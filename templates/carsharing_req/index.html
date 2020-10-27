@@ -8,7 +8,7 @@
 <body class="container">
     <h1 class="display-4 text-primary">{{ title }}</h1>
     <p class="h5 mt-4">{{ message|safe }}</p>
-    <form action="{% url 'hello' %}" method="post">
+    <form action="{% url 'index' %}" method="post">
         {% csrf_token %}
         {{ form.as_table }}
         <input class="btn btn-primary my-2" type="submit" value="click">

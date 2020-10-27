@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'carsharing_req',
-    'carsharing_booking',
-    'owners_req',
-    'parking_req',
-    'secondhandcar',
+    'carsharing_req.apps.CarsharingReqConfig',
+    'carsharing_booking.apps.CarsharingBookingConfig',
+    'owners_req.apps.OwnersReqConfig',
+    'parking_req.apps.ParkingReqConfig',
+    'secondhandcar.apps.SecondhandcarConfig',
 ]
 
 MIDDLEWARE = [
