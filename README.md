@@ -33,15 +33,20 @@ params内に使用変数を定義
 ```bash
 from .views import CarsharUser
 ```
-5. urls.pyにCarsharUserclassのディレクトリを追記
+5. urls.pyに以下の記述でアプリケーション名を追記
+```bash
+app_name = 'carsharing_req'
+```
+6. urls.pyにCarsharUserclassのディレクトリを追記
 ```bash
 path('index/', CarsharUser.as_view(), name='index')
 ```
-6. ルートディレクトリ直下のtemplatesフォルダ内にcarsharing_reqフォルダを作成
+
+7. ルートディレクトリ直下のtemplatesフォルダ内にcarsharing_reqフォルダを作成
 ```bash
 $ mkdir carsharing_req
 ```
-7. carsharing_reqフォルダ内にindex.htmlを作成
+8. carsharing_reqフォルダ内にindex.htmlを作成
 ```bash
 <!DOCTYPE html>
 <html lang="ja">
@@ -61,11 +66,14 @@ $ mkdir carsharing_req
 </body>
 </html>
 ```
-8. さあ、runserverしてみよう
+9. さあ、runserverしてみよう
 
 __carsharing_booking(カーシェア予約)__
+
 __owners_req(カーシェアオーナー申請)__
+
 __parking_req(駐車場オーナー申請)__
+
 __secondhandcar(中古車提案)__
 
 # — Djangoのあれこれ —
