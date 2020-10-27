@@ -5,7 +5,7 @@ from django.db import models
 class CarsharUserModel(models.Model):
     
     name = models.CharField(max_length=100)
-    mail = models.EmailField(max_length=200)
+    email = models.EmailField(max_length=200)
     gender = models.BooleanField()
     age = models.IntegerField(default=0)
     birthday = models.DateField()
