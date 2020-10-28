@@ -98,9 +98,11 @@ __secondhandcar(中古車提案)__
 
 # Djangoでの開発の流れ 
 ## 11/4日にやること(1回のみ！！！)
+```
 1. $cd Desktop #Desktopに移動
 2. $pip install pipenv
 3. 仮想環境の設定を実行
+```
 
 ## 仮想環境の設定(開発の時毎回やる)
 ```
