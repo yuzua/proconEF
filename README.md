@@ -101,7 +101,7 @@ python manage.py runserver #サーバー起動
 ④11/4からの開発の時一回のみやって欲しいことへ
 
 ## 毎回開発の前にやって欲しいこと
-①VSCodeの左下のmainを押してdjangoをクリック
+①VSCodeの左下のmainを押してdjangoをクリック。
 ②$git pull remote django #前日の変更をローカルに適用
 ③仮想環境の設定へ
 
