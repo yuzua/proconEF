@@ -1,4 +1,4 @@
-# proconEF
+# proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
 __carsharing_req(カーシェアリング利用登録)__
@@ -76,7 +76,7 @@ __parking_req(駐車場オーナー申請)__
 
 __secondhandcar(中古車提案)__
 
-# Gitコマンド&流れ
+# Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
 ## 11/4日にやること(1回のみ！！！)
 ```
 1. 翔ちゃんのGithub(proconEF)をForkする
