@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Python仮想環境
+Pipfile
+Pipfile.lock
+
+#settings.py
+/config/settings.py
