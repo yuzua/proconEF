@@ -50,6 +50,8 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+pipfile
+pipfile.lock
 
 # Translations
 *.mo
@@ -127,3 +129,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Python仮想環境
+pipfile
+pipfile.lock
+
+#settings.py
+/config/settings.py
