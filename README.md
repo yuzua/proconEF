@@ -1,4 +1,4 @@
-# proconEF
+# proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
 __carsharing_req(カーシェアリング利用登録)__
@@ -76,40 +76,53 @@ __parking_req(駐車場オーナー申請)__
 
 __secondhandcar(中古車提案)__
 
-# Gitコマンド&流れ
-## 11/4からの開発時一回のみやって欲しいこと
-①翔ちゃんのGithub(proconEF)をForkする
-②$git clone <自分のGithubURL(proconEF)>　#URL先のフォルダを自分のPC上にコピー
-③$git remote add remote <翔ちゃんのGithubURL(proconEF)> #URL先のフォルダを追加
-③VSCodeの左下のmainを押してorigin/djangoをクリック
-④11/4からの開発の時一回のみやって欲しいことへ
+# Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
+## 11/4日にやること(1回のみ！！！)
+```
+1. 翔ちゃんのGithub(proconEF)をForkする
+2. $cd Desktop #自分のPCのデスクトップに移動 
+3. $git clone 自分のGithubURL(proconEF)　#URL先のフォルダを自分のPC上にコピー
+4. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
+5. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
+6. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
+```
 
-## 毎回開発の前にやって欲しいこと
-①VSCodeの左下のmainを押してdjangoをクリック。
-②$git pull remote django #前日の変更をローカルに適用
-③仮想環境の設定へ
+## 毎回開発の前にやること(proconEFフォルダ内で)
+```
+1. VSCodeの左下のmainを押してdjangoをクリック(branchを変更)
+2. $git pull remote django #前日の変更をローカルに適用
+3. 仮想環境の設定を実行
+```
 
-## 毎回開発後にやって欲しいこと
-①$git add .
-②$git commit -m "コメント入力"
-③$git push origin django #①②③をやることで自分のGithub上のproconEFのdjangoブランチに変更が送られる
-④Github上からpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
+## 毎回開発後にやること(proconEFフォルダ内で)
+```
+1. $git add .
+2. $git commit -m "コメント入力"
+3. $git push origin django #１,2,3,を実行することで自分のGithubのproconEFのdjangoブランチに変更が送られる
+4. Githubからpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
+```
 
 # Djangoでの開発の流れ 
-## 11/4からの開発の時一回のみやって欲しいこと
-①$pip install pipenv #Desktop上で
-②仮想環境の設定へ
+## 11/4日にやること(1回のみ！！！)
+```
+1. $cd Desktop #Desktopに移動
+2. $pip install pipenv
+3. 仮想環境の設定を実行
+```
 
-## 仮想環境の設定(開発の時毎回やってください)
+## 仮想環境の設定(開発の時毎回やる)
+```
+$cd Desktop
 $cd proconEF
 $pipenv install #仮想環境の作成
 $pipenv shell #仮想環境に入る(VSCodeのshellが$pipenv or Python~に変わっているか確認)
+```
 
 ## Djangoコマンド
+```
 python manage.py makemigration #データベースにテーブル作成
 python manage.oy migrate #データベースへ反映
 python manage.py createrunserver #管理者アカウントの作成
 python manage.py runserver #サーバー起動
-
-
+```
 
