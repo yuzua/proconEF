@@ -133,4 +133,4 @@ Pipfile
 Pipfile.lock
 
 #settings.py
-/config/settings.py
+#/config/settings.py
