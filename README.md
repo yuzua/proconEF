@@ -76,22 +76,6 @@ __parking_req(駐車場オーナー申請)__
 
 __secondhandcar(中古車提案)__
 
-# Djangoでの開発の流れ 
-## 11/4からの開発の時一回のみやって欲しいこと
-①$pip install pipenv #Desktop上で
-②仮想環境の設定へ
-
-## 仮想環境の設定(開発の時毎回やってください)
-$cd proconEF
-$pipenv install #仮想環境の作成
-$pipenv shell #仮想環境に入る(VSCodeのshellが$pipenv or Python~に変わっているか確認)
-
-## Djangoコマンド
-python manage.py makemigration #データベースにテーブル作成
-python manage.oy migrate #データベースへ反映
-python manage.py createrunserver #管理者アカウントの作成
-python manage.py runserver #サーバー起動
-
 # Gitコマンド&流れ
 ## 11/4からの開発時一回のみやって欲しいこと
 ①翔ちゃんのGithub(proconEF)をForkする
@@ -110,5 +94,22 @@ python manage.py runserver #サーバー起動
 ②$git commit -m "コメント入力"
 ③$git push origin django #①②③をやることで自分のGithub上のproconEFのdjangoブランチに変更が送られる
 ④Github上からpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
+
+# Djangoでの開発の流れ 
+## 11/4からの開発の時一回のみやって欲しいこと
+①$pip install pipenv #Desktop上で
+②仮想環境の設定へ
+
+## 仮想環境の設定(開発の時毎回やってください)
+$cd proconEF
+$pipenv install #仮想環境の作成
+$pipenv shell #仮想環境に入る(VSCodeのshellが$pipenv or Python~に変わっているか確認)
+
+## Djangoコマンド
+python manage.py makemigration #データベースにテーブル作成
+python manage.oy migrate #データベースへ反映
+python manage.py createrunserver #管理者アカウントの作成
+python manage.py runserver #サーバー起動
+
 
 
