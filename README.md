@@ -76,6 +76,25 @@ __parking_req(駐車場オーナー申請)__
 
 __secondhandcar(中古車提案)__
 
+# Gitコマンド&流れ
+## 11/4からの開発時一回のみやって欲しいこと
+①翔ちゃんのGithub(proconEF)をForkする
+②$git clone <自分のGithubURL(proconEF)>　#URL先のフォルダを自分のPC上にコピー
+③$git remote add remote <翔ちゃんのGithubURL(proconEF)> #URL先のフォルダを追加
+③VSCodeの左下のmainを押してorigin/djangoをクリック
+④11/4からの開発の時一回のみやって欲しいことへ
+
+## 毎回開発の前にやって欲しいこと
+①VSCodeの左下のmainを押してdjangoをクリック。
+②$git pull remote django #前日の変更をローカルに適用
+③仮想環境の設定へ
+
+## 毎回開発後にやって欲しいこと
+①$git add .
+②$git commit -m "コメント入力"
+③$git push origin django #①②③をやることで自分のGithub上のproconEFのdjangoブランチに変更が送られる
+④Github上からpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
+
 # Djangoでの開発の流れ 
 ## 11/4からの開発の時一回のみやって欲しいこと
 ①$pip install pipenv #Desktop上で
@@ -92,23 +111,5 @@ python manage.oy migrate #データベースへ反映
 python manage.py createrunserver #管理者アカウントの作成
 python manage.py runserver #サーバー起動
 
-# Gitコマンド&流れ
-## 11/4からの開発時一回のみやって欲しいこと
-①翔ちゃんのGithub(proconEF)をForkする
-②$git clone <自分のGithubURL(proconEF)>　#URL先のフォルダを自分のPC上にコピー
-③$git remote add remote <翔ちゃんのGithubURL(proconEF)> #URL先のフォルダを追加
-③VSCodeの左下のmainを押してorigin/djangoをクリック
-④11/4からの開発の時一回のみやって欲しいことへ
-
-## 毎回開発の前にやって欲しいこと
-①VSCodeの左下のmainを押してdjangoをクリック
-②$git pull remote django #前日の変更をローカルに適用
-③仮想環境の設定へ
-
-## 毎回開発後にやって欲しいこと
-①$git add .
-②$git commit -m "コメント入力"
-③$git push origin django #①②③をやることで自分のGithub上のproconEFのdjangoブランチに変更が送られる
-④Github上からpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
 
 
