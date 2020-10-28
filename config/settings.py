@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'carsharing_req',
-    'carsharing_booking',
-    'owners_req',
-    'parking_req',
-    'secondhandcar',
+    'carsharing_req.apps.CarsharingReqConfig',
+    'carsharing_booking.apps.CarsharingBookingConfig',
+    'owners_req.apps.OwnersReqConfig',
+    'parking_req.apps.ParkingReqConfig',
+    'secondhandcar.apps.SecondhandcarConfig',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,3 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#開発環境では、メールのシステムをスタブ化
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
