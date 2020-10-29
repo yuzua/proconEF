@@ -81,7 +81,7 @@ __secondhandcar(中古車提案)__
 ```
 1. 翔ちゃんのGithub(proconEF)をForkする
 2. $cd Desktop #自分のPCのデスクトップに移動 
-3. $git clone 自分のGithubURL(proconEF)　#URL先のフォルダを自分のPC上にコピー
+3. $git clone 自分のGithubURL(proconEF) #URL先のフォルダを自分のPC上にコピー
 4. $cd proconEF #proconEFに移動
 5. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
 6. $git update-index --skip-worktree Pipfile Pipfile.lock config/settings.py
