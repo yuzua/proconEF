@@ -82,9 +82,10 @@ __secondhandcar(中古車提案)__
 1. 翔ちゃんのGithub(proconEF)をForkする
 2. $cd Desktop #自分のPCのデスクトップに移動 
 3. $git clone 自分のGithubURL(proconEF)　#URL先のフォルダを自分のPC上にコピー
-4. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
-5. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
-6. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
+4. $cd proconEF #proconEFに移動
+5. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
+6. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
+7. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
 ```
 
 ## 毎回開発の前にやること(proconEFフォルダ内で)
