@@ -128,8 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Python仮想環境
-Pipfile*
-
 #settings.py
 /config/settings.py
