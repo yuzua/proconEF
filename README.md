@@ -100,7 +100,8 @@ __secondhandcar(中古車提案)__
 1. $git add .
 2. $git commit -m "コメント入力"
 3. $git push origin django #１,2,3,を実行することで自分のGithubのproconEFのdjangoブランチに変更が送られる
-4. Githubからpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
+4. Githubのcode下にあるmain▼をdjangoに変更
+5. Githubからpull requestsをクリック→翔ちゃんのproconEF djangoに自分のproconEF djangoからcreate pull requestを作成
 ```
 
 # Djangoでの開発の流れ 
@@ -122,7 +123,7 @@ $pipenv shell #仮想環境に入る(VSCodeのshellが$pipenv or Python~に変�
 ## Djangoコマンド
 ```
 python manage.py makemigration #データベースにテーブル作成
-python manage.oy migrate #データベースへ反映
+python manage.py migrate #データベースへ反映
 python manage.py createrunserver #管理者アカウントの作成
 python manage.py runserver #サーバー起動
 ```
