@@ -1,7 +1,7 @@
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
-__carsharing_req(カーシェアリング利用登録)__
+__*carsharing_req(カーシェアリング利用登録)*__
 *ボス*
 1. models.pyにCarsharUserModel[class]を追加
 2. forms.pyを作成し、models.pyで作ったmodelをimport
