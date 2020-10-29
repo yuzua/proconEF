@@ -84,7 +84,7 @@ __secondhandcar(中古車提案)__
 3. $git clone 自分のGithubURL(proconEF)　#URL先のフォルダを自分のPC上にコピー
 4. $cd proconEF #proconEFに移動
 5. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
-6. git update-index --skip-worktree Pipfile Pipfile.lock config/settings.py
+6. $git update-index --skip-worktree Pipfile Pipfile.lock config/settings.py
 7. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
 8. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
 ```
