@@ -2,6 +2,7 @@
 
 # info
 __carsharing_req(カーシェアリング利用登録)__
+*ボス*
 1. models.pyにCarsharUserModel[class]を追加
 2. forms.pyを作成し、models.pyで作ったmodelをimport
 ```bash
@@ -69,12 +70,16 @@ $ mkdir carsharing_req
 9. さあ、runserverしてみよう
 
 __carsharing_booking(カーシェア予約)__
+*おおにしちゃん＆はっしー*
 
 __owners_req(カーシェアオーナー申請)__
+*おおにしちゃん*
 
 __parking_req(駐車場オーナー申請)__
+*はっしー*
 
 __secondhandcar(中古車提案)__
+*ボス*
 
 # Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
 ## 11/4日にやること(1回のみ！！！)
