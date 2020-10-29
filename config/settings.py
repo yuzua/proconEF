@@ -134,3 +134,4 @@ STATIC_URL = '/static/'
 
 #開発環境では、メールのシステムをスタブ化
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+aaa
