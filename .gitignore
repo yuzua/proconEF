@@ -130,3 +130,6 @@ dmypy.json
 
 #settings.py
 /config/settings.py
+
+#migrations
+**/migrations/*
