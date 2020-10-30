@@ -5,11 +5,11 @@ class CarsharOwnersModel(models.Model):
     
     car_maker = models.CharField(max_length=100) #ChoiceField
     car_type = models.CharField(max_length=100) #ChoiceField
-    car_possible = models.IntegerField(max_length=10)
-    car_number = models.IntegerField(max_length=4)
+    car_possible = models.IntegerField(default=0)
+    car_number = models.IntegerField(default=0)
     bank_name = models.CharField(max_length=100) #ChoiceField
-    bank_num = models.IntegerField(max_length=10)
-    account_num = models.IntegerField(max_length=7)
+    bank_num = models.IntegerField(default=0)
+    account_num = models.IntegerField(default=0)
     account_name = models.CharField(max_length=100) #カタカナで入力
     
     
