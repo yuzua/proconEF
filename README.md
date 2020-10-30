@@ -150,7 +150,7 @@ $pipenv shell #仮想環境に入る(VSCodeのshellが$pipenv or Python~に変�
 ```
 python manage.py makemigration #データベースにテーブル作成
 python manage.py migrate #データベースへ反映
-python manage.py createrunserver #管理者アカウントの作成
+python manage.py createsuperuser #管理者アカウントの作成
 python manage.py runserver #サーバー起動
 ```
 
