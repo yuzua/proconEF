@@ -14,5 +14,6 @@ class CarsharOwnersModel(models.Model):
     
     
     def __str__(self):
-        return '<Friend:id=' + str(self.id) + ',' + str(self.possible) + \
-            '(' + str(self.age) + ')>'
+        return '<Friend:id=' + str(self.id) + ',' + str(self.car_possible) + \
+            ',' + str(self.car_number) + ',' + str(self.bank_num) + ',' + str(self.account_num) + \
+            '(' + str(self.account_name) + ')>'
