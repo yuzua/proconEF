@@ -12,7 +12,7 @@ def index(request):
 def create(request):
     if (request.method == 'POST'):
         obj = ParkingUserModel()
-        parking = ParkingForm(request.POST, isinstance=obj)
+        parking = ParkingForm(request.POST, instance=obj)
         parking.save()
         return redirect(to='/parking_req')
     params = {
