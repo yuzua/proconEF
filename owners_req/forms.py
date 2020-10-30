@@ -17,7 +17,7 @@ class CarsharOwnersCreateForm(forms.ModelForm):
         ('トミーカイラ', 'トミーカイラ'),
         ('ゼロスポーツ', 'ゼロスポーツ'),
         ('日野自動車', '日野自動車'),
-        ('UDトラックス', '三菱ふそう'),
+        ('UDトラックス', 'UDトラックス'),
         ('GLM', 'GLM'),
         ('その他外国車', 'その他外国車'),
     ]
@@ -25,19 +25,15 @@ class CarsharOwnersCreateForm(forms.ModelForm):
     type_list = [
         ()
     ]
-
     car_type = forms.ChoiceField(label='車種', choices=type_list)
-
     car_possible = forms.IntegerField(label='乗車可能人数',
         widget=forms.TextInput(attrs={'class':'form-control'}))
     car_number = forms.IntegerField(label='ナンバープレート(数字のみ入力)',\
         widget=forms.TextInput(attrs={'class':'form-control'}))
-
     name_list = [
         ()
     ]
     bank_name = forms.ChoiceField(label='銀行選択', choices=name_list)
-
     bank_num = forms.IntegerField(label='支店番号',\
         widget=forms.TextInput(attrs={'class':'form-control'}))
     account_num = forms.IntegerField(label='口座番号',\
