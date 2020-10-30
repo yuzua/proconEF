@@ -1,7 +1,8 @@
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
-__carsharing_req(カーシェアリング利用登録)__
+__*carsharing_req(カーシェアリング利用登録)*__
+*ボス*
 1. models.pyにCarsharUserModel[class]を追加
 2. forms.pyを作成し、models.pyで作ったmodelをimport
 ```bash
@@ -68,13 +69,37 @@ $ mkdir carsharing_req
 ```
 9. さあ、runserverしてみよう
 
-__carsharing_booking(カーシェア予約)__
+__*carsharing_booking(カーシェア予約)*__
+*おおにしちゃん＆はっしー*
 
-__owners_req(カーシェアオーナー申請)__
 
-__parking_req(駐車場オーナー申請)__
+__*owners_req(カーシェアオーナー申請)*__
+*おおにしちゃん*
+1. ログインしているか確認するコントローラ[views.py]
+2. DBへ登録する内容のClass[models.py]
+3. 登録画面のフォーム[forms.py]
+4. バリデーション機能[views.py]
+5. オーナー詳細画面[views.py]
+6. 変更コントローラ（登録と同様に）[views.py]
+7. 削除コントローラ（登録と同様に）[views.py]
+8. HTMLのコンポーネント化[base.html]の継承
 
-__secondhandcar(中古車提案)__
+
+__*parking_req(駐車場オーナー申請)*__
+*はっしー*
+1. ログインしているか確認するコントローラ[views.py]
+2. DBへ登録する内容の駐車場登録Class追加[models.py]
+3. 登録画面のフォーム[forms.py]
+4. バリデーション機能[views.py]
+5. オーナー詳細画面[views.py]
+6. 変更コントローラ（登録と同様に）[views.py]
+7. 削除コントローラ（登録と同様に）[views.py]
+8. HTMLのコンポーネント化[base.html]の継承
+
+
+__*secondhandcar(中古車提案)*__
+*ボス*
+
 
 # Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
 ## 11/4日にやること(1回のみ！！！)
@@ -84,8 +109,9 @@ __secondhandcar(中古車提案)__
 3. $git clone 自分のGithubURL(proconEF)　#URL先のフォルダを自分のPC上にコピー
 4. $cd proconEF #proconEFに移動
 5. $git remote add remote 翔ちゃんのGithubURL(proconEF) #URL先のフォルダをremoteという名前で追加
-6. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
-7. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
+6. $git update-index --skip-worktree Pipfile Pipfile.lock config/settings.py
+7. VSCodeの左下のmainを押してorigin/djangoをクリック(branchを変更)
+8. Djangoでの開発の流れの 11/4日にやること(1回のみ！！！)を実行
 ```
 
 ## 毎回開発の前にやること(proconEFフォルダ内で)
