@@ -5,7 +5,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="{% url 'create'%}" method="post">
+    <form method="post">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
