@@ -16,4 +16,4 @@ from.models import ParkingUserModel
 class ParkingForm(forms.ModelForm):
     class Meta:
         model = ParkingUserModel
-        fields = ['coordinate','day','parking_type','width','length','height',]
+        fields = ['coordinate','day','parking_type','width','length','height','car_id']

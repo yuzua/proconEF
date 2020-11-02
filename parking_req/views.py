@@ -20,7 +20,12 @@ class ParkingHostCreate(TemplateView):
     
     def get(self, request):
         return render(request, 'parking_req/create.html', self.params)
-    
+
+
     def post(self, request):
-        self.params['form'] = ParkingForm(request.POST)
-        return render(request, 'parking_req/create.html', self.params)
+        obj = ParkingUserModel()
+        parking = ParkingForm(request.POST, instance=obj)
+        parking.save()
+        return redirect(to='/parking_req')
+
+    
