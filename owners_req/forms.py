@@ -23,7 +23,7 @@ class CarsharOwnersCreateForm(forms.ModelForm):
     ]
     car_maker = forms.ChoiceField(label='メーカー', choices=maker_list)
     type_list = [
-        ()
+        ('ア行','ア行')
     ]
     car_type = forms.ChoiceField(label='車種', choices=type_list)
     car_possible = forms.IntegerField(label='乗車可能人数',
@@ -31,7 +31,7 @@ class CarsharOwnersCreateForm(forms.ModelForm):
     car_number = forms.IntegerField(label='ナンバープレート(数字のみ入力)',\
         widget=forms.TextInput(attrs={'class':'form-control'}))
     name_list = [
-        ()
+        ('三菱UFJ銀行','三菱UFJ銀行')
     ]
     bank_name = forms.ChoiceField(label='銀行選択', choices=name_list)
     bank_num = forms.IntegerField(label='支店番号',\
