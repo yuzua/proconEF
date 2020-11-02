@@ -1,27 +1,22 @@
 from django import forms
 from django.core.mail import EmailMessage
-from.models import CarsharUserModel
+from .models import CarsharUserModel
 
 class CarsharUserCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(CarsharUserCreateForm, self).__init__(*args, **kwd)
+        self.fields["gender"].required = False
     class Meta:
         model = CarsharUserModel
-        fields = ['id', 'name', 'email', 'gender', 'age', 'birthday', 'system_flag']
-
-    def send_email(self):
-        name = self.cleaned_data['name']
-        email = self.cleaned_data['email']
-        title = self.cleaned_data['name']
-        message = self.cleaned_data['name']
-
-        subject = 'お問い合わせ {}'.format(title)
-        message = '送信者名: {0}\nメールアドレス: {1}\nメッセージ:\n{2}'.format(name, email, message)
-        from_email = 'admin@example.com'
-        to_list = [
-            'test@example.com'
-        ]
-        cc_list = [
-            email
-        ]
-
-        message = EmailMessage(subject=subject, body=message, from_email=from_email, to=to_list, cc=cc_list)
-        message.send()
+        fields = ['id', 'name', 'gender', 'age', 'birthday']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'birthday': forms.DateInput(attrs={'class': 'form-control'}),
+        }
+        labels={
+           'name': '名前',
+           'gender': '性別',
+           'age': '年齢',
+           'birthday': '生年月日',
+        }
