@@ -13,7 +13,7 @@ from.models import ParkingUserModel
 #     height = forms.IntegerField(label='高さ')
 #     car_id = forms.IntegerField(label='車両ID')
 
-class ParkingForm(forms.Form):
+class ParkingForm(forms.ModelForm):
     class Meta:
         model = ParkingUserModel
-        fields = ['駐車場座標', '登録日', '駐車場タイプ', '横幅', '奥行き', '高さ', '車両ID']
+        fields = ['coordinate','day','parking_type','width','length','height',]
