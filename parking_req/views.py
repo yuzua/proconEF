@@ -27,3 +27,5 @@ class ParkingHostCreate(TemplateView):
         parking = ParkingForm(request.POST, instance=obj)
         parking.save()
         return redirect(to='/parking_req')
+
+    
