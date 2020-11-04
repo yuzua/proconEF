@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import CarsharOwnersModel
-from .forms import CarsharOwnersCreateForm
+from .models import HostUserModel, CarInfoModel
+from .forms import HostUserForm, CarInfoForm
 from django.views.generic import TemplateView
 # Create your views here.
 
@@ -12,46 +12,54 @@ def index(request):
 class CreateView(TemplateView):
     def __init__(self):
         self.params = {
-        'title': 'カーシェアリング申請',
-        'form': CarsharOwnersCreateForm(),
+        'title': 'カーシェアリングオーナー申請',
+        'form': HostUserForm(),
     }
     def get(self, request):
         return render(request, 'owners_req/create.html', self.params)
     def post(self, request):
-        obj = CarsharOwnersModel()
-        owners = CarsharOwnersCreateForm(request.POST, instance=obj)
+        obj = HostUserModel()
+        owners = HostUserForm(request.POST, instance=obj)
         owners.save()
         return redirect(to='/owners_req')
-        
-    
-    
-
-
     
 def edit(request, num):
-    obj = CarsharOwnersModel.objects.get(id=num)
+    obj = HostUserModel.objects.get(id=num)
     if (request.method == 'POST'):
-        owners2 = CarsharOwnersCreateForm(request.POST, instance=obj)
+        owners2 = HostUserForm(request.POST, instance=obj)
         owners2.save()
         return redirect(to='/owners_req')
     params = {
-        'title': 'カーシェアリング予約変更',
+        'title': 'カーシェアオーナー情報変更',
         'id': num,
-        'form': CarsharOwnersCreateForm(instance=obj),
+        'form': HostUserForm(instance=obj),
     }
     return render(request, 'owners_req/edit.html', params)
 
-
-
-
 def delete(request, num):
-    owners_req = CarsharOwnersModel.objects.get(id=num)
+    owners_req = HostUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         owners_req.delete()
         return redirect(to='/owners_req')
     params = {
-        'title': 'カーシェアリング予約削除',
+        'title': 'カーシェアオーナー削除',
         'id': num,
         'data': owners_req,
     }
     return render(request, 'owners_req/delete.html', params)
+
+
+class CreateCarView(TemplateView):
+    def __init__(self):
+        self.params = {
+        'title': '車情報登録',
+        'form': CarInfoForm(),
+    }
+    def get(self, request):
+        return render(request, 'owners_req/createCar.html', self.params)
+    def post(self, request):
+        obj = CarInfoModel()
+        owners = CarInfoForm(request.POST, instance=obj)
+        owners.save()
+        return redirect(to='/owners_req')
+

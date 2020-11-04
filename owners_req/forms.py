@@ -1,50 +1,55 @@
 from django import forms
-from.models import CarsharOwnersModel
+from datetime import date
+from.models import HostUserModel, CarInfoModel
 
-class CarsharOwnersCreateForm(forms.ModelForm):
-    maker_list = [
-        ('レクサス', 'レクサス'),
-        ('トヨタ', 'トヨタ'),
-        ('日産', '日産'),
-        ('ホンダ', 'ホンダ'),
-        ('マツダ', 'マツダ'),
-        ('スバル', 'スバル'),
-        ('スズキ', 'スズキ'),
-        ('三菱', '三菱'),
-        ('ダイハツ', 'ダイハツ'),
-        ('いすゞ', 'いすゞ'),
-        ('光岡自動車', '光岡自動車'),
-        ('トミーカイラ', 'トミーカイラ'),
-        ('ゼロスポーツ', 'ゼロスポーツ'),
-        ('日野自動車', '日野自動車'),
-        ('UDトラックス', 'UDトラックス'),
-        ('GLM', 'GLM'),
-        ('その他外国車', 'その他外国車'),
+class HostUserForm(forms.ModelForm):
+    
+    day = forms.DateField(label='登録日', \
+         widget=forms.TextInput(attrs={'class':'form-control'}))
+    pay_list = [
+        ('銀行振込','銀行振込'),
+        ('QR決済','QR決済'),
     ]
-    car_maker = forms.ChoiceField(label='メーカー', choices=maker_list)
-    type_list = [
-        ('ア行','ア行')
-    ]
-    car_type = forms.ChoiceField(label='車種', choices=type_list)
-    car_possible = forms.IntegerField(label='乗車可能人数',
+    pay = forms.ChoiceField(label='支払方法', choices=pay_list)
+    bank_name = forms.CharField(label='銀行名', \
+         widget=forms.TextInput(attrs={'class':'form-control'}))
+    bank_code = forms.IntegerField(label='支店コード',\
         widget=forms.TextInput(attrs={'class':'form-control'}))
-    car_number = forms.IntegerField(label='ナンバープレート(数字のみ入力)',\
+    bank_account_number = forms.IntegerField(label='口座番号',\
         widget=forms.TextInput(attrs={'class':'form-control'}))
-    name_list = [
-        ('三菱UFJ銀行','三菱UFJ銀行')
-    ]
-    bank_name = forms.ChoiceField(label='銀行選択', choices=name_list)
-    bank_num = forms.IntegerField(label='支店番号',\
-        widget=forms.TextInput(attrs={'class':'form-control'}))
-    account_num = forms.IntegerField(label='口座番号',\
-        widget=forms.TextInput(attrs={'class':'form-control'}))
-    account_name = forms.CharField(label='口座名義名(カタカナ)', \
+    QR_id = forms.CharField(label='QR決済ID', \
         widget=forms.TextInput(attrs={'class':'form-control'}))
     class Meta:
-        model = CarsharOwnersModel
-        fields = ['id', 'car_maker', 'car_type', 'car_possible', 'car_number', \
-                 'bank_name', 'bank_num', 'account_num', 'account_name']
+        model = HostUserModel
+        fields = ['id', 'day', 'pay', 'bank_name', 'bank_code', \
+             'bank_account_number', 'QR_id']
 
 
+class CarInfoForm(forms.ModelForm):
+    
+    license_plate = forms.IntegerField(label='ナンバープレート',\
+        widget=forms.TextInput(attrs={'class':'form-control'}))    	
+    ParentCategory = forms.ChoiceField(label='メーカー', )
+    category = forms.ChoiceField(label='車種', )
+    model_id = forms.IntegerField(label='型番',\
+        widget=forms.TextInput(attrs={'class':'form-control'}))
+    custom = forms.CharField(label='カスタム', \
+        widget=forms.TextInput(attrs={'class':'form-control'}))	
+    people = forms.IntegerField(label='乗車人数',\
+        widget=forms.TextInput(attrs={'class':'form-control'})) 
+    day = forms.DateField(label='登録日', \
+         widget=forms.TextInput(attrs={'class':'form-control'}))
+    tire = forms.CharField(label='タイヤ', \
+        widget=forms.TextInput(attrs={'class':'form-control'}))	
+    used_years =  forms.IntegerField(label='使用年数',\
+        widget=forms.TextInput(attrs={'class':'form-control'}))
+    vehicle_inspection_day = forms.DateField(label='次回車検予定日', \
+         widget=forms.TextInput(attrs={'class':'form-control'}))
+
+    class Meta:
+        model = CarInfoModel
+        fields = ['id', 'license_plate', 'ParentCategory', 'category', \
+            'model_id', 'custom', 'people', 'day', 'tire', 'used_years', \
+            'vehicle_inspection_day']
 
    
