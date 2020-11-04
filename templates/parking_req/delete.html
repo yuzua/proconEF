@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous" />
+    </head>
+    <body class="container">
+        <h1 class="display-4 text-primary">{{title}}</h1>
+        <p>※以下のレコードを削除します。</p>
+        <table class="table">
+            <tr><th>ID</th><td>{{obj.id}}</td></tr>
+            <tr><th>駐車場座標</th><td>{{obj.coordinate}}</td></tr>
+            <tr><th>登録日</th><td>{{obj.day}}</td><tr>
+            <tr><th>駐車場タイプ</th><td>{{obj.parking_type}}</td></tr>
+            <tr><th>横幅</th><td>{{obj.width}}</td></tr>
+            <tr><th>奥行き</th><td>{{obj.length}}</td></tr>
+            <tr><th>高さ</th><td>{{obj.height}}</td></tr>
+            <tr><th>車両ID</th><td>{{obj.car_id}}</td></tr>
+            <form action="{% url 'parking_req:delete' id %}" method="post">
+                {% csrf_token %}
+                <tr><th></th><td>
+                    <input type="submit" value="click" class="btn btn-primary mt-2">
+                </td></tr>    
+            </form>    
+        </table>
+    </body>
+</html>

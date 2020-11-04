@@ -23,9 +23,39 @@ class ParkingHostCreate(TemplateView):
 
 
     def post(self, request):
+        params = {
+        'form': ParkingForm(),
+        }
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
+        if (parking.is_valid()):
+            parking.save()
+            return redirect(to='/parking_req')
+        else:
+            params['form'] = ParkingForm(request.POST, instance= obj)
+        return render(request, 'parking_req/create.html', self.params)
+
+def edit(request, num):
+    obj = ParkingUserModel.objects.get(id=num)
+    parking = ParkingForm(request.POST, instance=obj)
+    if (parking.is_valid()):
         parking.save()
         return redirect(to='/parking_req')
+    params = {
+        'title': 'ParkingEdit',
+        'form': ParkingForm(instance=obj),
+        'id':num,
+        }
+    return render(request, 'parking_req/edit.html', params)
 
-    
+def delete(request, num):
+    parking = ParkingUserModel.objects.get(id=num)
+    if (request.method == 'POST'):
+        parking.delete()
+        return redirect(to='/parking_req')
+    params = {
+        'title': 'ParkingDelete',
+        'id': num,
+        'obj': parking,
+    }
+    return render(request, 'parking_req/delete.html', params)    
