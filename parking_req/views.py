@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from .models import ParkingUserModel
 from .forms import ParkingForm
+
 # Create your views here.
 
 
@@ -23,16 +24,13 @@ class ParkingHostCreate(TemplateView):
 
 
     def post(self, request):
-        params = {
-        'form': ParkingForm(),
-        }
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
+        self.params['form'] = parking
         if (parking.is_valid()):
             parking.save()
             return redirect(to='/parking_req')
-        else:
-            params['form'] = ParkingForm(request.POST, instance= obj)
+            
         return render(request, 'parking_req/create.html', self.params)
 
 def edit(request, num):
@@ -55,6 +53,7 @@ def delete(request, num):
         return redirect(to='/parking_req')
     params = {
         'title': 'ParkingDelete',
+        'message': '※以下のレコードを削除します。',
         'id': num,
         'obj': parking,
     }
