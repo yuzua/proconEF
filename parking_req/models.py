@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -9,7 +10,7 @@ class ParkingUserModel(models.Model):
     coordinate = models.CharField(max_length=64)
     day = models.DateField()
     parking_type = models.CharField(max_length=32)
-    width = models.IntegerField(default=0)
+    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99999999)])
     length = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
     car_id = models.IntegerField(default=0)
