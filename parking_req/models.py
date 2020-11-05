@@ -10,9 +10,9 @@ class ParkingUserModel(models.Model):
     coordinate = models.CharField(max_length=64)
     day = models.DateField()
     parking_type = models.CharField(max_length=32)
-    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99999999)])
-    length = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
+    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000000)])
+    length = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000000)])
+    height = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000000)])
     car_id = models.IntegerField(default=0)
     def __str__(self):
         return '<carsharing_id=' + str(self.id) + '>'  
