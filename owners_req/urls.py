@@ -13,4 +13,6 @@ urlpatterns = [
     path('createCar', CreateCarView.as_view(), name='createCar'),
     path('edit/<int:num>', views.edit, name='edit'),
     path('delete/<int:num>', views.delete, name='delete'),
+    path('editCar/<int:num1>', views.editCar, name='editCar'),
+    path('deleteCar/<int:num1>', views.deleteCar, name='deleteCar'),
 ]
