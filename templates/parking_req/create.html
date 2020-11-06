@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
+{% block title %}
+{{ title }}
+{% endblock %}
+
 {% block active_login %}
-<title>{{ title }}</title>
-<h1>{{ title }}</h1>
 {% endblock %}
 
 {% block contents %}
+<h1>{{ title }}</h1>
 <p class="h5 mt-4">{{ message|safe }}</p>
 <form action="{% url 'parking_req:create' %}" method="post">
     {% csrf_token %}
