@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from .models import ParkingUserModel
 from .forms import ParkingForm
+import datetime
 
 # Create your views here.
 
@@ -13,13 +14,19 @@ def index(request):
 
 class ParkingHostCreate(TemplateView):
     def __init__(self):
+        dt_now = datetime.datetime.now()
         self.params = {
             'title': 'ParkingHostCreate',
             'message': 'Not found your data.<br>Please send your profile.',
-            'form': ParkingForm(),
+            'form': ParkingForm({'day': dt_now}),
         }
     
     def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(request.user)
         return render(request, 'parking_req/create.html', self.params)
 
 
@@ -35,15 +42,19 @@ class ParkingHostCreate(TemplateView):
 
 def edit(request, num):
     obj = ParkingUserModel.objects.get(id=num)
-    parking = ParkingForm(request.POST, instance=obj)
-    if (parking.is_valid()):
-        parking.save()
-        return redirect(to='/parking_req')
     params = {
         'title': 'ParkingEdit',
         'form': ParkingForm(instance=obj),
         'id':num,
-        }
+    }
+    if (request.method == 'POST'):    
+        parking = ParkingForm(request.POST, instance=obj)
+        if (parking.is_valid()):
+            parking.save()
+            return redirect(to='/parking_req')
+        else:
+            params['form'] = ParkingForm(request.POST, instance= obj)        
+        
     return render(request, 'parking_req/edit.html', params)
 
 def delete(request, num):
@@ -57,4 +68,4 @@ def delete(request, num):
         'id': num,
         'obj': parking,
     }
-    return render(request, 'parking_req/delete.html', params)    
+    return render(request, 'parking_req/delete.html', params)
