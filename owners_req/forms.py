@@ -1,6 +1,9 @@
 from django import forms
 from datetime import date
-from.models import HostUserModel, CarInfoModel
+from.models import HostUserModel
+
+from.models import *
+
 
 class HostUserForm(forms.ModelForm):
     
@@ -33,15 +36,15 @@ class HostUserForm(forms.ModelForm):
         labels = {
             'day': '登録日',
             'pay': '支払方法',
-            'bank_name': '銀行名',
+            'bank_name': '銀行名(カタカナ）',
             'bank_code': '支店コード',
             'bank_account_number': '口座番号',
             'QR_id': 'QR決済ID',
         }
 
 
-class CarInfoForm(forms.ModelForm):
-    
+# class CarInfoForm(forms.ModelForm):
+
     # license_plate = forms.IntegerField(label='ナンバープレート',\
     #     widget=forms.TextInput(attrs={'class':'form-control'}))    	
     # ParentCategory = forms.ChoiceField(label='メーカー', )
@@ -61,21 +64,45 @@ class CarInfoForm(forms.ModelForm):
     # vehicle_inspection_day = forms.DateField(label='次回車検予定日', \
     #      widget=forms.TextInput(attrs={'class':'form-control'}))
 
+    # class Meta:
+    #     model = CarInfoModel
+    #     fields = ['id', 'license_plate', 'model_id', 'custom', 'people', \
+    #     'day', 'tire', 'used_years',  'vehicle_inspection_day']
+        
+        
+
+class PostCreateForm(forms.ModelForm):
+    # 親カテゴリの選択欄がないと絞り込めないので、定義する。
+    parent_category = forms.ModelChoiceField(
+        label='メーカー',
+        queryset=ParentCategory.objects,
+        required=False
+    )
+
     class Meta:
-        model = CarInfoModel
-        fields = ['id', 'license_plate', 'model_id', 'custom', 'people', \
-        'day', 'tire', 'used_years',  'vehicle_inspection_day']
-        widget = {
+        model = Post
+        fields = '__all__'
+
+    field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'custom', 'people', \
+         'day', 'tire', 'used_years', 'vehicle_inspection_day')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+        self.fields['user_email'].widget = forms.HiddenInput()
+
+        # widget = {
             
-            'license_plate': forms.NumberInput(attrs={'class': 'form-control'}),
-            'model_id': forms.NumberInput(attrs={'class': 'form-control'}),
-            'custom': forms.TextInput(attrs={'class': 'form-control'}),
-            'people': forms.NumberInput(attrs={'class': 'form-control'}),
-            'day': forms.DateInput(attrs={'class': 'form-control'}),
-            'tire': forms.TextInput(attrs={'class': 'form-control'}),
-            'used_years': forms.NumberInput(attrs={'class': 'form-control'}),
-            'vehicle_inspection_day': forms.DateInput(attrs={'class': 'form-control'}),
-        }
+        #     'license_plate': forms.NumberInput(attrs={'class': 'form-control'}),
+        #     'model_id': forms.NumberInput(attrs={'class': 'form-control'}),
+        #     'custom': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'people': forms.NumberInput(attrs={'class': 'form-control'}),
+        #     'day': forms.DateInput(attrs={'class': 'form-control'}),
+        #     'tire': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'used_years': forms.NumberInput(attrs={'class': 'form-control'}),
+        #     'vehicle_inspection_day': forms.DateInput(attrs={'class': 'form-control'}),
+        # }
         labels = {
             'license_plate': 'ナンバープレート',
             'model_id': '型番',
@@ -86,6 +113,5 @@ class CarInfoForm(forms.ModelForm):
             'used_years':'使用年数',
             'vehicle_inspection_day':'次回車検予定日'
         }
-
 
    

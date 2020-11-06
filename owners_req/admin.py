@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import HostUserModel, CarInfoModel
+from .models import *
 
 
 # Register your models here.
 admin.site.register(HostUserModel)
-admin.site.register(CarInfoModel)
+admin.site.register(Post)
+admin.site.register(ParentCategory)
+admin.site.register(Category)
