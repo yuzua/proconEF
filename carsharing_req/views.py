@@ -20,15 +20,17 @@ def index(request):
         print('ゲスト')
     else:
         print(request.user.email)
-    return redirect(to='carsharing_req:index')
+    return redirect(to='carsharing_req:set_session')
 
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
     print(data.id)
+    request.session['user_id'] = data.id
+    print(request.session['user_id'])
     params = {
         'data': data,
     }
-    return render(request, 'carsharing_req/set_session.html', params)
+    return redirect(to='carsharing_req:index')
 
 
 class CarsharUser(TemplateView):
