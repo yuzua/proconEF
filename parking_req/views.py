@@ -10,7 +10,10 @@ import datetime
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the parking_req index.")
+    params = {
+        'apikey': 'AIzaSyAmulNAl7XvDORhZ8f5HGJPm1uwJEHOqDg',
+    }
+    return render(request, 'parking_req/map1.html', params)
 
 class ParkingHostCreate(TemplateView):
     def __init__(self):
@@ -18,7 +21,7 @@ class ParkingHostCreate(TemplateView):
         self.params = {
             'title': 'ParkingHostCreate',
             'message': 'Not found your data.<br>Please send your profile.',
-            'form': ParkingForm({'day': dt_now}),
+            'form': ParkingForm({'car_id': 100,'day': dt_now}),
         }
     
     def get(self, request):
