@@ -62,7 +62,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     
-    user_email = models.EmailField(verbose_name="メールアドレス", max_length=254)
+
     category = models.ForeignKey(Category, verbose_name='カテゴリ', default=0, on_delete=models.PROTECT)
     license_plate = models.CharField(max_length=12,  verbose_name='ナンバープレート')    	
     #ParentCategory = models.CharField(max_length=32,  verbose_name='メーカー')

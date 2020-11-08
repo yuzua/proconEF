@@ -62,45 +62,6 @@ def delete(request, num):
     return render(request, 'owners_req/delete.html', params)
 
 
-# class CreateCarView(TemplateView):
-#     def __init__(self):
-#         self.params = {
-#         'title': '車情報登録',
-#         'form': CarInfoForm(),
-#     }
-#     def get(self, request):
-#         return render(request, 'owners_req/createCar.html', self.params)
-#     def post(self, request):
-#         obj = CarInfoModel()
-#         owners3 = CarInfoForm(request.POST, instance=obj)
-#         owners3.save()
-#         return redirect(to='/owners_req')
-
-# def editCar(request, num1):
-#     obj = CarInfoModel.objects.get(id=num1)
-#     if (request.method == 'POST'):
-#         owners4 = CarInfoForm(request.POST, instance=obj)
-#         owners4.save()
-#         return redirect(to='/owners_req')
-#     params = {
-#         'title': '車情報変更',
-#         'id': num1,
-#         'form': CarInfoForm(instance=obj),
-#     }
-#     return render(request, 'owners_req/editCar.html', params)
-
-# def deleteCar(request, num1):
-#     owners_req = CarInfoModel.objects.get(id=num1)
-#     if (request.method == 'POST'):
-#         owners_req.delete()
-#         return redirect(to='/owners_req')
-#     params = {
-#         'title': '車情報削除',
-#         'id': num1,
-#         'data': owners_req,
-#     }
-#     return render(request, 'owners_req/deleteCar.html', params)
-
 class PostCreate(TemplateView):
     def __init__(self):
         self.params = {
@@ -117,7 +78,6 @@ class PostCreate(TemplateView):
         return redirect(to='carsharing_req:createCar')
         
     def get(self, request):
-        # self.params['form'] = PostCreateForm({'user_email': request.user.email})
         print(self.params['parentcategory_list'])
         print(self.params['category_set'])
         return render(request, 'owners_req/createCar.html', self.params)
