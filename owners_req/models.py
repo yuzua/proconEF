@@ -20,6 +20,7 @@ def katakana_only(value):
 
 class HostUserModel(models.Model):
 
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     day = models.DateField() 
     pay = models.CharField(max_length=32) 
     bank_name = models.CharField(max_length=32, validators=[katakana_only])
@@ -28,7 +29,7 @@ class HostUserModel(models.Model):
     QR_id = models.CharField(max_length=100, validators=[number_only])
 
     def __str__(self):
-         return '<カーシェアオーナー:id=' + str(self.id) + ',' + '(' + str(self.bank_name) + ')>'
+         return '<カーシェアオーナー:id=' + str(self.user_id) + ',' + '(' + str(self.bank_name) + ')>'
 
 # class CarInfoModel(models.Model):
 

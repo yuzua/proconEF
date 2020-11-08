@@ -7,6 +7,8 @@ from django.views.generic import TemplateView
 
 from django.views import generic
 from .forms import PostCreateForm
+
+import datetime
 # from .models import Post, ParentCategory, Category
 # Create your views here.
 
@@ -24,15 +26,24 @@ class CreateView(TemplateView):
     def get(self, request):
         return render(request, 'owners_req/create.html', self.params)
     def post(self, request):
-        if request.method == 'POST':
-            obj = HostUserModel()
-            form = HostUserForm(request.POST, instance=obj)
-            self.params['form'] = form
-            if (form.is_valid()):
-                self.params['message'] = '以下の内容でよろしいでしょうか？'
-                return render(request, 'owners_req/index.html', self.params)
-            else:
-                self.params['message'] = '入力データに問題があります'
+        dt_now = datetime.datetime.now()
+        user_id = request.session['user_id']
+        pay = request.POST['pay']
+        day = dt_now
+        bank_name = request.POST['bank_name']
+        bank_code = request.POST['bank_code']
+        bank_account_number = request.POST['bank_account_number']
+        QR_id = request.POST['QR_id']
+        record = HostUserModel(user_id = user_id, pay = pay, day = day, \
+            bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
+        obj = HostUserModel()
+        form = HostUserForm(request.POST, instance=obj)
+        self.params['form'] = form
+        if (form.is_valid()):
+            record.save()
+            return redirect(to='owners_req:index')
+        else:
+            self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/create.html', self.params)
 
     

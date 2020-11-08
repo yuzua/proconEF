@@ -17,11 +17,10 @@ def index(request):
 
 class ParkingHostCreate(TemplateView):
     def __init__(self):
-        dt_now = datetime.datetime.now()
         self.params = {
             'title': 'ParkingHostCreate',
             'message': 'Not found your data.<br>Please send your profile.',
-            'form': ParkingForm({'car_id': 100,'day': dt_now}),
+            'form': ParkingForm(),
         }
     
     def get(self, request):
@@ -34,11 +33,21 @@ class ParkingHostCreate(TemplateView):
 
 
     def post(self, request):
+        dt_now = datetime.datetime.now()
+        user_id = request.session['user_id']
+        coordinate = request.POST['coordinate']
+        day = dt_now
+        parking_type = request.POST['parking_type']
+        width = request.POST['width']
+        length = request.POST['length']
+        height = request.POST['height']
+        record = ParkingUserModel(user_id = user_id, coordinate = coordinate, day = day, \
+            parking_type = parking_type, width = width, length = length, height = height)
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
         self.params['form'] = parking
         if (parking.is_valid()):
-            parking.save()
+            record.save()
             return redirect(to='/parking_req')
             
         return render(request, 'parking_req/create.html', self.params)
