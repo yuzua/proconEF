@@ -12,16 +12,23 @@ from .forms import CarsharUserCreateForm
 
 
 def index(request):
-    # if str(request.user) == "AnonymousUser":
-    #     print('ゲスト')
-    # else:
-    #     print(request.user)
     querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
     if querySet.first() is None:
         print('no data')
         return redirect(to='carsharing_req:create')
-
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+    else:
+        print(request.user.email)
     return redirect(to='carsharing_req:index')
+
+def set_session(request):
+    data = CarsharUserModel.objects.get(email=request.user.email)
+    print(data.id)
+    params = {
+        'data': data,
+    }
+    return render(request, 'carsharing_req/set_session.html', params)
 
 
 class CarsharUser(TemplateView):
@@ -76,9 +83,19 @@ class CreateView(TemplateView):
         gender = 'gender' in request.POST
         age = request.POST['age']
         birthday = request.POST['birthday']
-        record = CarsharUserModel(email = email,name = name, gender = gender, age = age, birthday = birthday)
+        zip01 = request.POST['zip01']
+        pref01 = request.POST['pref01']
+        addr01 = request.POST['addr01']
+        addr02 = request.POST['addr02']
+        record = CarsharUserModel(email = email,name = name, gender = gender, age = age, birthday = birthday, zip01 = zip01, pref01 = pref01, addr01 = addr01, addr02 = addr02)
         record.save()
         return redirect(to='carsharing_req:index')
         
     def get(self, request):
+        querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
+        if querySet.first() is None:
+            print('no data')
+        else:
+            print('data　exist')
+            return redirect(to='carsharing_req:index')
         return render(request, 'carsharing_req/create.html', self.params)
