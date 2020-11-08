@@ -1,0 +1,63 @@
+<div id="map_canvas" style="width:100%; height:500px;">
+</div>
+ 
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap"></script>
+<script type="text/javascript">
+<!--
+  var map;
+  var marker = [];
+  var infoWindow = [];
+  // マーカーに設定するタイトル・緯度・経度・内容
+  var markerData = [ {
+      title: '壱発ラーメン',
+      lat: 35.567675,
+      lng: 139.361022,
+      content: '壱発ラーメン 相模原店<br><img src="./ippatsu.png" width="200"><br><a href="http://ippatsu.co.jp/" target="_blank">公式サイトはコチラ！</a>'
+    }, {
+      title: 'とんこつらーめん七志',
+      lat: 35.568550,
+      lng: 139.361146,
+      content: 'とんこつらーめん七志 相模原横山台店<br><img src="./nanashi.png" width="200"><br><a href="http://www.nanashi-food.com/" target="_blank">公式サイトはコチラ！</a>'
+    } ];
+   
+ // 地図の作成
+  function initMap() {
+    // 緯度経度のデータ作成
+    var mapLatLng = new google.maps.LatLng({lat: 35.568199, lng: 139.361119});
+    // 地図の基本設定
+    map = new google.maps.Map(document.getElementById('map_canvas'), {
+      center: mapLatLng, // 地図の中心座標を指定
+      zoom: 18, // 地図のデフォルトのズーム指定
+      mapTypeId: google.maps.MapTypeId.ROADMAP // マップの表示種別選択 (ROADMAP・SATELLITE・TERRAIN・HYBRIDから選択)
+    });
+    
+    // マーカー毎の処理
+    for (var i = 0; i < markerData.length; i++) {
+      // 緯度経度のデータを作成
+      markerLatLng = new google.maps.LatLng({lat: markerData[i]['lat'], lng: markerData[i]['lng']});
+      marker[i] = new google.maps.Marker({
+        position: markerLatLng, // マーカーを立てる位置を指定
+        map: map, // マーカーを立てる地図を指定
+        title: markerData[i]['title'] // ツールヒント
+      });
+      
+      // 吹き出しの設定
+      infoWindow[i] = new google.maps.InfoWindow({
+        // 吹き出しに表示する内容を設定する
+        content: markerData[i]['content']
+      });
+      
+      // マーカーにクリックイベントを追加
+      markerEvent(i);
+    }
+  }
+   
+  // マーカーにクリックイベントを追加
+  function markerEvent(i) {
+      marker[i].addListener('click', function() {
+        // 吹き出しの表示
+        infoWindow[i].open(map, marker[i]);
+    });
+  }
+//--?>
+</script>
