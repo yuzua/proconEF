@@ -27,14 +27,14 @@ class CreateView(TemplateView):
         return render(request, 'owners_req/create.html', self.params)
     def post(self, request):
         dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
+        #user_id = request.session['user_id']
         pay = request.POST['pay']
         day = dt_now
         bank_name = request.POST['bank_name']
         bank_code = request.POST['bank_code']
         bank_account_number = request.POST['bank_account_number']
         QR_id = request.POST['QR_id']
-        record = HostUserModel(user_id = user_id, pay = pay, day = day, \
+        record = HostUserModel(pay = pay, day = day, \
             bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
@@ -78,24 +78,53 @@ class PostCreate(TemplateView):
         self.params = {
             'parentcategory_list': list(ParentCategory.objects.all()),
             'category_set': list(Category.objects.all().values()),
-            'title': 'Owner Create',
+            'title': '車情報登録',
             'form': PostCreateForm(),
         }
 
     def post(self, request):
-        obj = Post()
-        owners = PostCreateForm(request.POST, instance=obj)
-        owners.save()
-        return redirect(to='carsharing_req:createCar')
+        obj1 = Post()
+        form = PostCreateForm(request.POST, instance=obj1)
+        #owners.save()
+        self.params['form'] = form
+        if (form.is_valid()):
+            form.save()
+            return redirect(to='owners_req:index')
+        else:
+            self.params['message'] = '入力データに問題があります'
+        return render(request, 'owners_req/PostCreate.html', self.params)
         
     def get(self, request):
         print(self.params['parentcategory_list'])
         print(self.params['category_set'])
-        return render(request, 'owners_req/createCar.html', self.params)
+        return render(request, 'owners_req/PostCreate.html', self.params)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
         return context
 
+def editCar(request, num1):
+    obj1 = Post.objects.get(id=num1)
+    if (request.method == 'POST'):
+        owners2 = PostCreateForm(request.POST, instance=obj1)
+        owners2.save()
+        return redirect(to='/owners_req')
+    params = {
+        'title': '車情報変更',
+        'id': num1,
+        'form': PostCreateForm(instance=obj1),
+    }
+    return render(request, 'owners_req/editCar.html', params)
 
+def deleteCar(request, num1):
+    owners_req = Post.objects.get(id=num1)
+    if (request.method == 'POST'):
+        owners_req.delete()
+        return redirect(to='/owners_req')
+    params = {
+        'title': '車情報削除',
+        'id': num1,
+        'data': owners_req,
+    }
+    return render(request, 'owners_req/deleteCar.html', params)
