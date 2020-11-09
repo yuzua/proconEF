@@ -1,7 +1,8 @@
 import re
 from django.db import models
 from datetime import date
-from django.core.validators import ValidationError
+from django.core.validators import ValidationError, MinValueValidator, MaxValueValidator
+
 
 def number_only(value):
         if(re.match(r'^[0-9]*$', value) == None):
@@ -24,9 +25,9 @@ class HostUserModel(models.Model):
     day = models.DateField() 
     pay = models.CharField(max_length=32) 
     bank_name = models.CharField(max_length=32, validators=[katakana_only])
-    bank_code = models.CharField(max_length=64, validators=[number_only])
-    bank_account_number = models.CharField(max_length=64, validators=[number_only])
-    QR_id = models.CharField(max_length=100, validators=[number_only])
+    bank_code = models.CharField(max_length=64, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
+    bank_account_number = models.CharField(max_length=64, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
+    QR_id = models.CharField(max_length=100, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
 
     def __str__(self):
          return '<カーシェアオーナー:id=' + str(self.user_id) + ',' + '(' + str(self.bank_name) + ')>'
@@ -63,17 +64,21 @@ class Category(models.Model):
 
 class Post(models.Model):
     
-
-    category = models.ForeignKey(Category, verbose_name='カテゴリ', default=0, on_delete=models.PROTECT)
-    license_plate = models.CharField(max_length=12,  verbose_name='ナンバープレート')    	
+    category = models.ForeignKey(Category, verbose_name='車種', default=0, on_delete=models.PROTECT)
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
+    license_plate = models.CharField(max_length=12,  verbose_name='ナンバープレート', validators=[number_only])    	
     #ParentCategory = models.CharField(max_length=32,  verbose_name='メーカー')
     model_id = models.CharField(max_length=128,  verbose_name='型番')
     custom = models.CharField(max_length=128,  verbose_name='カスタム')	
-    people = models.IntegerField(default=0,  verbose_name='乗車人数')
+    people = models.IntegerField(default=0,  verbose_name='乗車人数', validators=[MinValueValidator(0), MaxValueValidator(15)])
     day = models.DateField( verbose_name='登録日')
     tire = models.CharField(max_length=128,  verbose_name='タイヤ')
-    used_years = models.IntegerField(default=0,  verbose_name='使用年数')
+    used_years = models.IntegerField(default=0,  verbose_name='使用年数(年単位)', validators=[MinValueValidator(0), MaxValueValidator(15)])
     vehicle_inspection_day = models.DateField( verbose_name='次回車検予定日',)
+
+    def __str__(self):
+         return str(self.user_id) 
+
 
     
     
