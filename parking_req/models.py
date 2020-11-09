@@ -5,14 +5,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class ParkingUserModel(models.Model):
 
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     #carsharing_id = models.IntegerField(max_length=8)
     #parking_id = models.CharField(max_length=32)
     coordinate = models.CharField(max_length=64)
     day = models.DateField()
     parking_type = models.CharField(max_length=32)
-    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99999999)])
-    length = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
-    car_id = models.IntegerField(default=0)
+    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    length = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    height = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
     def __str__(self):
-        return '<carsharing_id=' + str(self.id) + '>'  
+        return '<parking_id=' + str(self.id) + '>'  

@@ -9,6 +9,10 @@ class CarsharUserModel(models.Model):
     gender = models.BooleanField()
     age = models.IntegerField(default=0)
     birthday = models.DateField()
+    zip01 = models.IntegerField()
+    pref01 = models.CharField(max_length=100)
+    addr01 = models.CharField(max_length=100)
+    addr02 = models.CharField(max_length=100)
     system_flag = models.IntegerField(default=0)
 
     
