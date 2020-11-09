@@ -35,13 +35,14 @@ class ParkingHostCreate(TemplateView):
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
-        coordinate = request.POST['coordinate']
+        lat = request.POST['lat']
+        lng = request.POST['lng']
         day = dt_now
         parking_type = request.POST['parking_type']
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
-        record = ParkingUserModel(user_id = user_id, coordinate = coordinate, day = day, \
+        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
             parking_type = parking_type, width = width, length = length, height = height)
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
@@ -52,12 +53,11 @@ class ParkingHostCreate(TemplateView):
             
         return render(request, 'parking_req/create.html', self.params)
 
-def edit(request, num):
-    obj = ParkingUserModel.objects.get(id=num)
+def edit(request):
+    obj = ParkingUserModel.objects.get(user_id=request.session['user_id'])
     params = {
         'title': 'ParkingEdit',
         'form': ParkingForm(instance=obj),
-        'id':num,
     }
     if (request.method == 'POST'):    
         parking = ParkingForm(request.POST, instance=obj)
@@ -69,15 +69,23 @@ def edit(request, num):
         
     return render(request, 'parking_req/edit.html', params)
 
-def delete(request, num):
-    parking = ParkingUserModel.objects.get(id=num)
+def delete(request):
+    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
     if (request.method == 'POST'):
         parking.delete()
         return redirect(to='/parking_req')
     params = {
         'title': 'ParkingDelete',
         'message': '※以下のレコードを削除します。',
-        'id': num,
         'obj': parking,
     }
     return render(request, 'parking_req/delete.html', params)
+
+def sample(request):
+    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
+    params = {
+        'title': '',
+        'message': '',
+        'obj': parking,
+    }
+    return render(request, 'parking_req/sample.html', params)    
