@@ -53,11 +53,12 @@ class ParkingHostCreate(TemplateView):
             
         return render(request, 'parking_req/create.html', self.params)
 
-def edit(request):
-    obj = ParkingUserModel.objects.get(user_id=request.session['user_id'])
+def edit(request, num):
+    obj = ParkingUserModel.objects.get(id=num)
     params = {
         'title': 'ParkingEdit',
         'form': ParkingForm(instance=obj),
+        'id':num,
     }
     if (request.method == 'POST'):    
         parking = ParkingForm(request.POST, instance=obj)
@@ -69,8 +70,8 @@ def edit(request):
         
     return render(request, 'parking_req/edit.html', params)
 
-def delete(request):
-    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
+def delete(request, num):
+    parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
         return redirect(to='/parking_req')
@@ -78,14 +79,15 @@ def delete(request):
         'title': 'ParkingDelete',
         'message': '※以下のレコードを削除します。',
         'obj': parking,
+        'id': num,
     }
     return render(request, 'parking_req/delete.html', params)
 
 def sample(request):
-    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
+    parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
     params = {
         'title': '',
         'message': '',
-        'obj': parking,
+        'data': parking,
     }
     return render(request, 'parking_req/sample.html', params)    
