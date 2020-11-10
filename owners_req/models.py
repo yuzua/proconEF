@@ -67,7 +67,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, verbose_name='車種', default=0, on_delete=models.PROTECT)
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     license_plate = models.CharField(max_length=12,  verbose_name='ナンバープレート', validators=[number_only])    	
-    #ParentCategory = models.CharField(max_length=32,  verbose_name='メーカー')
+    parent_category = models.CharField(max_length=32,  verbose_name='メーカー')
     model_id = models.CharField(max_length=128,  verbose_name='型番')
     custom = models.CharField(max_length=128,  verbose_name='カスタム')	
     people = models.IntegerField(default=0,  verbose_name='乗車人数', validators=[MinValueValidator(0), MaxValueValidator(15)])

@@ -68,7 +68,7 @@ def delete(request, num):
     params = {
         'title': 'カーシェアオーナー削除',
         'id': num,
-        'data': owners_req,
+        'obj': owners_req,
     }
     return render(request, 'owners_req/delete.html', params)
 
@@ -125,6 +125,6 @@ def deleteCar(request, num1):
     params = {
         'title': '車情報削除',
         'id': num1,
-        'data': owners_req,
+        'obj1': owners_req,
     }
     return render(request, 'owners_req/deleteCar.html', params)
