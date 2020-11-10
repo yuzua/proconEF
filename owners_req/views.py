@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
-from .models import HostUserModel
+from .models import HostUserModel, Post, ParentCategory, Category
 from .forms import HostUserForm
 from django.views.generic import TemplateView
 
 from django.views import generic
 from .forms import PostCreateForm
-
 import datetime
 # from .models import Post, ParentCategory, Category
 # Create your views here.
@@ -24,18 +23,23 @@ class CreateView(TemplateView):
         'form': HostUserForm(),
         }
     def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(request.user)
         return render(request, 'owners_req/create.html', self.params)
+
     def post(self, request):
         dt_now = datetime.datetime.now()
-        #user_id = request.session['user_id']
+        user_id = request.session['user_id']
         pay = request.POST['pay']
         day = dt_now
         bank_name = request.POST['bank_name']
         bank_code = request.POST['bank_code']
         bank_account_number = request.POST['bank_account_number']
         QR_id = request.POST['QR_id']
-        record = HostUserModel(pay = pay, day = day, \
-            bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
+        record = HostUserModel(user_id = user_id, pay = pay, day = day, bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
@@ -119,6 +123,7 @@ def editCar(request, num1):
 
 def deleteCar(request, num1):
     owners_req = Post.objects.get(id=num1)
+    owners_req2 = Category.objects.get(id=num1)
     if (request.method == 'POST'):
         owners_req.delete()
         return redirect(to='/owners_req')
@@ -126,5 +131,6 @@ def deleteCar(request, num1):
         'title': '車情報削除',
         'id': num1,
         'obj1': owners_req,
+        'obj2': owners_req2,
     }
     return render(request, 'owners_req/deleteCar.html', params)

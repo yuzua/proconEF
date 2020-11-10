@@ -24,18 +24,18 @@ class HostUserForm(forms.ModelForm):
     #     widget=forms.TextInput(attrs={'class':'form-control'}))
     class Meta:
         model = HostUserModel
-        fields = ['day', 'pay', 'bank_name', 'bank_code', \
+        fields = ['pay', 'bank_name', 'bank_code', \
              'bank_account_number', 'QR_id']
         widget = {
-            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
             'day': forms.DateInput(attrs={'class': 'form-control'}),
             'bank_name': forms.TextInput(attrs={'class': 'form-control'}),
             'bank_code': forms.NumberInput(attrs={'class': 'form-control'}),
             'bank_account_number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'QR_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'QR_id': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            #'user_id': 'ユーザID',
+            'user_id': 'ユーザID',
             'day': '登録日',
             'pay': '支払方法',
             'bank_name': '銀行名(カタカナ）',
