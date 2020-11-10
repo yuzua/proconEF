@@ -17,9 +17,9 @@
                 {% csrf_token %}
                 <table class="table">
                     {{ form.as_table }}
-                    {% for item in form %}
+                    <!-- {% for item in form %}
                         {{item.name}}{{item}}
-                    {% endfor %}
+                    {% endfor %} -->
                     <tr><th><td>
                         <input class="btn btn-primary my-2" type="submit" value="click">
                     </td></th></tr>
