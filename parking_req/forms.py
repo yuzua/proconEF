@@ -14,6 +14,34 @@ from.models import ParkingUserModel
 #     car_id = forms.IntegerField(label='車両ID')
 
 class ParkingForm(forms.ModelForm):
+
+    parkingtype_list = [
+        ('平面駐車場', '平面駐車場'),
+        ('立体駐車場', '立体駐車場'),
+    ]
+    parking_type = forms.ChoiceField(choices=parkingtype_list, label='駐車場タイプ')
+
     class Meta:
         model = ParkingUserModel
-        fields = ['coordinate','day','parking_type','width','length','height',]
+        fields = ['lat','lng','parking_type','width','length','height']
+        widget = {
+            'lat': forms.TextInput(attrs={'class': 'form-control'}),
+            'lng': forms.TextInput(attrs={'class': 'form-control'}),
+            'day': forms.DateInput(attrs={'class': 'form-control'}),
+            #'parking_type': forms.NumberInput(attrs={'class': 'form-control'}),
+            'width': forms.NumberInput(attrs={'class': 'form-control'}),
+            'length': forms.NumberInput(attrs={'class': 'form-control'}),
+            'height': forms.NumberInput(attrs={'class': 'form-control'}),
+            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'lat': '緯度',
+            'lng': '経度',
+            'day': '登録日',
+            #'parking_type': '駐車場タイプ',
+            'width': '横幅(m)',
+            'length': '奥行き(m)',
+            'height': '高さ(m)',
+            #'user_id': 'ユーザID',
+        }
+
