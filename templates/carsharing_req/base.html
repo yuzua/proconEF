@@ -1,17 +1,163 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-    <title>{{ title }}</title>
-</head>
-<body class="container">
-    <h1 class="display-4 text-primary">{{ title }}</h1>
-    <p class="h5 mt-4">{{ message|safe }}</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input class="btn btn-primary my-2" type="submit" value="click">
-    </form>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <title>ゲストトップ</title>
+    </head>
+    <body>
+        <!--ヘッダー-->
+        <header>
+            <div class="head_container">
+                <h1>ゲストトップ</h1>
+                <h2>ようこそ　<a href="#">ゲスト</a>さん</h2>
+            </div>
+        <nav class="global_navi">
+            <ul>
+                <li><a href="#"><span class="new">新規登録</span><span class="alr">ログイン</span></a></li>
+                <li><a href="#"><span class="mai">利用の流れ</span><span class="sub">(料金)</span></a></li>
+                <li><a href="#"><span>カーシェアリング<br>ステーション検索</span></a></li>
+                <li><a href="#"><span class="ppp"><p>駐車場検索</p></span></a></li>
+                <li><a href="#"><span class="old"><p>中古車検索</p></span></a></li>            
+            </ul>
+        </nav>
+        </header>
+        <!--/ヘッダー-->
+
+        <!--wrapper-->
+        <!--メイン-->
+        <main>
+        <section class="l">
+            <h3>▶︎お知らせ</h3>
+        <table>
+            <tr>
+                <th>'20.10.15　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'20.07.20　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'20.04.19　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'20.01.30　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'19.12.14　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'19.10.01　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'19.07.10　</th><td><a href="#">----------</a></td>
+            </tr>
+            <tr>
+                <th>'19.04.01　</th><td><a href="#">----------</a></td>
+            </tr>
+        </table>
+        </section>
+        <section class="r">
+            <h3>▶︎よくあるご質問</h3>
+        <table>
+            <tr>
+                <th><tr><td></td></tr></th>
+                <th><tr><td></td></tr></th>
+                <th><tr><td></td></tr></th>
+                <th><tr><td></td></tr></th>
+                <th><tr><td></td></tr></th>
+                <th><tr><td></td></tr></th>
+            </tr>
+        </table>
+        </section>
+        <section class="u">
+            <h3>▶︎お問い合わせ</h3>
+        <table>
+            <tr>
+                <th>〇〇支店<br>TEL<br><a href="#">XXXーXXXーXXXX</a></th>
+                <th>〇〇支店<br>TEL<br><a href="#">XXXーXXXーXXXX</a></th>
+                <th>〇〇支店<br>TEL<br><a href="#">XXXーXXXーXXXX</a></th>
+                <th>〇〇支店<br>TEL<br><a href="#">XXXーXXXーXXXX</a></th>
+            </tr>
+        </table>
+        </section>
+        </main>
+        <!--/メイン-->
+
+        <!--サイド-->
+        <aside id="sidebar">
+            <section id="side_banner">
+                <form id="entry">
+                    <dl>
+                        <dt>メールアドレス <span class="must"></span></dt>
+                        <dd><input type="email" name="email" id="email" required></dd>
+                        <br>
+                        <dt>パスワード <span class="must"></span></dt>
+                        <dd><input type="text" name="password" id="password"></dd>
+                    </dl>
+                    <ul>
+                        <li><a href="#">＞パスワードをお忘れの方</a></li>
+                        <li><a href="#">＞アカウントをお持ちでない方</a></li>
+                    </ul>
+                    <p id="submit button_cover">
+                        <input type="submit" id="submit button" value="ログイン">
+                    </p>
+                </form>
+            </section>
+            <section id="side_contact">
+                <figure>
+                    <img src="images/###">
+                </figure>
+                <h2>アプリインストール</h2>
+                <ul>
+                    <li><a href="#">＞Androidの方</a></li>
+                    <li><a href="#">＞iPhoneの方</a></li>
+                </ul>
+            </section>
+        </aside>
+        <!--/サイド-->
+        <!--/wrapper-->
+
+        <!--フッター-->
+        <footer>
+            <div class="footer_nav">
+                <div class="di1">
+                    <ul>
+                        <li><a href="#">・新規登録</a></li>
+                        <li><a href="#">・ログイン</a></li>
+                    </ul>
+                </div>
+                <div class="di2">
+                    <ul>
+                        <li><a href="#">・カーシェアリングの利用の流れ</a></li>
+                        <li><a href="#">・駐車場の利用の流れ</a></li>
+                        <li><a href="#">・料金について</a></li>
+                    </ul>
+                </div>
+                <div class="di3">
+                    <ul>
+                        <li><a href="#">・ステーション検索</a></li>
+                        <li><a href="#">・駐車場検索</a></li>
+                        <li><a href="#">・中古車検索</a></li>
+                    </ul>
+                </div>
+                <div class="di4">
+                    <ul>
+                        <li><a href="#">・お知らせ</a></li>
+                        <li><a href="#">・よくあるご質問</a></li>
+                        <li><a href="#">・お問い合わせ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <section class="kigyo">
+                <h3>株式会社▲▲▲</h3>
+            <ul>
+                <li>〒XXXーXXXX</li>
+                <li>東京都〇〇区ーーーーーーー</li>
+                <li>TEL　<a href="#">XXXーXXXーXXXX</a></li>
+                <li>FAX　<a href="#">XXXーXXXーXXXX</a></li>
+            </ul>
+            </section>
+        </footer>
+        <!--/フッター-->
+    </body>
 </html>
