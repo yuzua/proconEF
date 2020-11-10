@@ -18,13 +18,9 @@
     <tr><th>駐車場タイプ</th><td>{{obj.parking_type}}</td></tr>
     <tr><th>横幅</th><td>{{obj.width}}</td></tr>
     <tr><th>奥行き</th><td>{{obj.length}}</td></tr>
-    <tr><th>高さ</th><td>{{obj.height}}</td></tr>
-    <form action="{% url 'parking_req:delete' %}" method="post">
-        {% csrf_token %}
-        <tr><th></th><td>
-            <input type="submit" value="click" class="btn btn-primary mt-2">
-        </td></tr>    
-    </form>    
-    </table>
+    <tr><th>高さ</th><td>{{obj.height}}</td></tr>  
+</table>
+<a href="{% url 'parking_req:edit' %}">Edit</a>
+<a href="{% url 'parking_req:delete' %}">Delete</a>
 
 {% endblock %}

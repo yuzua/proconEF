@@ -47,7 +47,8 @@ class CarsharUser(TemplateView):
             print('ゲスト')
         else:
             print(request.user)
-        return render(request, 'carsharing_req/index.html', self.params)
+        # return render(request, 'carsharing_req/index.html', self.params)
+        return render(request, 'carsharing_req/top.html', self.params)
     
     def post(self, request):
         msg = 'Your name is <b>' + request.POST['name'] + \
