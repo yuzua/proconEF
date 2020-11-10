@@ -1,20 +1,26 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-    <title>{{ title }}</title>
-</head>
-<body class="container">
-    <h1 class="display-4 text-primary">{{ title }}</h1>
-    <table class="table">
+{% extends 'base.html' %}
+
+{% block active_login %}
+<title>{{ title }}</title>
+<h1>{{ title }}</h1>
+{% endblock %}
+
+{% block contents %}
+<p class="h5 mt-4">{{ message|safe }}</p>
+<table class="table">
+    <tr><th>ID</th><td>{{obj.user_id}}</td></tr>
+    <tr><th>登録日</th><td>{{obj.day}}</td></tr>
+    <tr><th>振込方法</th><td>{{obj.pay}}</td><tr>
+    <tr><th>銀行名</th><td>{{obj.bank_name}}</td></tr>
+    <tr><th>支店コード</th><td>{{obj.bank_code}}</td></tr>
+    <tr><th>口座番号</th><td>{{obj.bank_account_number}}</td></tr>
+    <tr><th>QR決済ID</th><td>{{obj.QR_id}}</td></tr>
     <form action="{% url 'owners_req:delete' id %}" method="post">
         {% csrf_token %}
-        {{ form.as_table }}
         <tr><th></th><td>
-            <input class="btn btn-primary my-2" type="submit" value="click">
-        </td></tr>
-    </form>
+            <input type="submit" value="削除" class="btn btn-primary mt-2">
+        </td></tr>    
+    </form>    
     </table>
-</body>
-</html>
+
+{% endblock %}

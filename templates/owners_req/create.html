@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block active_login %}
-<li class="breadcrumb-item active">{{ title }}</li>
+<title>{{ title }}</title>
+<h1>{{ title }}</h1>
 {% endblock %}
 
 {% block contents %}
@@ -9,27 +10,12 @@
 <form action="{% url 'owners_req:create' %}" method="post">
 
 	{% csrf_token %}
-	{{ form.as_table }}
-	<input class="btn btn-primary my-2" type="submit" value="click">
+	<table class="table">
+		{{ form.as_table }}
+			<tr><th><td>
+		<input class="btn btn-primary my-2" type="submit" value="click">
+			</td></th></tr>
+		</table>
 </form>
 
 {% endblock %}
-
-<!-- <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-    <title>{{ title }}</title>
-</head>
-<body class="container">
-    <h1 class="display-4 text-primary">{{ title }}</h1>
-    <p class="h5 mt-4">{{ message|safe }}</p>
-    <form action="{% url 'owners_req:create' %}" method="post">
-
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input class="btn btn-primary my-2" type="submit" value="click">
-    </form>
-</body>
-</html> -->
