@@ -20,10 +20,30 @@
     <tr><th>横幅</th><td>{{obj.width}}</td></tr>
     <tr><th>奥行き</th><td>{{obj.length}}</td></tr>
     <tr><th>高さ</th><td>{{obj.height}}</td></tr>
-    <tr><td><a href="{% url 'parking_req:edit' obj.user_id %}">Edit</a></td><td><a href="{% url 'parking_req:delete' obj.id %}">Delete</a></td></tr>  
+    {% comment %} <tr><td><a href="{% url 'parking_req:edit' obj.user_id %}">Edit</a></td><td><a href="{% url 'parking_req:delete' obj.id %}">Delete</a></td></tr>   {% endcomment %}
+    <tr>
+        <td>
+            <form action="{% url 'parking_req:sample' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input class="btn btn-primary my-2" type="submit" value="Edit">
+            </form>
+        </td>
+        <td>
+            {% comment %} <form action="{% url 'parking_req:sample' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input class="btn btn-primary my-2" type="submit" value="Delete">
+            </form> {% endcomment %}
+        </td>
+    </tr>
 </table>
 {% endfor %}
 {% comment %} <a href="{% url 'parking_req:edit' %}">Edit</a>
 <a href="{% url 'parking_req:delete' %}">Delete</a> {% endcomment %}
+{% comment %} <form action="{% url 'parking_req:edit' %}" method="post">
+    {{obj.user_id}}
+    <input class="btn btn-primary my-2" type="submit" value="Edit">
+</form> {% endcomment %}
 
 {% endblock %}
