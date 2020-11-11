@@ -27,23 +27,35 @@
       </ul>
     </div>
     {% endif %}
-
     <div>
-      <strong>Menu:</strong>
-      <ul>
+      <!-- <strong>Menu:</strong> -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
+        <ul class="navbar-nav mr-auto">
+        <p class="navbar-brand">Menu</p>     
         {% if user.is_authenticated %}
-        <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
-        <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+        <a class="navbar-brand" href="{% url 'account_email' %}">Change E-mail</a>
+        <a class="navbar-brand" href="{% url 'account_logout' %}">Sign Out</a>
         {% else %}
-        <li><a href="{% url 'account_login' %}">Sign In</a></li>
-        <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_login' %}"> ログイン</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_signup' %}">新規登録</a>
+        </li>
         {% endif %}
-      </ul>
+        </ul>
+    </nav>
     </div>
+    <!-- 河西 -->
+    <div class="container">
+    <!-- 河西 -->
     {% block content %}
     {% endblock %}
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
+    <!-- 河西 -->
+    </div>
+    <!-- 河西 -->
   </body>
 </html>
