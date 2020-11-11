@@ -19,7 +19,7 @@
     <tr><th>横幅</th><td>{{obj.width}}</td></tr>
     <tr><th>奥行き</th><td>{{obj.length}}</td></tr>
     <tr><th>高さ</th><td>{{obj.height}}</td></tr>
-    <form action="{% url 'parking_req:delete' %}" method="post">
+    <form action="{% url 'parking_req:delete' id %}" method="post">
         {% csrf_token %}
         <tr><th></th><td>
             <input type="submit" value="click" class="btn btn-primary mt-2">
