@@ -24,10 +24,10 @@ class HostUserForm(forms.ModelForm):
     #     widget=forms.TextInput(attrs={'class':'form-control'}))
     class Meta:
         model = HostUserModel
-        fields = ['pay', 'bank_name', 'bank_code', \
+        fields = ['day', 'pay', 'bank_name', 'bank_code', \
              'bank_account_number', 'QR_id']
         widget = {
-            'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
             'day': forms.DateInput(attrs={'class': 'form-control'}),
             'bank_name': forms.TextInput(attrs={'class': 'form-control'}),
             'bank_code': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -35,7 +35,7 @@ class HostUserForm(forms.ModelForm):
             'QR_id': forms.TextInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'user_id': 'ユーザID',
+            #'user_id': 'ユーザID',
             'day': '登録日',
             'pay': '支払方法',
             'bank_name': '銀行名(カタカナ）',
@@ -106,6 +106,7 @@ class PostCreateForm(forms.ModelForm):
         #     'vehicle_inspection_day': forms.DateInput(attrs={'class': 'form-control'}),
         # }
         labels = {
+            'use_id': 'ユーザID',
             'license_plate': 'ナンバープレート',
             'model_id': '型番',
             'custom': 'カスタム',

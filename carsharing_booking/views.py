@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from carsharing_req .models import CarsharUserModel
 # Create your views here.
 
 
@@ -21,9 +22,12 @@ def test_ajax_response(request):
     return HttpResponse(hoge)
 
 def map(request):
+    data = CarsharUserModel.objects.get(id=request.session['user_id'])
+    print(data.pref01+data.addr01+data.addr02)
+    add = data.pref01+data.addr01+data.addr02
     params = {
-        'name': '大原簿記法律専門学校',
-        'add': '〒277-0842 千葉県柏市末広町１０−１',
+        'name': '自宅',
+        'add': add,
     }
     if (request.method == 'POST'):
         params['add'] = request.POST['add']

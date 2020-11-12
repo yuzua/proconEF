@@ -1,3 +1,13 @@
+# 11/12 やること！
+settings.pyの一番下に以下を追記。
+```bash
+#アラートメッセージ
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert alert-success',
+    messages.ERROR: 'alert alert-danger',
+}
+```
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
@@ -83,6 +93,7 @@ __*owners_req(カーシェアオーナー申請)*__
 6. 変更コントローラ（登録と同様に）[views.py]
 7. 削除コントローラ（登録と同様に）[views.py]
 8. HTMLのコンポーネント化[base.html]の継承
+9. デザイン変更
 
 
 __*parking_req(駐車場オーナー申請)*__
@@ -95,6 +106,7 @@ __*parking_req(駐車場オーナー申請)*__
 6. 変更コントローラ（登録と同様に）[views.py]
 7. 削除コントローラ（登録と同様に）[views.py]
 8. HTMLのコンポーネント化[base.html]の継承
+9. デザイン変更
 
 
 __*secondhandcar(中古車提案)*__

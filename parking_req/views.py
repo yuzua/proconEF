@@ -35,13 +35,14 @@ class ParkingHostCreate(TemplateView):
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
-        coordinate = request.POST['coordinate']
+        lat = request.POST['lat']
+        lng = request.POST['lng']
         day = dt_now
         parking_type = request.POST['parking_type']
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
-        record = ParkingUserModel(user_id = user_id, coordinate = coordinate, day = day, \
+        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
             parking_type = parking_type, width = width, length = length, height = height)
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
@@ -52,14 +53,19 @@ class ParkingHostCreate(TemplateView):
             
         return render(request, 'parking_req/create.html', self.params)
 
-def edit(request, num):
-    obj = ParkingUserModel.objects.get(id=num)
-    params = {
-        'title': 'ParkingEdit',
-        'form': ParkingForm(instance=obj),
-        'id':num,
-    }
-    if (request.method == 'POST'):    
+def edit(request):
+    # num = request.POST['message']
+    # obj = ParkingUserModel.objects.filter(id=num).all()
+    # params = {
+    #     'title': 'ParkingEdit',
+    #     'data': obj,
+    #     'message':num,
+    #     'form': ParkingForm(instance=obj),
+    # }
+    # return render(request, 'parking_req/edit.html', params)
+    if (request.method == 'POST'):
+        num = request.POST['p_id']
+        obj = ParkingUserModel.objects.get(id=num)
         parking = ParkingForm(request.POST, instance=obj)
         if (parking.is_valid()):
             parking.save()
@@ -67,7 +73,7 @@ def edit(request, num):
         else:
             params['form'] = ParkingForm(request.POST, instance= obj)        
         
-    return render(request, 'parking_req/edit.html', params)
+    return render(request, 'parking_req/edit.html', params,)
 
 def delete(request, num):
     parking = ParkingUserModel.objects.get(id=num)
@@ -77,7 +83,27 @@ def delete(request, num):
     params = {
         'title': 'ParkingDelete',
         'message': '※以下のレコードを削除します。',
-        'id': num,
         'obj': parking,
+        'id': num,
     }
     return render(request, 'parking_req/delete.html', params)
+
+def sample(request):
+    parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
+    if (request.method == 'POST'):
+        num = request.POST['obj.id']
+        obj = ParkingUserModel.objects.get(id=num)
+        params = {
+        'title': 'ParkingEdit',
+        'data': obj,
+        'id':num,
+        'form': ParkingForm(instance=obj),
+        }
+        return render(request, 'parking_req/edit.html', params)
+    else:
+        params = {
+            'title': 'ParkingSample',
+            'message': '',
+            'data': parking, 
+        }
+        return render(request, 'parking_req/sample.html', params)    
