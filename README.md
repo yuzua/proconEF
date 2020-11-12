@@ -1,3 +1,13 @@
+# 11/12 やること！
+settings.pyの一番下に以下を追記。
+```bash
+#アラートメッセージ
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert alert-success',
+    messages.ERROR: 'alert alert-danger',
+}
+```
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
