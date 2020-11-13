@@ -27,15 +27,15 @@ class HostUserForm(forms.ModelForm):
         fields = ['pay', 'bank_name', 'bank_code', \
              'bank_account_number', 'QR_id']
         widget = {
-            'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
             'day': forms.DateInput(attrs={'class': 'form-control'}),
             'bank_name': forms.TextInput(attrs={'class': 'form-control'}),
             'bank_code': forms.NumberInput(attrs={'class': 'form-control'}),
-            'bank_account_number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'QR_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bank_account_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'QR_id': forms.TextInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'user_id': 'ユーザID',
+            #'user_id': 'ユーザID',
             'day': '登録日',
             'pay': '支払方法',
             'bank_name': '銀行名(カタカナ）',
@@ -73,7 +73,7 @@ class HostUserForm(forms.ModelForm):
         
         
 
-class PostCreateForm(forms.ModelForm):
+class CarInfoForm(forms.ModelForm):
     # 親カテゴリの選択欄がないと絞り込めないので、定義する。
     parent_category = forms.ModelChoiceField(
         label='メーカー',
@@ -82,11 +82,13 @@ class PostCreateForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Post
-        fields = '__all__'
+        model = CarInfoModel
+        fields = ['parent_category', 'category', 'license_plate', 'model_id', 'custom', 'people', \
+         'tire', 'used_years', 'vehicle_inspection_day']
+        #fields = '__all__'
 
     field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'custom', 'people', \
-         'day', 'tire', 'used_years', 'vehicle_inspection_day')
+         'tire', 'used_years', 'vehicle_inspection_day')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,7 +108,7 @@ class PostCreateForm(forms.ModelForm):
         #     'vehicle_inspection_day': forms.DateInput(attrs={'class': 'form-control'}),
         # }
         labels = {
-            'use_id': 'ユーザID',
+            #'user_id': 'ユーザID',
             'license_plate': 'ナンバープレート',
             'model_id': '型番',
             'custom': 'カスタム',

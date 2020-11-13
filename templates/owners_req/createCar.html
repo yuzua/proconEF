@@ -19,7 +19,7 @@
                     {% for category in parent.category_set.all %}
                         {
                             'pk': '{{ category.pk }}',
-                            'name': '{{ category.name }}'
+                            'name': '{{ category.category }}'
                         },
                     {% endfor %}
                 ],
