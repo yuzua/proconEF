@@ -67,43 +67,61 @@ def edit(request):
         num = request.POST['p_id']
         obj = ParkingUserModel.objects.get(id=num)
         parking = ParkingForm(request.POST, instance=obj)
+        params = {
+            'title':'ParkingEdittest', 
+            'form': ParkingForm(),
+            'id':num,
+        }
         if (parking.is_valid()):
             parking.save()
             return redirect(to='/parking_req')
         else:
             params['form'] = ParkingForm(request.POST, instance= obj)        
         
-    return render(request, 'parking_req/edit.html', params,)
+    return render(request, 'parking_req/edit.html', params)
 
 def delete(request, num):
     parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
         return redirect(to='/parking_req')
-    params = {
-        'title': 'ParkingDelete',
-        'message': '※以下のレコードを削除します。',
-        'obj': parking,
-        'id': num,
-    }
-    return render(request, 'parking_req/delete.html', params)
+    # params = {
+    #     'title': 'ParkingDelete',
+    #     'message': '※以下のレコードを削除します。',
+    #     'obj': parking,
+    #     'id': num,
+    # }
+    return render(request, 'parking_req/delete.html')
 
 def sample(request):
-    parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
+    sample_parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
     if (request.method == 'POST'):
         num = request.POST['obj.id']
-        obj = ParkingUserModel.objects.get(id=num)
-        params = {
-        'title': 'ParkingEdit',
-        'data': obj,
-        'id':num,
-        'form': ParkingForm(instance=obj),
-        }
-        return render(request, 'parking_req/edit.html', params)
+        num1 = request.POST['command']
+        #edit
+        if (num1 == 'edit'):
+            obj = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingEdit',
+            'id':num,
+            'form': ParkingForm(instance=obj), 
+            }
+            return render(request, 'parking_req/edit.html', params)
+        #delete    
+        if (num1 == 'delete'):
+            delete_parking = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingDelete',
+            'message': '※以下のレコードを削除します。',
+            'obj': delete_parking,
+            'id': num,
+            }
+            return render(request, 'parking_req/delete.html', params)
     else:
+        #sample
         params = {
             'title': 'ParkingSample',
-            'message': '',
-            'data': parking, 
+            'message': '駐車場登録データ',
+            'data': sample_parking, 
         }
         return render(request, 'parking_req/sample.html', params)    
