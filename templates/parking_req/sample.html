@@ -26,15 +26,17 @@
             <form action="{% url 'parking_req:sample' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input type="hidden" name="command" value="edit">
                 <input class="btn btn-primary my-2" type="submit" value="Edit">
             </form>
         </td>
         <td>
-            {% comment %} <form action="{% url 'parking_req:sample' %}" method="post">
+            <form action="{% url 'parking_req:sample' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input type="hidden" name="command" value="delete">
                 <input class="btn btn-primary my-2" type="submit" value="Delete">
-            </form> {% endcomment %}
+            </form>
         </td>
     </tr>
 </table>
