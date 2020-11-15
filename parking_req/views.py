@@ -11,9 +11,19 @@ import datetime
 
 def index(request):
     params = {
-        'apikey': 'AIzaSyAmulNAl7XvDORhZ8f5HGJPm1uwJEHOqDg',
+        'hoge': '',
     }
     return render(request, 'parking_req/map1.html', params)
+
+
+def test_ajax_response(request):
+    input_lat = request.POST.getlist("name_input_lat")
+    input_lng = request.POST.getlist("name_input_lng")
+    hoge = "lat: "  + input_lat[0] + "lng: " + input_lng[0] + "がセットされました"
+    request.session['user_lat'] = input_lat[0]
+    request.session['user_lng'] = input_lng[0]
+
+    return HttpResponse(hoge)
 
 class ParkingHostCreate(TemplateView):
     def __init__(self):
@@ -29,6 +39,9 @@ class ParkingHostCreate(TemplateView):
             return redirect(to='/carsharing_req/index')
         else:
             print(request.user)
+            print(request.session['user_lat'])
+            print(request.session['user_lng'])
+
         return render(request, 'parking_req/create.html', self.params)
 
 
