@@ -1,0 +1,32 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+</head>
+<body>
+<canvas id="chart-area"></canvas>
+<canvas id="myChart"></canvas>
+
+<script>
+const data = JSON.parse('{{ data_json|safe }}');
+var Data = data;
+console.log(Data);
+console.log(Object.keys(Data));
+var days = Object.keys(Data);
+console.log(Object.values(Data));
+var prices = Object.values(Data);
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: days,
+    datasets: [{
+      label: 'プリウス(トヨタ)',
+      data: prices,
+      backgroundColor: "rgba(255,153,0,0.4)"
+    }]
+  }
+});
+
+</script>
+</body>
+</html>
