@@ -23,30 +23,32 @@
     <tr><th>タイヤ</th><td>{{obj.tire}}</td></tr>
     <tr><th>使用年数(年単位)</th><td>{{obj.used_years}}</td></tr>
     <tr><th>次回車検予定日</th><td>{{obj.vehicle_inspection_day}}</td></tr>
-    {% comment %} <tr><td><a href="{% url 'owners_req:editCar' obj.user_id %}">変更</a></td><td><a href="{% url 'parking_req:deleteCar' obj.id %}">削除</a></td></tr>   {% endcomment %}
+    {% comment %} <tr><td><a href="{% url 'owners_req:editCar' obj.user_id %}">Edit</a></td><td><a href="{% url 'parking_req:delete' obj.id %}">Delete</a></td></tr>   {% endcomment %}
     <tr>
         <td>
             <form action="{% url 'owners_req:carlist' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="obj.id" value="{{obj.id}}">
-                <input class="btn btn-primary my-2" type="submit" value="変更">
+                <input type="hidden" name="command" value="editCar">
+                <input class="btn btn-primary my-2" type="submit" value="Edit">
             </form>
         </td>
         <td>
-            {% comment %} <form action="{% url 'owners_req:carlist' %}" method="post">
+            <form action="{% url 'owners_req:carlist' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="obj.id" value="{{obj.id}}">
-                <input class="btn btn-primary my-2" type="submit" value="削除">
-            </form> {% endcomment %}
+                <input type="hidden" name="command" value="deleteCar">
+                <input class="btn btn-primary my-2" type="submit" value="Delete">
+            </form>
         </td>
     </tr>
 </table>
 {% endfor %}
-{% comment %} <a href="{% url 'owners_req:edit' %}">車情報変更</a>
-<a href="{% url 'owners_req' %}">車情報削除</a> {% endcomment %}
-{% comment %} <form action="{% url 'owners_req:edit' %}" method="post">
+{% comment %} <a href="{% url 'owners_req:editCar' %}">車情報変更</a>
+<a href="{% url 'owners_req:deleteCar' %}">車情報削除</a> {% endcomment %}
+{% comment %} <form action="{% url 'owners_req:editCar' %}" method="post">
     {{obj.user_id}}
-    <input class="btn btn-primary my-2" type="submit" value="変更">
+    <input class="btn btn-primary my-2" type="submit" value="Edit">
 </form> {% endcomment %}
-
 {% endblock %}
+
