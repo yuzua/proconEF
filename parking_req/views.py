@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django .shortcuts import redirect
+from carsharing_req .models import CarsharUserModel
 from .models import ParkingUserModel
 from .forms import ParkingForm
 import datetime
+import json
 
 # Create your views here.
 
@@ -48,8 +50,8 @@ class ParkingHostCreate(TemplateView):
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
-        lat = request.POST['lat']
-        lng = request.POST['lng']
+        lat = request.session['user_lat']
+        lng = request.session['user_lng']
         day = dt_now
         parking_type = request.POST['parking_type']
         width = request.POST['width']
@@ -62,6 +64,8 @@ class ParkingHostCreate(TemplateView):
         self.params['form'] = parking
         if (parking.is_valid()):
             record.save()
+            del request.session['user_lat']
+            del request.session['user_lng']
             return redirect(to='/parking_req')
             
         return render(request, 'parking_req/create.html', self.params)
@@ -107,7 +111,8 @@ def delete(request, num):
     return render(request, 'parking_req/delete.html')
 
 def sample(request):
-    sample_parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
+    s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
+    sample_parking = s_p.values("id", "user_id", "lat", "lng")
     if (request.method == 'POST'):
         num = request.POST['obj.id']
         num1 = request.POST['command']
@@ -131,10 +136,21 @@ def sample(request):
             }
             return render(request, 'parking_req/delete.html', params)
     else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
         #sample
+        markerData = list(sample_parking.all())
+        data = {
+            'markerData': markerData,
+        }
         params = {
             'title': 'ParkingSample',
             'message': '駐車場登録データ',
-            'data': sample_parking, 
+            'data': sample_parking,
+            'name': '自宅',
+            'add': add,
+            'data_json': json.dumps(data)
         }
-        return render(request, 'parking_req/sample.html', params)    
+        # return render(request, 'parking_req/sample.html', params)
+        return render(request, 'parking_req/map3.html', params)
