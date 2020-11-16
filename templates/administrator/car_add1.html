@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>管理者画面</title>
+  </head>
+  <body>
+    <h1 class="h3 pl-2">管理者画面</h1>
+    <h2 class="h4 text-center">車追加</h2>
+    <div class="card card-body p-1 border-dark mx-auto" style="width: 40rem;">
+        <ul class="h5">
+            <li>ナンバープレート（数字のみ）</li>
+            <input style="width:145px;" type="text">
+            <li>メーカー</li>
+            <div class="col-4 pr-5">
+                <select class="custom-select">
+                  <option selected>選択</option>
+                  <option>スバル</option>
+                  <option>スズキ</option>
+                  <option>ダイハツ</option>
+                  <option>トヨタ</option>
+                  <option>日産</option>
+                  <option>三菱</option>
+                  <option>ホンダ</option>
+                  <option>レクサス</option>
+                </select>
+            </div>
+            <li>車種</li>
+            <div class="col-4 pr-5">
+                <select class="custom-select">
+                  <option selected>選択</option>
+                  <option>セレナ</option>
+                  <option>タント</option>
+                  <option>ワゴンR</option>
+                  <option>クラウン</option>
+                  <option>アルファード</option>
+                  <option>ハスラー</option>
+                  <option>ノア</option>
+                  <option>プリウス</option>
+                </select>
+            </div>
+            <li>乗車人数</li>
+            <input style="width:145px;" type="number">
+            <li>ガソリンの種類</li>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="radio1" id="radio1a" checked>
+                <label class="form-check-label" for="radio1a">レギュラー</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="radio1" id="radio1b">
+                <label class="form-check-label" for="radio1b">ハイオク</label>
+              </div>
+            <li>タイヤ</li>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="radio2" id="radio1a" checked>
+                <label class="form-check-label" for="radio1a">通常</label>
+              </div>　　　
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="radio2" id="radio2b">
+                <label class="form-check-label" for="radio2b">スタットレス</label>
+              </div>              
+            <li>使用年数</li>
+            <input style="width:145px;" type="number">
+            <li>次回車検予定日</li>
+            <input style="width:80px;" type="text">年
+            <input style="width:40px;" type="number">月
+            <input style="width:40px;" type="number">日
+            <div class="text-right pr-5">
+                <input type="submit" value="追加" class="btn btn-outline-secondary rounded-0">
+            </div>
+        </ul>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
