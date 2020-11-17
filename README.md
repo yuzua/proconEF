@@ -9,6 +9,14 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert alert-danger',
 }
 ```
+
+```bash
+INSTALLED_APPS = [
+
+
+'administrator.apps.AdministratorConfig',
+
+```
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 
 # info
