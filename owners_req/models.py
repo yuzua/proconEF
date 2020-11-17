@@ -67,6 +67,29 @@ class CarInfoModel(models.Model):
     def __str__(self):
          return '<車両ID:id' + str(self.id) + '>'  
 
+class ParkingUserModel(models.Model):
+
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
+    #carsharing_id = models.IntegerField(max_length=8)
+    #parking_id = models.CharField(max_length=32)
+    lat = models.CharField(default=0, verbose_name='緯度', max_length=32)
+    lng = models.CharField(default=0, verbose_name='経度', max_length=32)
+    day = models.DateField()
+    parking_type = models.CharField(max_length=32)
+    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    length = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    height = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    def __str__(self):
+        return '<駐車場ID：' + str(self.id) + '>'  
+
+
+class CarInfoParkingModel(models.Model):
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
+    car_id = models.ForeignKey(CarInfoModel,verbose_name='車両ID', on_delete=models.CASCADE)
+    parking_id =  models.ForeignKey(ParkingUserModel,verbose_name='駐車場ID', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.user_id + self.car_id + self.parking_id
+
 
     
     
