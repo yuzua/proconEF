@@ -9,7 +9,6 @@ from django.views import generic
 from .forms import CarInfoForm
 import datetime
 # from .models import Post, ParentCategory, Category
-# Create your views here.
 
 
 def index(request):
@@ -21,14 +20,22 @@ class CreateView(TemplateView):
         'title': 'カーシェアリングオーナー申請',
         'message': '',
         'form': HostUserForm(),
+        'data': '',
         }
     def get(self, request):
+        owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
-            return redirect(to='/carsharing_req/index')
+            return redirect(to='/carsharing_req/index') 
         else:
-            print(request.user)
-        return render(request, 'owners_req/create.html', self.params)
+            if owner_list.first() is None:
+                return render(request, 'owners_req/create.html', self.params)
+                print(request.user)
+        self.params['title'] = 'オーナー情報確認'
+        self.params['message'] = 'オーナー情報'
+        self.params['data'] = owner_list
+        return render(request, 'owners_req/ownerslist.html', self.params)
+
 
     def post(self, request):
         dt_now = datetime.datetime.now()
@@ -39,7 +46,8 @@ class CreateView(TemplateView):
         bank_code = request.POST['bank_code']
         bank_account_number = request.POST['bank_account_number']
         QR_id = request.POST['QR_id']
-        record = HostUserModel(user_id = user_id, pay = pay, day = day, bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
+        record = HostUserModel(user_id = user_id, pay = pay, day = day, \
+            bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
@@ -52,65 +60,65 @@ class CreateView(TemplateView):
 
     
 def edit(request):
-    params = {
-         'title': 'カーシェアオーナー情報変更',
-         'id': user_id,
-         'message':'',
-         'form': HostUserForm(instance=obj),
-     
-    }
-    if (request.method == 'POST'):
+     if (request.method == 'POST'):
         num = request.POST['p_id']
-        obj = CarInfoModel.objects.get(id=num)
-        form = CarInfoForm(request.POST, instance=obj)
-        if (form.is_valid()):
-            form.save()
-            return redirect(to='/parking_req')
+        obj = HostUserModel.objects.get(id=num)
+        form1 = HostUserForm(request.POST, instance=obj)
+        params = {
+            'title':'オーナー情報変更', 
+            'form': HostUserForm(),
+            'message':'',
+            'id':num,
+        }
+        if (form1.is_valid()):
+            form1.save()
+            return redirect(to='/owners_req')
         else:
-            params['message'] = '入力データに問題があります'       
-    return render(request, 'owners_req/edit.html', params)
-    # obj = HostUserModel.objects.get(id=user_id)
-    # params = {
-    #     'title': 'カーシェアオーナー情報変更',
-    #     'id': user_id,
-    #     'message':'',
-    #     'form': HostUserForm(instance=obj),
-    # }
-    # if (request.method == 'POST'):
-    #     form = HostUserForm(request.POST, instance=obj)
-    #     params['form'] = form
-    #     if (form.is_valid()):
-    #         form.save()
-    #         return redirect(to='owners_req:index')
-    #     else:
-    #         params['message'] = '入力データに問題があります'
-    # return render(request, 'owners_req/edit.html', params)
-
-
-    # obj = HostUserModel.objects.get(id=num)
-    # if (request.method == 'POST'):
-    #     owners2 = HostUserForm(request.POST, instance=obj)
-    #     owners2.save()
-    #     return redirect(to='/owners_req')
-    # params = {
-    #     'title': 'カーシェアオーナー情報変更',
-    #     'id': num,
-    #     'form': HostUserForm(instance=obj),
-    # }
-    # return render(request, 'owners_req/edit.html', params)
-
+            params['message'] = '入力データに問題があります'   
+            params['form'] = HostUserForm(request.POST, instance= obj)        
+     return render(request, 'owners_req/edit.html', params)
+    
 def delete(request, num):
     owners_req = HostUserModel.objects.get(id=num)
     if (request.method == 'POST'):
+        # num = request.POST['p_id']
         owners_req.delete()
         return redirect(to='/owners_req')
-    params = {
-        'title': 'カーシェアオーナー削除',
-        'id': num,
-        'obj': owners_req,
-    }
-    return render(request, 'owners_req/delete.html', params)
+    return render(request, 'owners_req/delete.html')
 
+def ownerslist(request):
+    owner_list = HostUserModel.objects.filter(user_id=request.session['user_id']).all()
+    if (request.method == 'POST'):
+        num = request.POST['obj.id']
+        num1 = request.POST['command']
+        #edit
+        if (num1 == 'edit'):
+            obj = HostUserModel.objects.get(id=num)
+            params = {
+            'title':'オーナー情報変更', 
+            'form': HostUserForm(instance=obj),
+            'message':'',
+            'id':num,
+            }
+            return render(request, 'owners_req/edit.html', params)
+        #delete    
+        if (num1 == 'delete'):
+            delete_owners = HostUserModel.objects.get(id=num)
+            params = {
+            'title': 'オーナー情報削除',
+            'message': '※以下のレコードを削除します。',
+            'obj': delete_owners,
+            'id': num,
+            }
+            return render(request, 'owners_req/delete.html', params)
+    else:
+        #sample
+        params = {
+            'title': 'オーナー情報確認',
+            'message': 'オーナー情報',
+            'data': owner_list, 
+        }
+        return render(request, 'owners_req/ownerslist.html', params) 
 
 class CreateCarView(TemplateView):
     def __init__(self):
@@ -157,15 +165,6 @@ class CreateCarView(TemplateView):
             self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/createCar.html', self.params)
 
-        # obj1 = CarInfoModel()
-        # form = CarInfoForm(request.POST, instance=obj1)
-        # self.params['form'] = form
-        # if (form.is_valid()):
-        #     form.save()
-        #     return redirect(to='owners_req:index')
-        # else:
-        #     self.params['message'] = '入力データに問題があります'
-        # return render(request, 'owners_req/createCar.html', self.params)
         
     def get(self, request):
         
@@ -184,22 +183,27 @@ class CreateCarView(TemplateView):
         context['parentcategory_list'] = ParentCategory.objects.all()
         return context
 
-def editCar(request, num1):
-    obj1 = CarInfoModel.objects.get(id=num1)
+def editCar(request):
     if (request.method == 'POST'):
-        owners2 = CarInfoForm(request.POST, instance=obj1)
-        owners2.save()
-        return redirect(to='/owners_req')
-    params = {
-        'title': '車情報変更',
-        'id': num1,
-        'form': CarInfoForm(instance=obj1),
-    }
+        num = request.POST['p_id']
+        obj = CarInfoModel.objects.get(id=num)
+        form2 = CarInfoForm(request.POST, instance=obj)
+        params = {
+            'title':'車情報変更', 
+            'form': CarInfoForm(),
+            'message': '',
+            'id':num,
+        }
+        if (form2.is_valid()):
+            form2.save()
+            return redirect(to='/owners_req')
+        else:
+            params['message'] = '入力データに問題があります'
+            params['form'] = CarInfoForm(request.POST, instance= obj)        
     return render(request, 'owners_req/editCar.html', params)
 
 def deleteCar(request, num1):
     owners_req = CarInfoModel.objects.get(id=num1)
-    owners_req2 = Category.objects.get(id=num1)
     if (request.method == 'POST'):
         owners_req.delete()
         return redirect(to='/owners_req')
@@ -207,26 +211,42 @@ def deleteCar(request, num1):
         'title': '車情報削除',
         'id': num1,
         'obj1': owners_req,
-        'obj2': owners_req2,
     }
     return render(request, 'owners_req/deleteCar.html', params)
 
 def carlist(request):
-    car = CarInfoModel.objects.filter(user_id=request.session['user_id']).all()
+    car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).all()
     if (request.method == 'POST'):
         num = request.POST['obj.id']
-        obj = CarInfoModel.objects.get(id=num)
-        params = {
-        'title': '車情報変更',
-        'data': obj,
-        'id':num,
-        'form': CarInfoForm(instance=obj),
-        }
-        return render(request, 'owners_req/editCar.html', params)
-    else:
-        params = {
-            'title': '車両一覧表示',
+        num1 = request.POST['command']
+        #edit
+        if (num1 == 'editCar'):
+            obj = CarInfoModel.objects.get(id=num)
+            params = {
+            'title':'車情報変更', 
+            'form': CarInfoForm(instance=obj),
             'message': '',
-            'data': car
+            'id':num,
+            }
+            return render(request, 'owners_req/editCar.html', params)
+        #delete    
+        if (num1 == 'deleteCar'):
+            delete_car = CarInfoModel.objects.get(id=num)
+            params = {
+            'title': '車情報削除',
+            'message': '※以下のレコードを削除します。',
+            'obj1': delete_car,
+            'id': num,
+            }
+            return render(request, 'owners_req/deleteCar.html', params)
+    else:
+        #sample
+        params = {
+            'title': '車両情報一覧',
+            'message': '車両データ',
+            'data': car_list, 
         }
-        return render(request, 'owners_req/carlist.html', params) 
+        return render(request, 'owners_req/carlist.html', params)    
+
+
+   
