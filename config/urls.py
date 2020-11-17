@@ -24,4 +24,5 @@ urlpatterns = [
     path('secondhandcar/', include('secondhandcar.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('administrator/', include('administrator.urls')),
 ]
