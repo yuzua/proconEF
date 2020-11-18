@@ -64,7 +64,7 @@
     }
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&signed_in=true&callback=initMap" async defer></script>
-  <form name="name_form" action="/parking_req/ajax/" method="POST">
+  <form name="name_form" action="/administrator/ajax/" method="POST">
     <!-- <form name="name_form" action="/test_ajax_app/" method="POST"> -->
       {% csrf_token %}
       <input type="text" id="id_input_lat" name="name_input_lat" value="">
@@ -88,7 +88,7 @@
         .done( function(data) {
           alert(data);
           $("#id_div_ajax_response").text(data);
-          $("#id_div_ajax_response").html("<a href='create' class='btn btn-default'>create</a>");
+          $("#id_div_ajax_response").html("<a href='/administrator/create' class='btn btn-default'>create</a>");
         })
       });
     </script>
