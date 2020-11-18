@@ -66,7 +66,7 @@ class ParkingHostCreate(TemplateView):
             record.save()
             del request.session['user_lat']
             del request.session['user_lng']
-            return redirect(to='/parking_req')
+            return redirect(to='/parking_req/sample')
             
         return render(request, 'parking_req/create.html', self.params)
 
@@ -85,13 +85,13 @@ def edit(request):
         obj = ParkingUserModel.objects.get(id=num)
         parking = ParkingForm(request.POST, instance=obj)
         params = {
-            'title':'ParkingEdittest', 
+            'title':'ParkingEdit', 
             'form': ParkingForm(),
             'id':num,
         }
         if (parking.is_valid()):
             parking.save()
-            return redirect(to='/parking_req')
+            return redirect(to='/parking_req/sample')
         else:
             params['form'] = ParkingForm(request.POST, instance= obj)        
         
@@ -101,7 +101,7 @@ def delete(request, num):
     parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
-        return redirect(to='/parking_req')
+        return redirect(to='/parking_req/sample')
     # params = {
     #     'title': 'ParkingDelete',
     #     'message': '※以下のレコードを削除します。',

@@ -2,17 +2,35 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
 from .models import HostUserModel, CarInfoModel, ParentCategory, Category
+from carsharing_req .models import CarsharUserModel
 from .forms import HostUserForm
 from django.views.generic import TemplateView
 
 from django.views import generic
-from .forms import CarInfoForm
+from .forms import CarInfoForm, ParkingForm
 import datetime
-# from .models import Post, ParentCategory, Category
+import json
+
 
 
 def index(request):
     return HttpResponse("Hello, world. You're at the owners_req index.")
+
+def parkingplace(request):
+    params = {
+        'hoge': '',
+    }
+    return render(request, 'owners_req/parkingplace.html', params)
+
+def test_ajax_response(request):
+    input_lat = request.POST.getlist("name_input_lat")
+    input_lng = request.POST.getlist("name_input_lng")
+    hoge = "lat: "  + input_lat[0] + "lng: " + input_lng[0] + "がセットされました"
+    request.session['user_lat'] = input_lat[0]
+    request.session['user_lng'] = input_lng[0]
+
+    return HttpResponse(hoge)
+
 
 class CreateView(TemplateView):
     def __init__(self):
@@ -23,11 +41,11 @@ class CreateView(TemplateView):
         'data': '',
         }
     def get(self, request):
-        owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
             return redirect(to='/carsharing_req/index') 
         else:
+            owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
             if owner_list.first() is None:
                 return render(request, 'owners_req/create.html', self.params)
                 print(request.user)
@@ -160,15 +178,13 @@ class CreateCarView(TemplateView):
         self.params['form'] = form
         if (form.is_valid()):
             record.save()
-            return redirect(to='owners_req:index')
+            return redirect(to='owners_req:parkingplace')
         else:
             self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/createCar.html', self.params)
 
         
     def get(self, request):
-        
-        #return render(request, 'owners_req/createCar.html', self.params)
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
             return redirect(to='/carsharing_req/index')
@@ -247,6 +263,120 @@ def carlist(request):
             'data': car_list, 
         }
         return render(request, 'owners_req/carlist.html', params)    
+
+class ParkingHostCreate(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': 'ParkingHostCreate',
+            'message': 'Not found your data.<br>Please send your profile.',
+            'form': ParkingForm(),
+        }
+    
+    def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(request.user)
+            print(request.session['user_lat'])
+            print(request.session['user_lng'])
+
+        return render(request, 'owners_req/createParking.html', self.params)
+
+
+    def post(self, request):
+        dt_now = datetime.datetime.now()
+        user_id = request.session['user_id']
+        lat = request.session['user_lat']
+        lng = request.session['user_lng']
+        day = dt_now
+        parking_type = request.POST['parking_type']
+        width = request.POST['width']
+        length = request.POST['length']
+        height = request.POST['height']
+        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
+            parking_type = parking_type, width = width, length = length, height = height)
+        obj = ParkingUserModel()
+        parking = ParkingForm(request.POST, instance=obj)
+        self.params['form'] = parking
+        if (parking.is_valid()):
+            record.save()
+            del request.session['user_lat']
+            del request.session['user_lng']
+            return redirect(to='/owners_req')
+            
+        return render(request, 'owners_req/createParking.html', self.params)
+
+def editParking(request):
+    
+    if (request.method == 'POST'):
+        num = request.POST['p_id']
+        obj = ParkingUserModel.objects.get(id=num)
+        parking = ParkingForm(request.POST, instance=obj)
+        params = {
+            'title':'ParkingEdittest', 
+            'form': ParkingForm(),
+            'id':num,
+        }
+        if (parking.is_valid()):
+            parking.save()
+            return redirect(to='/owners_req')
+        else:
+            params['form'] = ParkingForm(request.POST, instance= obj)        
+        
+    return render(request, 'owners_req/carparking.html', params)
+
+def deleteParking(request, num):
+    parking = ParkingUserModel.objects.get(id=num)
+    if (request.method == 'POST'):
+        parking.delete()
+        return redirect(to='/owners_req')
+    
+    return render(request, 'owners_req/carparkinglist.html')
+
+def carparkinglist(request):
+    s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
+    sample_parking = s_p.values("id", "user_id", "lat", "lng")
+    if (request.method == 'POST'):
+        num = request.POST['obj.id']
+        num1 = request.POST['command']
+        #edit
+        if (num1 == 'editParking'):
+            obj = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingEdit',
+            'id':num,
+            'form': ParkingForm(instance=obj), 
+            }
+            return render(request, 'owners_req/editParking.html', params)
+        #delete    
+        if (num1 == 'deleteParking'):
+            delete_parking = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingDelete',
+            'message': '※以下のレコードを削除します。',
+            'obj': delete_parking,
+            'id': num,
+            }
+            return render(request, 'owners_req/deleteParking.html', params)
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
+        #sample
+        markerData = list(sample_parking.all())
+        data = {
+            'markerData': markerData,
+        }
+        params = {
+            'title': 'ParkingSample',
+            'message': '駐車場登録データ',
+            'data': sample_parking,
+            'name': '自宅',
+            'add': add,
+            'data_json': json.dumps(data)
+        }
+        return render(request, 'owners_req/carparkinglist.html', params)
 
 
    
