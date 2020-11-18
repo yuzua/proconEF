@@ -15,7 +15,8 @@ def index(request):
     params = {
         'hoge': '',
     }
-    return render(request, 'parking_req/map1.html', params)
+    # return render(request, 'parking_req/map1.html', params)
+    return render(request, 'parking_req/mapping.html', params)
 
 
 def test_ajax_response(request):
