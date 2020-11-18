@@ -4,12 +4,12 @@ from datetime import date
 from django.core.validators import ValidationError, MinValueValidator, MaxValueValidator
 
 
-def number_only(value):
-        if(re.match(r'^[0-9]*$', value) == None):
-            raise ValidationError(
-                '%(value)s を半角数字で入力してください',\
-                params={'value': value},
-            )
+# def number_only(value):
+#         if(re.match(r'^[0-9]*$', value) == None):
+#             raise ValidationError(
+#                 '%(value)s を半角数字で入力してください',\
+#                 params={'value': value},
+#             )
 
 
 def katakana_only(value):
@@ -21,63 +21,51 @@ def katakana_only(value):
 
 class HostUserModel(models.Model):
 
+    #id = models.IntegerField(default=0, verbose_name='オーナーID')
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
-    day = models.DateField() 
-    pay = models.CharField(max_length=32) 
-    bank_name = models.CharField(max_length=32, validators=[katakana_only])
-    bank_code = models.CharField(max_length=64, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
-    bank_account_number = models.CharField(max_length=64, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
-    QR_id = models.CharField(max_length=100, validators=[number_only, MinValueValidator(0), MaxValueValidator(1000)])
+    day = models.DateField(verbose_name='登録日') 
+    pay = models.CharField(max_length=32, verbose_name='支払方法') 
+    bank_name = models.CharField(max_length=32, validators=[katakana_only], \
+        verbose_name='銀行名')
+    bank_code = models.IntegerField(default=0, verbose_name='支店コード')
+    bank_account_number = models.CharField(max_length=64, verbose_name='口座番号')
+    QR_id = models.CharField(max_length=128, verbose_name='口座番号')
 
     def __str__(self):
-         return '<カーシェアオーナー:id=' + str(self.user_id) + ',' + '(' + str(self.bank_name) + ')>'
+         return '<カーシェアオーナー:id' + str(self.id) + '>'  
 
-# class CarInfoModel(models.Model):
-
-#     license_plate = models.CharField(max_length=12)    	
-#     ParentCategory = models.CharField(max_length=32)
-#     category = models.CharField(max_length=32)
-#     model_id = models.CharField(max_length=128)
-#     custom = models.CharField(max_length=128)	
-#     people = models.IntegerField(default=0)
-#     day = models.DateField()
-#     tire = models.CharField(max_length=128)
-#     used_years = models.IntegerField(default=0)
-#     vehicle_inspection_day = models.DateField()
-#     def __str__(self):
-#          return '<車情報:id=' + str(self.id) + ',' + '(' + str(self.people) + ')>'
 
 class ParentCategory(models.Model):
-    name = models.CharField('メーカー', max_length=255)
+    parent_category = models.CharField('メーカー', max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.parent_category
 
 
 class Category(models.Model):
-    name = models.CharField('車種', max_length=255)
-    parent = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
+    category = models.CharField('車種', max_length=255)
+    parent_category = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.name
+        return self.category
 
 
-class Post(models.Model):
-    
-    category = models.ForeignKey(Category, verbose_name='車種', default=0, on_delete=models.PROTECT)
+class CarInfoModel(models.Model):
+    #id = models.IntegerField(default=0, verbose_name='車両ID')
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
-    license_plate = models.CharField(max_length=12,  verbose_name='ナンバープレート', validators=[number_only])    	
-    #ParentCategory = models.CharField(max_length=32,  verbose_name='メーカー')
-    model_id = models.CharField(max_length=128,  verbose_name='型番')
-    custom = models.CharField(max_length=128,  verbose_name='カスタム')	
-    people = models.IntegerField(default=0,  verbose_name='乗車人数', validators=[MinValueValidator(0), MaxValueValidator(15)])
-    day = models.DateField( verbose_name='登録日')
-    tire = models.CharField(max_length=128,  verbose_name='タイヤ')
-    used_years = models.IntegerField(default=0,  verbose_name='使用年数(年単位)', validators=[MinValueValidator(0), MaxValueValidator(15)])
-    vehicle_inspection_day = models.DateField( verbose_name='次回車検予定日',)
+    day = models.DateField(verbose_name='登録日')
+    parent_category = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, verbose_name='車種', default=0, on_delete=models.PROTECT)
+    license_plate = models.CharField(max_length=12, verbose_name='ナンバープレート')    	
+    model_id = models.CharField(max_length=128, verbose_name='型番')
+    custom = models.CharField(max_length=128, verbose_name='カスタム')	
+    people = models.IntegerField(default=0, verbose_name='乗車人数')
+    tire = models.CharField(max_length=128, verbose_name='タイヤ')
+    used_years = models.IntegerField(default=0, verbose_name='使用年数(年単位)')
+    vehicle_inspection_day = models.DateField(verbose_name='次回車検予定日')
 
     def __str__(self):
-         return str(self.user_id) 
+         return '<車両ID:id' + str(self.id) + '>'  
 
 
     

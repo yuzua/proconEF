@@ -11,9 +11,19 @@ import datetime
 
 def index(request):
     params = {
-        'apikey': 'AIzaSyAmulNAl7XvDORhZ8f5HGJPm1uwJEHOqDg',
+        'hoge': '',
     }
     return render(request, 'parking_req/map1.html', params)
+
+
+def test_ajax_response(request):
+    input_lat = request.POST.getlist("name_input_lat")
+    input_lng = request.POST.getlist("name_input_lng")
+    hoge = "lat: "  + input_lat[0] + "lng: " + input_lng[0] + "がセットされました"
+    request.session['user_lat'] = input_lat[0]
+    request.session['user_lng'] = input_lng[0]
+
+    return HttpResponse(hoge)
 
 class ParkingHostCreate(TemplateView):
     def __init__(self):
@@ -29,6 +39,9 @@ class ParkingHostCreate(TemplateView):
             return redirect(to='/carsharing_req/index')
         else:
             print(request.user)
+            print(request.session['user_lat'])
+            print(request.session['user_lng'])
+
         return render(request, 'parking_req/create.html', self.params)
 
 
@@ -54,13 +67,24 @@ class ParkingHostCreate(TemplateView):
         return render(request, 'parking_req/create.html', self.params)
 
 def edit(request):
-    obj = ParkingUserModel.objects.get(user_id=request.session['user_id'])
-    params = {
-        'title': 'ParkingEdit',
-        'form': ParkingForm(instance=obj),
-    }
-    if (request.method == 'POST'):    
+    # num = request.POST['message']
+    # obj = ParkingUserModel.objects.filter(id=num).all()
+    # params = {
+    #     'title': 'ParkingEdit',
+    #     'data': obj,
+    #     'message':num,
+    #     'form': ParkingForm(instance=obj),
+    # }
+    # return render(request, 'parking_req/edit.html', params)
+    if (request.method == 'POST'):
+        num = request.POST['p_id']
+        obj = ParkingUserModel.objects.get(id=num)
         parking = ParkingForm(request.POST, instance=obj)
+        params = {
+            'title':'ParkingEdittest', 
+            'form': ParkingForm(),
+            'id':num,
+        }
         if (parking.is_valid()):
             parking.save()
             return redirect(to='/parking_req')
@@ -69,23 +93,48 @@ def edit(request):
         
     return render(request, 'parking_req/edit.html', params)
 
-def delete(request):
-    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
+def delete(request, num):
+    parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
         return redirect(to='/parking_req')
-    params = {
-        'title': 'ParkingDelete',
-        'message': '※以下のレコードを削除します。',
-        'obj': parking,
-    }
-    return render(request, 'parking_req/delete.html', params)
+    # params = {
+    #     'title': 'ParkingDelete',
+    #     'message': '※以下のレコードを削除します。',
+    #     'obj': parking,
+    #     'id': num,
+    # }
+    return render(request, 'parking_req/delete.html')
 
 def sample(request):
-    parking = ParkingUserModel.objects.get(user_id=request.session['user_id'])
-    params = {
-        'title': '',
-        'message': '',
-        'obj': parking,
-    }
-    return render(request, 'parking_req/sample.html', params)    
+    sample_parking = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
+    if (request.method == 'POST'):
+        num = request.POST['obj.id']
+        num1 = request.POST['command']
+        #edit
+        if (num1 == 'edit'):
+            obj = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingEdit',
+            'id':num,
+            'form': ParkingForm(instance=obj), 
+            }
+            return render(request, 'parking_req/edit.html', params)
+        #delete    
+        if (num1 == 'delete'):
+            delete_parking = ParkingUserModel.objects.get(id=num)
+            params = {
+            'title': 'ParkingDelete',
+            'message': '※以下のレコードを削除します。',
+            'obj': delete_parking,
+            'id': num,
+            }
+            return render(request, 'parking_req/delete.html', params)
+    else:
+        #sample
+        params = {
+            'title': 'ParkingSample',
+            'message': '駐車場登録データ',
+            'data': sample_parking, 
+        }
+        return render(request, 'parking_req/sample.html', params)    

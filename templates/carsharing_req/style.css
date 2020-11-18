@@ -27,15 +27,36 @@
     height: 333px;
     width: 570px;
     border: 1px solid #000;
+    text-align: left;
+    float: left;
 }
 .r{
     height: 333px;
     width: 570px;
     border: 1px solid #000;
+    text-align: left;
+    float: left;
+}
+.r ul li a{
+    font-size: 20px;
 }
 .u{
     width: 1140px;
-    border: 1px solid #000
+    height: 200px;
+    border: 1px solid #000;
+    float: left;
+}
+.u ul:after{
+    content: "";
+    clear: both;
+    display: block;
+}
+.u ul li{
+    width: 25%;
+    display: block;
+    float: left;
+    text-align: center;
+
 }
 .new{
     border-left: 1px solid #000;
@@ -54,25 +75,15 @@
     position: relative;
     height: 16px;
 }
-.global_navi li a {
+.global_navi li a{
     text-decoration: none;
     color: #000;
     font-weight: bold;
 }
-#wrapper {
-    border: 1px solid #000;
-    width: 980px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-#main{
-    width: 670px;
-    float: left;
-}
 #sidebar{
     width: 280px;
     float: right;
-    position: fixed;
+    position: absolute;
     top: 200px;
     right: 0;
 }
@@ -84,30 +95,31 @@
     border: 1px solid #000;
     text-align: center;
 }
-.footer_nav li{
-    display: block;
-    margin-left: 8px;
-    padding-left: 8px;
-    font-size: smaller;
-}
-.di1{
-    width: 130px;
-    height: 100px;
-    margin-left: 10px;
+.footer_nav{
+    border: 1px solid #000;
+    width: 1020px;
+    height: 160px;
     float: left;
 }
-.di2{
-    height: 100px;
-    margin-left: 100px;
+.footer_nav ul:after{
+    content: "";
+    clear: both;
+    display: block;
 }
-.di3{
-    height: px;
-    margin-left: 400px;
+.footer_nav ul li{
+    display: block;
+    float: left;
+    width: 25%;
+    text-align: center;
+    font-size: smaller;
 }
 .kigyo{
     width: 400px;
     border: 1px solid #000;
     float: right;
+}
+.kigyo ul li{
+    font-size: 15px;
 }
 li{
     list-style: none;
