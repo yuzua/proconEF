@@ -39,7 +39,7 @@ def set_session(request):
     return redirect(to='carsharing_req:index')
 
 
-class CarsharUser(TemplateView):
+class CarsharUserInfo(TemplateView):
     def __init__(self):
         self.params = {
             'title': 'Hello World!',
@@ -98,7 +98,7 @@ class CreateView(TemplateView):
         addr02 = request.POST['addr02']
         record = CarsharUserModel(email = email,name = name, gender = gender, age = age, birthday = birthday, zip01 = zip01, pref01 = pref01, addr01 = addr01, addr02 = addr02)
         record.save()
-        return redirect(to='carsharing_req:index')
+        return redirect(to='carsharing_req:first')
         
     def get(self, request):
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
