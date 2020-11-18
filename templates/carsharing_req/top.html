@@ -15,11 +15,22 @@
       <header>
         <p style="float: right;">
             {% if user.is_authenticated %}
-            ようこそ{{ user.get_username }}
+                ようこそ{{ user.get_username }}
             {% else %}
-            ゲスト
+                ゲスト
             {% endif %}  
-            さん
+                さん
+        </p>
+        <p>
+<!-- 駐車場オーナーに登録済か判定 -->
+        {% if request.session.parking_flag == True %}
+    <!-- 登録済 -->
+            {{ request.session.parking_flag }}
+        {% else %}
+    <!-- 未登録 -->
+            {{ request.session.parking_flag }}
+        {% endif %}
+<!-- 駐車場オーナーに登録済か判定 -->
         </p>
           <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;">
             <a class="navbar-brand" href="#">templete</a>

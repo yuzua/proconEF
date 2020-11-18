@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .models import CarsharUserModel
 from .forms import CarsharUserCreateForm
+from parking_req .models import *
 
 # Create your views here.
 
@@ -27,9 +28,14 @@ def set_session(request):
     print(data.id)
     request.session['user_id'] = data.id
     print(request.session['user_id'])
-    params = {
-        'data': data,
-    }
+    paking_data = ParkingUserModel.objects.filter(user_id=data.id)
+    if paking_data.first() is None:
+        print('no data')
+        request.session['parking_flag'] = False
+    else:
+        print(paking_data.values('user_id', 'id'))
+        request.session['parking_flag'] = True
+
     return redirect(to='carsharing_req:index')
 
 
