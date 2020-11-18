@@ -19,10 +19,10 @@
 
     {% if messages %}
     {% comment %} <div>
-      <strong>Messages:</strong>
+      <!-- <strong>Messages:</strong> -->
       <ul>
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;">{{ message }}</li>
         {% endfor %}
       </ul>
     </div> {% endcomment %}
@@ -31,9 +31,9 @@
     <div class="container">
     <div>
       {% for message in messages %}
-      <strong>Messages:</strong>
-        <ul>  
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      <!-- <strong>Messages:</strong> -->
+        <ul class="socialaccount_providers" style="padding: 0pt;">  
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
         </ul>
         {% endfor %}
     </div>
