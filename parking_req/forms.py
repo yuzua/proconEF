@@ -23,10 +23,10 @@ class ParkingForm(forms.ModelForm):
 
     class Meta:
         model = ParkingUserModel
-        fields = ['lat','lng','parking_type','width','length','height']
+        fields = ['parking_type','width','length','height']
         widget = {
-            'lat': forms.TextInput(attrs={'class': 'form-control'}),
-            'lng': forms.TextInput(attrs={'class': 'form-control'}),
+            #'lat': forms.TextInput(attrs={'class': 'form-control'}),
+            #'lng': forms.TextInput(attrs={'class': 'form-control'}),
             'day': forms.DateInput(attrs={'class': 'form-control'}),
             #'parking_type': forms.NumberInput(attrs={'class': 'form-control'}),
             'width': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -35,8 +35,8 @@ class ParkingForm(forms.ModelForm):
             #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'lat': '緯度',
-            'lng': '経度',
+            #'lat': '緯度',
+            #'lng': '経度',
             'day': '登録日',
             #'parking_type': '駐車場タイプ',
             'width': '横幅(m)',
