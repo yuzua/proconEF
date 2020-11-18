@@ -36,7 +36,9 @@
     var infoWindows = [];
     const data = JSON.parse('{{ data_json|safe }}');
     var markerData = data.markerData;
+    var markerData2 = data.markerData2; //車両情報sample_carinfo
     console.log(markerData);
+    console.log(markerData2); 
     function initMap() {
       jQuery(function($){
         var map, map_center;
@@ -89,14 +91,28 @@
              position: markerLatLngs, // マーカーを立てる位置を指定
                 map: map // マーカーを立てる地図を指定
            });
+    //  for (var i = 0; i < markerData2.length; i++) {
+    //         markerLatLngs = new google.maps.LatLng({lat: Number(markerData2[i]['id']), lng: Number(markerData2[i]['license_plate'])}); // 緯度経度のデータ作成
+    //         console.log(map2);
+    //         markers[i] = new google.maps.Marker({ 
+    //          position: markerLatLngs, 
+    //             map2: map2 
+    //        });
          infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-             content: '<div class="sample">' + markerData[i]['id'] + '</div><form action="{% url 'parking_req:sample' %}" method="post">\
-             {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '><input type="hidden" name="command" value="edit">\
-             <input class="btn btn-primary my-2" type="submit" value="修正"></form>\
-             <form action="{% url 'parking_req:sample' %}" method="post">{% csrf_token %}\
+             content: '<div class="carparkinglist">' + markerData[i]['id'] + '</div><form action="{% url 'owners_req:carparkinglist' %}" method="post">\
+             {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '><input type="hidden" name="command" value="editParking">\
+             <input class="btn btn-primary my-2" type="submit" value="駐車場情報修正"></form>\
+             <form action="{% url 'owners_req:carparkinglist' %}" method="post">{% csrf_token %}\
              <input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '>\
-             <input type="hidden" name="command" value="delete">\
-             <input class="btn btn-primary my-2" type="submit" value="削除"></form>' // 吹き出しに表示する内容
+             <input type="hidden" name="command" value="deleteParking">\
+             <input class="btn btn-primary my-2" type="submit" value="駐車場情報削除"></form>\
+             <br><form action="{% url 'owners_req:carparkinglist' %}" method="post">\
+             {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData2[i]['id'] + '><input type="hidden" name="command" value="editCar">\
+             <input class="btn btn-primary my-2" type="submit" value="車両情報編集"></form>\
+             <form action="{% url 'owners_req:carparkinglist' %}" method="post">{% csrf_token %}\
+             <input type="hidden" name="obj.id" value=' + markerData2[i]['id'] + '>\
+             <input type="hidden" name="command" value="deleteCar">\
+             <input class="btn btn-primary my-2" type="submit" value="車両情報削除"></form>' // 吹き出しに表示する内容
            });
      
          markerEvent(i); // マーカーにクリックイベントを追加
@@ -140,8 +156,7 @@
     <!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->  
     <form action="{% url 'carsharing_booking:map' %}" method="post">
         {% csrf_token %}
-        <input type="text" name="add" size="40" maxlength="20">
-        <input class="btn btn-primary my-2" type="submit" value="click">
+        <input class="btn btn-primary my-2" type="submit" value="トップページへ">
     </form>
     </body>
     </html>
