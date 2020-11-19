@@ -22,4 +22,5 @@ urlpatterns = [
     path('deleteParking/<int:num1>', views.deleteParking, name='deleteParking'),
     path('parkingplace', views.parkingplace, name='parkingplace'),
     path('carparkinglist', views.carparkinglist, name='carparkinglist'),
+    path('test', views.test, name='test'),
 ]

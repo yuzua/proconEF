@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import *
-from .models import HostUserModel, CarInfoModel, ParentCategory, Category
+from .models import HostUserModel, CarInfoModel, ParentCategory, Category, ParkingUserModel, CarInfoParkingModel
 from carsharing_req .models import CarsharUserModel
 from .forms import HostUserForm
 from django.views.generic import TemplateView
 
 from django.views import generic
-from .forms import CarInfoForm, ParkingForm
+from .forms import CarInfoForm, ParkingForm, CarInfoParkingForm
 import datetime
 import json
 
@@ -155,28 +154,9 @@ class CreateCarView(TemplateView):
         
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
-        # parent_category = request.POST['parent_category']
-        # category = request.POST['category']
         day = dt_now
         license_plate = request.POST['license_plate']
-        # model_id = request.POST['model_id']
-        # custom = request.POST['custom']
-        # people = request.POST['people']
-        # tire = request.POST['tire']
-        # used_years = request.POST['used_years']
-        # vehicle_inspection_day = request.POST['vehicle_inspection_day']
-
-        # parent_category = ParentCategory.objects.get(id=parent_category)
-        # CarInfoModel.parent_category = parent_category
-        # category = Category.objects.get(id=category)
-        # CarInfoModel.category = category
-
         record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
-      
-        # record = CarInfoModel(user_id = user_id, parent_category = parent_category, \
-        #             category = category, day = day, license_plate = license_plate, model_id = model_id,\
-        #             custom = custom, people = people, tire = tire, used_years = used_years,\
-        #             vehicle_inspection_day = vehicle_inspection_day)
         form = CarInfoForm(request.POST, instance=record)
         
         self.params['form'] = form
@@ -344,6 +324,19 @@ def deleteParking(request, num1):
     return render(request, 'owners_req/carparkinglist.html')
 
 def carparkinglist(request):
+   
+    # user_id = request.session['user_id']
+    # #car_id = request.session['car_id']
+    # #parking_id = request.session['parking_id']
+    # car_id = CarInfoParkingModel.objects.get(car_id=car_id)
+    # parking_id = CarInfoParkingModel.objects.get(parking_id=parking_id)
+    # obj = CarInfoParkingModel(user_id= user_id, car_id=car_id, parking_id=parking_id)
+    # form = CarInfoParkingForm(request.POST, instance=obj)
+    # if (form.is_valid()):
+    #     record.save()
+      
+    #     return redirect(to='/owners_req/carparkinglist')
+
     s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
     s_c = CarInfoModel.objects.filter(user_id=request.session['user_id'])
     sample_parking = s_p.values("id", "user_id", "lat", "lng")
@@ -409,42 +402,11 @@ def carparkinglist(request):
             'data2': sample_carinfo,
             'name': '自宅',
             'add': add,
-            'data_json': json.dumps(data)
+            'data_json': json.dumps(data),
+            'form': CarInfoParkingForm()
         }
         return render(request, 'owners_req/carparkinglist.html', params)
 
-    # car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).all()
-    # if (request.method == 'POST'):
-    #     num = request.POST['obj.id']
-    #     num1 = request.POST['command']
-    #     #edit
-    #     if (num1 == 'editCar'):
-    #         obj = CarInfoModel.objects.get(id=num)
-    #         params = {
-    #         'title':'車情報変更', 
-    #         'form': CarInfoForm(instance=obj),
-    #         'message': '',
-    #         'id':num,
-    #         }
-    #         return render(request, 'owners_req/editCar.html', params)
-    #     #delete    
-    #     if (num1 == 'deleteCar'):
-    #         delete_car = CarInfoModel.objects.get(id=num)
-    #         params = {
-    #         'title': '車情報削除',
-    #         'message': '※以下のレコードを削除します。',
-    #         'obj1': delete_car,
-    #         'id': num,
-    #         }
-    #         return render(request, 'owners_req/deleteCar.html', params)
-    # else:
-    #     #sample
-    #     params = {
-    #         'title': '車両情報一覧',
-    #         'message': '車両データ',
-    #         'data': car_list, 
-    #     }
-    #     return render(request, 'owners_req/carlist.html', params)    
-
-
-   
+def test(request):
+    pass
+    

@@ -88,7 +88,7 @@ class CarInfoParkingModel(models.Model):
     car_id = models.ForeignKey(CarInfoModel,verbose_name='車両ID', on_delete=models.CASCADE)
     parking_id =  models.ForeignKey(ParkingUserModel,verbose_name='駐車場ID', on_delete=models.CASCADE)
     def __str__(self):
-        return self.user_id + self.car_id + self.parking_id
+        return str(self.user_id) + str(self.car_id) + str(self.parking_id)
 
 
     
