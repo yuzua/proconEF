@@ -46,7 +46,7 @@
 <!-- カーシェアリングオーナーに登録済か判定 -->
         </p>
           <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;">
-            <a class="navbar-brand" href="#">templete</a>
+            <a class="navbar-brand" href="/">CarSharingService</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -69,8 +69,8 @@
                       カーシェアリング・駐車場利用
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">カーシェアリング検索</a>
-                      <a class="dropdown-item" href="#">駐車場検索</a>
+                      <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
+                      <a class="dropdown-item" href="">駐車場検索</a>
                       <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
                       <a class="dropdown-item" href="#">駐車場利用の流れ</a>
                       <a class="dropdown-item" href="#">料金について</a>
@@ -84,6 +84,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="#">あなたへのおすすめ</a>
                       <a class="dropdown-item" href="#">中古車検索</a>
+                      <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
                     </div>
                 </li>
                 {% if request.session.owner_flag == True %}
@@ -192,7 +193,7 @@
                             <a href="#!">カーシェアリング利用の流れ</a>
                         </li>
                         <li>
-                            <a href="#!">カーシェアリング検索</a>
+                            <a href="/carsharing_booking/map">カーシェアリング検索</a>
                         </li>
                         <li>
                             <a href="#!">駐車場利用の流れ</a>
