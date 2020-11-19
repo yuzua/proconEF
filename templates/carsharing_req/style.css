@@ -1,0 +1,135 @@
+@charset "utf-8";
+
+.head_container h1{
+    margin: 5px 0 10px;
+    font-size: 5ex;
+}
+.head_container h2{
+    text-align: right;
+    margin-top: 0px;
+    font-size: medium;
+}
+.global_navi, .global_navi ul{
+    list-style: none;
+    font-size: 0;
+    overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+}
+.global_navi li{
+    border-right: 1px solid #000;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    width: 19.92%;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+}
+.mb{
+    margin-top: 400px;
+}
+#l{
+    height: 333px;
+    width: 570px;
+    border: 1px solid #000;
+    text-align: left;
+    float: left;
+}
+#r{
+    height: 333px;
+    width: 570px;
+    border: 1px solid #000;
+    text-align: left;
+    float: left;
+}
+#r ul li a{
+    font-size: 20px;
+}
+#u{
+    width: 1142px;
+    height: 200px;
+    border: 1px solid #000;
+    float: left;
+}
+#u ul:after{
+    content: "";
+    clear: both;
+    display: block;
+}
+#u ul li{
+    width: 25%;
+    display: block;
+    float: left;
+    text-align: center;
+}
+.new{
+    border-left: 1px solid #000;
+}
+.alr{
+    border-left: 1px solid #000;
+}
+.global_navi li a span{
+    display: block;
+}
+.new p{
+    position: relative;
+    height: 16px;
+}
+.ppp p{
+    position: relative;
+    height: 16px;
+}
+.old p{
+    position: relative;
+    height: 16px;
+}
+.global_navi li a{
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+#sidebar{
+    width: 280px;
+    float: right;
+    position: absolute;
+    top: 200px;
+    right: 0;
+}
+#side_banner{
+    border: 1px solid #000;
+    text-align: center;
+}
+#side_contact{
+    border: 1px solid #000;
+    text-align: center;
+}
+.footer_nav{
+    border: 1px solid #000;
+    width: 1020px;
+    height: 173px;
+    float: left;
+}
+.footer_nav ul:after{
+    content: "";
+    clear: both;
+    display: block;
+}
+.footer_nav ul li{
+    display: block;
+    float: left;
+    width: 25%;
+    text-align: center;
+    font-size: smaller;
+}
+.kigyo{
+    width: 400px;
+    border: 1px solid #000;
+    float: right;
+}
+.kigyo ul li{
+    font-size: 15px;
+}
+li{
+    list-style: none;
+}

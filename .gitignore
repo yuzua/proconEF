@@ -133,4 +133,12 @@ dmypy.json
 
 #migrations
 **/migrations/*
+<<<<<<< HEAD
 !*/migrations/__init__.py
+=======
+# __init__.py は必用なファイル
+!*/migrations/__init__.py
+
+# DS_Store
+*.DS_Store
+>>>>>>> badbbde5948f1bc9410070a3b333061d2e8df21f
