@@ -1,32 +1,25 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <title>Test Map</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <meta charset="utf-8">
-  <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+{% extends 'carsharing_req/base.html' %}
+
+{% block head %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&signed_in=true&callback=initMap" async defer></script>
+<style>
     #map {
-      height: 80%;
-      width: 80%;
+      height: 600px;
+      width: 100%;
+      margin: auto;
+      margin-top: 20pt;
+      margin-bottom: 20pt;
+      border: solid;
+      border-width: 1pt;
     }
-  </style>
-</head>
-<body>
-  <div id="map"></div>
-  <ul>
+</style>
+{% endblock %}
+
+{% block title %}管理者用：駐車場追加{% endblock %}
+
+{% block main_contents %}
+<div id="map"></div>
+  <ul style="display:none;">
     <li>lat: <span id="lat"></span></li>
     <li>lng: <span id="lng"></span></li>
   </ul>
@@ -63,21 +56,19 @@
     map.panTo(lat_lng);
     }
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&signed_in=true&callback=initMap" async defer></script>
-  <form name="name_form" action="/administrator/ajax/" method="POST">
+  <form id="myform" name="name_form" action="/parking_req/ajax/" method="POST">
     <!-- <form name="name_form" action="/test_ajax_app/" method="POST"> -->
       {% csrf_token %}
-      <input type="text" id="id_input_lat" name="name_input_lat" value="">
-      <input type="text" id="id_input_lng" name="name_input_lng" value="">
+      <input type="hidden" id="id_input_lat" name="name_input_lat" value="">
+      <input type="hidden" id="id_input_lng" name="name_input_lng" value="">
       <input class="btn btn-default" type="submit"> 
     </form>
-    <span id="id_div_ajax_response">
-      AJAX RESPONSE
-    </span>
+    <span id="id_div_ajax_response"></span>
     <script>
-        $("form").submit( function(event) {
+        $("#myform").submit( function(event) {
         event.preventDefault();
         var form = $(this);
+        console.log(form);
         $.ajax({
           url: form.prop("action"),
           method: form.prop("method"),
@@ -88,9 +79,8 @@
         .done( function(data) {
           alert(data);
           $("#id_div_ajax_response").text(data);
-          $("#id_div_ajax_response").html("<a href='/administrator/create' class='btn btn-default'>create</a>");
+          $("#id_div_ajax_response").html("<a href='/administrator/create' class='btn btn-primary'>create</a>");
         })
       });
     </script>
-</body>
-</html>
+{% endblock %}
