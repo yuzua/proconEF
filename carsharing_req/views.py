@@ -8,6 +8,7 @@ from django.views import generic
 from .models import CarsharUserModel
 from .forms import CarsharUserCreateForm
 from parking_req .models import *
+from owners_req .models import HostUserModel
 
 # Create your views here.
 
@@ -35,6 +36,16 @@ def set_session(request):
     else:
         print(paking_data.values('user_id', 'id'))
         request.session['parking_flag'] = True
+
+    owner_data = HostUserModel.objects.filter(user_id=data.id)
+    if owner_data.first() is None:
+        print('no data')
+        request.session['owner_flag'] = False
+    else:
+        print(owner_data.values('user_id', 'id'))
+        request.session['owner_flag'] = True
+
+
 
     return redirect(to='carsharing_req:index')
 

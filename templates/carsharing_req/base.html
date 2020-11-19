@@ -26,12 +26,12 @@
         </p>
         <p>
 <!-- 駐車場オーナーに登録済か判定 -->
-        {% if request.session.parking_flag == True %}
+        {% if request.session.owner_flag == True %}
     <!-- 登録済 -->
-            {{ request.session.parking_flag }}
+            {{ request.session.owner_flag }}
         {% else %}
     <!-- 未登録 -->
-            {{ request.session.parking_flag }}
+            {{ request.session.owner_flag }}
         {% endif %}
 <!-- 駐車場オーナーに登録済か判定 -->
         </p>
