@@ -138,9 +138,10 @@ function initMap() {
 </script> 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
 <!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->  
-<form action="{% url 'carsharing_booking:map' %}" method="post">
+<form action="{% url 'administrator:admin_main' %}" method="post">
     {% csrf_token %}
     <input type="text" name="add" size="40" maxlength="20">
+    <input type="hidden" name="command" value="map">
     <input class="btn btn-primary my-2" type="submit" value="click">
 </form>
 </body>
