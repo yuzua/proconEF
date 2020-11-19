@@ -137,4 +137,4 @@ dmypy.json
 !*/migrations/__init__.py
 
 # DS_Store
-.DS_Store
+*.DS_Store
