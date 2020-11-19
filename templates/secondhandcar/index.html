@@ -1,8 +1,12 @@
-<html>
-<head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-</head>
-<body>
+{% extends 'carsharing_req/base.html' %}
+
+{% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+{% endblock %}
+    
+{% block title %}価格予測推移グラフ{% endblock %}
+
+{% block main_contents %}
 <input id="purius" type="checkbox" value="purius" onchange="myfunc(this.value)"/> プリウス(トヨタ) 
 <input id="minimini" type="checkbox" value="minimini" onchange="myfunc(this.value)"/>　ミニ(ミニ)
 <canvas id="myChart"></canvas>
@@ -71,7 +75,5 @@ var myChart = new Chart(ctx, {
       datasets: dataset,
     }
 });
-
 </script>
-</body>
-</html>
+{% endblock %}
