@@ -3,28 +3,73 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
 </head>
 <body>
-<canvas id="chart-area"></canvas>
+<input id="purius" type="checkbox" value="purius" onchange="myfunc(this.value)"/> プリウス(トヨタ) 
+<input id="minimini" type="checkbox" value="minimini" onchange="myfunc(this.value)"/>　ミニ(ミニ)
 <canvas id="myChart"></canvas>
-
 <script>
-const data = JSON.parse('{{ data_json|safe }}');
-var Data = data;
-console.log(Data);
-console.log(Object.keys(Data));
-var days = Object.keys(Data);
-console.log(Object.values(Data));
-var prices = Object.values(Data);
+check_list = [];
+function myfunc(value) {
+var flag = document.getElementById(value).checked;
+  if(flag == true){
+    
+    check_list.push(value);
+    console.log(check_list);
+  }else{
+    
+    check_list = check_list.filter(function(a) {
+      return a !== value;
+    });
+    console.log(check_list);
+  }
+  for (item of check_list){
+    console.log(item);
+    if (item == "purius"){
+      dataset.push(purius_data);
+    }else if(item == "minimini"){
+      dataset.push(minimini_data);
+    }
+  }
+  console.log(dataset);
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: dataset,
+    }
+  });
+  
+  dataset = [];
+}
+
+var data = JSON.parse('{{ purius_json|safe }}');
+var Purius = data;
+var days = Object.keys(Purius);
+var purius_prices = Object.values(Purius);
+var data = JSON.parse('{{ minimini_json|safe }}');
+var Minimini = data;
+var minimini_prices = Object.values(Minimini);
+
+purius_data = {
+  label: 'プリウス(トヨタ)',
+  data: purius_prices,
+  backgroundColor: "rgba(255,153,0,0.4)"
+}
+minimini_data = {
+  label: 'ミニ(ミニ)',
+  data: minimini_prices,
+  backgroundColor: "rgba(125,145,0,0.4)"
+}
+data_list = [purius, minimini];
+dataset = [];
+
+
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: days,
-    datasets: [{
-      label: 'プリウス(トヨタ)',
-      data: prices,
-      backgroundColor: "rgba(255,153,0,0.4)"
-    }]
-  }
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: dataset,
+    }
 });
 
 </script>
