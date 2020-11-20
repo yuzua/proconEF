@@ -1,7 +1,6 @@
 {% extends 'carsharing_req/base.html' %}
 
 {% block head %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&signed_in=true&callback=initMap" async defer></script>
 <style>
     #map {
       height: 600px;
@@ -83,4 +82,10 @@
         })
       });
     </script>
+{% endblock %}
+
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
 {% endblock %}
