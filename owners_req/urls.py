@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.conf.urls import url
-from .views import CreateView, CreateCarView, ParkingHostCreate
+from .views import CreateView, CreateCarView, ParkingHostCreate, Test
 
 
 
@@ -22,5 +22,6 @@ urlpatterns = [
     path('deleteParking/<int:num1>', views.deleteParking, name='deleteParking'),
     path('parkingplace', views.parkingplace, name='parkingplace'),
     path('carparkinglist', views.carparkinglist, name='carparkinglist'),
-    path('test', views.test, name='test'),
+    path('test', Test.as_view(), name='test'),
+    path('ajax/', views.test_ajax_response),
 ]

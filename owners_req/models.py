@@ -51,7 +51,7 @@ class Category(models.Model):
 
 
 class CarInfoModel(models.Model):
-    #id = models.IntegerField(default=0, verbose_name='車両ID')
+    car_id = models.IntegerField(primary_key=True) #車両ID
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     day = models.DateField(verbose_name='登録日')
     parent_category = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
@@ -71,7 +71,7 @@ class ParkingUserModel(models.Model):
 
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     #carsharing_id = models.IntegerField(max_length=8)
-    #parking_id = models.CharField(max_length=32)
+    parking_id = models.IntegerField(primary_key=True) #駐車場ID
     lat = models.CharField(default=0, verbose_name='緯度', max_length=32)
     lng = models.CharField(default=0, verbose_name='経度', max_length=32)
     day = models.DateField()
@@ -85,8 +85,8 @@ class ParkingUserModel(models.Model):
 
 class CarInfoParkingModel(models.Model):
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
-    car_id = models.ForeignKey(CarInfoModel,verbose_name='車両ID', on_delete=models.CASCADE)
-    parking_id =  models.ForeignKey(ParkingUserModel,verbose_name='駐車場ID', on_delete=models.CASCADE)
+    car_id = models.ForeignKey(CarInfoModel,verbose_name='車両ID', on_delete=models.CASCADE) #CarInfoModel.id
+    parking_id =  models.ForeignKey(ParkingUserModel,verbose_name='駐車場ID', on_delete=models.CASCADE) #ParkingUserModel.id
     def __str__(self):
         return str(self.user_id) + str(self.car_id) + str(self.parking_id)
 
