@@ -151,7 +151,9 @@ class CreateCarView(TemplateView):
         }
 
     def post(self, request):
-        
+        car_id = request.session['car_id']
+        car_id = request.POST.get(id=car_id)
+        car_id = request.session['car_id'] 
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
         day = dt_now
@@ -269,6 +271,8 @@ class ParkingHostCreate(TemplateView):
 
 
     def post(self, request):
+        parking_list = request.POST.get(id=id)
+        request.session['parking_list'] = parking_list
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
         lat = request.session['user_lat']
@@ -407,6 +411,39 @@ def carparkinglist(request):
         }
         return render(request, 'owners_req/carparkinglist.html', params)
 
-def test(request):
-    pass
+class Test(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'駐車場、車両情報登録データ',
+            'message': '駐車場、車両情報登録データ',
+            'data': '',
+            'data2': '',
+        }
+    def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(request.user)
+            # print(request.session['car_id'])
+            # print(request.session['parking_id'])
+
+        return render(request, 'owners_req/test.html', self.params)
+    def post(self, request):
+        car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).all()
+        parking_list = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
+        carparking_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).all()
+        car = CarInfoForm(request.POST, instance=car_list)
+        parking = ParkingForm(request.POST, instance=parking_list)
+        carparking = CarInfoParkingForm(request.POST, instance=carparking_list)
+
+        if (parking.is_valid() & car.is_valid() & carparking.is_valid()):
+            parking.save()
+            car.save()
+            carparking.save()
+            return redirect(to='/owners_req')
+        else:
+            self.params['data'] = car_list
+            self.params['data2'] = parking_list 
+        return render(request, 'owners_req/test.html', self.params)     
     
