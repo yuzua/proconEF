@@ -1,6 +1,11 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_req/css/top.css" %}'>
+{% endblock %}
+
 {% block title %}トップページ{% endblock %}
 
 {% comment %} 
@@ -37,21 +42,59 @@
 {% block main_contents %}
 <div id ="main">
           <div id=nav class="clearfix">
-              <p><img src="template.jpeg"class="mx-auto d-block"style="padding: 120pt"></p>
-              <div class="card" style="width: 35rem;margin: auto;float: left;margin-bottom: 8pt;">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-                <div class="card-body" style="text-align: center;">
+              <p><img src="template.jpeg"class="mx-auto d-block"></p>
+              <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96" style="height: 200pt;"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
                     <h5 class="card-title">カーシェアリング予約</h5>
                     <p class="card-text">template</p>
-                    <a href="/carsharing_booking/map" class="btn btn-primary" style="width: 100pt;margin: auto;height: 45pt;font-size: 20pt;padding: auto;">予約</a>
+                    <a href="/carsharing_booking/map" class="btn btn-primary">予約</a>
                 </div>
             </div>
-            <div class="card" style="width: 35rem;margin: auto;margin-bottom: 8pt;">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-                <div class="card-body" style="text-align: center;">
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
                     <h5 class="card-title">駐車場予約</h5>
                     <p class="card-text">template</p>
-                    <a href="/carsharing_booking/map" class="btn btn-primary" style="width: 100pt;margin: auto;height: 45pt;font-size: 20pt;padding: auto;">予約</a>
+                    <a href="/carsharing_booking/map" class="btn btn-primary">予約</a>
+                </div>
+            </div>
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">カーシェアリングオーナー日時選択</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">選択</a>
+                </div>
+            </div>
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top"xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">駐車場オーナー日時選択</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">選択</a>
+                </div>
+            </div>
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">あなたへのおすすめ</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">見てみる</a>
+                </div>
+            </div>
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">中古車検索</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">検索</a>
                 </div>
             </div>
           <div id ="left">
@@ -101,8 +144,8 @@
             </div>
           </div>
           </div>
-          <div id ="under" class="float-left border clearfix w-100">
-              <div class="mx-auto" style="width:90%;">
+          <div id ="under" class="float-left border clearfix w-100" style="height: 250pt;font-size: 13pt;">
+              <div class="mx-auto" style="width:100%;padding:15pt;padding-left: 50pt;padding-right: 50pt;padding-top: 70pt;">
               <h2>お問い合わせ</h2>
               <p style="display: table-cell;width: auto;padding: 16px;">
                   〇〇支店<br>
