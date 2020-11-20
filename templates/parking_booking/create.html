@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block active_login %}
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <h1>{{ title }}</h1>
+    <div class="card">
+        <div class="card-header"><p>{{ message|safe }}</p></div>
+        <div class="card-body">
+            <form action="{% url 'parking_booking:create' %}" method="post" class="form-group">
+                {% csrf_token %}
+                <table class="table">
+                    {{ form.as_table }}
+                    <tr><th><td>
+                        <input class="btn btn-primary my-2" type="submit" value="click">
+                    </td></th></tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
