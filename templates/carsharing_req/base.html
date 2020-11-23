@@ -154,6 +154,12 @@
     <!--wrapper-->
     <div wrapper class="container w-80 clearfix" style="padding: 5px;">
     <!--メイン-->
+    {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers" style="padding: 0pt;"> 
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
+      </ul>
+    {% endfor %}
     {% block box %}{% endblock %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->

@@ -7,13 +7,14 @@ from .models import ParkingUserModel
 from .forms import ParkingForm
 import datetime
 import json
+from django.contrib import messages
 
 # Create your views here.
 
 
 def index(request):
     params = {
-        'hoge': '',
+        'msg': '',
     }
     # return render(request, 'parking_req/map1.html', params)
     return render(request, 'parking_req/mapping.html', params)
@@ -41,6 +42,7 @@ class ParkingHostCreate(TemplateView):
     def get(self, request):
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
             print(request.user)
@@ -71,8 +73,12 @@ class ParkingHostCreate(TemplateView):
             #セッションデータ削除
             del request.session['user_lat']
             del request.session['user_lng']
-            return redirect(to='/parking_req/sample')
-            
+            if 'info_flag' in request.session:
+                print(request.session['info_flag'])
+                return redirect(to='/owners_req/settinginfo')
+            else:
+                print('none')
+                return redirect(to='/parking_req/sample')
         return render(request, 'parking_req/create.html', self.params)
 
 def edit(request):

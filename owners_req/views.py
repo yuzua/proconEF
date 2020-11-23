@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import HostUserModel, CarInfoModel, ParentCategory, Category, ParkingUserModel, CarInfoParkingModel
+from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from carsharing_req .models import CarsharUserModel
+from parking_req .models import ParkingUserModel
 from .forms import HostUserForm
 from django.views.generic import TemplateView
-
+from django.contrib import messages
 from django.views import generic
-from .forms import CarInfoForm, ParkingForm, CarInfoParkingForm
+from .forms import CarInfoForm, CarInfoParkingForm
 import datetime
 import json
 
@@ -14,25 +15,6 @@ import json
 
 def index(request):
     return HttpResponse("Hello, world. You're at the owners_req index.")
-
-def parkingplace(request):
-    if str(request.user) == "AnonymousUser":
-            print('ゲスト')
-            return redirect(to='/carsharing_req/index')
-    else:
-        params = {
-            'hoge': '',
-        }
-    return render(request, 'owners_req/parkingplace.html', params)
-
-def test_ajax_response(request):
-    input_lat = request.POST.getlist("name_input_lat")
-    input_lng = request.POST.getlist("name_input_lng")
-    hoge = "lat: "  + input_lat[0] + "lng: " + input_lng[0] + "がセットされました"
-    request.session['user_lat'] = input_lat[0]
-    request.session['user_lng'] = input_lng[0]
-
-    return HttpResponse(hoge)
 
 
 class CreateView(TemplateView):
@@ -46,6 +28,7 @@ class CreateView(TemplateView):
     def get(self, request):
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index') 
         else:
             owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
@@ -141,6 +124,7 @@ def ownerslist(request):
         }
         return render(request, 'owners_req/ownerslist.html', params) 
 
+
 class CreateCarView(TemplateView):
     def __init__(self):
         self.params = {
@@ -151,9 +135,6 @@ class CreateCarView(TemplateView):
         }
 
     def post(self, request):
-        car_id = request.session['car_id']
-        car_id = request.POST.get(id=car_id)
-        car_id = request.session['car_id'] 
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
         day = dt_now
@@ -164,7 +145,9 @@ class CreateCarView(TemplateView):
         self.params['form'] = form
         if (form.is_valid()):
             record.save()
-            return redirect(to='owners_req:parkingplace')
+            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+            request.session['info_flag'] = True
+            return redirect(to='parking_req:index')
         else:
             self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/createCar.html', self.params)
@@ -173,6 +156,7 @@ class CreateCarView(TemplateView):
     def get(self, request):
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
             print(self.params['parentcategory_list'])
@@ -250,82 +234,6 @@ def carlist(request):
         }
         return render(request, 'owners_req/carlist.html', params)    
 
-class ParkingHostCreate(TemplateView):
-    def __init__(self):
-        self.params = {
-            'title': '駐車場情報登録',
-            'message': '前ページで登録した駐車場情報を入力してください。',
-            'form': ParkingForm(),
-        }
-    
-    def get(self, request):
-        if str(request.user) == "AnonymousUser":
-            print('ゲスト')
-            return redirect(to='/carsharing_req/index')
-        else:
-            print(request.user)
-            print(request.session['user_lat'])
-            print(request.session['user_lng'])
-
-        return render(request, 'owners_req/createParking.html', self.params)
-
-
-    def post(self, request):
-        parking_list = request.POST.get(id=id)
-        request.session['parking_list'] = parking_list
-        dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
-        lat = request.session['user_lat']
-        lng = request.session['user_lng']
-        day = dt_now
-        parking_type = request.POST['parking_type']
-        width = request.POST['width']
-        length = request.POST['length']
-        height = request.POST['height']
-        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
-            parking_type = parking_type, width = width, length = length, height = height)
-        obj = ParkingUserModel()
-        parking = ParkingForm(request.POST, instance=obj)
-        self.params['form'] = parking
-        if (parking.is_valid()):
-            record.save()
-            del request.session['user_lat']
-            del request.session['user_lng']
-            return redirect(to='/owners_req/carparkinglist')
-            
-        return render(request, 'owners_req/createParking.html', self.params)
-
-def editParking(request):
-    
-    if (request.method == 'POST'):
-        num = request.POST['p_id']
-        obj = ParkingUserModel.objects.get(id=num)
-        parking = ParkingForm(request.POST, instance=obj)
-        params = {
-            'title':'ParkingEdittest', 
-            'form': ParkingForm(),
-            'id':num,
-        }
-        if (parking.is_valid()):
-            parking.save()
-            return redirect(to='/owners_req')
-        else:
-            params['form'] = ParkingForm(request.POST, instance= obj)        
-        
-    return render(request, 'owners_req/carparking.html', params)
-
-def deleteParking(request, num1):
-    parking = ParkingUserModel.objects.get(id=num1)
-    if (request.method == 'POST'):
-        parking.delete()
-        return redirect(to='/owners_req')
-    params = {
-        'title': '駐車場情報削除',
-        'id': num1,
-        'obj1': owners_req,
-    }
-    
-    return render(request, 'owners_req/carparkinglist.html')
 
 def carparkinglist(request):
    
@@ -411,39 +319,41 @@ def carparkinglist(request):
         }
         return render(request, 'owners_req/carparkinglist.html', params)
 
-class Test(TemplateView):
+class SettingInfo(TemplateView):
     def __init__(self):
         self.params = {
             'title':'駐車場、車両情報登録データ',
             'message': '駐車場、車両情報登録データ',
-            'data': '',
-            'data2': '',
+            'car_data': '',
+            'parking_data': '',
         }
     def get(self, request):
+        exclude_car = []
+        exclude_parking = []
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
-            print(request.user)
-            # print(request.session['car_id'])
-            # print(request.session['parking_id'])
-
+            set_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            for obj in set_list.values("car_id"):
+                for index in obj.values():
+                    exclude_car.append(index)
+            for obj in set_list.values("parking_id"):
+                for index in obj.values():
+                    exclude_parking.append(index)
+            car_list = CarInfoModel.objects.exclude(id__in=exclude_car)
+            parking_list = ParkingUserModel.objects.exclude(id__in=exclude_parking)
+            self.params['car_data'] = car_list
+            self.params['parking_data'] = parking_list
         return render(request, 'owners_req/test.html', self.params)
-    def post(self, request):
-        car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).all()
-        parking_list = ParkingUserModel.objects.filter(user_id=request.session['user_id']).all()
-        carparking_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).all()
-        car = CarInfoForm(request.POST, instance=car_list)
-        parking = ParkingForm(request.POST, instance=parking_list)
-        carparking = CarInfoParkingForm(request.POST, instance=carparking_list)
 
-        if (parking.is_valid() & car.is_valid() & carparking.is_valid()):
-            parking.save()
-            car.save()
-            carparking.save()
-            return redirect(to='/owners_req')
-        else:
-            self.params['data'] = car_list
-            self.params['data2'] = parking_list 
-        return render(request, 'owners_req/test.html', self.params)     
+    def post(self, request):
+        user_id = int(request.POST['user_id'])
+        car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
+        record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
+        record.save()
+        messages.success(self.request, '登録完了しました')
+        return redirect(to='/carsharing_req/index')
     

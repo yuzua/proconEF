@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
+from owners_req .models import CarInfoParkingModel
 from carsharing_booking .models import BookingModel
 from .forms import BookingCreateForm
 import json
@@ -29,10 +30,10 @@ def map(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
     print(data.pref01+data.addr01+data.addr02)
     add = data.pref01+data.addr01+data.addr02
-    item_all = ParkingUserModel.objects.all()
+    set_list = CarInfoParkingModel.objects.values("parking_id")
+    item_all = ParkingUserModel.objects.filter(id__in=set_list)
     item = item_all.values("id", "user_id", "lat", "lng")
     item_list = list(item.all())
-    print(item)
     data = {
         'markerData': item_list,
     }
