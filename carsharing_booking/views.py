@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
-from owners_req .models import CarInfoParkingModel
+from owners_req .models import CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from .forms import BookingCreateForm
 import json
@@ -47,12 +47,16 @@ def map(request):
     return render(request, "carsharing_booking/map.html", params)
 
 def booking(request, num):
-    obj = ParkingUserModel.objects.get(id=num)
-
+    parking_obj = ParkingUserModel.objects.get(id=num)
+    items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
+    for item in items:
+        index = item['car_id']
+    car_obj = CarInfoModel.objects.get(id=index)
     params = {
-        'obj': obj,
+        'parking_obj': parking_obj,
         'form': BookingCreateForm(),
         'message': '予約入力',
+        'car_obj': car_obj,
     }
     
     return render(request, 'carsharing_booking/booking.html', params)

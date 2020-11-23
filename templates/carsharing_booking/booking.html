@@ -14,17 +14,24 @@
     <p id="addressOutput" rows="3" cols="26"></p>
 </div>
 <div class="card">
+<table class="table">
+    <tr class="card-header"><th>車両ID</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>カスタム</th><th>タイヤ</th></tr>
+    <tr><td>{{car_obj.id}}</td><td>{{car_obj.parent_category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.category}}</td><td>{{car_obj.people}}</td><td>{{car_obj.custom}}</td><td>{{car_obj.tire}}</td></tr> 
+</table>
+</div>
+<br>
+<div class="card">
     <h2 class="card-header">{{ message|safe }}</h2>
     <div class="card-body">
         {{ form.as_p }}
     </div>
     <div class="card-footer">
-        <input class="btn btn-outline-secondary" type="submit" value="削除" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
     </div>
 </div>
 <script>
 //入力した緯度・経度を取得しjsへセット
-  var idoInput = '{{obj.lat}}';
-  var keidoInput = '{{obj.lng}}';
+  var idoInput = '{{parking_obj.lat}}';
+  var keidoInput = '{{parking_obj.lng}}';
 </script>
 {% endblock %}
