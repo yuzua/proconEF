@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.conf.urls import url
-from .views import CreateView, CreateCarView, SettingInfo
+from .views import CreateView, CreateCarView, SettingInfo, CreateDateView
 
 
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path('deleteCar/<int:num1>', views.deleteCar, name='deleteCar'),
     path('carlist', views.carlist, name='carlist'),
     path('ownerslist', views.ownerslist, name='ownerslist'),
-    path('carparkinglist', views.carparkinglist, name='carparkinglist'),
+    #path('carparkinglist', views.carparkinglist, name='carparkinglist'),
     path('settinginfo', SettingInfo.as_view(), name='settinginfo'),
+    path('createDate', CreateDateView.as_view(), name='createDate'),
 ]
