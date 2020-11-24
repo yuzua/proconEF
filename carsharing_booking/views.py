@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic import TemplateView
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
 from owners_req .models import CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from .forms import BookingCreateForm
-import json
+import json, datetime
+from django.contrib import messages
 # Create your views here.
 
 
@@ -47,16 +49,34 @@ def map(request):
     return render(request, "carsharing_booking/map.html", params)
 
 def booking(request, num):
+    params = {
+        'parking_obj': '',
+        'form': BookingCreateForm(),
+        'message': '予約入力',
+        'car_obj': '',
+        'car_id': '',
+    }
+
     parking_obj = ParkingUserModel.objects.get(id=num)
+    params['parking_obj'] = parking_obj
     items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
     for item in items:
         index = item['car_id']
-    car_obj = CarInfoModel.objects.get(id=index)
-    params = {
-        'parking_obj': parking_obj,
-        'form': BookingCreateForm(),
-        'message': '予約入力',
-        'car_obj': car_obj,
-    }
+    params['car_id'] = index
+    car_obj = CarInfoModel.objects.get(id=index)    
+    params['car_obj'] = car_obj
     
     return render(request, 'carsharing_booking/booking.html', params)
+
+def postBooking(request):
+    if (request.method == 'POST'):
+        user_id = request.session['user_id']
+        car_id = request.POST['car_id']
+        start_day = request.POST['start_day']
+        end_day = request.POST['end_day']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+        record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time)
+        record.save()
+    messages.success(request, '予約が完了しました')
+    return redirect(to='/carsharing_req/index')

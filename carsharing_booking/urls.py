@@ -8,4 +8,5 @@ urlpatterns = [
     path("ajax/", views.test_ajax_response),
     path("map/", views.map, name='map'),
     path('booking/<int:num>', views.booking, name='booking'),
+    path('postbooking', views.postBooking, name='postbooking'),
 ]
