@@ -63,7 +63,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="#">個人登録情報確認</a>
-                      <a class="dropdown-item" href="#">利用確認</a>
+                      <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
                       <a class="dropdown-item" href="#">利用明細</a>
                     </div>
                 </li>
@@ -80,7 +80,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
-                      <a class="dropdown-item" href="">駐車場検索</a>
+                      <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
                       <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
                       <a class="dropdown-item" href="#">駐車場利用の流れ</a>
                       <a class="dropdown-item" href="#">料金について</a>
@@ -141,7 +141,7 @@
       </div>
       <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 153px;height: 140px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
         <p class="text-center" style="padding: auto;padding-top: 12pt;">
-            <a href="#" style="font-size: 15px;">予約確認</a>
+            <a href="/carsharing_booking/list" style="font-size: 15px;">予約確認</a>
         </p>
         <p class="text-center" style="padding: auto;">
             <a href="#" style="font-size: 15px;">予約変更</a>
@@ -162,7 +162,7 @@
     </div>
     <!--/サイド-->
     <!--wrapper-->
-    <div wrapper class="container w-80 clearfix" style="padding: 5px;">
+    <div id="wrapper" class="container w-80" style="padding: 5px;">
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
@@ -192,7 +192,7 @@
                             <a href="#!">個人登録情報確認</a>
                         </li>
                         <li>
-                            <a href="#!">利用確認</a>
+                            <a href="/carsharing_booking/list">予約確認</a>
                         </li>
                         <li>
                             <a href="#!">利用明細</a>
@@ -216,7 +216,7 @@
                             <a href="#!">駐車場利用の流れ</a>
                         </li>
                         <li>
-                            <a href="#!">駐車場検索</a>
+                            <a href="/parking_booking/map">駐車場検索</a>
                         </li>
                         <li>
                             <a href="#!">料金について</a>

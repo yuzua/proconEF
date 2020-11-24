@@ -80,3 +80,15 @@ def postBooking(request):
         record.save()
     messages.success(request, '予約が完了しました')
     return redirect(to='/carsharing_req/index')
+
+class ReservationList(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': '予約一覧',
+            'data': ''
+        }
+    
+    def get(self, request):
+        booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('-end_day', '-end_time')
+        self.params['data'] = booking
+        return render(request, 'carsharing_booking/list.html', self.params)
