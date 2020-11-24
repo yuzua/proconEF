@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
+from owners_req .models import CarInfoParkingModel, CarInfoModel
+from carsharing_booking .models import BookingModel
+from .forms import BookingCreateForm
 import json
 # Create your views here.
 
@@ -27,40 +30,12 @@ def map(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
     print(data.pref01+data.addr01+data.addr02)
     add = data.pref01+data.addr01+data.addr02
-    item_all = ParkingUserModel.objects.all()
+    set_list = CarInfoParkingModel.objects.values("parking_id")
+    item_all = ParkingUserModel.objects.filter(id__in=set_list)
     item = item_all.values("id", "user_id", "lat", "lng")
     item_list = list(item.all())
-    print(item)
     data = {
         'markerData': item_list,
-        # 'markerData': [
-        #     {
-        #         'name': 'TAM 東京',
-        #         'lat': 35.6954806,
-        #         'lng': 139.76325010000005,
-        #         'icon': 'tam.png',
-        #     }, {
-        #         'name': '小川町駅',
-        #         'lat': 35.6951212,
-        #         'lng': 139.76610649999998
-        #     }, {
-        #         'name': '淡路町駅',
-        #         'lat': 35.69496,
-        #         'lng': 139.76746000000003
-        #     }, {
-        #         'name': '御茶ノ水駅',
-        #         'lat': 35.6993529,
-        #         'lng': 139.76526949999993
-        #     }, {
-        #         'name': '神保町駅',
-        #         'lat': 35.695932,
-        #         'lng': 139.75762699999996
-        #     }, {
-        #         'name': '新御茶ノ水駅',
-        #         'lat': 35.696932,
-        #         'lng': 139.76543200000003
-        #     }
-        # ],
     }
     params = {
         'name': '自宅',
@@ -70,3 +45,18 @@ def map(request):
     if (request.method == 'POST'):
         params['add'] = request.POST['add']
     return render(request, "carsharing_booking/map.html", params)
+
+def booking(request, num):
+    parking_obj = ParkingUserModel.objects.get(id=num)
+    items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
+    for item in items:
+        index = item['car_id']
+    car_obj = CarInfoModel.objects.get(id=index)
+    params = {
+        'parking_obj': parking_obj,
+        'form': BookingCreateForm(),
+        'message': '予約入力',
+        'car_obj': car_obj,
+    }
+    
+    return render(request, 'carsharing_booking/booking.html', params)
