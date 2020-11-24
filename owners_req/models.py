@@ -2,6 +2,7 @@ import re
 from django.db import models
 from datetime import date
 from django.core.validators import ValidationError, MinValueValidator, MaxValueValidator
+from parking_req .models import ParkingUserModel
 
 
 # def number_only(value):
@@ -51,7 +52,7 @@ class Category(models.Model):
 
 
 class CarInfoModel(models.Model):
-    #id = models.IntegerField(default=0, verbose_name='車両ID')
+    # car_id = models.AutoField(primary_key=True) #車両ID
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     day = models.DateField(verbose_name='登録日')
     parent_category = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
@@ -65,30 +66,15 @@ class CarInfoModel(models.Model):
     vehicle_inspection_day = models.DateField(verbose_name='次回車検予定日')
 
     def __str__(self):
-         return '<車両ID:id' + str(self.id) + '>'  
-
-class ParkingUserModel(models.Model):
-
-    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
-    #carsharing_id = models.IntegerField(max_length=8)
-    #parking_id = models.CharField(max_length=32)
-    lat = models.CharField(default=0, verbose_name='緯度', max_length=32)
-    lng = models.CharField(default=0, verbose_name='経度', max_length=32)
-    day = models.DateField()
-    parking_type = models.CharField(max_length=32)
-    width = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
-    length = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
-    height = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
-    def __str__(self):
-        return '<駐車場ID：' + str(self.id) + '>'  
+         return '<car_id=' + str(self.id) + '>'  
 
 
 class CarInfoParkingModel(models.Model):
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
-    car_id = models.ForeignKey(CarInfoModel,verbose_name='車両ID', on_delete=models.CASCADE)
-    parking_id =  models.ForeignKey(ParkingUserModel,verbose_name='駐車場ID', on_delete=models.CASCADE)
+    car_id = models.ForeignKey(CarInfoModel, on_delete=models.CASCADE, verbose_name='車両ID')
+    parking_id =  models.ForeignKey(ParkingUserModel, on_delete=models.CASCADE, verbose_name='駐車場ID')
     def __str__(self):
-        return str(self.user_id) + str(self.car_id) + str(self.parking_id)
+        return 'user_id=' +str(self.user_id) + str(self.car_id) + str(self.parking_id)
 
 
     

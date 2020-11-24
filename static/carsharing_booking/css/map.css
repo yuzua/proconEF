@@ -1,0 +1,35 @@
+div {
+    margin: 0pt;
+  }
+  #map_info {
+    padding: 0.5em 1em;
+    margin: 2em 10pt;
+    margin-bottom: 20pt;
+    color: #5d627b;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    opacity: 1;
+    width: 80%;
+  
+  }
+  #map_container {
+  
+    width: 90%;
+    padding: 4px;
+    margin: 0pt;
+  }
+  #map_canvas {   /* 高さ（と幅）を指定しないと地図は表示されない */
+    width: 100%;
+    height: 500px;
+    border: 1px solid black;
+    margin: 10pt; 
+  }
+  #url, #zoom {
+    display: none;  /* 非表示 */
+  }
+  /* 情報ウィンドウ（マーカーをクリックすると表示される領域）内 */
+  #map_content {
+    width: 250px;
+    height: 70px;
+  }

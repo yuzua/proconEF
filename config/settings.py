@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'parking_req.apps.ParkingReqConfig',
     'secondhandcar.apps.SecondhandcarConfig',
     'accounts.apps.AccountsConfig',
+    'parking_booking.apps.ParkingBookingConfig',
 
     'django.contrib.sites',
     'allauth',
@@ -58,6 +59,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 ROOT_URLCONF = 'config.urls'
 
@@ -142,6 +146,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+<<<<<<< HEAD
+=======
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+>>>>>>> 99b9533b3bd6576a2759e64636e95594d193a617
 #開発環境では、メールのシステムをスタブ化
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -170,3 +182,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 #ログイン／ログアウト時の遷移先の設定
 LOGIN_REDIRECT_URL = 'carsharing_req:first'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+
+#アラートメッセージ
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert alert-success',
+    messages.ERROR: 'alert alert-danger',
+    messages.WARNING: 'alert alert-warning',
+    messages.INFO: 'alert alert-info',
+}
