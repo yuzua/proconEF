@@ -1,88 +1,34 @@
 {% extends 'carsharing_req/base.html' %}
+{% load static %}
+
 
 {% block head %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&signed_in=true&callback=initMap" async defer></script>
-<style>
-    #map {
-      height: 600px;
-      width: 100%;
-      margin: auto;
-      margin-top: 20pt;
-      margin-bottom: 20pt;
-      border: solid;
-      border-width: 1pt;
-    }
-</style>
+<link rel="stylesheet" href='{% static "parking_req/css/map.css" %}'>
 {% endblock %}
+
 
 {% block title %}駐車場追加{% endblock %}
 
+
 {% block main_contents %}
 <div id="map"></div>
-  <ul>
+  <ul style="display:none;">
     <li>lat: <span id="lat"></span></li>
     <li>lng: <span id="lng"></span></li>
   </ul>
-  <script>
-    function initMap() {
-
-      // マップの初期化
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 13,
-        center: {lat: 35.89375928334494, lng: 139.63377508058397}
-      });
-
-      // クリックイベントを追加
-      map.addListener('click', function(e) {
-        getClickLatLng(e.latLng, map);
-      });
-    }
-
-    function getClickLatLng(lat_lng, map) {
-
-      // 座標を表示
-      document.getElementById('lat').textContent = lat_lng.lat();
-      document.getElementById('lng').textContent = lat_lng.lng();
-      document.forms[0].elements['name_input_lat'].value = lat_lng.lat();
-      document.forms[0].elements['name_input_lng'].value = lat_lng.lng();
-    // マーカーを設置  
-	var marker = new google.maps.Marker({
-        position: lat_lng,
-        map: map
-      });
-    console.log(marker);
-    // 座標の中心をずらす
-    // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
-    map.panTo(lat_lng);
-    }
-  </script>
-  <form id="myform" name="name_form" action="/parking_req/ajax/" method="POST">
+<form id="myform" name="name_form" action="/parking_req/ajax/" method="POST">
     <!-- <form name="name_form" action="/test_ajax_app/" method="POST"> -->
-      {% csrf_token %}
-      <input type="text" id="id_input_lat" name="name_input_lat" value="">
-      <input type="text" id="id_input_lng" name="name_input_lng" value="">
-      <input class="btn btn-default" type="submit"> 
-    </form>
-    <span id="id_div_ajax_response">
-      AJAX RESPONSE
-    </span>
-    <script>
-        $("#myform").submit( function(event) {
-        event.preventDefault();
-        var form = $(this);
-        console.log(form);
-        $.ajax({
-          url: form.prop("action"),
-          method: form.prop("method"),
-          data: form.serializeArray(),
-          timeout: 10000,
-          dataType: "text",
-        })
-        .done( function(data) {
-          alert(data);
-          $("#id_div_ajax_response").text(data);
-          $("#id_div_ajax_response").html("<a href='create' class='btn btn-default'>create</a>");
-        })
-      });
-    </script>
+  {% csrf_token %}
+  <input type="hidden" id="id_input_lat" name="name_input_lat" value="">
+  <input type="hidden" id="id_input_lng" name="name_input_lng" value="">
+  <input class="btn btn-default" type="submit"> 
+</form>
+    <span id="id_div_ajax_response"></span>
+<script type="text/javascript" src='{% static "parking_req/js/mapping.js" %}'></script>
+{% endblock %}
+
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
 {% endblock %}

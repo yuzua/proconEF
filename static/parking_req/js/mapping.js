@@ -1,29 +1,4 @@
-{% extends 'carsharing_req/base.html' %}
-
-{% block head %}
-<style>
-    #map {
-      height: 600px;
-      width: 100%;
-      margin: auto;
-      margin-top: 20pt;
-      margin-bottom: 20pt;
-      border: solid;
-      border-width: 1pt;
-    }
-</style>
-{% endblock %}
-
-{% block title %}管理者用：駐車場追加{% endblock %}
-
-{% block main_contents %}
-<div id="map"></div>
-  <ul style="display:none;">
-    <li>lat: <span id="lat"></span></li>
-    <li>lng: <span id="lng"></span></li>
-  </ul>
-  <script>
-    function initMap() {
+function initMap() {
 
       // マップの初期化
       var map = new google.maps.Map(document.getElementById('map'), {
@@ -54,16 +29,7 @@
     // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
     map.panTo(lat_lng);
     }
-  </script>
-  <form id="myform" name="name_form" action="/parking_req/ajax/" method="POST">
-    <!-- <form name="name_form" action="/test_ajax_app/" method="POST"> -->
-      {% csrf_token %}
-      <input type="hidden" id="id_input_lat" name="name_input_lat" value="">
-      <input type="hidden" id="id_input_lng" name="name_input_lng" value="">
-      <input class="btn btn-default" type="submit"> 
-    </form>
-    <span id="id_div_ajax_response"></span>
-    <script>
+
         $("#myform").submit( function(event) {
         event.preventDefault();
         var form = $(this);
@@ -78,14 +44,6 @@
         .done( function(data) {
           alert(data);
           $("#id_div_ajax_response").text(data);
-          $("#id_div_ajax_response").html("<a href='/administrator/create' class='btn btn-primary'>create</a>");
+          $("#id_div_ajax_response").html("<a href='/parking_req/create' class='btn btn-primary'>create</a>");
         })
       });
-    </script>
-{% endblock %}
-
-
-{% block mapapi %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
-<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
-{% endblock %}

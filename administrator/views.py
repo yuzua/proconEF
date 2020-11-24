@@ -47,8 +47,17 @@ class ParkingAdminCreate(TemplateView):
         }
     
     def get(self, request):
-        return render(request, 'administrator/create.html', self.params)
+        #SSRF対策サンプルコード
+        # if request.user.id == None:
+        #     return redirect(to='/carsharing_req/index')
+        # flag = CustomUser.objects.filter(id=request.user.id)
+        # flag = flag.values('is_superuser')
+        # flag = flag[0]['is_superuser']
+        # if flag != True:
+        #     print(request.user)
+        #     return redirect(to='/carsharing_req/')
 
+        return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
         dt_now = datetime.datetime.now()
@@ -77,10 +86,11 @@ def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
     admin_parking = s_p.values("id", "user_id", "lat", "lng")
     if (request.method == 'POST'):
-        num = request.POST['obj.id']
+        #num = request.POST['obj.id']
         num1 = request.POST['command']
         #edit
         if (num1 == 'edit'):
+            num = request.POST['obj.id']
             obj = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingAdminEdit',
@@ -90,6 +100,7 @@ def admin_main(request):
             return render(request, 'administrator/edit.html', params)
         #delete    
         if (num1 == 'delete'):
+            num = request.POST['obj.id']
             delete_parking = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingAdminDelete',
@@ -98,6 +109,23 @@ def admin_main(request):
             'id': num,
             }
             return render(request, 'administrator/delete.html', params)
+        #map
+        if (num1 == 'map'):
+            # data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            # print(data.pref01+data.addr01+data.addr02)
+            add = '千葉県柏市末広町10-1'
+            markerData = list(admin_parking.all())
+            data = {
+                'markerData': markerData,
+            }
+            params = {
+            'name': '自宅',
+            'add': add,
+            'data_json': json.dumps(data)
+            }
+            if (request.method == 'POST'):
+                params['add'] = request.POST['add']
+            return render(request, "administrator/admin_main.html", params)    
     else:
         # data = CarsharUserModel.objects.get(id=0)
         # print(data.pref01+data.addr01+data.addr02)

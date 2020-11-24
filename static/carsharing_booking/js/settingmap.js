@@ -1,40 +1,5 @@
-<style>
-#map_container {
-  clear: both;
-  width: 90%;
-  padding: 4px;
-  border: 1px solid #CCC;
-}
-#map_canvas {   /* 高さ（と幅）を指定しないと地図は表示されない */
-  width: 100%;
-  height: 500px;
-}
-#url, #zoom {
-  display: none;  /* 非表示 */
-}
-/* 情報ウィンドウ（マーカーをクリックすると表示される領域）内 */
-#map_content {
-  width: 250px;
-  height: 70px;
-}
-</style>
-</head>
-<body>
-<div id="map_info">
-  <p id="venue">{{ name }}</p>
-  <p id="address">{{ add }}</p>
-  <p id="url"><a href="http://www.tokyo-skytree.jp/" target="_blank">www.tokyo-skytree.jp</a></p>
-  <p id="zoom">17</p>
-</div>
-<div id="map_container">
-  <div id="map_canvas"></div>
-</div>
-<!-- jQuery の読み込み --> 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
 var markers = [];
 var infoWindows = [];
-const data = JSON.parse('{{ data_json|safe }}');
 var markerData = data.markerData;
 console.log(markerData);
 function initMap() {
@@ -80,24 +45,17 @@ function initMap() {
           animation: google.maps.Animation.DROP,  
           title: title,
         });
- 
+
   // マーカー毎の処理
  for (var i = 0; i < markerData.length; i++) {
-        markerLatLngs = new google.maps.LatLng({lat: Number(markerData[i]['lat']), lng: Number(markerData[i]['lng'])}); // 緯度経度のデータ作成
-        console.log(map);
+        markerLatLngs = new google.maps.LatLng({lat: Number(markerData[i]['lat']), lng: Number(markerData[i]['lng'])}); // 緯度経度のデータ作成        
         markers[i] = new google.maps.Marker({ // マーカーの追加
-         position: markerLatLngs, // マーカーを立てる位置を指定
+          position: markerLatLngs, // マーカーを立てる位置を指定
             map: map // マーカーを立てる地図を指定
-       });
-     infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-         content: '<div class="sample">' + markerData[i]['id'] + '</div><form action="{% url 'administrator:admin_main' %}" method="post">\
-         {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '><input type="hidden" name="command" value="edit">\
-         <input class="btn btn-primary my-2" type="submit" value="修正"></form>\
-         <form action="{% url 'administrator:admin_main' %}" method="post">{% csrf_token %}\
-         <input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '>\
-         <input type="hidden" name="command" value="delete">\
-         <input class="btn btn-primary my-2" type="submit" value="削除"></form>' // 吹き出しに表示する内容
-       });
+        });
+        infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+          content: '<div class="sample">' + markerData[i]['id'] + '</div><a href="/carsharing_booking/booking/'+ markerData[i]['id'] +'">ここを予約</a>' // 吹き出しに表示する内容
+        });
  
      markerEvent(i); // マーカーにクリックイベントを追加
  }
@@ -135,14 +93,3 @@ function initMap() {
     });
   }); 
 }
-</script> 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
-<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->  
-<form action="{% url 'administrator:admin_main' %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="add" size="40" maxlength="20">
-    <input type="hidden" name="command" value="map">
-    <input class="btn btn-primary my-2" type="submit" value="click">
-</form>
-</body>
-</html>

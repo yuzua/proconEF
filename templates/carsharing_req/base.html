@@ -37,18 +37,18 @@
 <!-- 駐車場オーナーに登録済か判定 -->
 
 <!-- カーシェアリングオーナーに登録済か判定 -->
-{% if request.session.owner_flag == True %}
-<!-- 登録済 -->
-        {{ request.session.owner_flag }}
-    {% else %}
-<!-- 未登録 -->
-        {{ request.session.owner_flag }}
-    {% endif %}
+        {% if request.session.owner_flag == True %}
+    <!-- 登録済 -->
+            {{ request.session.owner_flag }}
+        {% else %}
+    <!-- 未登録 -->
+            {{ request.session.owner_flag }}
+        {% endif %}
 <!-- カーシェアリングオーナーに登録済か判定 -->
 
         </p>
           <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;">
-            <a class="navbar-brand" href="#">templete</a>
+            <a class="navbar-brand" href="/">CarSharingService</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -78,8 +78,8 @@
                       カーシェアリング・駐車場利用
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">カーシェアリング検索</a>
-                      <a class="dropdown-item" href="#">駐車場検索</a>
+                      <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
+                      <a class="dropdown-item" href="">駐車場検索</a>
                       <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
                       <a class="dropdown-item" href="#">駐車場利用の流れ</a>
                       <a class="dropdown-item" href="#">料金について</a>
@@ -93,6 +93,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="#">あなたへのおすすめ</a>
                       <a class="dropdown-item" href="#">中古車検索</a>
+                      <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
                     </div>
                 </li>
                 {% if request.session.owner_flag == True %}
@@ -171,6 +172,13 @@
     <!--wrapper-->
     <div wrapper class="container w-80 clearfix" style="padding: 5px;">
     <!--メイン-->
+    {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers" style="padding: 0pt;"> 
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
+      </ul>
+    {% endfor %}
+    {% block box %}{% endblock %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->
     </div>
@@ -213,7 +221,7 @@
                             <a href="#!">カーシェアリング利用の流れ</a>
                         </li>
                         <li>
-                            <a href="#!">カーシェアリング検索</a>
+                            <a href="/carsharing_booking/map">カーシェアリング検索</a>
                         </li>
                         <li>
                             <a href="#!">駐車場利用の流れ</a>
@@ -297,10 +305,6 @@
     </footer>
     <!-- Footer -->
   </body>
-    {% comment %} <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> {% endcomment %}
-  </body>
 </html>
+
+{% block mapapi %}{% endblock %}

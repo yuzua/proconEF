@@ -7,18 +7,19 @@ from .models import ParkingUserModel
 from .forms import ParkingForm
 import datetime
 import json
+from django.contrib import messages
 
 # Create your views here.
 
 
 def index(request):
     params = {
-        'hoge': '',
+        'msg': '',
     }
     # return render(request, 'parking_req/map1.html', params)
     return render(request, 'parking_req/mapping.html', params)
 
-
+#登録する緯度、経度をセッションにセット
 def test_ajax_response(request):
     input_lat = request.POST.getlist("name_input_lat")
     input_lng = request.POST.getlist("name_input_lng")
@@ -28,6 +29,7 @@ def test_ajax_response(request):
 
     return HttpResponse(hoge)
 
+#駐車場データ登録機能
 class ParkingHostCreate(TemplateView):
     def __init__(self):
         self.params = {
@@ -36,9 +38,11 @@ class ParkingHostCreate(TemplateView):
             'form': ParkingForm(),
         }
     
+    #ログインユーザ、非ログインユーザ判別
     def get(self, request):
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
             print(request.user)
@@ -47,7 +51,7 @@ class ParkingHostCreate(TemplateView):
 
         return render(request, 'parking_req/create.html', self.params)
 
-
+    #入力データとセッションデータを保存
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
@@ -63,24 +67,21 @@ class ParkingHostCreate(TemplateView):
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
         self.params['form'] = parking
+        #バリデーションチェック
         if (parking.is_valid()):
             record.save()
+            #セッションデータ削除
             del request.session['user_lat']
             del request.session['user_lng']
-            return redirect(to='/parking_req/sample')
-            
+            if 'info_flag' in request.session:
+                print(request.session['info_flag'])
+                return redirect(to='/owners_req/settinginfo')
+            else:
+                print('none')
+                return redirect(to='/parking_req/sample')
         return render(request, 'parking_req/create.html', self.params)
 
 def edit(request):
-    # num = request.POST['message']
-    # obj = ParkingUserModel.objects.filter(id=num).all()
-    # params = {
-    #     'title': 'ParkingEdit',
-    #     'data': obj,
-    #     'message':num,
-    #     'form': ParkingForm(instance=obj),
-    # }
-    # return render(request, 'parking_req/edit.html', params)
     if (request.method == 'POST'):
         num = request.POST['p_id']
         obj = ParkingUserModel.objects.get(id=num)
@@ -103,22 +104,17 @@ def delete(request, num):
     if (request.method == 'POST'):
         parking.delete()
         return redirect(to='/parking_req/sample')
-    # params = {
-    #     'title': 'ParkingDelete',
-    #     'message': '※以下のレコードを削除します。',
-    #     'obj': parking,
-    #     'id': num,
-    # }
+
     return render(request, 'parking_req/delete.html')
 
 def sample(request):
     s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
     sample_parking = s_p.values("id", "user_id", "lat", "lng")
     if (request.method == 'POST'):
-        num = request.POST['obj.id']
         num1 = request.POST['command']
-        #edit
+        #修正機能
         if (num1 == 'edit'):
+            num = request.POST['obj.id']
             obj = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingEdit',
@@ -126,8 +122,9 @@ def sample(request):
             'form': ParkingForm(instance=obj), 
             }
             return render(request, 'parking_req/edit.html', params)
-        #delete    
+        #削除機能    
         if (num1 == 'delete'):
+            num = request.POST['obj.id']
             delete_parking = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingDelete',
@@ -136,11 +133,32 @@ def sample(request):
             'id': num,
             }
             return render(request, 'parking_req/delete.html', params)
+        #検索機能
+        if (num1 == 'map'):
+            data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            print(data.pref01+data.addr01+data.addr02)
+            add = data.pref01+data.addr01+data.addr02
+            markerData = list(sample_parking.all())
+            #item_all = ParkingUserModel.objects.all()
+            #item = item_all.values("id", "user_id", "lat", "lng")
+            #item_list = list(item.all())
+            #print(item)
+            data = {
+                'markerData': markerData,
+            }
+            params = {
+            'name': '自宅',
+            'add': add,
+            'data_json': json.dumps(data)
+            }
+            if (request.method == 'POST'):
+                params['add'] = request.POST['add']
+            return render(request, "parking_req/map3.html", params)        
     else:
+        #地図上に登録した駐車場を表示
         data = CarsharUserModel.objects.get(id=request.session['user_id'])
         print(data.pref01+data.addr01+data.addr02)
         add = data.pref01+data.addr01+data.addr02
-        #sample
         markerData = list(sample_parking.all())
         data = {
             'markerData': markerData,
