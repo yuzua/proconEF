@@ -146,11 +146,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+<<<<<<< HEAD
+=======
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+>>>>>>> 99b9533b3bd6576a2759e64636e95594d193a617
 #開発環境では、メールのシステムをスタブ化
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

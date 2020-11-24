@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
+from django .shortcuts import redirect
 from carsharing_req .models import CarsharUserModel
+from owners_req .models import CarInfoParkingModel
 from parking_req .models import *
 import json
 from .models import BookingInfoModel
@@ -12,28 +14,34 @@ from .forms import BookingInfoForm
 def index(request):
     return HttpResponse('parking_booking')
 
-def test_ajax_app(request):
-    if str(request.user) == "AnonymousUser":
-        print('ゲスト')
-    else:
-        print(request.user)
-    hoge = "Hello Django!!"
+def test(request):
+    input_parking_id = request.POST.getlist("name_parking_id")
+    request.session['user_parking_id'] = input_parking_id[0]
+    return redirect(to='/parking_booking/create')    
 
-    return render(request, "carsharing_booking/index.html", {
-        "hoge": hoge,
-    })
+# def test_ajax_app(request):
+#     if str(request.user) == "AnonymousUser":
+#         print('ゲスト')
+#     else:
+#         print(request.user)
+#     hoge = "Hello Django!!"
 
-def test_ajax_response(request):
-    input_text = request.POST.getlist("name_input_text")
-    hoge = "Ajax Response: " + input_text[0]
+#     return render(request, "carsharing_booking/index.html", {
+#         "hoge": hoge,
+#     })
 
-    return HttpResponse(hoge)
+# def test_ajax_response(request):
+#     input_text = request.POST.getlist("name_input_text")
+#     hoge = "Ajax Response: " + input_text[0]
+
+#     return HttpResponse(hoge)
 
 def map(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
     print(data.pref01+data.addr01+data.addr02)
     add = data.pref01+data.addr01+data.addr02
-    item_all = ParkingUserModel.objects.all()
+    set_list = CarInfoParkingModel.objects.values("parking_id")
+    item_all = ParkingUserModel.objects.exclude(id__in=set_list)
     item = item_all.values("id", "user_id", "lat", "lng")
     item_list = list(item.all())
     print(item)
@@ -73,15 +81,14 @@ class ParkingBookingCreate(TemplateView):
     #入力データ保存
     def post(self, request):
         user_id = request.session['user_id']
-        #parking_booking/map.htmlからparking_idをpost送信する。（まだ動かない）
-        parking_id = request.POST['parking_id']
+        parking_id = request.session['user_parking_id']
         car_id = request.POST['car_id']
         start_day = request.POST['start_day']
         end_day = request.POST['end_day']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
         charge = request.POST['charge']
-        record = ParkingUserModel(user_id = user_id, parking_id = parking_id, car_id=car_id, start_day = start_day, \
+        record = BookingInfoModel(user_id = user_id, parking_id = parking_id, car_id=car_id, start_day = start_day, \
             end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
         obj = BookingInfoModel()
         p_b = BookingInfoForm(request.POST, instance=obj)
@@ -89,7 +96,7 @@ class ParkingBookingCreate(TemplateView):
         #バリデーションチェック
         if (p_b.is_valid()):
             record.save()
-            return redirect(to='/parking_booking/index')
+            return redirect(to='/parking_booking/')
             
         return render(request, 'parking_booking/create.html', self.params)
 
