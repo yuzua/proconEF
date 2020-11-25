@@ -1,21 +1,47 @@
 from django import forms
-from.models import BookingInfoModel
+from.models import ParkingBookingModel
+import bootstrap_datepicker_plus as datetimepicker
 
-class BookingInfoForm(forms.ModelForm):
+class ParkingBookingForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(ParkingBookingForm, self).__init__(*args, **kwd)
 
     class Meta:
-        model = BookingInfoModel
-        fields = ['car_id','start_day','end_day','start_time', 'end_time', 'charge']
-        widget = {
-            'car_id': forms.NumberInput(attrs={'class': 'form-control'}),
-            'start_day': forms.DateInput(attrs={'class': 'form-control'}),
-            'end_day': forms.DateInput(attrs={'class': 'form-control'}),
-            'start_time': forms.NumberInput(attrs={'class': 'form-control'}),
-            'end_time': forms.NumberInput(attrs={'class': 'form-control'}),
-            'charge': forms.NumberInput(attrs={'class': 'form-control'}),
+        model = ParkingBookingModel
+        fields = ['start_day', 'start_time', 'end_day', 'end_time']
+        widgets = {
+            'user_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'parking_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).start_of('期間'),
+            'start_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+            'end_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).end_of('期間'),
+            'end_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
         }
         labels = {
-            'car_id': '車ID',
             'start_day': '利用開始日',
             'end_day': '利用終了日',
             'start_time': '利用開始時刻',
