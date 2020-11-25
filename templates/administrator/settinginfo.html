@@ -1,0 +1,32 @@
+{% extends 'carsharing_req/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block active_login %}
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<p class="h5 mt-4">{{ message|safe }}</p>
+<form action="{% url 'administrator:settinginfo' %}" method="post">
+    <input type="hidden" name="user_id" value='0'>
+    {% csrf_token %}
+    <table class="table">
+        <tr><th>車両ID</th><th>ユーザID</th><th>登録日</th><th>車種</th><th>選択</th></tr>
+    {% for obj in car_data %}
+        <tr><td>{{obj.id}}</td><td>{{obj.user_id}}</td><td>{{obj.day}}</td><td>{{obj.category}}</td><td><input type="radio" name="car_id" value="{{obj.id}}"></td></tr>
+    {% endfor %}        
+    </table>
+
+    <table class="table">
+        <tr><th>駐車場ID</th><th>ユーザID</th><th>登録日</th><th>駐車場タイプ</th><th>選択</th></tr>
+    {% for obj in parking_data %}
+        <tr><td>{{obj.id}}</td><td>{{obj.user_id}}</td><td>{{obj.day}}</td><td>{{obj.parking_type}}</td><td><input type="radio" name="parking_id" value="{{obj.id}}"></td></tr>
+    {% endfor %}
+    </table>
+<input class="btn btn-primary my-2" type="submit" value="click">
+</form>
+{% endblock %}
+
