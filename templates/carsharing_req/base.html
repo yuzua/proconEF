@@ -144,8 +144,8 @@
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
-      <ul class="socialaccount_providers" style="padding: 0pt;"> 
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
+      <ul class="socialaccount_providers" style="margin-right: 5pt; padding: 0px;"> 
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
       </ul>
     {% endfor %}
     {% block box %}{% endblock %}
