@@ -21,13 +21,18 @@
 </div>
 <br>
 <div class="card">
+<form action="{% url 'carsharing_booking:postbooking' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="car_id" value="{{car_id}}"> 
     <h2 class="card-header">{{ message|safe }}</h2>
     <div class="card-body">
         {{ form.as_p }}
+        {{ form.media }}
     </div>
     <div class="card-footer">
         <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
     </div>
+</form>
 </div>
 <script>
 //入力した緯度・経度を取得しjsへセット
