@@ -41,14 +41,6 @@
                 <input class="btn btn-primary my-2" type="submit" value="Delete">
             </form>
         </td>
-        <td>
-            <form action="{% url 'owners_req:createDate' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="obj.id" value="{{obj.id}}">
-                <input type="hidden" name="command" value="createDate">
-                <input class="btn btn-primary my-2" type="submit" value="貸出可能日登録">
-            </form>
-        </td>
     </tr>
 </table>
 {% endfor %}

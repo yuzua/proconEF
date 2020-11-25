@@ -225,14 +225,14 @@ def carlist(request):
             'id': num,
             }
             return render(request, 'owners_req/deleteCar.html', params)
-        if (num1 == 'createDate'):
-            create_date = CarInfoModel.objects.get(id=num)
-            params = {
-                'title': 'カーシェアリングオーナー日時選択',
-                'message': 'カーシェアリングオーナー日時選択',
-                'obj': create_date,
-                'id': num, 
-            }
+        # if (num1 == 'createDate'):
+        #     create_date = CarInfoModel.objects.get(id=num)
+        #     params = {
+        #         'title': 'カーシェアリングオーナー日時選択',
+        #         'message': 'カーシェアリングオーナー日時選択',
+        #         'obj': create_date,
+        #         'id': num, 
+        #     }
     else:
         #sample
         params = {
@@ -350,8 +350,8 @@ class SettingInfo(TemplateView):
             for obj in set_list.values("parking_id"):
                 for index in obj.values():
                     exclude_parking.append(index)
-            car_list = CarInfoModel.objects.exclude(id__in=exclude_car)
-            parking_list = ParkingUserModel.objects.exclude(id__in=exclude_parking)
+            car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_car)
+            parking_list = ParkingUserModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_parking)
             self.params['car_data'] = car_list
             self.params['parking_data'] = parking_list
         return render(request, 'owners_req/settinginfo.html', self.params)
@@ -359,37 +359,38 @@ class SettingInfo(TemplateView):
     def post(self, request):
         user_id = int(request.POST['user_id'])
         car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        #car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
         parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
         record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
         record.save()
         messages.success(self.request, '登録完了しました')
-        return redirect(to='/carsharing_req/index')
+        return redirect(to='/owners_req/createDate')
+        #return render(request, 'owners_req/createDate.html', self.params)
     
 class CreateDateView(TemplateView):
-    exclude_car= []
-    car_info = CarInfoModel.objects.exclude(id__in=exclude_car).all()
     def __init__(self):
         self.params = {
-            'title': 'カーシェアリングオーナー日時選択',
-            'message': 'カーシェアリングオーナー日時選択',
-            'car_date': CarsharingDateForm, 
+            'title': '駐車場/車両一覧',
+            'message': '貸出可能日を設定してください',
+            'car_date': CarsharingDateForm(), 
             'carinfo': '',  #登録済みの車情報表示
         }
     def get(self, request):
-        if str(request.user) == "AnonymousUser":
-            print('ゲスト')
-            messages.error(self.request, 'ログインしてください。')
-            return redirect(to='/carsharing_req/index')
-        else:
-            car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id")
-            for obj in set_list.values("car_id"):
-                for index in obj.values():
-                    exclude_car.append(index)
-            car_list = CarInfoModel.objects.exclude(id__in=exclude_car)
-            self.params['carinfo'] = car_list
-            return render(request, 'owners_req/createDate.html', self.params)
+        car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+        # self.params['carinfo'] = car_info
+        #return render(request, 'owners_req/createDate.html', self.params)
+        # user_id = int(request.POST['user_id'])
+        # car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        #car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
+        # parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
+        # record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
+        # carinfo = CarInfoParkingForm(request.POST, instance=record)
+        self.params['carinfo'] = car_info
+        #record.save()
+        return render(request, 'owners_req/createDate.html', self.params)
     def post(self, request):
-        user_id = int(request.POST['user_id'])
+        date
         car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        return redirect(to='/carsharing_req/index')
         
     
