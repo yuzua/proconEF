@@ -84,7 +84,7 @@ class CarInfoParkingForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
         labels = {
-            #'user_id': 'ユーザID',
+            'user_id': 'ユーザID',
             'car_id': '車両ID',
             'parking_id': '駐車場ID',
         }
