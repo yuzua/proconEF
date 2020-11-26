@@ -21,9 +21,11 @@
 </div>
 <br>
 <div class="card">
-<form action="{% url 'carsharing_booking:postbooking' %}" method="post">
+<form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="car_id" value="{{car_id}}"> 
+    <input id="addressPush" type="hidden" name="address">
+    <input type="hidden" name="num" value="{{num}}">
     <h2 class="card-header">{{ message|safe }}</h2>
     <div class="card-body">
         {{ form.as_p }}

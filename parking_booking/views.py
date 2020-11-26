@@ -56,6 +56,7 @@ def map(request):
     }
     if (request.method == 'POST'):
         params['add'] = request.POST['add']
+        params['name'] = '検索'
     return render(request, "parking_booking/map.html", params)
 
 #駐車場予約
@@ -157,4 +158,5 @@ def push(request):
         end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
     record.save()
     messages.success(request, '予約が完了しました。')
+    del request.session['user_parking_id']
     return redirect(to='parking_booking:map')

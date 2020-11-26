@@ -39,8 +39,11 @@ window.onload = function getAddress(){
       
       //住所の結果表示をします。
       document.getElementById('addressOutput').value = address;
-      target = document.getElementById("addressOutput");
-       target.innerHTML = address;
+      target1 = document.getElementById("addressOutput");
+      target1.innerHTML = address;
+      document.getElementById('addressPush').value = address;
+      target2 = document.getElementById("addressPush");
+      target2.innerHTML = address;
     });
 
 }

@@ -151,7 +151,7 @@ function initMap() {
 }
 </script> 
 
-<form action="{% url 'carsharing_booking:map' %}" method="post">  
+<form action="{% url 'parking_booking:map' %}" method="post">  
 <div class="input-group mb-4 my-3">
   {% csrf_token %}
   <input type="text" class="form-control" placeholder="検索" aria-label="Recipient's username" aria-describedby="basic-addon2" name="add" size="20" maxlength="20">

@@ -22,11 +22,6 @@ def test_ajax_app(request):
         "hoge": hoge,
     })
 
-def test_ajax_response(request):
-    input_text = request.POST.getlist("name_input_text")
-    hoge = "Ajax Response: " + input_text[0]
-
-    return HttpResponse(hoge)
 
 def map(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
@@ -46,6 +41,7 @@ def map(request):
     }
     if (request.method == 'POST'):
         params['add'] = request.POST['add']
+        params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
 
 def booking(request, num):
@@ -55,6 +51,7 @@ def booking(request, num):
         'message': '予約入力',
         'car_obj': '',
         'car_id': '',
+        'num': num,
     }
 
     parking_obj = ParkingUserModel.objects.get(id=num)
@@ -65,10 +62,87 @@ def booking(request, num):
     params['car_id'] = index
     car_obj = CarInfoModel.objects.get(id=index)    
     params['car_obj'] = car_obj
+    request.session['car_obj'] = car_obj
     
     return render(request, 'carsharing_booking/booking.html', params)
 
-def postBooking(request):
+def checkBooking(request):
+    params = {
+        'parking_obj': '',
+        'title': 'カーシェアリング予約確認',
+        'message': '予約情報確認',
+        'data': '',
+        'kingaku': '',
+        'times': '',
+        'car_obj': request.session['car_obj'],
+        'address': request.POST['address'],
+    }
+    start_day = request.POST['start_day']
+    end_day = request.POST['end_day']
+    start_time = request.POST['start_time']
+    end_time = request.POST['end_time']
+    # charge = request.POST['charge']
+    start = start_day + ' ' + start_time
+    start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
+    print(start)
+    print(type(start))
+    end = end_day + ' ' + end_time
+    end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
+    print(end)
+    print(type(end))
+    time = end - start
+    d = int(time.days)
+    m = int(time.seconds / 60)
+    print(d)
+    print(int(m))
+    charge = 0
+    times = ''
+
+    if d <= 0:
+        print('1day')
+    else:
+        print('days')
+        charge = int(d * 10000)
+        times = str(d) + '日 '
+
+    if start_time < end_time:
+        print('tule')
+        charge += int(m / 15 * 330)
+        h = int(m / 60)
+        m = int(m % 60)
+        x = str(h) + '時間 ' + str(m) + '分'
+        times += x
+    elif start_time >= end_time and d < 0:
+        print('false')
+        parking_obj = ParkingUserModel.objects.get(id=request.POST['num'])
+        params['parking_obj'] = parking_obj
+        obj = BookingModel()
+        c_b = BookingCreateForm(request.POST, instance=obj)
+        params['form'] = c_b
+        messages.error(request, '終了時刻が開始時刻よりも前です。')
+        return render(request, 'carsharing_booking/booking.html', params)
+    else:
+        charge += int(m / 15 * 330)
+        h = int(m / 60)
+        m = int(m % 60)
+        x = str(h) + '時間 ' + str(m) + '分'
+        times += x
+        
+    data = {
+        'car_id': request.POST['car_id'],
+        'start_day': start_day,
+        'start_time': start_time,
+        'end_day': end_day,
+        'end_time': end_time,
+        'charge': charge,
+    }
+    params['kingaku'] = "{:,}".format(charge)
+    params['data'] = data
+    params['times'] = times
+    messages.warning(request, 'まだ予約完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
+    return render(request, "carsharing_booking/check.html", params)
+
+def push(request):
     if (request.method == 'POST'):
         user_id = request.session['user_id']
         car_id = request.POST['car_id']

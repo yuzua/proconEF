@@ -19,7 +19,7 @@ class BookingCreateForm(forms.ModelForm):
                     'locale': 'ja',
                     'dayViewHeaderFormat': 'YYYY年 MMMM',
                 }
-            ),
+            ).start_of('期間'),
             'start_time': datetimepicker.DateTimePickerInput(
                 format='%H:%M',
                 options={
@@ -33,7 +33,7 @@ class BookingCreateForm(forms.ModelForm):
                     'locale': 'ja',
                     'dayViewHeaderFormat': 'YYYY年 MMMM',
                 }
-            ),
+            ).end_of('期間'),
             'end_time': datetimepicker.DateTimePickerInput(
                 format='%H:%M',
                 options={
