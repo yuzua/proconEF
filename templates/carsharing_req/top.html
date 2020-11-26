@@ -57,6 +57,7 @@
                     <a href="/parking_booking/map" class="btn btn-primary">予約</a>
                 </div>
             </div>
+            {% if request.session.owner_flag == True %}
             <div class="card">
                 <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
                 <p><img src='{% static "admin/img/carsharing_owner.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
@@ -66,6 +67,18 @@
                     <a href="#" class="btn btn-primary">選択</a>
                 </div>
             </div>
+            {% else %}
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">カーシェアリングオーナーになる</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">登録</a>
+                </div>
+            </div>
+            {% endif %}
+            {% if request.session.parking_flag == True %}
             <div class="card">
                 <!-- <svg class="bd-placeholder-img card-img-top"xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
                 <p><img src='{% static "admin/img/parking_owner.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
@@ -75,6 +88,17 @@
                     <a href="#" class="btn btn-primary">選択</a>
                 </div>
             </div>
+            {% else %}
+            <div class="card">
+                <!-- <svg class="bd-placeholder-img card-img-top"xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
+                <p><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="img"></p>
+                <div class="card-body">
+                    <h5 class="card-title">駐車場オーナーになる</h5>
+                    <p class="card-text">template</p>
+                    <a href="#" class="btn btn-primary">登録</a>
+                </div>
+            </div>
+            {% endif %}
             <div class="card">
                 <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
                 <p><img src='{% static "admin/img/choce.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
