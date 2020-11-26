@@ -376,21 +376,37 @@ class CreateDateView(TemplateView):
             'carinfo': '',  #登録済みの車情報表示
         }
     def get(self, request):
-        car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
-        # self.params['carinfo'] = car_info
-        #return render(request, 'owners_req/createDate.html', self.params)
-        # user_id = int(request.POST['user_id'])
-        # car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
-        #car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
-        # parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
-        # record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
-        # carinfo = CarInfoParkingForm(request.POST, instance=record)
-        self.params['carinfo'] = car_info
-        #record.save()
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            # user_id = int(request.POST['user_id'])
+            # car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+            # car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
+            # parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
+            # record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
+            # carinfo = CarInfoParkingForm(request.POST, instance=record)
+            # exclude_car= []
+            # exclude_parking = []
+            # set_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            # for obj in set_list.values("car_id"):
+            #     for index in obj.values():
+            #         exclude_car.append(index)
+            # car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_car)
+            # parking_list = ParkingUserModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_parking)
+            self.params['carinfo'] = car_info
+            # self.params['car_data'] = parking_list
         return render(request, 'owners_req/createDate.html', self.params)
     def post(self, request):
-        date
+        user_id = int(request.POST['user_id'])
         car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        possible_date = request.POST['possible_date']
+        obj = CarsharingDateModel(user_id = user_id, car_id = car_id, possible_id = possible_id)
+        car_date = CarsharingDateForm(request.POST, instance=obj)
+        obj.save()
+        messages.success(self.request, '登録完了しました')
         return redirect(to='/carsharing_req/index')
         
     
