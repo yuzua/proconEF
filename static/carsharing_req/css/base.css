@@ -45,3 +45,40 @@
     float: left;
     text-align: center;
 }
+
+.nav {
+    width: 100%;
+    background-color: beige;
+    height: 50pt;
+}
+
+.navbar01 {
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar02 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar03 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar04 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar05 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
