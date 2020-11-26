@@ -150,7 +150,8 @@ def push(request):
         end_day = request.POST['end_day']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time)
+        charge = request.POST['charge']
+        record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time, charge = charge)
         record.save()
     messages.success(request, '予約が完了しました')
     return redirect(to='/carsharing_req/index')

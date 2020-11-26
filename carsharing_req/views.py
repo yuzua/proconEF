@@ -12,7 +12,7 @@ from owners_req .models import HostUserModel
 
 # Create your views here.
 
-
+# ゲスト/ユーザ 判定
 def index(request):
     querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
     if querySet.first() is None:
@@ -24,6 +24,7 @@ def index(request):
         print(request.user.email)
     return redirect(to='carsharing_req:set_session')
 
+# user_idをSESSIONに格納・オーナー登録済か判定用flagをSESSIONに格納
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
     print(data.id)
@@ -50,6 +51,7 @@ def set_session(request):
     return redirect(to='carsharing_req:index')
 
 
+# 説明ページ(HTML)ルーティング
 def pages(request, num):
     if num == 1:
         return render(request, 'user_car.html')
@@ -91,17 +93,18 @@ class CarsharUserInfo(TemplateView):
         self.params['form'] = CarsharUserCreateForm(request.POST)
         return render(request, 'carsharing_req/index.html', self.params)
 
-class CarsharUserSendMail(generic.FormView):
+# class CarsharUserSendMail(generic.FormView):
 
-    template_name = "carsharing_req/index.html"
-    form_class = CarsharUserCreateForm
-    success_url = reverse_lazy('carsharing_req:index')
+#     template_name = "carsharing_req/index.html"
+#     form_class = CarsharUserCreateForm
+#     success_url = reverse_lazy('carsharing_req:index')
 
 
-    def form_valid(self, form):
-        form.send_email()
-        messages.success(self.request, 'メッセージを送信しました。')
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.send_email()
+#         messages.success(self.request, 'メッセージを送信しました。')
+#         return super().form_valid(form)
+
 
 
 class CreateView(TemplateView):
