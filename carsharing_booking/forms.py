@@ -1,6 +1,7 @@
 from django import forms
 from django.core.mail import EmailMessage
 from .models import BookingModel
+import bootstrap_datepicker_plus as datetimepicker
 
 class BookingCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwd):
@@ -12,10 +13,34 @@ class BookingCreateForm(forms.ModelForm):
         widgets = {
             'user_id': forms.TextInput(attrs={'class': 'form-control'}),
             'car_id': forms.TextInput(attrs={'class': 'form-control'}),
-            'start_day': forms.TextInput(attrs={'class': 'form-control'}),
-            'start_time': forms.TextInput(attrs={'class': 'form-control'}),
-            'end_day': forms.TextInput(attrs={'class': 'form-control'}),
-            'end_time': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).start_of('期間'),
+            'start_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+            'end_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).end_of('期間'),
+            'end_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
         }
         labels={
             'user_id': 'ユーザID',

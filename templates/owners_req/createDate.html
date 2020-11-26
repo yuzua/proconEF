@@ -1,0 +1,30 @@
+{% extends 'carsharing_req/base.html' %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block active_login %}
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<p class="h5 mt-4">{{ message|safe }}</p>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<form action="{% url 'owners_req:createDate' %}" method="post">
+    <input type="hidden" name="user_id" value={{request.session.user_id}}>
+    {% csrf_token %}
+    <table class="table">
+        <tr><th>車両ID</th><th>駐車場ID</th></tr>
+    {% for obj in carinfo %}
+        <tr><td>{{obj.car_id}}</td><td>{{obj.parking_id}}</td><td><input type="radio" name="car_id" value="{{obj.id}}"></td></tr>
+    {% endfor %}        
+    </table>
+<input class="btn btn-primary my-2" type="submit" value="日付設定画面へ">
+</form>
+{% endblock %}
+

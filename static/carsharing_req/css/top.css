@@ -16,6 +16,51 @@
 
 .card {
     width: 35em;
+    margin: 20pt;
+    float: left;
+    margin-bottom: 8pt;
+}
+
+.bd-placeholder-img {
+    width: 100%;
+    height: 180;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.btn {
+    width: 100pt;
+    margin: auto;
+    height: 45pt;
+    font-size: 20pt;
+    padding: auto;
+}
+
+.d-block {
+    height: 213pt;
+    width: 320pt;
+}
+
+/* #main {
+    background-color:pink;
+} */
+
+.mx-auto {
+    padding: 120pt;
+}
+
+.img {
+    width: 420pt;
+    height: 100pt;
+    border: solid;
+    border-width: 1pt;
+    border-color:#dddddd;
+}
+
+.card {
+    width: 35em;
     margin: auto;
     float: left;
     margin-bottom: 8pt;

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ParkingAdminCreate
+from .views import ParkingAdminCreate, CreateCarAdminView, SettingAdminInfo
 
 app_name = 'administrator'
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
     path('admin_main/', views.admin_main, name='admin_main'),
     path('edit/', views.edit, name='edit'),
     path('delete/<int:num>', views.delete, name='delete'),
+    path('createCar', CreateCarAdminView.as_view(), name='createCar'),
+    path('settinginfo', SettingAdminInfo.as_view(), name='settinginfo'),
 ]

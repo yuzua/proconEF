@@ -1,7 +1,7 @@
 from django import forms
 from datetime import date
 from.models import HostUserModel
-
+import bootstrap_datepicker_plus as datetimepicker
 from.models import *
 
 
@@ -84,11 +84,30 @@ class CarInfoParkingForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
         labels = {
-            #'user_id': 'ユーザID',
+            'user_id': 'ユーザID',
             'car_id': '車両ID',
             'parking_id': '駐車場ID',
         }
 
+class CarsharingDateForm(forms.ModelForm):
+
+    class Meta:
+        model = CarsharingDateModel
+        fields = ['car_id', 'possible_date']
+        widgets = {
+            'possible_date': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+        }
+        labels = {
+            #'user_id': 'ユーザID',
+            'car_id': '車両ID',
+            'possible_date': '貸出可能日',
+        }
    
 
    

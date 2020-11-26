@@ -8,6 +8,10 @@ from parking_req .forms import ParkingForm
 import datetime
 import json
 from accounts .models import CustomUser
+from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
+from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
+from django.contrib import messages
+from django.views import generic
 
 # Create your views here.
 def check_superuser(request):
@@ -47,17 +51,12 @@ class ParkingAdminCreate(TemplateView):
         }
     
     def get(self, request):
-        #SSRF対策サンプルコード
-        # if request.user.id == None:
-        #     return redirect(to='/carsharing_req/index')
-        # flag = CustomUser.objects.filter(id=request.user.id)
-        # flag = flag.values('is_superuser')
-        # flag = flag[0]['is_superuser']
-        # if flag != True:
-        #     print(request.user)
-        #     return redirect(to='/carsharing_req/')
-
-        return render(request, 'administrator/create.html', self.params)
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
         dt_now = datetime.datetime.now()
@@ -78,8 +77,12 @@ class ParkingAdminCreate(TemplateView):
             record.save()
             del request.session['user_lat']
             del request.session['user_lng']
-            return redirect(to='/administrator/admin_main')
-            
+            if 'info_flag' in request.session:
+                print(request.session['info_flag'])
+                return redirect(to='/administrator/settinginfo')
+            else:
+                print('none')
+                return redirect(to='/administrator/admin_main')
         return render(request, 'administrator/create.html', self.params)
 
 def admin_main(request):
@@ -169,4 +172,86 @@ def delete(request, num):
         parking.delete()
         return redirect(to='/administrator/admin_main')
 
-    return render(request, 'administrator/delete.html')                
+    return render(request, 'administrator/delete.html')
+
+class CreateCarAdminView(TemplateView):
+    def __init__(self):
+        self.params = {
+            'parentcategory_list': list(ParentCategory.objects.all()),
+            'category_set': list(Category.objects.all().values()),
+            'title': '車情報登録',
+            'form': CarInfoForm(),
+        }
+
+    def post(self, request):
+        dt_now = datetime.datetime.now()
+        user_id = 0
+        day = dt_now
+        license_plate = request.POST['license_plate']
+        record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
+        form = CarInfoForm(request.POST, instance=record)
+        
+        self.params['form'] = form
+        if (form.is_valid()):
+            record.save()
+            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+            request.session['info_flag'] = True
+            return redirect(to='/administrator/index')
+        else:
+            self.params['message'] = '入力データに問題があります'
+        return render(request, 'administrator/create.html', self.params)
+
+        
+    def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(self.params['parentcategory_list'])
+            print(self.params['category_set'])
+            print(request.user)
+        return render(request, 'administrator/createCar.html', self.params)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parentcategory_list'] = ParentCategory.objects.all()
+        return context                    
+
+class SettingAdminInfo(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'駐車場、車両情報登録データ',
+            'message': '駐車場、車両情報登録データ',
+            'car_data': '',
+            'parking_data': '',
+        }
+    def get(self, request):
+        exclude_car= []
+        exclude_parking = []
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            set_list = CarInfoParkingModel.objects.filter(user_id=0).values("car_id", "parking_id")
+            for obj in set_list.values("car_id"):
+                for index in obj.values():
+                    exclude_car.append(index)
+            for obj in set_list.values("parking_id"):
+                for index in obj.values():
+                    exclude_parking.append(index)
+            car_list = CarInfoModel.objects.filter(user_id=0).exclude(id__in=exclude_car)
+            parking_list = ParkingUserModel.objects.filter(user_id=0).exclude(id__in=exclude_parking)
+            self.params['car_data'] = car_list
+            self.params['parking_data'] = parking_list
+        return render(request, 'administrator/settinginfo.html', self.params)
+
+    def post(self, request):
+        user_id = int(request.POST['user_id'])
+        car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
+        record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
+        record.save()
+        messages.success(self.request, '登録完了しました')
+        return redirect(to='/administrator/admin_main')

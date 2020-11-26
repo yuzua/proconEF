@@ -108,7 +108,9 @@ function initMap() {
             map: map // マーカーを立てる地図を指定
        });
      infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-         content: '<div class="sample">' + markerData[i]['id'] + '</div><a href="//'+ markerData[i]['id'] +'">ここを予約</a>' // 吹き出しに表示する内容
+         content: '<div class="sample">' + markerData[i]['id'] + '<form action="{% url 'parking_booking:test' %}" method="post">\
+         {% csrf_token %}<input type="hidden" name="name_parking_id" value=' + markerData[i]['id'] + '>\
+         <input class="btn btn-primary my-2" type="submit" value="ここを予約"></form>' // 吹き出しに表示する内容
        });
  
      markerEvent(i); // マーカーにクリックイベントを追加
@@ -149,7 +151,7 @@ function initMap() {
 }
 </script> 
 
-<form action="{% url 'carsharing_booking:map' %}" method="post">  
+<form action="{% url 'parking_booking:map' %}" method="post">  
 <div class="input-group mb-4 my-3">
   {% csrf_token %}
   <input type="text" class="form-control" placeholder="検索" aria-label="Recipient's username" aria-describedby="basic-addon2" name="add" size="20" maxlength="20">
