@@ -50,6 +50,21 @@ def set_session(request):
     return redirect(to='carsharing_req:index')
 
 
+def pages(request, num):
+    if num == 1:
+        return render(request, 'user_car.html')
+    elif num == 2:
+        return render(request, 'user_parking.html')
+    elif num == 3:
+        return render(request, 'owner_car.html')
+    elif num == 4:
+        return render(request, 'owner_parking.html')
+    elif num == 0:
+        pass
+    else:
+        return redirect(to='carsharing_req:index')
+
+
 class CarsharUserInfo(TemplateView):
     def __init__(self):
         self.params = {

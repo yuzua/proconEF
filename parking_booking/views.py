@@ -63,7 +63,7 @@ def map(request):
 class ParkingBookingCreate(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'ParkingBookingCreate',
+            'title': '駐車場予約',
             'message': '予約情報入力',
             'form': ParkingBookingForm(),
         }
@@ -142,6 +142,7 @@ class ParkingBookingCreate(TemplateView):
         self.params['kingaku'] = "{:,}".format(charge)
         self.params['data'] = data
         self.params['times'] = times
+        self.params['message'] = '予約情報確認'
         messages.warning(self.request, 'まだ予約完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
         return render(request, "parking_booking/check.html", self.params)
         
