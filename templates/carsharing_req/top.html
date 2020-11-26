@@ -6,32 +6,7 @@
 {% endblock %}
 
 {% block title %}トップページ{% endblock %}
-<<<<<<< HEAD
-
-<!-- 駐車場オーナーに登録済か判定 -->
-{% if request.session.parking_flag == True %}
-<!-- 登録済 -->
-        {{ request.session.parking_flag }}
-    {% else %}
-<!-- 未登録 -->
-        {{ request.session.parking_flag }}
-    {% endif %}
-<!-- 駐車場オーナーに登録済か判定 -->
-
-<!-- カーシェアリングオーナーに登録済か判定 -->
-    {% if request.session.owner_flag == True %}
-<!-- 登録済 -->
-        {{ request.session.owner_flag }}
-    {% else %}
-<!-- 未登録 -->
-        {{ request.session.owner_flag }}
-    {% endif %}
-<!-- カーシェアリングオーナーに登録済か判定 -->
-
-{% comment %} 
-=======
  
->>>>>>> 617e53141867935210a32e671f26ee85b07da463
 {% block box %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="width: 840pt;height: pt;">
     <ol class="carousel-indicators">

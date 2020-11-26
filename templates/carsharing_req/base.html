@@ -128,28 +128,6 @@
             <a href="#" style="font-size: 15px;">予約キャンセル</a>
         </p>
       </div>
-<<<<<<< HEAD
-      {% else %}
-      {% endif %}
-      {% if user.is_authenticated %}
-      <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 153px;height: 70px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-          <p class="text-center" style="padding: auto;padding-top: 15pt;">
-              <a href="http://127.0.0.1:8000/accounts/logout/">ログアウト</a>
-          </p>
-      </div>
-      {% else %}
-      <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 153px;height: 70px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-          <p class="text-center" style="padding: auto;padding-top: 15pt;">        
-              <a href="http://127.0.0.1:8000/accounts/login/">ログイン</a>
-          </p>
-      </div>
-      <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 153px;height: 70px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-          <p class="text-center" style="padding: auto;padding-top: 15pt;">
-              <a href="http://127.0.0.1:8000/accounts/signup/">新規登録</a>
-          </p>
-      </div>
-      {% endif %}
-=======
       <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 150px;height: 70px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
         <p class="text-center" style="padding: auto;padding-top: 15pt;">
             {% if user.is_authenticated %}
@@ -160,7 +138,6 @@
         </p>
       </div>
     </div>
->>>>>>> 617e53141867935210a32e671f26ee85b07da463
     <!--/サイド-->
     <!--wrapper-->
     <div id="wrapper" class="container w-80" style="padding: 5px;">
