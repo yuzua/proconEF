@@ -1,4 +1,6 @@
 {% load static %}
+
+
 <!doctype html>
 <html lang="ja">
   <head>
@@ -13,12 +15,13 @@
 
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
+    <link rel="stylesheet" href='{% static "carsharing_req/css/base.css" %}'>
     </head>
   <body>
       <!--ヘッダー-->
       <header>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;height: 50pt;padding: 5pt 20pt 5pt 20pt;width: 100%;margin-bottom: 5pt;">
-            <a class="navbar-brand" href="/"><img src='{% static "admin/img/logo03.png" %}' style="width: 35pt;height: 35pt;">CarSharingService</a>
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="/"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -26,8 +29,7 @@
               <ul class="navbar-nav mt-2">
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
-                    text-align: center;float: left;margin: 0px 15px 0px 15px;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       マイページ
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -38,13 +40,11 @@
                 </li>
                 {% else %}
                 <li>
-                    <a class="nav-link" href="http://127.0.0.1:8000/accounts/signup/" style="
-                    text-align: center;float: left;margin: 0px 15px 0px 15px;">新規会員登録</a>
+                    <a class="nav-link" href="http://127.0.0.1:8000/accounts/signup/">新規会員登録</a>
                 </li>
                 {% endif %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
-                    text-align: center;margin: 0px 15px 0px 15px;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       カーシェアリング・駐車場利用
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -56,8 +56,7 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
-                    text-align: center; margin: 0px 15px 0px 15px;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         中古車
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -68,8 +67,7 @@
                 </li>
                 {% if request.session.owner_flag == True %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
-                    text-align: center; margin: 0px 15px 0px 15px;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       カーシェアリングオーナー
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -81,8 +79,7 @@
                 {% endif %}
                 {% if request.session.parking_flag == True %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
-                    text-align: center;margin: 0px 15px 0px 15px;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       駐車場オーナー
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -94,6 +91,15 @@
                 {% endif %}
               </ul>
             </div>
+            {% if user.is_authenticated %}
+            <button class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="height: 30pt;width: 75pt;font-size: 10pt;margin: 20pt;background-color: #1E90FF;color: white;">
+                <a href="http://127.0.0.1:8000/accounts/logout/" class="logout">ログアウト</a>
+            </button>
+            {% else %}
+            <button class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="height: 30pt;width: 75pt;font-size: 10pt;margin: 20pt;background-color: #1E90FF;color: white;">
+                <a href="http://127.0.0.1:8000/accounts/login/" class="login">ログイン</a>
+            </button>
+            {% endif %}
             <p style="float: right;">
                 {% if user.is_authenticated %}
                     ようこそ{{ user.get_username }}
@@ -108,16 +114,16 @@
       <!--/ヘッダー-->
 
       <!--サイド-->
-      <div id ="side" style="margin: 0;width: 160px; float: right;">
-        <div class="float-right clearfix" style="display:inline-block; background:#fcfcff; width: 150px;height: 280px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
+      <!-- <div id ="side" style="margin: 0;width: 160px; float: right;"> -->
+        <!-- <div class="float-right clearfix" style="display:inline-block; background:#fcfcff; width: 150px;height: 280px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
           <img src='{% static "admin/img/logo02.jpg" %}' alt="Card image cap" style="width: 50pt;height:50pt;margin: 10pt 35pt 0pt 30pt;border: solid;border-color: #778899;border-width: 2pt;" class="card-img-top" >
           <div class="card-body">
               <h7 class="card-title" style="font-size: 15px;">アプリ<br>インストール</h7>
               <p><a href="#" class="btn btn-primary" style="font-size: 15px;height: 30pt;width: 85pt;margin-top: 5pt;">Androidの方</a></p>
               <p><a href="#" class="btn btn-primary" style="font-size: 15px;height: 30pt;width: 85pt;">iPhoneの方</a></p>
           </div>
-      </div>
-      <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 150px;height: 140px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
+      </div> -->
+      <!-- <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 150px;height: 140px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
         <p class="text-center" style="padding: auto;padding-top: 12pt;">
             <a href="/carsharing_booking/list" style="font-size: 15px;">予約確認</a>
         </p>
@@ -137,20 +143,23 @@
             {% endif %}
         </p>
       </div>
-    </div>
+    </div> -->
     <!--/サイド-->
     <!--wrapper-->
-    <div id="wrapper" class="container w-80" style="padding: 5px;">
+    <div id="wrapper" class="container w-80">
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
-      <ul class="socialaccount_providers" style="margin-right: 5pt; padding: 0px;"> 
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
+      <ul class="socialaccount_providers"> 
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
       </ul>
     {% endfor %}
-    {% block box %}{% endblock %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->
+    </div>
+    <div id="top_wrapper" class="w-100">
+    {% block box %}{% endblock %}
+    {% block top %}{% endblock %}
     </div>
     <!--/wrapper-->
 
@@ -162,7 +171,7 @@
             <!-- Grid row -->
             <div class="row">
                 <!-- Grid column -->
-                <div class="col-md-15 mx-auto" style="margin: 10pt;padding: 8pt;float: left;text-align: center;">
+                <div class="col-md-15 mx-auto">
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">マイページ</h5>
                     <ul class="list-unstyled">
@@ -180,7 +189,7 @@
                 <!-- Grid column -->
                 <hr class="clearfix w-100 d-md-none">
                 <!-- Grid column -->
-                <div class="col-md-15 mx-auto" style="margin: 10pt;padding: 8pt;float: left;text-align: center;">
+                <div class="col-md-15 mx-auto">
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリング・駐車場利用</h5>
                     <ul class="list-unstyled">
@@ -204,7 +213,7 @@
                 <!-- Grid column -->
                 <hr class="clearfix w-100 d-md-none">
                 <!-- Grid column -->
-                <div class="col-md-15 mx-auto" style="margin: 10pt;padding: 8pt;float: left;text-align: center;">
+                <div class="col-md-15 mx-auto">
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">中古車</h5>
                     <ul class="list-unstyled">
@@ -222,7 +231,7 @@
                 <!-- Grid column -->
                 <hr class="clearfix w-100 d-md-none">
                 <!-- Grid column -->
-                <div class="col-md-15 mx-auto" style="margin: 10pt;padding: 8pt;float: left;text-align: center;">
+                <div class="col-md-15 mx-auto">
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリングオーナー</h5>
                     <ul class="list-unstyled">
@@ -243,7 +252,7 @@
                 <!-- Grid column -->
                 <hr class="clearfix w-100 d-md-none">
                 <!-- Grid column -->
-                <div class="col-md-15 mx-auto" style="margin: 10pt;padding: 8pt;float: left;text-align: center;">
+                <div class="col-md-15 mx-auto">
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">駐車場オーナー</h5>
                     <ul class="list-unstyled">
