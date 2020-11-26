@@ -34,7 +34,7 @@ class ParkingHostCreate(TemplateView):
     def __init__(self):
         self.params = {
             'title': 'ParkingHostCreate',
-            'message': 'Not found your data.<br>Please send your profile.',
+            'message': '駐車場情報入力',
             'form': ParkingForm(),
         }
     
@@ -78,6 +78,7 @@ class ParkingHostCreate(TemplateView):
                 return redirect(to='/owners_req/settinginfo')
             else:
                 print('none')
+                messages.success(self.request, '駐車場登録が完了しました。')
                 return redirect(to='/parking_req/sample')
         return render(request, 'parking_req/create.html', self.params)
 
@@ -87,12 +88,14 @@ def edit(request):
         obj = ParkingUserModel.objects.get(id=num)
         parking = ParkingForm(request.POST, instance=obj)
         params = {
-            'title':'ParkingEdit', 
+            'title':'ParkingEdit',
+            'message': '駐車場情報修正', 
             'form': ParkingForm(),
             'id':num,
         }
         if (parking.is_valid()):
             parking.save()
+            messages.success(request, '駐車場情報を修正しました。')
             return redirect(to='/parking_req/sample')
         else:
             params['form'] = ParkingForm(request.POST, instance= obj)        
@@ -103,6 +106,7 @@ def delete(request, num):
     parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
+        messages.success(request, '駐車場情報を削除しました。')
         return redirect(to='/parking_req/sample')
 
     return render(request, 'parking_req/delete.html')
@@ -118,6 +122,7 @@ def sample(request):
             obj = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingEdit',
+            'message': '駐車場情報修正',
             'id':num,
             'form': ParkingForm(instance=obj), 
             }
