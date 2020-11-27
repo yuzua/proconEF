@@ -46,7 +46,7 @@ class ParkingAdminCreate(TemplateView):
     def __init__(self):
         self.params = {
             'title': 'ParkingAdminCreate',
-            'message': 'Not found your data.<br>Please send your profile.',
+            'message': '駐車場情報入力',
             'form': AdminParkingForm(),
         }
     
@@ -69,8 +69,9 @@ class ParkingAdminCreate(TemplateView):
         length = request.POST['length']
         height = request.POST['height']
         count = request.POST['count']
+        admin = True
         record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
-            parking_type = parking_type, width = width, length = length, height = height, count = count)
+            parking_type = parking_type, width = width, length = length, height = height, count = count, admin = admin)
         obj = ParkingUserModel()
         parking = AdminParkingForm(request.POST, instance=obj)
         self.params['form'] = parking
@@ -83,6 +84,7 @@ class ParkingAdminCreate(TemplateView):
                 return redirect(to='/administrator/settinginfo')
             else:
                 print('none')
+                messages.success(self.request, '駐車場登録が完了しました。')
                 return redirect(to='/administrator/admin_main')
         return render(request, 'administrator/create.html', self.params)
 
@@ -98,6 +100,7 @@ def admin_main(request):
             obj = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingAdminEdit',
+            'message': '駐車場情報修正',
             'id':num,
             'form': AdminParkingForm(instance=obj), 
             }
@@ -108,7 +111,7 @@ def admin_main(request):
             delete_parking = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingAdminDelete',
-            'message': '※以下のレコードを削除します。',
+            'message': '駐車場情報削除',
             'obj': delete_parking,
             'id': num,
             }
@@ -155,12 +158,14 @@ def edit(request):
         obj = ParkingUserModel.objects.get(id=num)
         parking = AdminParkingForm(request.POST, instance=obj)
         params = {
-            'title':'ParkingAdminEdit', 
+            'title':'ParkingAdminEdit',
+            'message': '駐車場情報修正', 
             'form': AdminParkingForm(),
             'id':num,
         }
         if (parking.is_valid()):
             parking.save()
+            messages.success(request, '駐車場情報を修正しました。')
             return redirect(to='/administrator/admin_main')
         else:
             params['form'] = AdminParkingForm(request.POST, instance= obj)        
@@ -171,6 +176,7 @@ def delete(request, num):
     parking = ParkingUserModel.objects.get(id=num)
     if (request.method == 'POST'):
         parking.delete()
+        messages.success(request, '駐車場情報を削除しました。')
         return redirect(to='/administrator/admin_main')
 
     return render(request, 'administrator/delete.html')
@@ -181,6 +187,7 @@ class CreateCarAdminView(TemplateView):
             'parentcategory_list': list(ParentCategory.objects.all()),
             'category_set': list(Category.objects.all().values()),
             'title': '車情報登録',
+            'message': '車情報入力',
             'form': CarInfoForm(),
         }
 

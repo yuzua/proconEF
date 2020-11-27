@@ -1,16 +1,15 @@
-{% extends 'carsharing_req/base.html' %}
+{% extends 'administrator/base.html' %}
 
 {% block title %}
 {{ title }}
 {% endblock %}
 
-{% block active_login %}
-{% endblock %}
-
 {% block main_contents %}
 <h1>{{ title }}</h1>
-<p class="h5 mt-4">{{ message|safe }}</p>
+<div class="card">
+<h2 class="card-header">{{ message|safe }}</h2>
 <form action="{% url 'administrator:settinginfo' %}" method="post">
+    <div class="card-body">
     <input type="hidden" name="user_id" value='0'>
     {% csrf_token %}
     <table class="table">
@@ -26,7 +25,11 @@
         <tr><td>{{obj.id}}</td><td>{{obj.user_id}}</td><td>{{obj.day}}</td><td>{{obj.parking_type}}</td><td><input type="radio" name="parking_id" value="{{obj.id}}"></td></tr>
     {% endfor %}
     </table>
-<input class="btn btn-primary my-2" type="submit" value="click">
+    </div>
+    <div class="card-footer">
+        <input class="btn btn-outline-secondary" type="submit" value="登録" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+    </div>    
 </form>
+</div>
 {% endblock %}
 
