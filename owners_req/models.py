@@ -5,14 +5,6 @@ from django.core.validators import ValidationError, MinValueValidator, MaxValueV
 from parking_req .models import ParkingUserModel
 
 
-# def number_only(value):
-#         if(re.match(r'^[0-9]*$', value) == None):
-#             raise ValidationError(
-#                 '%(value)s を半角数字で入力してください',\
-#                 params={'value': value},
-#             )
-
-
 def katakana_only(value):
         if(re.match(r'^[ァ-ヶ]*$', value) == None):
             raise ValidationError(
@@ -79,7 +71,7 @@ class CarInfoParkingModel(models.Model):
 class CarsharingDateModel(models.Model):
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     car_id = models.ForeignKey(CarInfoModel, on_delete=models.CASCADE, verbose_name='車両ID')
-    possible_date = models.CharField( verbose_name='貸出可能日', max_length=10)
+    possible_date = models.CharField(verbose_name='貸出可能日', max_length=10)
 
     def __str__(self):
-      return '<date_id=' + str(self.id) + '>'
+      return '<date_id=' + str(self.user_id) + str(self.car_id) + self.possible_date + '>'
