@@ -74,7 +74,7 @@ class CarInfoParkingModel(models.Model):
     car_id = models.ForeignKey(CarInfoModel, on_delete=models.CASCADE, verbose_name='車両ID')
     parking_id =  models.ForeignKey(ParkingUserModel, on_delete=models.CASCADE, verbose_name='駐車場ID')
     def __str__(self):
-        return 'user_id=' +str(self.user_id) + str(self.car_id) + str(self.parking_id)
+        return '<user_id=' +str(self.user_id) + str(self.car_id) + str(self.parking_id) + '>'
 
 class CarsharingDateModel(models.Model):
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
