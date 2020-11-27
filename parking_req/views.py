@@ -133,7 +133,7 @@ def sample(request):
             delete_parking = ParkingUserModel.objects.get(id=num)
             params = {
             'title': 'ParkingDelete',
-            'message': '※以下のレコードを削除します。',
+            'message': '駐車場情報削除',
             'obj': delete_parking,
             'id': num,
             }
