@@ -1,7 +1,7 @@
 from django import forms
-from.models import ParkingUserModel
+from parking_req .models import ParkingUserModel
 
-class ParkingForm(forms.ModelForm):
+class AdminParkingForm(forms.ModelForm):
 
     parkingtype_list = [
         ('平面駐車場', '平面駐車場'),
@@ -11,11 +11,12 @@ class ParkingForm(forms.ModelForm):
 
     class Meta:
         model = ParkingUserModel
-        fields = ['parking_type','width','length','height']
+        fields = ['parking_type','width','length','height','count']
         widgets = {
             'width': forms.NumberInput(attrs={'class': 'form-control'}),
             'length': forms.NumberInput(attrs={'class': 'form-control'}),
             'height': forms.NumberInput(attrs={'class': 'form-control'}),
+            'count': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         labels = {
             'width': '横幅(m)',

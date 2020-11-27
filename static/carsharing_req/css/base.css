@@ -1,0 +1,84 @@
+.navbar {
+    padding: 0px;
+    height: 50pt;
+    padding: 5pt 20pt 5pt 20pt;
+    width: 100%;
+    margin-bottom: 5pt;
+    background-color: #87CEEB;
+}
+
+.logo3 {
+    width: 35pt;
+    height: 35pt;
+}
+
+.nav-link {
+    text-align: center;
+    float: left;
+    margin: 0px 15px 0px 15px;
+}
+
+.logout {
+    color: #fff;
+}
+
+.login {
+    color: #fff;
+}
+
+.container {
+    padding: 5pt;
+}
+
+.socialaccount_providers {
+    margin-right: 5pt; 
+    padding: 0px;
+}
+
+.w-100 {
+    padding: 5px;
+}
+
+.col-md-15 {
+    margin: 10pt;
+    padding: 8pt;
+    float: left;
+    text-align: center;
+}
+
+.nav {
+    width: 100%;
+    background-color: beige;
+    height: 50pt;
+}
+
+.navbar01 {
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar02 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar03 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar04 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}
+
+.navbar05 {
+    border-right: 1px solid #333;
+    width: 20%;
+    text-align: center;
+}

@@ -79,8 +79,7 @@ class CarInfoParkingModel(models.Model):
 class CarsharingDateModel(models.Model):
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
     car_id = models.ForeignKey(CarInfoModel, on_delete=models.CASCADE, verbose_name='車両ID')
-    possible_date = models.DateField(
-        verbose_name='貸出可能日',
-        blank=True,
-        null=True,
-    )
+    possible_date = models.CharField( verbose_name='貸出可能日', max_length=10)
+
+    def __str__(self):
+      return '<date_id=' + str(self.id) + '>'

@@ -95,6 +95,8 @@ class CarsharingDateForm(forms.ModelForm):
         model = CarsharingDateModel
         fields = ['car_id', 'possible_date']
         widgets = {
+            'user_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'car_id': forms.TextInput(attrs={'class': 'form-control'}),
             'possible_date': datetimepicker.DatePickerInput(
                 format='%Y-%m-%d',
                 options={

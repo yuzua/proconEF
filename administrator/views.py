@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
-from parking_req .forms import ParkingForm
+from .forms import AdminParkingForm
 import datetime
 import json
 from accounts .models import CustomUser
@@ -47,7 +47,7 @@ class ParkingAdminCreate(TemplateView):
         self.params = {
             'title': 'ParkingAdminCreate',
             'message': 'Not found your data.<br>Please send your profile.',
-            'form': ParkingForm(),
+            'form': AdminParkingForm(),
         }
     
     def get(self, request):
@@ -68,10 +68,11 @@ class ParkingAdminCreate(TemplateView):
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
+        count = request.POST['count']
         record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
-            parking_type = parking_type, width = width, length = length, height = height)
+            parking_type = parking_type, width = width, length = length, height = height, count = count)
         obj = ParkingUserModel()
-        parking = ParkingForm(request.POST, instance=obj)
+        parking = AdminParkingForm(request.POST, instance=obj)
         self.params['form'] = parking
         if (parking.is_valid()):
             record.save()
@@ -98,7 +99,7 @@ def admin_main(request):
             params = {
             'title': 'ParkingAdminEdit',
             'id':num,
-            'form': ParkingForm(instance=obj), 
+            'form': AdminParkingForm(instance=obj), 
             }
             return render(request, 'administrator/edit.html', params)
         #delete    
@@ -152,17 +153,17 @@ def edit(request):
     if (request.method == 'POST'):
         num = request.POST['p_id']
         obj = ParkingUserModel.objects.get(id=num)
-        parking = ParkingForm(request.POST, instance=obj)
+        parking = AdminParkingForm(request.POST, instance=obj)
         params = {
             'title':'ParkingAdminEdit', 
-            'form': ParkingForm(),
+            'form': AdminParkingForm(),
             'id':num,
         }
         if (parking.is_valid()):
             parking.save()
             return redirect(to='/administrator/admin_main')
         else:
-            params['form'] = ParkingForm(request.POST, instance= obj)        
+            params['form'] = AdminParkingForm(request.POST, instance= obj)        
         
     return render(request, 'administrator/edit.html', params)
 

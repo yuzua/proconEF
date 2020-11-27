@@ -148,13 +148,13 @@ class ParkingBookingCreate(TemplateView):
         
 
 def push(request):
-    user_id = request.session['user_id']
-    parking_id = request.session['user_parking_id']
+    user_id = int(request.session['user_id'])
+    parking_id = int(request.session['user_parking_id'])
     start_day = request.POST['start_day']
     end_day = request.POST['end_day']
     start_time = request.POST['start_time']
     end_time = request.POST['end_time']
-    charge = request.POST['charge']
+    charge = int(request.POST['charge'])
     record = ParkingBookingModel(user_id = user_id, parking_id = parking_id, start_day = start_day, \
         end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
     record.save()
