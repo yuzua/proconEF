@@ -19,15 +19,97 @@
     </head>
   <body>
       <!--ヘッダー-->
-      {% comment %} <header>
+        <header>
+            <div class="header">
+                <p style="float: right; margin: 5pt 5pt 5pt 0pt;">
+                    {% if user.is_authenticated %}
+                        ようこそ{{ user.get_username }}
+                    {% else %}
+                        ゲスト
+                    {% endif %}  
+                        さん
+                </p>
+                {% if user.is_authenticated %}
+            <button class="btn" data-toggle="modal" data-target=".bd-example-modal-lg">
+                <a href="http://127.0.0.1:8000/accounts/logout/" class="logout">ログアウト</a>
+            </button>
+            {% else %}
+            <button class="btn" data-toggle="modal" data-target=".bd-example-modal-lg">
+                <a href="http://127.0.0.1:8000/accounts/login/" class="login">ログイン</a>
+            </button>
+            {% endif %}
           <ul class="nav">
-              <li class="navbar01">マイページ</li>
-              <li class="navbar02">カーシェアリング・駐車場利用</li>
-              <li class="navbar03">中古車</li>
-              <li class="navbar04">カーシェアリングオーナー</li>
-              <li class="navbar05">駐車場オーナー</li>
+            <a class="navbar-brand" href="/" style="color: #333;margin-left: 5pt;"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
+            {% if user.is_authenticated %}
+              <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    マイページ
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">個人登録情報確認</a>
+                    <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
+                    <a class="dropdown-item" href="#">利用明細</a>
+                </div>
+            </li>
+            {% else %}
+            <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center;">
+                <a class="nav-link" href="http://127.0.0.1:8000/accounts/signup/">新規会員登録</a>
+            </li>
+            {% endif %}
+            <li class="navbar01" style="border-right: 1px solid #333;width: 18%;text-align: center">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    カーシェアリング利用
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
+                    <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
+                    <a class="dropdown-item" href="#">料金について</a>
+                  </div>
+            </li>
+            <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    駐車場利用
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
+                    <a class="dropdown-item" href="#">駐車場利用の流れ</a>
+                    <a class="dropdown-item" href="#">料金について</a>
+                  </div>
+            </li>
+              <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    中古車
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">あなたへのおすすめ</a>
+                    <a class="dropdown-item" href="#">中古車検索</a>
+                    <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
+                  </div>
+            </li>
+            {% if request.session.owner_flag == True or request.session.parking_flag == True %}
+              <li class="navbar02" style="width: 15%;text-align: center">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    オーナー
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {% if request.session.owner_flag == True %}
+                    <a class="dropdown-item" href="#">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
+                {% endif %}
+                    <a class="dropdown-item" href="#">カーシェアリングオーナー利用の流れ</a>
+                {% if request.session.parking_flag == True %}
+                    <a class="dropdown-item" href="#">駐車場オーナー<br>貸し出し日時を登録する</a>
+                {% endif %}
+                    <a class="dropdown-item" href="#">駐車場オーナー利用の流れ</a> 
+                </div>
+            </li>
+            {% else %}
+            {% endif %}
           </ul>
-      </header> {% endcomment %}
+        </div>
+      </header>
+
+
+      {% comment %}
       <header>
           <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="/"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
@@ -120,6 +202,7 @@
             
           </nav>
       </header>
+      {% endcomment %}
       <!--/ヘッダー-->
 
       <!--サイド-->
