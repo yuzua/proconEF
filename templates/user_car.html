@@ -1,91 +1,95 @@
+{% extends 'carsharing_req/base.html' %}
 {% load static %}
+
+{% block main_contents %}
 <!--wrapper-->
-<div wrapper class="container w-80 clearfix" style="padding: 5px;">
+<!-- 1 -->
+<div wrapper "container w-80 clearfix" style="padding: 5px;">
   <!--メイン-->
-  <div id ="main">
+  <div id "main">
     <h4 style="font-size: 25px;text-align: center;">カーシェアリング利用の流れ</h4>  
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">会員登録</h5>
-        <p class="card-text">まずは会員登録！</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>会員登録に関するよくある質問</a>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">会員登録</h5>
+        <p "card-text">まずは会員登録！</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>会員登録に関するよくある質問</a>
       </div>
     </div>
 
-    <div class="card" style="font-size: 20px;text-align: center;">
+    <div "card" style="font-size: 20px;text-align: center;">
         <h5>↓</h5>
     </div>
 
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">検索・予約</h5>
-        <p class="card-text">日時、場所、乗車人数、利用時間を限定し検索、そのまま予約もカンタン！<br>（トップページからいつでも予約内容の確認ができます。）</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>検索・予約に関するよくある質問</a>
-      </div>
-    </div>
-      
-    <div class="card" style="font-size: 20px;text-align: center;">
-        <h5>↓</h5>
-    </div>
-
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
-      <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">解錠</h5>
-        <p class="card-text">共通鍵を使って解錠！</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>解錠に関するよくある質問</a>
-      </div>
-    </div>
-
-    <div class="card" style="font-size: 20px;text-align: center;">
-        <h5>↓</h5>
-    </div>
-
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
-      <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">乗車</h5>
-        <p class="card-text">本サービスと交通のルールを守って楽しく安全に運転してください！<br>（返却前に給油していただくと利用料金がお安くなります。）</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>乗車に関するよくある質問</a>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">検索・予約</h5>
+        <p "card-text">日時、場所、乗車人数、利用時間を限定し検索、そのまま予約もカンタン！<br>（トップページからいつでも予約内容の確認ができます。）</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>検索・予約に関するよくある質問</a>
       </div>
     </div>
       
-    <div class="card" style="font-size: 20px;text-align: center;">
+    <div "card" style="font-size: 20px;text-align: center;">
         <h5>↓</h5>
     </div>
 
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">返却</h5>
-        <p class="card-text">車を出発したステーションに戻し、ドアを施錠してください！<br>（返却後、アンケートにご協力ください。）</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>返却に関するよくある質問</a>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">解錠</h5>
+        <p ="card-text">共通鍵を使って解錠！</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>解錠に関するよくある質問</a>
       </div>
     </div>
 
-    <div class="card" style="font-size: 20px;text-align: center;">
+    <div "card" style="font-size: 20px;text-align: center;">
         <h5>↓</h5>
     </div>
 
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
-      <div class="card-body" style="margin-left: 230px;">
-        <h5 class="card-title" style="font-size: 20px;">精算</h5>
-        <p class="card-text">当月ご利用された分の料金を、ご指定いただいたクレジットカードでお支払いください！</p>
-        <a href="#" class="btn btn-primary">詳細</a>
-        <a href="#" class="btn btn-primary">>>精算に関するよくある質問</a>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">乗車</h5>
+        <p "card-text">本サービスと交通のルールを守って楽しく安全に運転してください！<br>（返却前に給油していただくと利用料金がお安くなります。）</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>乗車に関するよくある質問</a>
+      </div>
+    </div>
+      
+    <div "card" style="font-size: 20px;text-align: center;">
+        <h5>↓</h5>
+    </div>
+
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+      <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">返却</h5>
+        <p "card-text">車を出発したステーションに戻し、ドアを施錠してください！<br>（返却後、アンケートにご協力ください。）</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>返却に関するよくある質問</a>
+      </div>
+    </div>
+
+    <div "card" style="font-size: 20px;text-align: center;">
+        <h5>↓</h5>
+    </div>
+
+    <div "card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+      <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
+      <div "card-body" style="margin-left: 230px;">
+        <h5 "card-title" style="font-size: 20px;">精算</h5>
+        <p "card-text">当月ご利用された分の料金を、ご指定いただいたクレジットカードでお支払いください！</p>
+        <a href="#" "btn btn-primary">詳細</a>
+        <a href="#" "btn btn-primary">>>精算に関するよくある質問</a>
       </div>
     </div>
     
-    <div class="botan" style="text-align: center;">
-      <div class="botan-body">
+    <div ="botan" style="text-align: center;">
+      <div "botan-body">
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;">会員登録</a>
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;"style="border: 1px solid #000;">カーシェアリング検索</a>
       </div>
@@ -93,3 +97,4 @@
   <!--/メイン-->
 </div>
 <!--/wrapper-->
+{% endblock %}
