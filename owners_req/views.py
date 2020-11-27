@@ -382,22 +382,20 @@ class CreateDateView(TemplateView):
             return redirect(to='/carsharing_req/index')
         else:
             car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            self.params['carinfo'] = car_info
             # user_id = int(request.POST['user_id'])
             # car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
             # car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
             # parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
             # record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
             # carinfo = CarInfoParkingForm(request.POST, instance=record)
-            # exclude_car= []
-            # exclude_parking = []
-            # set_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
-            # for obj in set_list.values("car_id"):
-            #     for index in obj.values():
-            #         exclude_car.append(index)
-            # car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_car)
-            # parking_list = ParkingUserModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_parking)
+            exclude_car= []
+            set_list = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id")
+            for obj in set_list.values("car_id"):
+                for index in obj.values():
+                    exclude_car.append(index)
+            car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_car)
             self.params['carinfo'] = car_info
-            # self.params['car_data'] = parking_list
         return render(request, 'owners_req/createDate.html', self.params)
     def post(self, request):
         user_id = int(request.POST['user_id'])
