@@ -70,8 +70,8 @@ class ParkingAdminCreate(TemplateView):
         height = request.POST['height']
         count = request.POST['count']
         admin = True
-        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
-            parking_type = parking_type, width = width, length = length, height = height, count = count, admin = admin)
+        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, parking_type = parking_type, \
+            width = width, length = length, height = height, count = count, admin = admin)
         obj = ParkingUserModel()
         parking = AdminParkingForm(request.POST, instance=obj)
         self.params['form'] = parking
@@ -250,7 +250,8 @@ class SettingAdminInfo(TemplateView):
                 for index in obj.values():
                     exclude_parking.append(index)
             car_list = CarInfoModel.objects.filter(user_id=0).exclude(id__in=exclude_car)
-            parking_list = ParkingUserModel.objects.filter(user_id=0).exclude(id__in=exclude_parking)
+            # parking_list = ParkingUserModel.objects.filter(user_id=0).exclude(id__in=exclude_parking)
+            parking_list = ParkingUserModel.objects.filter(user_id=0, countflag=True)
             self.params['car_data'] = car_list
             self.params['parking_data'] = parking_list
         return render(request, 'administrator/settinginfo.html', self.params)
@@ -261,5 +262,15 @@ class SettingAdminInfo(TemplateView):
         parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
         record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
         record.save()
+        print(request.POST['parking_id'])
+        nowint = CarInfoParkingModel.objects.filter(parking_id=request.POST['parking_id']).count()
+        maxint = ParkingUserModel.objects.filter(id=request.POST['parking_id']).values_list("count", flat=True)
+        if nowint == maxint[0]:
+            print('out')
+            countflag = False
+            ParkingUserModel.objects.filter(id=request.POST['parking_id']).update(countflag = countflag)
+        else:
+            print('safe')
+        print(nowint)
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/admin_main')

@@ -15,6 +15,6 @@ class ParkingUserModel(models.Model):
     height = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
     count = models.IntegerField(default=1, verbose_name='収容台数')
     admin = models.BooleanField(verbose_name='管理者', default=False)
-    countflag = models.BooleanField(verbose_name='制限台数フラグ', default=False)
+    countflag = models.BooleanField(verbose_name='制限台数フラグ', default=True)
     def __str__(self):
         return '<parking_id=' + str(self.id) + '>'  

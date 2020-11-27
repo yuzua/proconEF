@@ -363,6 +363,9 @@ class SettingInfo(TemplateView):
         parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
         record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
         record.save()
+        countflag = False
+        print(request.POST['parking_id'])
+        ParkingUserModel.objects.filter(id=request.POST['parking_id']).update(countflag = countflag)
         messages.success(self.request, '登録完了しました')
         return redirect(to='/owners_req/createDate')
         #return render(request, 'owners_req/createDate.html', self.params)
