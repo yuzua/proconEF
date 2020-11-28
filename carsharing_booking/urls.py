@@ -5,7 +5,8 @@ from .views import ReservationList
 
 app_name = 'carsharing_booking'
 urlpatterns = [
-    path("", views.test_ajax_app),
+    path("", views.select, name='select'),
+    # path("", views.test_ajax_app),
     path("map/", views.map, name='map'),
     path('booking/<int:num>', views.booking, name='booking'),
     path('checkbooking/', views.checkBooking, name='checkbooking'),

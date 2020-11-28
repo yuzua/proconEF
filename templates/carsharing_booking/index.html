@@ -1,33 +1,18 @@
-  <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <form name="name_form" action="/carsharing_booking/ajax/" method="POST">
-    <!-- <form name="name_form" action="/test_ajax_app/" method="POST"> -->
-      {% csrf_token %}
-      <input type="text" id="id_input_text" name="name_input_text" value="999.99">
-      <input class="btn" type="submit"> 
-    </form>
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
 
-    <span id="id_div_ajax_response">
-      AJAX RESPONSE
-    </span>
-    <script>
-          $("form").submit( function(event) {
-        event.preventDefault();
-        var form = $(this);
-        $.ajax({
-          url: form.prop("action"),
-          method: form.prop("method"),
-          data: form.serialize(),
-          timeout: 10000,
-          dataType: "text",
-        })
-        .done( function(data) {
-          alert("done");
-          $("#id_div_ajax_response").text(data);
-        })
-      });
-    </script>
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_contents %}
+<div class="card w-50 mt-5">
+    <h2 class="card-header bg-secondary text-white">地図から予約</h2>
+        <div class="card-body">
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
+            <p class="card-text mt-3">利用したい場所を地図から選択して予約をします。</p>
+            <p class="card-text">近い場所から選んでね</p>
+        </div>
+    <div class="card-footer">
+    <a class="btn btn-secondary btn-sm m-0 font-weight-bold" href="map">予約する</a>
+    </div>
+</div>
+{% endblock %}

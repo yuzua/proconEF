@@ -12,6 +12,11 @@ from django.db.models import Q
 # Create your views here.
 
 
+def select(request):
+    return render(request, "carsharing_booking/index.html", {
+        "title": 'カーシェアリング予約',
+    })
+
 def test_ajax_app(request):
     if str(request.user) == "AnonymousUser":
         print('ゲスト')
@@ -19,7 +24,7 @@ def test_ajax_app(request):
         print(request.user)
     hoge = "Hello Django!!"
 
-    return render(request, "carsharing_booking/index.html", {
+    return render(request, "carsharing_booking/ajax.html", {
         "hoge": hoge,
     })
 
