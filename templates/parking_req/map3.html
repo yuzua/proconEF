@@ -1,178 +1,175 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Places Search Box</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initAutocomplete&libraries=places&v=weekly"
-      defer
-    ></script>
-    <style type="text/css">
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
+{% extends 'carsharing_req/base.html' %}
 
-      /* Optional: Makes the sample page fill the window. */
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+{% block head %}
+<style>
+div {
+  margin: 0pt;
+}
+#map_info {
+  padding: 0.5em 1em;
+  margin: 2em 10pt;
+  margin-bottom: 20pt;
+  color: #5d627b;
+  background: white;
+  border-top: solid 5px #5d627b;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+  width: 300pt;
+}
+#map_container {
+  width: 90%;
+  padding: 4px;
+  margin: 0pt;
+}
+#map_canvas {   /* 高さ（と幅）を指定しないと地図は表示されない */
+  width: 100%;
+  height: 500px;
+  border: 1px solid black;
+  margin: 10pt;
+}
+#url, #zoom {
+  display: none;  /* 非表示 */
+}
+/* 情報ウィンドウ（マーカーをクリックすると表示される領域）内 */
+#map_content {
+  width: 250px;
+  height: 70px;
+}
+</style>
+{% endblock %}
 
-      #description {
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-      }
-
-      #infowindow-content .title {
-        font-weight: bold;
-      }
-
-      #infowindow-content {
-        display: none;
-      }
-
-      #map #infowindow-content {
-        display: inline;
-      }
-
-      .pac-card {
-        margin: 10px 10px 0 0;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        outline: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        background-color: #fff;
-        font-family: Roboto;
-      }
-
-      #pac-container {
-        padding-bottom: 12px;
-        margin-right: 12px;
-      }
-
-      .pac-controls {
-        display: inline-block;
-        padding: 5px 11px;
-      }
-
-      .pac-controls label {
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 300;
-      }
-
-      #pac-input {
-        background-color: #fff;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        margin-left: 12px;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-      }
-
-      #pac-input:focus {
-        border-color: #4d90fe;
-      }
-
-      #title {
-        color: #fff;
-        background-color: #4d90fe;
-        font-size: 25px;
-        font-weight: 500;
-        padding: 6px 12px;
-      }
-
-      #target {
-        width: 345px;
-      }
-    </style>
-    <script>
-      // This example adds a search box to a map, using the Google Place Autocomplete
-      // feature. People can enter geographical searches. The search box will return a
-      // pick list containing a mix of places and predicted search terms.
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-      function initAutocomplete() {
-        const map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: -33.8688, lng: 151.2195 },
-          zoom: 13,
-          mapTypeId: "roadmap",
+{% block main_contents %}
+<div id="map_info">
+  <p id="venue">{{ name }}</p>
+  <p id="address">{{ add }}</p>
+  <p id="url"><a href="http://www.tokyo-skytree.jp/" target="_blank">www.tokyo-skytree.jp</a></p>
+  <p id="zoom">17</p>
+</div>
+<div id="map_container">
+  <div id="map_canvas"></div>
+</div>
+<!-- jQuery の読み込み --> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+var markers = [];
+var infoWindows = [];
+const data = JSON.parse('{{ data_json|safe }}');
+var markerData = data.markerData;
+console.log(markerData);
+function initMap() {
+  jQuery(function($){
+    var map, map_center;
+    //初期のズーム レベル（指定がなければ 16）
+    var zoom = $("#zoom").text() ?  parseInt($("#zoom").text()): 16;
+    //マーカーのタイトル
+    var title = $('#venue').text();
+ 
+    //マップ生成のオプション
+    //center は Geolocation から取得して後で設定
+    var opts = {
+      zoom: zoom,
+      mapTypeId: "roadmap"  //初期マップ タイプ  
+    };
+ 
+    //マップのインスタンスを生成
+    map = new google.maps.Map(document.getElementById("map_canvas"), opts);
+ 
+    //ジオコーディングのインスタンスの生成
+    var geocoder = new google.maps.Geocoder();
+ 
+    var address = $('#address').text();
+    var my_reg = /〒\s?\d{3}(-|ー)\d{4}/;
+    //郵便番号を含めるとおかしくなる場合があったので、郵便番号は削除
+    address = address.replace(my_reg, '');
+ 
+    //geocoder.geocode() にアドレスを渡して、コールバック関数を記述して処理
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status === 'OK' && results[0]) {
+        //results[0].geometry.location に緯度・経度のオブジェクトが入っている
+        map_center = results[0].geometry.location;
+        //地図の中心位置を設定
+        map.setCenter(map_center);
+        //マーカーのインスタンスを生成
+        var marker = new google.maps.Marker({
+          //マーカーを配置する Map オブジェクトを指定
+          map: map,
+          //マーカーの初期の場所を示す LatLng を指定  
+          position: map_center,  
+          //マーカーをアニメーションで表示
+          animation: google.maps.Animation.DROP,  
+          title: title,
         });
-        // Create the search box and link it to the UI element.
-        const input = document.getElementById("pac-input");
-        const searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener("bounds_changed", () => {
-          searchBox.setBounds(map.getBounds());
+ 
+  // マーカー毎の処理
+ for (var i = 0; i < markerData.length; i++) {
+        markerLatLngs = new google.maps.LatLng({lat: Number(markerData[i]['lat']), lng: Number(markerData[i]['lng'])}); // 緯度経度のデータ作成
+        console.log(map);
+        markers[i] = new google.maps.Marker({ // マーカーの追加
+         position: markerLatLngs, // マーカーを立てる位置を指定
+            map: map // マーカーを立てる地図を指定
+       });
+     infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+         content: '<div class="sample">' + markerData[i]['id'] + '</div><form action="{% url 'parking_req:sample' %}" method="post">\
+         {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '><input type="hidden" name="command" value="edit">\
+         <input class="btn btn-primary my-2" type="submit" value="修正"></form>\
+         <form action="{% url 'parking_req:sample' %}" method="post">{% csrf_token %}\
+         <input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '>\
+         <input type="hidden" name="command" value="delete">\
+         <input class="btn btn-primary my-2" type="submit" value="削除"></form>' // 吹き出しに表示する内容
+       });
+ 
+     markerEvent(i); // マーカーにクリックイベントを追加
+ }
+        // マーカーにクリックイベントを追加
+        function markerEvent(i) {
+            markers[i].addListener('click', function() { // マーカーをクリックしたとき
+            infoWindows[i].open(map, markers[i]); // 吹き出しの表示
         });
-        let markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener("places_changed", () => {
-          const places = searchBox.getPlaces();
+        }
 
-          if (places.length == 0) {
-            return;
-          }
-          // Clear out the old markers.
-          markers.forEach((marker) => {
-            marker.setMap(null);
-          });
-          markers = [];
-          // For each place, get the icon, name and location.
-          const bounds = new google.maps.LatLngBounds();
-          places.forEach((place) => {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            const icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25),
-            };
-            // Create a marker for each place.
-            markers.push(
-              new google.maps.Marker({
-                map,
-                icon,
-                title: place.name,
-                position: place.geometry.location,
-              })
-            );
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          map.fitBounds(bounds);
+        //情報ウィンドウに表示するコンテンツを作成
+        //urlが指定してあればリンクつきのタイトルと住所を表示（URLがない場合もあるため）
+        var url = $("#url a").attr('href');
+        var content;
+        if (url) {
+          content = '<div id="map_content"><p><a href="' + url + '" target="_blank"> ' + title + '</a><br />' + address + '</p></div>';
+        }else {
+          //urlが指定してなければ、リンクなしのタイトルと住所を表示
+          content = '<div id="map_content"><p>' + title + '<br />' + address + '</p></div>';
+        }
+ 
+        //情報ウィンドウのインスタンスを生成
+        var infowindow = new google.maps.InfoWindow({
+          content: content,
         });
+ 
+        //marker をクリックすると情報ウィンドウを表示(リスナーの登録）
+        google.maps.event.addListener(marker, 'click', function() {
+          //第2引数にマーカーを指定して紐付け
+          infowindow.open(map, marker);
+        });
+      } else {
+        alert("住所から位置の取得ができませんでした。: " + status);
       }
-  </script>
-  
-  </head>
-  <body>
-    <input
-      id="pac-input"
-      class="controls"
-      type="text"
-      placeholder="Search Box"
-    />
-    <div id="map"></div>
-  </body>
-</html>
+    });
+  }); 
+}
+</script>
+
+<form action="{% url 'parking_req:sample' %}" method="post">
+<div class="input-group mb-4 my-3">
+    {% csrf_token %}
+    <input type="text" class="form-control" placeholder="検索" aria-label="Recipient's username" aria-describedby="basic-addon2" name="add" size="20" maxlength="20">
+    <input type="hidden" name="command" value="map">
+    <div class="input-group-append">
+      <div class="my-0">
+      <input type="submit" value="click" class="input-group-text" id="basic-addon2">
+      </div>
+    </div>
+</div>    
+</form>
+{% endblock %} 
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
+{% endblock %}

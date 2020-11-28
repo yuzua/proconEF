@@ -1,0 +1,23 @@
+{% extends 'administrator/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<div class="card">
+<form action="{% url 'administrator:edit' %}" method="post" >
+        {% csrf_token %}
+        <h2 class="card-header">{{ message|safe }}</h2>
+        <div class="card-body">
+            <input type="hidden" name="p_id" value="{{id}}">
+            {{ form.as_p }}
+        </div>
+        <div class="card-footer">
+            <input class="btn btn-outline-secondary" type="submit" value="修正" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </div>
+</form>            
+</div>
+
+{% endblock %}

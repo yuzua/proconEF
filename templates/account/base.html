@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+ <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -13,53 +13,30 @@
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
-  </head>
-  <body>
-    {% block body %}
-
-    {% if messages %}
+ </head>
+ <body>
+ {% block body %}
+ 
+ {% if messages %}
     {% comment %} <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-      </ul>
+    <!-- <strong>Messages:</strong> -->
+    <ul>
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;">{{ message }}</li>
+    {% endfor %}
+    </ul>
     </div> {% endcomment %}
-    {% endif %}
-    <div> 
-      <!-- <strong>Menu:</strong> -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
-        <ul class="navbar-nav mr-auto">
-        <li class="navbar-brand">Menu</li>     
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account_logout' %}">ログアウト</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account_email' %}">メールアドレスの変更</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account_login' %}"> ログイン</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account_signup' %}">新規登録</a>
-        </li>
-        {% endif %}
-        </ul>
-    </nav>
-    </div>
+ {% endif %}
     <!-- 河西 -->
     <div class="container">
     <div>
       {% for message in messages %}
-      <strong>Messages:</strong>
-        <ul>  
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        </ul>
-        {% endfor %}
-    </div>
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers" style="padding: 0pt;"> 
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
+      </ul>
+      {% endfor %}
+ </div>
     <!-- 河西 -->
     {% block content %}
     {% endblock %}
@@ -69,5 +46,5 @@
     <!-- 河西 -->
     </div>
     <!-- 河西 -->
-  </body>
+ </body>
 </html>

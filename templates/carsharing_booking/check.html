@@ -1,0 +1,36 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+<div class="card">
+<table class="table">
+    <tr class="card-header"><th>車両ID</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>カスタム</th><th>タイヤ</th></tr>
+    <tr><td>{{car_obj.id}}</td><td>{{car_obj.parent_category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.category}}</td><td>{{car_obj.people}}</td><td>{{car_obj.custom}}</td><td>{{car_obj.tire}}</td></tr> 
+</table>
+</div>
+<br>
+<div class="card">
+    <h2 class="card-header">入力情報</h2>
+    <div class="card-body">
+        <p>利用予約場所：{{address}}</p>
+        <p>開始予定日時：{{data.start_day}} {{data.start_time}}</p>
+        <p>終了予定日時：{{data.end_day}} {{data.end_time}}</p>
+        <p>利用予定時間：{{times}}</p>
+        <p>支払い予定料金：{{kingaku}}円</p>
+    </div>
+    <div class="card-footer">
+        <form action="{% url 'carsharing_booking:push' %}" method="post" >
+            {% csrf_token %}
+            {% for key, value in data.items %}
+                <input type="hidden" name="{{key}}" value="{{value}}">
+            {% endfor %}
+                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

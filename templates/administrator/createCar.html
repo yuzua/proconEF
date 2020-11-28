@@ -1,12 +1,24 @@
-{% extends 'base.html' %}
-{% block contents %}
-<title>{{ title }}</title>
-<h1>{{ title }}</h1>
-    <form action="" method="POST">
-        {{ form.as_p }}
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+<div class="card">
+    <form action="" method="post" >
         {% csrf_token %}
-        <input class="btn btn-primary my-2" type="submit" value="click">
+        <h2 class="card-header">{{ message|safe }}</h2>
+        <div class="card-body">
+            {{ form.as_p }}
+        </div>
+        <div class="card-footer">
+            <input class="btn btn-outline-secondary" type="submit" value="駐車場登録画面へ" style="float: right;width: 120pt;height: 30pt;margin: 5pt;">
+        </div>
     </form>
+</div>
 {% endblock %}
 
 {% block extrajs %}
@@ -19,7 +31,7 @@
                     {% for category in parent.category_set.all %}
                         {
                             'pk': '{{ category.pk }}',
-                            'name': '{{ category.name }}'
+                            'name': '{{ category.category }}'
                         },
                     {% endfor %}
                 ],

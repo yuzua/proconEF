@@ -7,10 +7,12 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .models import CarsharUserModel
 from .forms import CarsharUserCreateForm
+from parking_req .models import *
+from owners_req .models import HostUserModel
 
 # Create your views here.
 
-
+# ゲスト/ユーザ 判定
 def index(request):
     querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
     if querySet.first() is None:
@@ -22,18 +24,50 @@ def index(request):
         print(request.user.email)
     return redirect(to='carsharing_req:set_session')
 
+# user_idをSESSIONに格納・オーナー登録済か判定用flagをSESSIONに格納
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
     print(data.id)
     request.session['user_id'] = data.id
     print(request.session['user_id'])
-    params = {
-        'data': data,
-    }
+    paking_data = ParkingUserModel.objects.filter(user_id=data.id)
+    if paking_data.first() is None:
+        print('no data')
+        request.session['parking_flag'] = False
+    else:
+        print(paking_data.values('user_id', 'id'))
+        request.session['parking_flag'] = True
+
+    owner_data = HostUserModel.objects.filter(user_id=data.id)
+    if owner_data.first() is None:
+        print('no data')
+        request.session['owner_flag'] = False
+    else:
+        print(owner_data.values('user_id', 'id'))
+        request.session['owner_flag'] = True
+
+
+
     return redirect(to='carsharing_req:index')
 
 
-class CarsharUser(TemplateView):
+# 説明ページ(HTML)ルーティング
+def pages(request, num):
+    if num == 1:
+        return render(request, 'user_car.html')
+    elif num == 2:
+        return render(request, 'user_parking.html')
+    elif num == 3:
+        return render(request, 'owner_car.html')
+    elif num == 4:
+        return render(request, 'owner_parking.html')
+    elif num == 0:
+        pass
+    else:
+        return redirect(to='carsharing_req:index')
+
+
+class CarsharUserInfo(TemplateView):
     def __init__(self):
         self.params = {
             'title': 'Hello World!',
@@ -59,17 +93,18 @@ class CarsharUser(TemplateView):
         self.params['form'] = CarsharUserCreateForm(request.POST)
         return render(request, 'carsharing_req/index.html', self.params)
 
-class CarsharUserSendMail(generic.FormView):
+# class CarsharUserSendMail(generic.FormView):
 
-    template_name = "carsharing_req/index.html"
-    form_class = CarsharUserCreateForm
-    success_url = reverse_lazy('carsharing_req:index')
+#     template_name = "carsharing_req/index.html"
+#     form_class = CarsharUserCreateForm
+#     success_url = reverse_lazy('carsharing_req:index')
 
 
-    def form_valid(self, form):
-        form.send_email()
-        messages.success(self.request, 'メッセージを送信しました。')
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.send_email()
+#         messages.success(self.request, 'メッセージを送信しました。')
+#         return super().form_valid(form)
+
 
 
 class CreateView(TemplateView):
@@ -92,7 +127,7 @@ class CreateView(TemplateView):
         addr02 = request.POST['addr02']
         record = CarsharUserModel(email = email,name = name, gender = gender, age = age, birthday = birthday, zip01 = zip01, pref01 = pref01, addr01 = addr01, addr02 = addr02)
         record.save()
-        return redirect(to='carsharing_req:index')
+        return redirect(to='carsharing_req:first')
         
     def get(self, request):
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)

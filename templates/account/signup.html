@@ -5,9 +5,9 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
-
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<html style="background-color: #EEEEEE;">
+<body class="centerMiddle" style="border: solid;text-align: left;padding: 30pt;display:inline-block;border-width: 1pt;width: 400pt;margin: 300pt;margin-top: 100pt;margin-bottom: 100pt;padding-left: 80pt;padding-right: 50pt;">
+<h1 class="h3 mb-3 font-weight-normal">{% trans "Sign Up" %}</h1>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
@@ -15,7 +15,10 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
+  <p>すでにアカウントお持ちの方は<a href="{{ login_url }}">ログイン</a></p>
   <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
+</body>
+</html>
 
 {% endblock %}
