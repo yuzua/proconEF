@@ -233,6 +233,7 @@ class SettingAdminInfo(TemplateView):
             'message': '駐車場、車両情報登録データ',
             'car_data': '',
             'parking_data': '',
+            # 'data_json': '',
         }
     def get(self, request):
         exclude_car= []
@@ -254,6 +255,12 @@ class SettingAdminInfo(TemplateView):
             parking_list = ParkingUserModel.objects.filter(user_id=0, countflag=True)
             self.params['car_data'] = car_list
             self.params['parking_data'] = parking_list
+            # item = parking_list.values("id", "user_id", "lat", "lng")
+            # item_list = list(item.all())
+            # data = {
+            #     'markerData': item_list,
+            # }
+            # self.params['data_json'] = json.dumps(data)
         return render(request, 'administrator/settinginfo.html', self.params)
 
     def post(self, request):
