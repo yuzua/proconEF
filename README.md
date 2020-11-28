@@ -1,143 +1,137 @@
+# :christmas_tree:冬休み期間のお願い:christmas_tree:
+
+- ***作業前に "必ず" どのファイルを編集するか伝えること！***
+
+- ***pullした時、以下のように「＋」や「ー」が表示されているか確認すること！！！！***
+    ```
+    templates/carsharing_req/base.html  | 97 ++++++++++++++++++++--------
+    ```
+
+- ***不安ならもう一度pullしてみて以下のような表示ならOK！***
+    ```
+    From https://github.com/kawanishi291/proconEF
+    * branch            django     -> FETCH_HEAD
+    Already up to date.
+    ```
+
+- ***Teamsで連絡した際、既読後スタンプで反応すること！！***
+
+- ***分からない事があるなら通話orチャットで聞くこと！***
+    - *月・火・木・金の 16:00~22:00 は連絡が取れませんチャットでお願いします。*
+    - *皆さんも連絡されたくない日にち時間帯は予め教えてください* :pray:
+
+- ***作成時、何をするためのものかコメントを残すこと！***
+    - *自作の変数にも日本語の説明や(代入される想定の)型などを書いていただくと丁寧だと思います。*
+    - *cssのclass, idも同様に何処に反映するか軽く日本語でメモして置くと、作業がしやすいです。*
+
+- ***commitする際、日にちに加えてやった内容も記載すること！！***
+    - *pullreq後のチェックがし易く、皆さん自身が見返す時にかなり便利です。*
+
+- ***自分が書いてないコードを止むを得ず消す場合は必ずコメントアウトにすること！！！***
+
+- ***必要のなくなったコメントアウトは削除してからpushすること***
+
+- ***バグ・エラーがないか確認する為、システムをたくさん動かすこと***
+    - *見つかったら自分で直す前にすぐ報告！！！*
+
+- ***APIやパッケージをInstallする前に相談すること！！！***
+
+###### ＊基本的にリモートで会議などするつもりはありません。全員の面倒を見ることができる環境でない為、自分から積極的に行動してください。:shit:
+###### ＊人生最後の長期休みです。ちゃんと遊んでください。ゆっくり休んで、思いっきり楽しんでください！！:santa:（やるべき事をちゃんとやっていれば大丈夫:+1:）
+
 # 今後の予定
     
-●既存の機能
-○オーナーの予約可能時間設定
-・日にち指定で良い
-○管理者の駐車場仕様変更
-・ピンを立てるのは駐車場でなくステーション
-・収容台数。管理者チェックボックス。制限台数フラグを追加
-・車を追加する際にステーションと結びつける
-・つまり駐車場を検索する際はステーション毎に予約する仕様
-・一つの駐車場IDに複数台追加可能
-・予約の際は駐車場を選んだ後、車両を選択
-○配車予測機能
-・予測データから配車場所を追加する
-・あらかじめ中心地となる座標を指定し格納
-・最も近い値の座標の地域IDをそれぞれ設定
-・ステーションIDはより細かくする！
-・目安の数値を決めてそれ以下なら同じステーションIDを割り振り
-・ステーションID毎に計算させる！
-○予約の重複を回避
-・予約テーブルから検索
-○予約方法
-・車から検索
-・時間から検索
-●新機能最低３つ
-・メール送信
-・電気自動車
-・特殊車両
-●デザイン
-・メディアクエリに対応させる為、cssを分解
-・動画や画像で使い方を説明
-・利用時の必要事項ページ作成
+> ### **既存の機能**
+
+**○アンケートの作成**
+
+* モデルとフォームを作成
+* 3~4項目を毎回ランダムに抽出し回答させる
+
+**○オーナーの予約可能時間設定**
+
+* 日にち指定で良い
+
+**○管理者の駐車場仕様変更**
+
+* ピンを立てるのは駐車場でなくステーション
+* ~~収容台数。管理者チェックボックス。制限台数フラグを追加~~
+* 車を追加する際にステーションと結びつける
+* つまり駐車場を検索する際はステーション毎に予約する仕様
+* ~~一つの駐車場IDに複数台追加可能~~
+* ~~予約の際は駐車場を選んだ後、車両を選択~~
+
+**○配車予測機能**
+
+* 予測データから配車場所を追加する
+* あらかじめ中心地となる座標を指定し格納
+* 最も近い値の座標の地域IDをそれぞれ設定
+* ステーションIDはより細かくする！
+* 目安の数値を決めてそれ以下なら同じステーションIDを割り振り
+* ステーションID毎に計算させる！
+
+**○予約の重複を回避**
+
+* 予約テーブルから検索
+
+**○予約方法**
+
+* ~~地図から検索~~
+* 車から検索
+* 時間から検索
 
 
-# proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
+> ### **新機能最低３つ**
+
+* メール送信
+* 電気自動車
+* 特殊車両
+
+
+> ### **デザイン**
+
+* メディアクエリに対応させるcss作成
+* 動画や画像で使い方を説明
+* 利用時の必要事項ページ作成
+
 
 # info
-__*carsharing_req(カーシェアリング利用登録)*__
-*ボス*
-1. models.pyにCarsharUserModel[class]を追加
-2. forms.pyを作成し、models.pyで作ったmodelをimport
-```bash
-from.models import CarsharUserModel
+
+> **日付入力をカレンダー方式にする方法**
+
+django-bootstrap-datepicker-plusをインストールし、フォームクラス上のwidgetにライブラリのクラスを指定
 ```
-3. forms.pyにCarsharUserModelを継承させたCarsharUserCreateForm[class]を記入
-```bash
-class CarsharUserCreateForm(forms.ModelForm):
-    class Meta:
-        model = CarsharUserModel
-        fields = ['id', 'name', 'mail', ... ]
+pip install django-bootstrap-datepicker-plus
 ```
+参考サイト:
 
-2. views.pyにTemplateViewをimport
-```bash
-from django.views.generic import TemplateView
-```
-3. views.pyにCarsharUser[class]を宣言(TemplateViewを使用)
-4. views.pyのCarsharUser[class]にコンストラクタを設定
-```bash
-def __init__(self):
-        self.params = {
-            'title': 'タイトル',
-        }
-```
-params内に使用変数を定義
-
-4. urls.pyにviews.py内で宣言したCarsharUser[class]をimport
-```bash
-from .views import CarsharUser
-```
-5. urls.pyに以下の記述でアプリケーション名を追記
-```bash
-app_name = 'carsharing_req'
-```
-6. urls.pyにCarsharUserclassのディレクトリを追記
-```bash
-path('index/', CarsharUser.as_view(), name='index')
-```
-
-7. ルートディレクトリ直下のtemplatesフォルダ内にcarsharing_reqフォルダを作成
-```bash
-$ mkdir carsharing_req
-```
-8. carsharing_reqフォルダ内にindex.htmlを作成
-```bash
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-    <title>{{ title }}</title>
-</head>
-<body class="container">
-    <h1 class="display-4 text-primary">{{ title }}</h1>
-    <p class="h5 mt-4">{{ message|safe }}</p>
-    <form action="{% url 'index' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input class="btn btn-primary my-2" type="submit" value="click">
-    </form>
-</body>
-</html>
-```
-9. さあ、runserverしてみよう
-
-__*carsharing_booking(カーシェア予約)*__
-*おおにしちゃん＆はっしー*
+[[Django] 日付入力欄をカレンダー形式にする (bootstrap-datetimepicker)](https://qiita.com/okoppe8/items/999b8e3c86708fbb3926)
 
 
-__*owners_req(カーシェアオーナー申請)*__
-*おおにしちゃん*
-1. ログインしているか確認するコントローラ[views.py]
-2. DBへ登録する内容のClass[models.py]
-3. 登録画面のフォーム[forms.py]
-4. バリデーション機能[views.py]
-5. オーナー詳細画面[views.py]
-6. 変更コントローラ（登録と同様に）[views.py]
-7. 削除コントローラ（登録と同様に）[views.py]
-8. HTMLのコンポーネント化[base.html]の継承
-9. デザイン変更
+> **DjangoにおけるDB操作 クエリメソッド（QueryAPI）**
 
+参考サイト:
 
-__*parking_req(駐車場オーナー申請)*__
-*はっしー*
-1. ログインしているか確認するコントローラ[views.py]
-2. DBへ登録する内容の駐車場登録Class追加[models.py]
-3. 登録画面のフォーム[forms.py]
-4. バリデーション機能[views.py]
-5. オーナー詳細画面[views.py]
-6. 変更コントローラ（登録と同様に）[views.py]
-7. 削除コントローラ（登録と同様に）[views.py]
-8. HTMLのコンポーネント化[base.html]の継承
-9. デザイン変更
+[Django逆引きチートシート（QuerySet編）](https://qiita.com/uenosy/items/54136aff0f6373957d22#%E6%A4%9C%E7%B4%A2%E7%B3%BB)
 
+[Django データベース操作 についてのまとめ](https://qiita.com/okoppe8/items/66a8747cf179a538355b)
 
-__*secondhandcar(中古車提案)*__
-*ボス*
+[Django:フィールドのアップデートのやりかた](http://wpress.biz/blog/2017/02/25/django%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%81%AE%E3%82%A2%E3%83%83%E3%83%97%E3%83%87%E3%83%BC%E3%83%88%E3%81%AE%E3%82%84%E3%82%8A%E3%81%8B%E3%81%9F/)
 
+> **DjangoにおけるSESSION利用法**
 
-# Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
+参考サイト:
+
+[【Django】Sessionの使い方（基本編）](https://idealive.jp/blog/2018/11/21/%E3%80%90django%E3%80%91session%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9%EF%BC%88%E5%9F%BA%E6%9C%AC%E7%B7%A8%EF%BC%89/)
+
+> **Bootstrapを利用し簡単に形を整える**
+
+参考サイト:
+
+[【Bootstrap】の基本「マージン」と「パディング」](https://design-studio-f.com/blog/bootstrap-utilities-spacing/)
+
+# proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
+* Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
 ## 11/4日にやること(1回のみ！！！)
 ```
 1. 翔ちゃんのGithub(proconEF)をForkする
@@ -190,3 +184,11 @@ python manage.py createsuperuser #管理者アカウントの作成
 python manage.py runserver #サーバー起動
 ```
 
+## DB削除
+
+1. 全てのアプリケーションの*migrations*フォルダ内の*0001_initial.py*を削除
+2. 以下のコマンドを実行
+```
+$ rm db.sqlite3 #データベースを削除
+```
+3. 上の4つの**Djangoコマンド**を実行
