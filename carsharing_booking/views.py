@@ -5,6 +5,7 @@ from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
 from owners_req .models import CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
+from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm
 import json, datetime
 from django.contrib import messages
@@ -205,14 +206,19 @@ def push(request):
         messages.error(request, '不正なリクエストです')
     return redirect(to='/carsharing_req/index')
 
+
+#予約確認・一覧
 class ReservationList(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'カーシェアリング予約一覧',
-            'data': ''
+            'title': '予約一覧',
+            'data': '',
+            'data2': '',
         }
     
     def get(self, request):
         booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('-end_day', '-end_time')
         self.params['data'] = booking
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).order_by('-end_day', '-end_time')
+        self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)

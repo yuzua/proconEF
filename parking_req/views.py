@@ -4,10 +4,12 @@ from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from carsharing_req .models import CarsharUserModel
 from .models import ParkingUserModel
-from .forms import ParkingForm
+from .forms import ParkingForm, ParkingLoaningForm
+from parking_booking .models import ParkingBookingModel
 import datetime
 import json
 from django.contrib import messages
+from django.db.models import Q
 
 # Create your views here.
 
@@ -178,3 +180,137 @@ def sample(request):
         }
         # return render(request, 'parking_req/sample.html', params)
         return render(request, 'parking_req/map3.html', params)
+
+
+class ParkingLoaningCreate(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': '駐車場貸し出し日時登録',
+            'message': '貸し出し不可日時入力',
+            'form': ParkingLoaningForm(),
+            'parking_obj': '',
+        }
+    
+    #ログインユーザ、非ログインユーザ判別
+    def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(self.request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            print(request.user)
+            parking_obj = ParkingUserModel.objects.filter(user_id=request.session['user_id'], countflag=True)
+            self.params['parking_obj'] = parking_obj
+            print(parking_obj)
+
+        return render(request, 'parking_req/loaning.html', self.params)
+
+    #入力データ保存
+    def post(self, request):
+        # POSTデータを変数へ格納
+        start_day = request.POST['start_day']
+        end_day = request.POST['end_day']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+        request.session['user_parking_id'] = request.POST['parking_id']
+
+        # POSTデータをdatetime型へ変換
+        start = start_day + ' ' + start_time
+        start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
+        print(start)
+        print(type(start))
+        end = end_day + ' ' + end_time
+        end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
+        print(end)
+        print(type(end))
+
+        booking_list = ParkingBookingModel.objects.filter(parking_id=request.session['user_parking_id'])
+        booking_list = booking_list.filter(Q(start_day=start_day) | Q(start_day=end_day) | Q(end_day=start_day) | Q(end_day=end_day))
+        print(booking_list)
+        booking_list = booking_list.values('id', 'start_day', 'start_time', 'end_day', 'end_time')
+        for item in booking_list:
+            booking_id = item['id']
+            booking_sd = item['start_day']
+            booking_st = item['start_time']
+            booking_ed = item['end_day']
+            booking_et = item['end_time']
+            print('item')
+            print(item)
+            booking_start = booking_sd + ' ' + booking_st
+            booking_start = datetime.datetime.strptime(booking_start, '%Y-%m-%d %H:%M')
+            booking_end = booking_ed + ' ' + booking_et
+            booking_end = datetime.datetime.strptime(booking_end, '%Y-%m-%d %H:%M')
+            if start <= booking_end and end >= booking_start:
+                print("被り！！")
+                messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の駐車場にするか時間帯を変更してください。<br>' \
+                     + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' \
+                     + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
+                return render(request, 'parking_req/loaning.html', self.params)
+            else:
+                print("大丈夫！")
+
+        print(booking_list)
+
+        time = end - start
+        d = int(time.days)
+        m = int(time.seconds / 60)
+        print(d)
+        print(int(m))
+        times = ''
+
+        if d <= 0:
+            print('1day')
+        else:
+            print('days')
+            times = str(d) + '日 '
+
+        if start_time < end_time:
+            print('tule')
+            h = int(m / 60)
+            m = int(m % 60)
+            x = str(h) + '時間 ' + str(m) + '分'
+            times += x
+        elif start_time >= end_time and d < 0:
+            print('false')
+            obj = ParkingBookingModel()
+            p_b = ParkingLoaningForm(request.POST, instance=obj)
+            self.params['form'] = p_b
+            messages.error(request, '終了時刻が開始時刻よりも前です。')
+            parking_obj = ParkingUserModel.objects.filter(user_id=request.session['user_id'], countflag=True)
+            self.params['parking_obj'] = parking_obj
+            return render(request, 'parking_req/loaning.html', self.params)
+        else:
+            h = int(m / 60)
+            m = int(m % 60)
+            x = str(h) + '時間 ' + str(m) + '分'
+            times += x
+        
+        charge = -1
+        data = {
+            'start_day': start_day,
+            'start_time': start_time,
+            'end_day': end_day,
+            'end_time': end_time,
+            'charge': charge,
+        }
+        self.params['kingaku'] = charge
+        self.params['data'] = data
+        self.params['times'] = times
+        self.params['message'] += '情報確認'
+        messages.warning(self.request, 'まだ貸し出し不可日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
+        return render(request, "parking_req/check.html", self.params)
+
+def push(request):
+    user_id = int(request.session['user_id'])
+    parking_id = int(request.session['user_parking_id'])
+    start_day = request.POST['start_day']
+    end_day = request.POST['end_day']
+    start_time = request.POST['start_time']
+    end_time = request.POST['end_time']
+    charge = int(request.POST['charge'])
+    record = ParkingBookingModel(user_id = user_id, parking_id = parking_id, start_day = start_day, \
+        end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
+    record.save()
+    messages.success(request, '登録が完了しました。')
+    del request.session['user_parking_id']
+    return redirect(to='parking_req:loaning')
