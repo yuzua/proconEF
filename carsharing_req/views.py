@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .models import CarsharUserModel
 from .forms import CarsharUserCreateForm
+from accounts .models import CustomUser
 from parking_req .models import *
 from owners_req .models import HostUserModel
 
@@ -92,6 +93,18 @@ class CarsharUserInfo(TemplateView):
         self.params['message'] = msg
         self.params['form'] = CarsharUserCreateForm(request.POST)
         return render(request, 'carsharing_req/index.html', self.params)
+
+def carsharuserdata(request):
+    data = CarsharUserModel.objects.get(id=request.session['user_id'])
+    data2 = CustomUser.objects.get(email=request.user.email)
+    params = {
+        'title': '個人登録情報確認',
+        'message': 'ユーザ情報',
+        'data': data,
+        'data2': data2,
+    }
+    return render(request, 'carsharing_req/userdata.html', params)
+
 
 # class CarsharUserSendMail(generic.FormView):
 

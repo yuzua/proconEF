@@ -1,0 +1,56 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+        <th></th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="col">ID</th><td scope="row">{{data.id}}</td>
+    </tr>
+    <tr>
+      <th scope="col">email</th><td scope="row">{{data.email}}</td>
+    </tr>
+    <tr>
+      <th scope="col">gender</th>
+      <td scope="row">
+        {% if data.gender == True %}
+            男性
+        {% else %}
+            女性
+        {% endif %}
+      </td>
+    </tr>
+    <tr>  
+      <th scope="col">age</th><td scope="row">{{data.age}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">birthday</th><td scope="row">{{data.birthday}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">zip01</th><td scope="row">{{data.zip01}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">pref01</th><td scope="row">{{data.pref01}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">addr01</th><td scope="row">{{data.addr01}}{{data.addr02}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">system_flag</th><td scope="row">{{data.system_flag}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">user name</th><td scope="row">{{data2.username}}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
