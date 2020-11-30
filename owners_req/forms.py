@@ -1,6 +1,7 @@
 from django import forms
 from datetime import date
 from.models import HostUserModel
+from parking_booking .models import ParkingBookingModel
 import bootstrap_datepicker_plus as datetimepicker
 from.models import *
 
@@ -109,6 +110,52 @@ class CarsharingDateForm(forms.ModelForm):
             #'user_id': 'ユーザID',
             'car_id': '車両ID',
             'possible_date': '貸出可能日',
+        }
+
+class ParkingLoaningForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(ParkingLoaningForm, self).__init__(*args, **kwd)
+
+    class Meta:
+        model = ParkingBookingModel
+        fields = ['start_day', 'start_time', 'end_day', 'end_time']
+        widgets = {
+            'user_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'parking_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).start_of('期間'),
+            'start_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+            'end_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).end_of('期間'),
+            'end_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+        }
+        labels = {
+            'start_day': '貸し出し制限開始日',
+            'end_day': '貸し出し制限終了日',
+            'start_time': '貸し出し制限開始時刻',
+            'end_time': '貸し出し制限終了時刻',
         }
    
 
