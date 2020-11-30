@@ -88,11 +88,12 @@
 .btn {
     height: 30pt;
     width: 75pt;
-    font-size: 10pt;
+    font-size: 12pt;
     margin: 3pt 10pt 3pt 10pt;
     border-color: #CDCDCD;
     float: right;
-    clear: both;;
+    clear: both;
+    padding: auto;
 }
 
 .btn:hover {
