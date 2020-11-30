@@ -165,30 +165,35 @@ class CalendarView(TemplateView):
     }
 
     def get(self, request):
+        # カーシェアリング予約
         events = []
         booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('end_day', 'end_time')
         booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
-        # print(booking)
         for obj in booking:
             title = obj.get("id")
             start = obj.get("start_day") + 'T' + obj.get("start_time")
             end = obj.get("end_day") + 'T' + obj.get("end_time")
-            # print(start)
             event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#9BF9CC']))
             events.append(event)
-        # print(events)
         
+        # 駐車場予約
         booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('end_day', 'end_time')
         booking2 = booking2.values("id", "start_day", "start_time", "end_day", "end_time")
-        # print(booking2)
         for obj in booking2:
             title = obj.get("id")
             start = obj.get("start_day") + 'T' + obj.get("start_time")
             end = obj.get("end_day") + 'T' + obj.get("end_time")
-            # print(start)
             event = dict((['title', '駐車場予約'+str(title)], ['start', start], ['end', end], ['color', '#A7F1FF']))
             events.append(event)
-        # print(events)
+        
+        loaning2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], charge=-1).order_by('end_day', 'end_time')
+        loaning2 = loaning2.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning2:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '駐車場貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#6495ED']))
+            events.append(event)
         self.params['events'] = json.dumps(events)
         
         return render(request, 'carsharing_req/calendar.html', self.params)
