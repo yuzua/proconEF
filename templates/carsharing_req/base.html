@@ -53,7 +53,7 @@
             </li>
             {% else %}
             <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center;">
-                <a class="nav-link" href="http://127.0.0.1:8000/accounts/signup/">新規会員登録</a>
+                <a class="nav-link" href="/accounts/signup/">新規会員登録</a>
             </li>
             {% endif %}
             <li class="navbar01" style="border-right: 1px solid #333;width: 18%;text-align: center">
@@ -61,8 +61,8 @@
                     カーシェアリング利用
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
-                    <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_booking/">カーシェアリング検索</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/1">カーシェアリング利用の流れ</a>
                     <a class="dropdown-item" href="#">料金について</a>
                   </div>
             </li>
@@ -72,7 +72,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
-                    <a class="dropdown-item" href="#">駐車場利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/2">駐車場利用の流れ</a>
                     <a class="dropdown-item" href="#">料金について</a>
                   </div>
             </li>
@@ -95,11 +95,11 @@
                 {% if request.session.owner_flag == True %}
                     <a class="dropdown-item" href="#">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="#">カーシェアリングオーナー利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/3">カーシェアリングオーナー利用の流れ</a>
                 {% if request.session.parking_flag == True %}
-                    <a class="dropdown-item" href="#">駐車場オーナー<br>貸し出し日時を登録する</a>
+                    <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="#">駐車場オーナー利用の流れ</a> 
+                    <a class="dropdown-item" href="/carsharing_req/pages/4">駐車場オーナー利用の流れ</a> 
                 </div>
             </li>
             {% else %}
