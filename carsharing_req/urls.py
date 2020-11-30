@@ -11,4 +11,5 @@ urlpatterns = [
     path('pages/<int:num>', views.pages, name='pages'),
     path('create', CreateView.as_view(), name='create'),
     path('set_session/', views.set_session, name='set_session'),
+    path('calendar/', CalendarView.as_view(), name='calendar'),
 ]
