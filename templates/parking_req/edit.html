@@ -1,4 +1,9 @@
 {% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "parking_req/css/parking.css" %}'>
+{% endblock %}
 
 {% block title %}
 {{ title }}
@@ -6,8 +11,9 @@
 
 {% block main_contents %}
 <h1>{{ title }}</h1>
-<div class="card">
 <form action="{% url 'parking_req:edit' %}" method="post" >
+<div class="card">
+
         {% csrf_token %}
         <h2 class="card-header">{{ message|safe }}</h2>
         <div class="card-body">
@@ -15,7 +21,7 @@
             {{ form.as_p }}
         </div>
         <div class="card-footer">
-            <input class="btn btn-outline-secondary" type="submit" value="修正" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+            <input class="btn" type="submit" value="修正" />
         </div>
 </form>            
 </div>

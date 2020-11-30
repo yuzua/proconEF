@@ -20,5 +20,5 @@ urlpatterns = [
     #path('carparkinglist', views.carparkinglist, name='carparkinglist'),
     path('settinginfo', SettingInfo.as_view(), name='settinginfo'),
     path('createDate', CreateDateView.as_view(), name='createDate'),
-    path('push', views.push, name='push'),
+    path('check', views.check, name='check'),
 ]
