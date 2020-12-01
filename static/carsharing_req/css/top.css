@@ -21,4 +21,11 @@
 
 #btn1 {
     width: 80pt;
+    float: right;
+    margin: 0 5pt 0 5pt;
+    clear: none;
+}
+
+.float-left {
+    background: linear-gradient(#fff,#f4f4f4);
 }
