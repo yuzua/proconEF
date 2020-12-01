@@ -21,6 +21,7 @@
 
 .logout {
     color: #333;
+    font-size: 11pt;
 }
 
 .login {
@@ -107,4 +108,8 @@ a:hover {
 
 .nav {
     padding: 10pt 0pt 10pt 0pt;
+}
+
+.dropdown-item {
+    margin: 4pt 0 4pt 0;
 }
