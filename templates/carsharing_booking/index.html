@@ -10,7 +10,7 @@
 {% block main_contents %}
 <!-- 地図からの予約 -->
 <div class="card-park">
-    <h4 class="card-header-park">地図から予約</h2>
+    <h4 class="card-header-park">近隣の利用可能な車を探す</h2>
         <div class="card-body-park">
             <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="park"></a>
             <div id="park">
@@ -21,7 +21,7 @@
         </div>
 </div>
 <div class="card-car">
-    <h4 class="card-header-car">車両から予約</h2>
+    <h4 class="card-header-car">乗りたい車両で探す</h2>
     <div class="card-body-car">
         <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="car"></a>
         <div id="car">
@@ -32,11 +32,12 @@
     </div>
 </div>
 <div class="card-time">
-    <h4 class="card-header-time">時間から予約</h2>
+    <h4 class="card-header-time">過去の履歴から探す</h2>
     <div class="card-body-time">
         <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="time"></a>
         <div id="time">
-            <p class="card-text mt-3">利用したい時間を選択して予約をします。</p>            <p class="card-text">好きな時間を選んでね</p>
+            <p class="card-text mt-3">過去に利用した情報から予約します。</p>            
+            <p class="card-text">履歴から選んでね</p>
             <a class="btn" id="timing" href="car">予約する</a>
         </div>
     </div>
