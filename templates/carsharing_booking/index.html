@@ -4,7 +4,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main_contents %}
-<div class="card w-50 mt-5">
+<div class="card w-50 mt-5 mx-0 float-left">
     <h2 class="card-header bg-secondary text-white">地図から予約</h2>
         <div class="card-body">
         <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
@@ -13,6 +13,17 @@
         </div>
     <div class="card-footer">
     <a class="btn btn-secondary btn-sm m-0 font-weight-bold" href="map">予約する</a>
+    </div>
+</div>
+<div class="card w-50 mt-5 mx-0">
+    <h2 class="card-header bg-secondary text-white">車両から予約</h2>
+        <div class="card-body">
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
+            <p class="card-text mt-3">利用したい車両を選択して予約をします。</p>
+            <p class="card-text">好きな車を選んでね</p>
+        </div>
+    <div class="card-footer">
+    <a class="btn btn-secondary btn-sm m-0 font-weight-bold" href="car">予約する</a>
     </div>
 </div>
 {% endblock %}

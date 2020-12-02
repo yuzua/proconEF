@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.select, name='select'),
     # path("", views.test_ajax_app),
     path("map/", views.map, name='map'),
+    path('car/', views.car, name='car'),
     path('booking/<int:num>', views.booking, name='booking'),
     path('checkbooking/', views.checkBooking, name='checkbooking'),
     path('push/', views.push, name='push'),

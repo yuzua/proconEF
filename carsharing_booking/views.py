@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import *
-from owners_req .models import CarInfoParkingModel, CarInfoModel
+from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
-from .forms import BookingCreateForm
+from .forms import BookingCreateForm, CarCategory
 import json, datetime
 from django.contrib import messages
 from django.db.models import Q
@@ -50,6 +50,28 @@ def map(request):
         params['add'] = request.POST['add']
         params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
+
+def car(request):
+    max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()
+    max_num = max_num.get('category') + 1
+    set_QuerySet = CarInfoParkingModel.objects.values("car_id")
+    print(set_QuerySet)
+    item_all = CarInfoModel.objects.filter(id__in=set_QuerySet).order_by('parent_category', 'category')
+    print(item_all.values('category'))
+    dict_car = {}
+    for key in range(1, max_num):
+        value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
+        dict_car.setdefault(key, value)
+
+    print(dict_car)
+    params = {
+        'car_obj': item_all,
+        'form': CarCategory(),
+        'parentcategory_list': list(ParentCategory.objects.all()),
+        'category_set': list(Category.objects.all().values()),
+        'json_car': json.dumps(dict_car, ensure_ascii=False)
+    }
+    return render(request, "carsharing_booking/car.html", params)
 
 def booking(request, num):
     request.session['num'] = num
