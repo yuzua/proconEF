@@ -48,6 +48,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="#">個人登録情報確認</a>
                     <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
+                    <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
                     <a class="dropdown-item" href="#">利用明細</a>
                 </div>
             </li>
@@ -253,6 +254,7 @@
     <div id="top_wrapper" class="w-100">
     {% block box %}{% endblock %}
     {% block top %}{% endblock %}
+    {% block extrajs %}{% endblock %}
     </div>
     <!--/wrapper-->
 
@@ -287,13 +289,13 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリング・駐車場利用</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#!">カーシェアリング利用の流れ</a>
+                            <a href="/carsharing_req/pages/1">カーシェアリング利用の流れ</a>
                         </li>
                         <li>
                             <a href="/carsharing_booking/map">カーシェアリング検索</a>
                         </li>
                         <li>
-                            <a href="#!">駐車場利用の流れ</a>
+                            <a href="/carsharing_req/pages/2">駐車場利用の流れ</a>
                         </li>
                         <li>
                             <a href="/parking_booking/map">駐車場検索</a>
@@ -311,13 +313,13 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">中古車</h5>
                     <ul class="list-unstyled">
                         <li>
+                            <a href="#!">あなたへのおすすめ</a>
+                        </li>
+                        <li>
                             <a href="#!">中古車検索</a>
                         </li>
                         <li>
-                            <a href="#!">カーシェアリング検索</a>
-                        </li>
-                        <li>
-                            <a href="#!">駐車場利用の流れ</a>
+                            <a href="/secondhandcar/">AI価格予測</a>
                         </li>
                     </ul>
                 </div>
@@ -329,7 +331,7 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリングオーナー</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#!">カーシェアリングオーナー利用の流れ</a>
+                            <a href="/carsharing_req/pages/3">カーシェアリングオーナー利用の流れ</a>
                         </li>
                         {% if request.session.owner_flag == True %}
                         <li>
@@ -337,7 +339,7 @@
                         </li>
                         {% else %}
                         <li>
-                            <a href="#!">カーシェアリングオーナーになる</a>
+                            <a href="/owners_req/create">カーシェアリングオーナーになる</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -350,11 +352,11 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">駐車場オーナー</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#!">駐車場オーナー利用の流れ</a>
+                            <a href="/carsharing_req/pages/4">駐車場オーナー利用の流れ</a>
                         </li>
                         {% if request.session.parking_flag == True %}
                         <li>
-                            <a href="#!">貸し出し日時を登録する</a>
+                            <a href="/parking_req/loaning/">貸し出し日時を登録する</a>
                         </li>
                         {% else %}
                         <li>
