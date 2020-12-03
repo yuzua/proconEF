@@ -1,5 +1,5 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
@@ -7,7 +7,7 @@
 {% block content %}
 <html>
 <body class="centerMiddle">
-<h3 class="title">{% trans "Sign Up" %}</h1>
+<h3 class="title">{% trans "Sign Up" %}</h3>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
@@ -22,16 +22,18 @@
 <style>
   .centerMiddle {
     text-align: center;
-    padding: 30pt;
-    width: 600pt;
+    padding: 5pt;
+    width: 400pt;
     height: 250pt;
     margin: auto;
-    margin-top: 20pt;
+    margin-top: 150pt;
     padding: 0.5em 1em;
     color: #000;/*文字色*/
-    background: #FFF;
     border: solid 2px #696969;/*線*/
     border-radius: 10px;/*角の丸み*/
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
   }
 
   .btn {
@@ -39,7 +41,7 @@
     width: 90pt;
     font-size: 11pt;
     margin: 3pt 10pt 3pt 10pt;
-    border-color: #CDCDCD;
+    border-color: #000;
     float: right;
     clear: both;
   }
