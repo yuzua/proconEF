@@ -43,6 +43,9 @@ class Survey(TemplateView):
         return render(request, 'survey/questionnaire.html', self.params)
 
     def post(self, request):
+
+        #コンストラクタ（__init__）でrandom関数をかけて選択されたrslをセッションに代入しておき、再度表示 -> checks_valueに含まれているかどうか判別
+
         #チェックされたアンケート項目を取得
         checks_value = request.POST.getlist('checks[]')
         print(checks_value)
