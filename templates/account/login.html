@@ -1,16 +1,15 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-<html style="background-color: #EEEEEE;">
-  <div class="centerMiddle" style="display:inline-block;text-align:left;padding: 30pt;padding-left: 40pt;">
-    <body style="border: solid;border-width: 1pt;width: 400pt;text-align: center;margin: 300pt;margin-top: 100pt;margin-bottom: 100pt;">
+<html>
+  <body class="centerMiddle">
 <!-- ログイン -->
-<h1 class="h3 mb-3 font-weight-normal">{% trans "Sign In" %}</h1>
+<h3>{% trans "Sign In" %}</h3>
 
 {% get_providers as socialaccount_providers %}
 
@@ -18,7 +17,7 @@
 <!-- Google login -->
 <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers" style="padding: 0pt;">
+  <ul class="socialaccount_providers">
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
   </ul>
 
@@ -43,11 +42,44 @@
   <!-- 新規登録 -->
   <p>新規の方は<a href="{{ signup_url }}">新規登録</a></p>
   <!-- パスワード忘れ -->
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
+  <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
   <!-- ログイン -->
-  <button class="primaryAction btn btn-primary" type="submit" style="margin-top: 15pt;">{% trans "Sign In" %}</button>
+  <button class="btn" type="submit" style="margin-top: 15pt;">{% trans "Sign In" %}</button>
 </form>
 </body>
-</div>
+<style>
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    display:inline-block;
+    text-align: center;
+    padding: 5pt;
+    width: 400pt;
+    height: 350pt;
+    margin: 150pt 350pt 0 350pt;
+    padding: 0.5em 1em;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
+
+  .socialaccount_providers {
+    padding: 0;
+  }
+
+  .btn {
+    height: 30pt;
+    width: 90pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #000;
+    float: right;
+    clear: both;
+  }
+</style>
 </html>
 {% endblock %}
