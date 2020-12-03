@@ -58,7 +58,14 @@ class CarInfoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-
+        widget = {
+            'vehicle_inspection_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                })
+        }
 
         labels = {
             #'user_id': 'ユーザID',
