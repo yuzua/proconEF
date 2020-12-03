@@ -12,6 +12,7 @@ def index(request):
 class Survey(TemplateView):
 
     def __init__(self):
+        #アンケート項目
         survey_list = [
             '乗り心地',
             '荷室の使いやすさ',
@@ -29,6 +30,7 @@ class Survey(TemplateView):
             'カスタムしやすい',
             'オプションが充実してる',
         ]
+        #survey_listの中からランダムに5つ選ぶ
         rsl = random.sample(survey_list, 5)
         print(rsl)
         self.params = {
@@ -41,8 +43,10 @@ class Survey(TemplateView):
         return render(request, 'survey/questionnaire.html', self.params)
 
     def post(self, request):
+        #チェックされたアンケート項目を取得
         checks_value = request.POST.getlist('checks[]')
         print(checks_value)
+        #取得したアンケート項目を仕分けして適切な位置に保存(試行錯誤中)
         for item in checks_value:
             if item == '乗り心地':
                 print('1')
