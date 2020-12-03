@@ -5,9 +5,9 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<html style="background-color: #EEEEEE;">
-<body class="centerMiddle" style="border: solid;text-align: left;padding: 30pt;display:inline-block;border-width: 1pt;width: 400pt;margin: 300pt;margin-top: 100pt;margin-bottom: 100pt;padding-left: 80pt;padding-right: 50pt;">
-<h1 class="h3 mb-3 font-weight-normal">{% trans "Sign Up" %}</h1>
+<html>
+<body class="centerMiddle">
+<h3 class="title">{% trans "Sign Up" %}</h1>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
@@ -15,10 +15,52 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <p>すでにアカウントお持ちの方は<a href="{{ login_url }}">ログイン</a></p>
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <p>すでにアカウントお持ちの方は<a href="{{ login_url }}" class="login">ログイン</a></p>
+  <button class="btn" type="submit" >{% trans "Sign Up" %}</button>
 </form>
 </body>
+<style>
+  .centerMiddle {
+    text-align: center;
+    padding: 30pt;
+    width: 600pt;
+    height: 250pt;
+    margin: auto;
+    margin-top: 20pt;
+    padding: 0.5em 1em;
+    color: #000;/*文字色*/
+    background: #FFF;
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
+
+  .btn {
+    height: 30pt;
+    width: 90pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #CDCDCD;
+    float: right;
+    clear: both;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+
+  .login {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .login:hover {
+    color: #000;
+  }
+
+  .signup {
+    padding: 10pt;
+  }
+</style>
 </html>
 
 {% endblock %}
