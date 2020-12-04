@@ -18,7 +18,6 @@ def index(request):
     params = {
         'msg': '',
     }
-    # return render(request, 'parking_req/map1.html', params)
     return render(request, 'parking_req/mapping.html', params)
 
 #登録する緯度、経度をセッションにセット
@@ -50,6 +49,8 @@ class ParkingHostCreate(TemplateView):
             print(request.user)
             print(request.session['user_lat'])
             print(request.session['user_lng'])
+            self.params['lat'] = request.session['user_lat']
+            self.params['lng'] = request.session['user_lng']
 
         return render(request, 'parking_req/create.html', self.params)
 
@@ -57,6 +58,7 @@ class ParkingHostCreate(TemplateView):
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
+        address = request.POST['address']
         lat = request.session['user_lat']
         lng = request.session['user_lng']
         day = dt_now
@@ -64,7 +66,7 @@ class ParkingHostCreate(TemplateView):
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
-        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, \
+        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, \
             parking_type = parking_type, width = width, length = length, height = height)
         obj = ParkingUserModel()
         parking = ParkingForm(request.POST, instance=obj)
@@ -115,7 +117,7 @@ def delete(request, num):
 
 def sample(request):
     s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
-    sample_parking = s_p.values("id", "user_id", "lat", "lng")
+    sample_parking = s_p.values("id", "user_id", "lat", "lng", "address")
     if (request.method == 'POST'):
         num1 = request.POST['command']
         #修正機能
@@ -160,7 +162,7 @@ def sample(request):
             }
             if (request.method == 'POST'):
                 params['add'] = request.POST['add']
-            return render(request, "parking_req/map3.html", params)        
+            return render(request, "parking_req/parking_map.html", params)        
     else:
         #地図上に登録した駐車場を表示
         data = CarsharUserModel.objects.get(id=request.session['user_id'])
@@ -179,7 +181,7 @@ def sample(request):
             'data_json': json.dumps(data)
         }
         # return render(request, 'parking_req/sample.html', params)
-        return render(request, 'parking_req/map3.html', params)
+        return render(request, 'parking_req/parking_map.html', params)
 
 
 class ParkingLoaningCreate(TemplateView):

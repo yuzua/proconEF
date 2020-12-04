@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class ParkingUserModel(models.Model):
 
     user_id = models.IntegerField(default=0, verbose_name='ユーザID')
+    address = models.CharField(verbose_name='住所', max_length=255)
     lat = models.CharField(default=0, verbose_name='緯度', max_length=32)
     lng = models.CharField(default=0, verbose_name='経度', max_length=32)
     day = models.DateField()
