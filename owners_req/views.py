@@ -12,6 +12,13 @@ import datetime
 import json
 from django.db.models import Q
 from parking_booking .models import ParkingBookingModel
+import json
+import logging
+import os
+import tornado.ioloop
+ 
+from tornado.web import RequestHandler
+from tornado.options import options
 
 
 
@@ -283,7 +290,7 @@ class CreateDateView(TemplateView):
     def __init__(self):
         self.params = {
             'title': '駐車場/車両一覧',
-            'message': '貸出可能日時を設定してください',
+            'message': '貸出不可能日時を設定してください',
             'form': ParkingLoaningForm(), 
             'car_info': '',  #登録済みの車情報表示
         }
@@ -333,7 +340,7 @@ class CreateDateView(TemplateView):
             booking_end = datetime.datetime.strptime(booking_end, '%Y-%m-%d %H:%M')
             if start <= booking_end and end >= booking_start:
                 print("被り！！")
-                messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の駐車場にするか時間帯を変更してください。<br>' \
+                messages.error(request, '申し訳ございません。その時間帯は既に設定済みです。別の車両/駐車場にするか時間帯を変更してください。<br>' \
                      + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' \
                      + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
                 return render(request, 'owners_req/createDate.html', self.params)
@@ -388,7 +395,7 @@ class CreateDateView(TemplateView):
         self.params['data'] = data
         self.params['times'] = times
         self.params['message'] = '情報確認'
-        messages.warning(self.request, 'まだ貸し出し可能日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
+        messages.warning(self.request, 'まだ貸し出し不可能日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
         return render(request, "owners_req/check.html", self.params)
         
 def check(request):
@@ -405,3 +412,93 @@ def check(request):
     messages.success(request, '登録が完了しました。')
     del request.session['user_parking_id']
     return redirect(to='owners_req:createDate')
+
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("index.html")
+ 
+ 
+class GetCalendar(RequestHandler):
+    """
+    カレンダー取得
+    """
+ 
+    def initialize(self):
+        logging.info("GetCalendar [initialize]")
+ 
+    def get(self):
+        logging.info("GetCalendar [get]")
+        data=[
+            {
+                "title":"All Day Event",
+                "start":"2018-06-01"
+            },
+            {
+                "title":"Long Event",
+                "start":"2018-06-07",
+                "end":"2018-06-10"
+            },
+            {
+                "id":"999",
+                "title":"Repeating Event",
+                "start":"2018-06-09T16:00:00-05:00"
+            },
+            {
+                "id":"999",
+                "title":"Repeating Event",
+                "start":"2018-06-16T16:00:00-05:00"
+            },
+            {
+                "title":"Conference",
+                "start":"2018-06-11",
+                "end":"2018-06-13"
+            },
+            {
+                "title":"Meeting",
+                "start":"2018-06-12T10:30:00-05:00",
+                "end":"2018-06-12T12:30:00-05:00"
+            },
+            {
+                "title":"Lunch",
+                "start":"2018-06-12T12:00:00-05:00"
+            },
+            {
+                "title":"Meeting",
+                "start":"2018-06-12T14:30:00-05:00"
+            },
+            {
+                "title":"Happy Hour",
+                "start":"2018-06-12T17:30:00-05:00"
+            },
+            {
+                "title":"Dinner",
+                "start":"2018-06-12T20:00:00"
+            },
+            {
+                "title":"Birthday Party",
+                "start":"2018-06-13T07:00:00-05:00"
+            },
+            {
+                "title":"Click for Google",
+                "url":"http://google.com/",
+                "start":"2018-06-28"
+            }
+        ]
+ 
+        self.write(json.dumps(data))
+ 
+ app=tornado.web.Application(
+     [
+    (r"/",MainHandler),
+    (r"/getCalendar",GetCalendar),
+],
+    template_path=os.path.join(os.getcwd(),"templates"),
+    static_path=os.path.join(os.getcwd(),"static"),
+)
+ 
+if __name__=="__main__":
+    options.parse_command_line()
+    app.listen(8080)
+    logging.info("server started")
+    tornado.ioloop.IOLoop.instance().start()
