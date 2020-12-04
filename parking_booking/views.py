@@ -155,6 +155,9 @@ class ParkingBookingCreate(TemplateView):
             self.params['form'] = p_b
             messages.error(request, '終了時刻が開始時刻よりも前です。')
             return render(request, 'parking_booking/booking.html', self.params)
+        elif m < 15:
+            messages.error(request, '15分以下は利用できません。')
+            return render(request, 'parking_booking/booking.html', self.params)
         else:
             charge += int(m / 15 * 330)
             h = int(m / 60)

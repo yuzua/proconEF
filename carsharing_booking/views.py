@@ -188,6 +188,9 @@ def checkBooking(request):
         print('false')
         messages.error(request, '終了時刻が開始時刻よりも前です。')
         return render(request, 'carsharing_booking/booking.html', params)
+    elif m < 15:
+        messages.error(request, '15分以下は利用できません。')
+        return render(request, 'carsharing_booking/booking.html', params)
     else:
         charge += int(m / 15 * 330)
         h = int(m / 60)
@@ -239,7 +242,7 @@ class ReservationList(TemplateView):
         }
     
     def get(self, request):
-        booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('-end_day', '-end_time')
+        booking = BookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time')
         self.params['data'] = booking
         booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time')
         self.params['data2'] = booking2
