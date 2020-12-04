@@ -167,7 +167,7 @@ class CalendarView(TemplateView):
     def get(self, request):
         # カーシェアリング予約
         events = []
-        booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('end_day', 'end_time')
+        booking = BookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('end_day', 'end_time')
         booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
         for obj in booking:
             title = obj.get("id")
@@ -186,6 +186,18 @@ class CalendarView(TemplateView):
             event = dict((['title', '駐車場予約'+str(title)], ['start', start], ['end', end], ['color', '#A7F1FF']))
             events.append(event)
         
+        # 車両貸し出し制限
+        loaning1 = BookingModel.objects.filter(user_id=request.session['user_id'], charge=-1).order_by('end_day', 'end_time')
+        loaning1 = loaning1.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning1:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#00CC33']))
+            events.append(event)
+
+
+        # 駐車場貸し出し制限
         loaning2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], charge=-1).order_by('end_day', 'end_time')
         loaning2 = loaning2.values("id", "start_day", "start_time", "end_day", "end_time")
         for obj in loaning2:

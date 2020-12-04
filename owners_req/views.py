@@ -12,6 +12,7 @@ import datetime
 import json
 from django.db.models import Q
 from parking_booking .models import ParkingBookingModel
+from carsharing_booking .models import BookingModel
 
 
 
@@ -283,7 +284,7 @@ class CreateDateView(TemplateView):
     def __init__(self):
         self.params = {
             'title': '駐車場/車両一覧',
-            'message': '貸出可能日時を設定してください',
+            'message': '貸出不可能日時を設定してください',
             'form': ParkingLoaningForm(), 
             'car_info': '',  #登録済みの車情報表示
         }
@@ -303,7 +304,7 @@ class CreateDateView(TemplateView):
         end_day = request.POST['end_day']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        request.session['user_parking_id'] = request.POST['parking_id']
+        request.session['user_car_id'] = request.POST['car_id']
 
         # POSTデータをdatetime型へ変換
         start = start_day + ' ' + start_time
@@ -315,7 +316,7 @@ class CreateDateView(TemplateView):
         print(end)
         print(type(end))
 
-        booking_list = ParkingBookingModel.objects.filter(parking_id=request.session['user_parking_id'])
+        booking_list = BookingModel.objects.filter(car_id=request.session['user_car_id'])
         booking_list = booking_list.filter(Q(start_day=start_day) | Q(start_day=end_day) | Q(end_day=start_day) | Q(end_day=end_day))
         print(booking_list)
         booking_list = booking_list.values('id', 'start_day', 'start_time', 'end_day', 'end_time')
@@ -333,7 +334,7 @@ class CreateDateView(TemplateView):
             booking_end = datetime.datetime.strptime(booking_end, '%Y-%m-%d %H:%M')
             if start <= booking_end and end >= booking_start:
                 print("被り！！")
-                messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の駐車場にするか時間帯を変更してください。<br>' \
+                messages.error(request, '申し訳ございません。その時間帯は既に設定済みです。別の車両/駐車場にするか時間帯を変更してください。<br>' \
                      + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' \
                      + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
                 return render(request, 'owners_req/createDate.html', self.params)
@@ -363,7 +364,7 @@ class CreateDateView(TemplateView):
             times += x
         elif start_time >= end_time and d < 0:
             print('false')
-            obj = ParkingBookingModel()
+            obj = BookingModel()
             p_b = ParkingLoaningForm(request.POST, instance=obj)
             self.params['form'] = p_b
             messages.error(request, '終了時刻が開始時刻よりも前です。')
@@ -388,20 +389,20 @@ class CreateDateView(TemplateView):
         self.params['data'] = data
         self.params['times'] = times
         self.params['message'] = '情報確認'
-        messages.warning(self.request, 'まだ貸し出し可能日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
+        messages.warning(self.request, 'まだ貸し出し不可能日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
         return render(request, "owners_req/check.html", self.params)
         
 def check(request):
     user_id = int(request.session['user_id'])
-    parking_id = int(request.session['user_parking_id'])
+    car_id = int(request.session['user_car_id'])
     start_day = request.POST['start_day']
     end_day = request.POST['end_day']
     start_time = request.POST['start_time']
     end_time = request.POST['end_time']
     charge = int(request.POST['charge'])
-    record = ParkingBookingModel(user_id = user_id, parking_id = parking_id, start_day = start_day, \
+    record = BookingModel(user_id = user_id, car_id = car_id, start_day = start_day, \
         end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
     record.save()
     messages.success(request, '登録が完了しました。')
-    del request.session['user_parking_id']
+    del request.session['user_car_id']
     return redirect(to='owners_req:createDate')
