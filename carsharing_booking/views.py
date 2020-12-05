@@ -36,7 +36,7 @@ def map(request):
     add = data.pref01+data.addr01+data.addr02
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.filter(id__in=set_list)
-    item = item_all.values("id", "user_id", "lat", "lng")
+    item = item_all.values("id", "address", "user_id", "lat", "lng")
     item_list = list(item.all())
     data = {
         'markerData': item_list,
