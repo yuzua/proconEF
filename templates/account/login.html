@@ -43,6 +43,9 @@
   <p>
     <input type="password" name="password" pleaseholder="メールアドレス" autocomplete="current-password" required id="id_password">
   </p>
+  <p>
+    <input type="checkbox" name="remember" id="id_remember">
+  </p>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
