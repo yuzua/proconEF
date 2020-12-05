@@ -19,6 +19,7 @@
     <form action="{% url 'administrator:create' %}" method="post" >
         <div class="card">
         {% csrf_token %}
+        <input id="addressPush" type="hidden" name="address">
         <h2 class="card-header">{{ message|safe }}</h2>
         <div class="card-body">
             {{ form.as_p }}

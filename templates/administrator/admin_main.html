@@ -106,7 +106,7 @@ function initMap() {
             map: map // マーカーを立てる地図を指定
        });
      infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-         content: '<div class="sample">' + markerData[i]['id'] + '</div><form action="{% url 'administrator:admin_main' %}" method="post">\
+         content: '<div class="sample">' + markerData[i]['address'] + '</div><form action="{% url 'administrator:admin_main' %}" method="post">\
          {% csrf_token %}<input type="hidden" name="obj.id" value=' + markerData[i]['id'] + '><input type="hidden" name="command" value="edit">\
          <input class="btn btn-primary my-2" type="submit" value="修正"></form>\
          <form action="{% url 'administrator:admin_main' %}" method="post">{% csrf_token %}\

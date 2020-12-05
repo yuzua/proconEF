@@ -93,7 +93,7 @@ class ParkingAdminCreate(TemplateView):
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
-    admin_parking = s_p.values("id", "user_id", "lat", "lng")
+    admin_parking = s_p.values("id", "address", "user_id", "lat", "lng")
     if (request.method == 'POST'):
         #num = request.POST['obj.id']
         num1 = request.POST['command']
