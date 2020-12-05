@@ -10,7 +10,7 @@
   <body class="centerMiddle">
   <!-- ロゴ入れてみて！ -->
 <!-- ログイン -->
-<h3>{% trans "Sign In" %}</h3>
+<h3><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign In" %}</h3>
 
 {% get_providers as socialaccount_providers %}
 
@@ -41,14 +41,19 @@
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <!-- 新規登録 -->
-  <p>新規の方は<a href="{{ signup_url }}">新規登録</a></p>
+  <p>新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></p>
   <!-- パスワード忘れ -->
   <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
   <!-- ログイン -->
-  <button class="btn" type="submit" style="margin-top: 15pt;">{% trans "Sign In" %}</button>
+  <button class="btn" type="submit">{% trans "Sign In" %}</button>
 </form>
 </body>
 <style>
+  img {
+    width: 35pt;
+    height: 35pt;
+  }
+
   html {
     background-image: url('{% static "admin/img/carsharing.jpg" %}');
     background-color:rgba(255,255,255,0.8);
@@ -56,13 +61,12 @@
   }
 
   .centerMiddle {
-    display:inline-block;
-    text-align: center;
-    padding: 5pt;
+    display: inline-block;
+    text-align: left;
     width: 400pt;
-    height: 350pt;
-    margin: 150pt 350pt 0 350pt;
-    padding: 0.5em 1em;
+    max-height: fit-content;
+    margin: 100pt 350pt 0 350pt;
+    padding: 10pt 20pt;
     color: #000;/*文字色*/
     border: solid 2px #696969;/*線*/
     border-radius: 10px;/*角の丸み*/
@@ -77,9 +81,28 @@
     width: 90pt;
     font-size: 11pt;
     margin: 3pt 10pt 3pt 10pt;
-    border-color: #000;
+    border-color: #696969;
     float: right;
     clear: both;
+    margin-top: 15pt;
+  }
+
+  .signup {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .signup:hover {
+    color: #000;
+  }
+
+  .but {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .but:hover {
+    color: #000;
   }
 </style>
 </html>
