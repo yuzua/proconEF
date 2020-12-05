@@ -45,7 +45,7 @@ def test_ajax_response(request):
 class ParkingAdminCreate(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'ParkingAdminCreate',
+            'title': 'ステーション追加',
             'message': '駐車場情報入力',
             'form': AdminParkingForm(),
         }
@@ -56,11 +56,14 @@ class ParkingAdminCreate(TemplateView):
             messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
+            self.params['lat'] = request.session['user_lat']
+            self.params['lng'] = request.session['user_lng']
             return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = 0
+        address = request.POST['address']
         lat = request.session['user_lat']
         lng = request.session['user_lng']
         day = dt_now
@@ -70,7 +73,7 @@ class ParkingAdminCreate(TemplateView):
         height = request.POST['height']
         count = request.POST['count']
         admin = True
-        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, parking_type = parking_type, \
+        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, parking_type = parking_type, \
             width = width, length = length, height = height, count = count, admin = admin)
         obj = ParkingUserModel()
         parking = AdminParkingForm(request.POST, instance=obj)

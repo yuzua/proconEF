@@ -5,8 +5,17 @@
 {{ title }}
 {% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "parking_req/css/parking.css" %}'>
+<script type="text/javascript" src='{% static "carsharing_booking/js/geocoder.js" %}'></script>
+{% endblock %}
+
+
 {% block main_contents %}
     <h1>{{ title }}</h1>
+<div id="map_info">
+    <p id="addressOutput" rows="3" cols="26"></p>
+</div>
     <form action="{% url 'administrator:create' %}" method="post" >
         <div class="card">
         {% csrf_token %}
@@ -19,4 +28,13 @@
         </div>
         </div> 
     </form>   
+{% endblock %}
+
+{% block mapapi %}
+<script>
+//入力した緯度・経度を取得しjsへセット
+  var idoInput = '{{lat}}';
+  var keidoInput = '{{lng}}';
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk" async defer></script>
 {% endblock %}
