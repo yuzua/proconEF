@@ -22,7 +22,7 @@
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
   </ul>
 
-  <div class="login-or">{% trans 'or' %}</div>
+  {% comment %} <div class="login-or">{% trans 'or' %}</div> {% endcomment %}
 
 </div>
 
@@ -36,7 +36,13 @@
 
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+  {% comment %} {{ form.as_p }} {% endcomment %}
+  <p>
+    <input type="email" name="login" pleaseholder="メールアドレス" autocomplete="email" required id="id_login">
+  </p>
+  <p>
+    <input type="password" name="password" pleaseholder="メールアドレス" autocomplete="current-password" required id="id_password">
+  </p>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
