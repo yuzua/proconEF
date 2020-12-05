@@ -66,33 +66,39 @@ for(key in data){
     newElementId.appendChild(newContent); // td要素にテキストノードを追加
     newElementId.setAttribute("id","child-td1"); // td要素にidを設定
     newElementId.setAttribute("scope","row");
+    // ID
+    var newElementAddress = document.createElement("td"); // td要素作成
+    var newContent = document.createTextNode(items.address); // テキストノードを作成
+    newElementAddress.appendChild(newContent); // td要素にテキストノードを追加
+    newElementAddress.setAttribute("id","child-td2"); // td要素にidを設定
+    newElementAddress.setAttribute("scope","row");
     // 車両（メーカー）
     var newElementCategory = document.createElement("td"); // td要素作成
     var newContent = document.createTextNode(items.category__category+"（"+items.parent_category__parent_category+"）"); // テキストノードを作成
     newElementCategory.appendChild(newContent); // td要素にテキストノードを追加
-    newElementCategory.setAttribute("id","child-td2"); // td要素にidを設定
+    newElementCategory.setAttribute("id","child-td3"); // td要素にidを設定
     newElementCategory.setAttribute("scope","row");
     // 型番
     var newElementModelId = document.createElement("td"); // td要素作成
     var newContent = document.createTextNode(items.model_id); // テキストノードを作成
     newElementModelId.appendChild(newContent); // td要素にテキストノードを追加
-    newElementModelId.setAttribute("id","child-td3"); // td要素にidを設定
+    newElementModelId.setAttribute("id","child-td4"); // td要素にidを設定
     newElementModelId.setAttribute("scope","row");
     // 乗車人数
     var newElementPeople = document.createElement("td"); // td要素作成
     var newContent = document.createTextNode(items.people); // テキストノードを作成
     newElementPeople.appendChild(newContent); // td要素にテキストノードを追加
-    newElementPeople.setAttribute("id","child-td4"); // td要素にidを設定
+    newElementPeople.setAttribute("id","child-td5"); // td要素にidを設定
     newElementPeople.setAttribute("scope","row");
     // 乗車人数
     var newElementUsedYears = document.createElement("td"); // td要素作成
     var newContent = document.createTextNode(items.used_years); // テキストノードを作成
     newElementUsedYears.appendChild(newContent); // td要素にテキストノードを追加
-    newElementUsedYears.setAttribute("id","child-td5"); // td要素にidを設定
+    newElementUsedYears.setAttribute("id","child-td6"); // td要素にidを設定
     newElementUsedYears.setAttribute("scope","row");
     // リンク
     var newElementLink = document.createElement("td"); // td要素作成
-    newElementLink.setAttribute("id","child-td6"); // td要素にidを設定
+    newElementLink.setAttribute("id","child-td7"); // td要素にidを設定
     newElementLink.setAttribute("scope","row");
 
     // ----------------------------
@@ -107,13 +113,14 @@ for(key in data){
     parentDiv.insertBefore(newElementPeople, parentDiv.firstChild);
     parentDiv.insertBefore(newElementModelId, parentDiv.firstChild);
     parentDiv.insertBefore(newElementCategory, parentDiv.firstChild);
+    parentDiv.insertBefore(newElementAddress, parentDiv.firstChild);
     parentDiv.insertBefore(newElementId, parentDiv.firstChild);
 
     var newElementLink = document.createElement("a"); // td要素作成
     var newContent = document.createTextNode('予約する'); // テキストノードを作成
     newElementLink.appendChild(newContent); // td要素にテキストノードを追加
     newElementLink.setAttribute("href","/carsharing_booking/car/"+items.id);
-    var parentDivLink = document.getElementById("child-td6");
+    var parentDivLink = document.getElementById("child-td7");
     parentDivLink.insertBefore(newElementLink, parentDivLink.firstChild);
     
     // 選択したvalue値をp要素に出力

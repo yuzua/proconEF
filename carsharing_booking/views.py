@@ -54,14 +54,27 @@ def map(request):
 def car(request):
     max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()
     max_num = max_num.get('category') + 1
-    set_QuerySet = CarInfoParkingModel.objects.values("car_id")
-    print(set_QuerySet)
-    item_all = CarInfoModel.objects.filter(id__in=set_QuerySet).order_by('parent_category', 'category')
-    print(item_all.values('category'))
+    set_QuerySet_car = CarInfoParkingModel.objects.values("car_id")
+    set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
+    addadd = {}
+    for index in set_QuerySet_parking:
+        address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
+        address = address[0]['address']
+        index = index['car_id']
+        addadd.setdefault(index, address)
+    # print(addadd)
+
+    item_all = CarInfoModel.objects.filter(id__in=set_QuerySet_car).order_by('parent_category', 'category')
+    # print(item_all.values('category'))
     dict_car = {}
     for key in range(1, max_num):
         value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
+        if not value :
+            print('空')
+        else:
+            value[0]['address'] = addadd[value[0]['id']]
         dict_car.setdefault(key, value)
+        # print(key, value)
 
     print(dict_car)
     params = {
@@ -72,6 +85,9 @@ def car(request):
         'json_car': json.dumps(dict_car, ensure_ascii=False)
     }
     return render(request, "carsharing_booking/car.html", params)
+
+# def booking_car(request, num):
+
 
 def booking(request, num):
     request.session['num'] = num
