@@ -7,7 +7,7 @@
 {% block content %}
 <html>
 <body class="centerMiddle">
-<h3 class="title">{% trans "Sign Up" %}</h3>
+<h3 class="title"><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign Up" %}</h3>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
@@ -20,8 +20,19 @@
 </form>
 </body>
 <style>
+  img {
+    width: 35pt;
+    height: 35pt;
+  }
+  
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
   .centerMiddle {
-    text-align: center;
+    text-align: left;
     padding: 5pt;
     width: 400pt;
     height: 250pt;
@@ -31,9 +42,6 @@
     color: #000;/*文字色*/
     border: solid 2px #696969;/*線*/
     border-radius: 10px;/*角の丸み*/
-    background-image: url('{% static "admin/img/carsharing.jpg" %}');
-    background-color:rgba(255,255,255,0.8);
-    background-blend-mode:lighten;
   }
 
   .btn {
@@ -41,7 +49,7 @@
     width: 90pt;
     font-size: 11pt;
     margin: 3pt 10pt 3pt 10pt;
-    border-color: #000;
+    border-color: #696969;
     float: right;
     clear: both;
   }
