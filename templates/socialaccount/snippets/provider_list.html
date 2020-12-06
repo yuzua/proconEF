@@ -16,6 +16,17 @@
 {% endif %}
 <li class="google" style="list-style: none;">
   <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %} "><img src='{% static "admin/img/login_google.png" %}' alt="Google" style="width: 120pt;height: 45pt;border: solid;border-color: gray;border-width: 1pt;"></a>
+     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %} "><img src='{% static "admin/img/login_google.png" %}' alt="Google" class="goo"></a>
 </li>
 {% endfor %}
+
+<style>
+  .goo {
+    width: 250pt;
+    height: 36pt;
+    border: solid;
+    border-color: gray;
+    border-width: 1pt;
+    padding: 3pt 77pt 3pt 77pt;
+  }
+</style>
