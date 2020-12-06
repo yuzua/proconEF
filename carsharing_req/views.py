@@ -56,15 +56,20 @@ def set_session(request):
 
 
 # 説明ページ(HTML)ルーティング
-def pages(request, num):
+def pages(request, num, page):
     if num == 1:
-        return render(request, 'user_car.html')
+        if page == 0:
+            return render(request, 'page/user_car.html')
+        elif page == 1:
+            return render(request, 'page/user_car_1.html')
+        elif page == 3:
+            return render(request, 'page/user_car_3.html')
     elif num == 2:
-        return render(request, 'user_parking.html')
+        return render(request, 'page/user_parking.html')
     elif num == 3:
-        return render(request, 'owner_car.html')
+        return render(request, 'page/owner_car.html')
     elif num == 4:
-        return render(request, 'owner_parking.html')
+        return render(request, 'page/owner_parking.html')
     elif num == 0:
         pass
     else:

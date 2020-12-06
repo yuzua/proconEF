@@ -63,7 +63,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="/carsharing_booking/">カーシェアリング検索</a>
-                    <a class="dropdown-item" href="/carsharing_req/pages/1">カーシェアリング利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/1/0">カーシェアリング利用の流れ</a>
                     <a class="dropdown-item" href="#">料金について</a>
                   </div>
             </li>
@@ -73,7 +73,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
-                    <a class="dropdown-item" href="/carsharing_req/pages/2">駐車場利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/2/0">駐車場利用の流れ</a>
                     <a class="dropdown-item" href="#">料金について</a>
                   </div>
             </li>
@@ -96,11 +96,11 @@
                 {% if request.session.owner_flag == True %}
                     <a class="dropdown-item" href="#">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="/carsharing_req/pages/3">カーシェアリングオーナー利用の流れ</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
                 {% if request.session.parking_flag == True %}
                     <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="/carsharing_req/pages/4">駐車場オーナー利用の流れ</a> 
+                    <a class="dropdown-item" href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a> 
                 </div>
             </li>
             {% else %}
@@ -289,13 +289,13 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリング・駐車場利用</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="/carsharing_req/pages/1">カーシェアリング利用の流れ</a>
+                            <a href="/carsharing_req/pages/1/0">カーシェアリング利用の流れ</a>
                         </li>
                         <li>
                             <a href="/carsharing_booking/map">カーシェアリング検索</a>
                         </li>
                         <li>
-                            <a href="/carsharing_req/pages/2">駐車場利用の流れ</a>
+                            <a href="/carsharing_req/pages/2/0">駐車場利用の流れ</a>
                         </li>
                         <li>
                             <a href="/parking_booking/map">駐車場検索</a>
@@ -331,7 +331,7 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリングオーナー</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="/carsharing_req/pages/3">カーシェアリングオーナー利用の流れ</a>
+                            <a href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
                         </li>
                         {% if request.session.owner_flag == True %}
                         <li>
@@ -352,7 +352,7 @@
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">駐車場オーナー</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="/carsharing_req/pages/4">駐車場オーナー利用の流れ</a>
+                            <a href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a>
                         </li>
                         {% if request.session.parking_flag == True %}
                         <li>
