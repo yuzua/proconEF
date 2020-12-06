@@ -72,9 +72,25 @@ def car(request):
         if not value :
             print('空')
         else:
-            value[0]['address'] = addadd[value[0]['id']]
+            for num in range(1, len(value)+1):
+                if num == 1:
+                    value[0]['address'] = addadd[value[0]['id']]
+                    print(value[0])
+                else:
+                    print(num)
+                    value[num-1]['address'] = addadd[value[num-1]['id']]
         dict_car.setdefault(key, value)
         # print(key, value)
+
+    print(dict_car)
+    params = {
+        'car_obj': item_all,
+        'form': CarCategory(),
+        'parentcategory_list': list(ParentCategory.objects.all()),
+        'category_set': list(Category.objects.all().values()),
+        'json_car': json.dumps(dict_car, ensure_ascii=False)
+    }
+    return render(request, "carsharing_booking/car.html", params)
 
     print(dict_car)
     params = {
