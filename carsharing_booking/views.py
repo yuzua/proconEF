@@ -120,25 +120,24 @@ def booking_car(request, num):
     request.session['car_objs'] = car_obj
     # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
     # request.session['parking_id'] = parking_id[0]['parking_id']
-    request.session['car_id'] = num
+    request.session['obj_id'] = num
 
     return render(request, "carsharing_booking/car_next.html", params)
 
 
 def booking(request, num):
     request.session['select'] = "map"
-    request.session['car_id'] = num
+    request.session['obj_id'] = num
     params = {
-        'parking_obj': '',
         'form': BookingCreateForm(),
         'message': '予約入力',
         'car_objs': '',
         'car_id': '',
-        'num': request.session['car_id'],
+        'num': request.session['obj_id'],
     }
-    num = request.session['car_id']
-    parking_obj = ParkingUserModel.objects.get(id=num)
-    params['parking_obj'] = parking_obj
+    num = request.session['obj_id']
+    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    params['address'] = address[0]['address']
     items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
     print(items)
     car_list = []
@@ -167,11 +166,11 @@ def checkBooking(request):
     }
     # error時の入力保存しredirect
     if request.session['select'] == 'map':
-        parking_obj = ParkingUserModel.objects.get(id=request.session['car_id'])
-        params['parking_obj'] = parking_obj
+        address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+        params['address'] = address[0]['address']
     elif request.session['select'] == 'car':
         params['events'] = request.session['events']
-        params['car_id'] = request.session['car_id']
+        params['car_id'] = request.session['obj_id']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
     params['form'] = c_b
@@ -274,7 +273,7 @@ def checkBooking(request):
         'end_time': end_time,
         'charge': charge,
     }
-    address = ParkingUserModel.objects.filter(id=request.session['car_id']).values('address')
+    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
     params['address'] = address[0]['address']
     params['kingaku'] = "{:,}".format(charge)
     params['data'] = data
@@ -297,7 +296,7 @@ def push(request):
         if request.session['select'] == 'car':
             del request.session['events']
         del request.session['car_objs']
-        del request.session['car_id']
+        del request.session['obj_id']
         del request.session['select']
         messages.success(request, '予約が完了しました')
     else:
