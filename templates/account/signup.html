@@ -10,12 +10,21 @@
 <h3 class="title"><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign Up" %}</h3>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
+  <p>
+    <input type="email" name="login" autocomplete="email" required id="id_login" placeholder="メールアドレス">
+    </p>
+    <p>
+    <input type="password" name="password1" placeholder="パスワード" autocomplete="current-password" required id="id_password1">
+    </p>
+    <p>
+      <input type="password" name="password2" placeholder="パスワード確認用" autocomplete="current-password" required id="id_password2">
+    </p>
+  <!-- {% csrf_token %}
   {{ form.as_p }}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <p>すでにアカウントお持ちの方は<a href="{{ login_url }}" class="login">ログイン</a></p>
+  {% endif %} -->
+  <p class="already">すでにアカウントお持ちの方は<a href="{{ login_url }}" class="login">ログイン</a></p>
   <button class="btn" type="submit" >{% trans "Sign Up" %}</button>
 </form>
 </body>
@@ -24,7 +33,7 @@
     width: 35pt;
     height: 35pt;
   }
-  
+
   html {
     background-image: url('{% static "admin/img/carsharing.jpg" %}');
     background-color:rgba(255,255,255,0.8);
@@ -32,25 +41,22 @@
   }
 
   .centerMiddle {
-    text-align: left;
-    padding: 5pt;
-    width: 400pt;
-    height: 250pt;
-    margin: auto;
-    margin-top: 150pt;
-    padding: 0.5em 1em;
+    display:inline-block;
+    text-align: center;
+    margin: 100pt 400pt 0 400pt;
+    padding: 10pt 40pt 20pt 40pt;
     color: #000;/*文字色*/
     border: solid 2px #696969;/*線*/
     border-radius: 10px;/*角の丸み*/
+    padding: 20pt;
   }
 
   .btn {
     height: 30pt;
-    width: 90pt;
+    width: 250pt;
     font-size: 11pt;
-    margin: 3pt 10pt 3pt 10pt;
+    margin: 5pt 10pt 5pt 10pt;
     border-color: #696969;
-    float: right;
     clear: both;
   }
 
@@ -67,8 +73,31 @@
     color: #000;
   }
 
-  .signup {
-    padding: 10pt;
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+  #id_login {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  #id_password1 {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  #id_password2 {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  .already {
+    font-size: small;
+    margin: 5pt 5pt;
   }
 </style>
 </html>

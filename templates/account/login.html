@@ -38,10 +38,10 @@
   {% csrf_token %}
   {% comment %} {{ form.as_p }} {% endcomment %}
   <p>
-    <input type="email" name="login" pleaseholder="メールアドレス" autocomplete="email" required id="id_login">
+    <input type="email" name="login" pleaseholder="メールアドレス" autocomplete="email" required id="id_login"  placeholder="メールアドレス">
   </p>
   <p>
-    <input type="password" name="password" pleaseholder="メールアドレス" autocomplete="current-password" required id="id_password">
+    <input type="password" name="password" pleaseholder="メールアドレス" autocomplete="current-password" required id="id_password"  placeholder="パスワード">
   </p>
   <p>
     <input type="checkbox" name="remember" id="id_remember">
@@ -50,7 +50,7 @@
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <!-- 新規登録 -->
-  <p>新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></p>
+  <p class="new">新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></p>
   <!-- パスワード忘れ -->
   <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
   <!-- ログイン -->
@@ -71,14 +71,13 @@
 
   .centerMiddle {
     display: inline-block;
-    text-align: left;
-    width: 400pt;
-    max-height: fit-content;
-    margin: 100pt 350pt 0 350pt;
-    padding: 10pt 20pt;
+    text-align: center;
+    margin: 100pt 400pt 0 400pt;
+    padding: 10pt 40pt 20pt 40pt;
     color: #000;/*文字色*/
     border: solid 2px #696969;/*線*/
     border-radius: 10px;/*角の丸み*/
+    padding: 20pt;
   }
 
   .socialaccount_providers {
@@ -87,11 +86,10 @@
 
   .btn {
     height: 30pt;
-    width: 90pt;
+    width: 250pt;
     font-size: 11pt;
     margin: 3pt 10pt 3pt 10pt;
     border-color: #696969;
-    float: right;
     clear: both;
     margin-top: 15pt;
   }
@@ -108,10 +106,36 @@
   .but {
     color: #696969;
     text-decoration: none;
+    font-size: small;
+    margin: 2pt 2pt;
   }
 
   .but:hover {
     color: #000;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+  #id_remember {
+    width: 250pt;
+  }
+
+  #id_login {
+    width: 250pt;
+  }
+
+  #id_password {
+    width: 250pt;
+  }
+
+  .new {
+    font-size: small;
+    margin: 2pt 2pt;
   }
 </style>
 </html>
