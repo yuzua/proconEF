@@ -37,22 +37,27 @@
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
   {% comment %} {{ form.as_p }} {% endcomment %}
-  <p>
-    <input type="email" name="login" pleaseholder="メールアドレス" autocomplete="email" required id="id_login"  placeholder="メールアドレス">
-  </p>
-  <p>
-    <input type="password" name="password" pleaseholder="メールアドレス" autocomplete="current-password" required id="id_password"  placeholder="パスワード">
-  </p>
-  <p>
+  <span>
+    <p class="text">メールアドレス：</p>
+    <input type="email" name="login" autocomplete="email" required id="id_login"  placeholder="メールアドレス">
+  </span>
+  <span>
+    <p class="text">パスワード：</p>
+    <input type="password" name="password" autocomplete="current-password" required id="id_password"  placeholder="パスワード">
+  </span>
+  <span style="clear: both;">
+    <p class="text">ログイン状態を保持：</p>
     <input type="checkbox" name="remember" id="id_remember">
-  </p>
+  </span>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <!-- 新規登録 -->
-  <p class="new">新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></p>
+  <span class="new">新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></span>
   <!-- パスワード忘れ -->
-  <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
+  <span>
+    <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  </span>
   <!-- ログイン -->
   <button class="btn" type="submit">{% trans "Sign In" %}</button>
 </form>
@@ -122,7 +127,8 @@
   } */
 
   #id_remember {
-    width: 250pt;
+    width: 100%;
+    clear: both;
   }
 
   #id_login {
@@ -134,8 +140,15 @@
   }
 
   .new {
+    clear: both;
     font-size: small;
     margin: 2pt 2pt;
+  }
+
+  .text {
+    margin: 2px;
+    float: left;
+    font-size: small;
   }
 </style>
 </html>
