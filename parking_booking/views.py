@@ -39,9 +39,12 @@ def test(request):
 #     return HttpResponse(hoge)
 
 def map(request):
-    data = CarsharUserModel.objects.get(id=request.session['user_id'])
-    print(data.pref01+data.addr01+data.addr02)
-    add = data.pref01+data.addr01+data.addr02
+    if request.user.id == None:
+        add = '千葉県柏市末広町10-1'
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.exclude(id__in=set_list)
     item = item_all.values("id", "user_id", "lat", "lng", "address")
