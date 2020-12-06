@@ -86,20 +86,57 @@ def car(request):
     }
     return render(request, "carsharing_booking/car.html", params)
 
-# def booking_car(request, num):
+def booking_car(request, num):
+    request.session['select'] = "car"
+    params = {
+        'title': '予約',
+        'events': '',
+        'car_id': num,
+        'form': BookingCreateForm(),
+    }
+    events = []
+    # カーシェアリング予約
+    booking = BookingModel.objects.filter(car_id=num).exclude(charge=-1).order_by('end_day', 'end_time')
+    booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
+    for obj in booking:
+        title = obj.get("id")
+        start = obj.get("start_day") + 'T' + obj.get("start_time")
+        end = obj.get("end_day") + 'T' + obj.get("end_time")
+        event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#A9A9A9']))
+        events.append(event)
+    # 車両貸し出し制限
+    loaning = BookingModel.objects.filter(car_id=num, charge=-1).order_by('end_day', 'end_time')
+    loaning = loaning.values("id", "start_day", "start_time", "end_day", "end_time")
+    for obj in loaning:
+        title = obj.get("id")
+        start = obj.get("start_day") + 'T' + obj.get("start_time")
+        end = obj.get("end_day") + 'T' + obj.get("end_time")
+        event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#DC143C']))
+        events.append(event)
+
+    request.session['events'] = json.dumps(events)
+    params['events'] = request.session['events']
+    car_obj = CarInfoModel.objects.filter(id=num)
+    request.session['car_objs'] = car_obj
+    # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
+    # request.session['parking_id'] = parking_id[0]['parking_id']
+    request.session['car_id'] = num
+
+    return render(request, "carsharing_booking/car_next.html", params)
 
 
 def booking(request, num):
-    request.session['num'] = num
+    request.session['select'] = "map"
+    request.session['car_id'] = num
     params = {
         'parking_obj': '',
         'form': BookingCreateForm(),
         'message': '予約入力',
         'car_objs': '',
         'car_id': '',
-        'num': request.session['num'],
+        'num': request.session['car_id'],
     }
-    num = request.session['num']
+    num = request.session['car_id']
     parking_obj = ParkingUserModel.objects.get(id=num)
     params['parking_obj'] = parking_obj
     items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
@@ -125,15 +162,21 @@ def checkBooking(request):
         'times': '',
         'car_obj': '',
         'car_objs': request.session['car_objs'],
-        'address': request.POST['address'],
+        'address': '',
 
     }
     # error時の入力保存しredirect
-    parking_obj = ParkingUserModel.objects.get(id=request.session['num'])
-    params['parking_obj'] = parking_obj
+    if request.session['select'] == 'map':
+        parking_obj = ParkingUserModel.objects.get(id=request.session['car_id'])
+        params['parking_obj'] = parking_obj
+    elif request.session['select'] == 'car':
+        params['events'] = request.session['events']
+        params['car_id'] = request.session['car_id']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
     params['form'] = c_b
+        
+    
 
     # POSTデータを変数へ格納
     start_day = request.POST['start_day']
@@ -170,7 +213,10 @@ def checkBooking(request):
         if start <= booking_end and end >= booking_start:
             print("被り！！")
             messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の車両にするか時間帯を変更してください。<br>' + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
-            return render(request, 'carsharing_booking/booking.html', params)
+            if request.session['select'] == 'map':
+                return render(request, 'carsharing_booking/booking.html', params)
+            elif request.session['select'] == 'car':
+                return render(request, "carsharing_booking/car_next.html", params)
         else:
             print("大丈夫！")
 
@@ -203,16 +249,22 @@ def checkBooking(request):
     elif start_time >= end_time and d < 0:
         print('false')
         messages.error(request, '終了時刻が開始時刻よりも前です。')
-        return render(request, 'carsharing_booking/booking.html', params)
-    elif m < 15:
-        messages.error(request, '15分以下は利用できません。')
-        return render(request, 'carsharing_booking/booking.html', params)
+        if request.session['select'] == 'map':
+            return render(request, 'carsharing_booking/booking.html', params)
+        elif request.session['select'] == 'car':
+            return render(request, "carsharing_booking/car_next.html", params)
     else:
         charge += int(m / 15 * 330)
         h = int(m / 60)
         m = int(m % 60)
         x = str(h) + '時間 ' + str(m) + '分'
         times += x
+    if d == 0 and m < 15 and h == 0:
+        messages.error(request, '15分以下は利用できません。')
+        if request.session['select'] == 'map':
+            return render(request, 'carsharing_booking/booking.html', params)
+        elif request.session['select'] == 'car':
+            return render(request, "carsharing_booking/car_next.html", params)
         
     data = {
         'car_id': request.POST['car_id'],
@@ -222,6 +274,8 @@ def checkBooking(request):
         'end_time': end_time,
         'charge': charge,
     }
+    address = ParkingUserModel.objects.filter(id=request.session['car_id']).values('address')
+    params['address'] = address[0]['address']
     params['kingaku'] = "{:,}".format(charge)
     params['data'] = data
     params['times'] = times
@@ -240,8 +294,11 @@ def push(request):
         charge = int(request.POST['charge'])
         record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time, charge=charge)
         record.save()
+        if request.session['select'] == 'car':
+            del request.session['events']
         del request.session['car_objs']
-        del request.session['num']
+        del request.session['car_id']
+        del request.session['select']
         messages.success(request, '予約が完了しました')
     else:
         messages.error(request, '不正なリクエストです')

@@ -1,0 +1,34 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js"></script>
+{% endblock %}
+
+{% block main_contents %}
+    <br>
+    <div class="clearfix">
+        <div class="w-50 float-left p-5" id="calendar"></div>
+        <div class="w-50 float-left p-5">
+        <form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="car_id" value="{{car_id}}" required>
+            {{ form.as_p }}
+            {{ form.media }}
+            <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block mapapi %}
+<script>
+  var events = JSON.parse('{{ events|safe }}');
+</script>
+<script type="text/javascript" src='{% static "carsharing_req/js/calendar.js" %}'></script>
+{% endblock %}
