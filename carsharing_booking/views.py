@@ -333,8 +333,11 @@ class ReservationList(TemplateView):
         }
     
     def get(self, request):
-        booking = BookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time')
+        dt_now = datetime.datetime.now()
+        d_now = dt_now.strftime('%Y-%m-%d')
+        print(d_now)
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
         self.params['data'] = booking
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
         self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
