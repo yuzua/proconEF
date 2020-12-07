@@ -11,12 +11,11 @@
         <table class="table">
         <thead class="thead-light">
             <tr>
-            <th scope="col">Select</th>
+            <th scope="col">選択</th>
             <th scope="col">ID</th>
-            <th scope="col">lat</th>
-            <th scope="col">lng</th>
-            <th scope="col">parking_type</th>
-            <th scope="col">day</th>
+            <th scope="col">住所</th>
+            <th scope="col">駐車場タイプ</th>
+            <th scope="col">登録日</th>
             </tr>
         </thead>
         {% for item in parking_obj %}
@@ -24,8 +23,7 @@
             <tr>
             <td><input type="radio" name="parking_id" value="{{item.id}}" required></td>
             <th scope="row">{{item.id}}</th>
-            <td>{{item.lat}}</td>
-            <td>{{item.lng}}</td>
+            <td>{{item.address}}</td>
             <td>{{item.parking_type}}</td>
             <td>{{item.day}}</td>
             </tr>
