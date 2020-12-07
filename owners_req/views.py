@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel
+from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel, Category
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import ParkingUserModel
 from .forms import HostUserForm
@@ -13,6 +13,7 @@ import json
 from django.db.models import Q
 from parking_booking .models import ParkingBookingModel
 from carsharing_booking .models import BookingModel
+from django.db import connection
 
 
 
@@ -295,10 +296,15 @@ class CreateDateView(TemplateView):
             return redirect(to='/carsharing_req/index')
         else:
             print(request.user)
-            car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
-            self.params['car_info'] = car_info
-            print(car_info)
-        return render(request, 'owners_req/createDate.html', self.params)
+            car_infos = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            for car_info in car_infos:
+                num = CarInfoModel.objects.filter(id=car_info['car_id']).values("category")
+                category = Category.objects.filter(id=num[0]['category']).values("category")
+                car_info['category'] = category[0]['category']
+                address = ParkingUserModel.objects.filter(id=car_info['parking_id']).values("address")
+                car_info['address'] = address[0]['address']
+            self.params['car_info'] = car_infos
+            return render(request, 'owners_req/createDate.html', self.params)
     def post(self, request):
         start_day = request.POST['start_day']
         end_day = request.POST['end_day']

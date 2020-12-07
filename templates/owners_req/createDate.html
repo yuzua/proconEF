@@ -12,16 +12,16 @@
         <thead class="thead-light">
             <tr>
             <th scope="col">選択</th>
-            <th scope="col">車両ID</th>
-            <th scope="col">駐車場ID</th>
+            <th scope="col">車種</th>
+            <th scope="col">駐車場</th>
             </tr>
         </thead>
         {% for item in car_info %}
         <tbody>
             <tr>
             <td><input type="radio" name="car_id" value="{{item.car_id}}" required></td>
-            <th scope="row">{{item.car_id}}</th>
-            <td>{{item.parking_id}}</td>
+            <th scope="row">{{item.category}}</th>
+            <td>{{item.address}}</td>
             </tr>
         </tbody>
         {% endfor %}
