@@ -126,11 +126,13 @@ pip install django-bootstrap-datepicker-plus
 
 参考サイト:
 
-[Django逆引きチートシート（QuerySet編）](https://qiita.com/uenosy/items/54136aff0f6373957d22#%E6%A4%9C%E7%B4%A2%E7%B3%BB)
+[Django 逆引きチートシート（QuerySet編）](https://qiita.com/uenosy/items/54136aff0f6373957d22#%E6%A4%9C%E7%B4%A2%E7%B3%BB)
 
 [Django データベース操作 についてのまとめ](https://qiita.com/okoppe8/items/66a8747cf179a538355b)
 
-[Django:フィールドのアップデートのやりかた](http://wpress.biz/blog/2017/02/25/django%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%81%AE%E3%82%A2%E3%83%83%E3%83%97%E3%83%87%E3%83%BC%E3%83%88%E3%81%AE%E3%82%84%E3%82%8A%E3%81%8B%E3%81%9F/)
+[Django フィールドのアップデートのやりかた](http://wpress.biz/blog/2017/02/25/django%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%81%AE%E3%82%A2%E3%83%83%E3%83%97%E3%83%87%E3%83%BC%E3%83%88%E3%81%AE%E3%82%84%E3%82%8A%E3%81%8B%E3%81%9F/)
+
+[Django QuerySetのfilterメソッドの使い方まとめ](https://codelab.website/django-queryset-filter/#i-13)
 
 > **DjangoにおけるSESSION利用法**
 
