@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from carsharing_req .models import CarsharUserModel
-from parking_req .models import *
+from parking_req .models import ParkingUserModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
@@ -336,8 +336,23 @@ class ReservationList(TemplateView):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
         print(d_now)
-        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
         self.params['data'] = booking
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        self.params['data'] = booking
         self.params['data2'] = booking2
+
+        for item in list(booking):
+            print(item['car_id'])
+            num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
+            category = Category.objects.filter(id=num[0]['category']).values("category")
+            item['category'] = category[0]['category']
+            parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
+            address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            item['address'] = address[0]['address']
+            print(item)
+        for item in list(booking2):
+            address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
+            item['address'] = address[0]['address']
+            print(item)
         return render(request, 'carsharing_booking/list.html', self.params)

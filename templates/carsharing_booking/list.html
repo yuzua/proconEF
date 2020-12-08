@@ -8,11 +8,12 @@
 <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col">ID</th>
-      <th scope="col">start</th>
-      <th scope="col">end</th>
-      <th scope="col">car_id</th>
-      <th scope="col">charge</th>
+      <th scope="col">予約番号</th>
+      <th scope="col">開始時間</th>
+      <th scope="col">終了時間</th>
+      <th scope="col">車種</th>
+      <th scope="col">住所</th>
+      <th scope="col">料金</th>
     </tr>
   </thead>
 {% for item in data %}
@@ -21,7 +22,8 @@
       <th scope="row">{{item.id}}</th>
       <td>{{item.start_day}}.{{item.start_time}}</td>
       <td>{{item.end_day}}.{{item.end_time}}</td>
-      <td>{{item.car_id}}</td>
+      <td>{{item.category}}</td>
+      <td>{{item.address}}</td>
       <td>{{item.charge}}</td>
     </tr>
   </tbody>
@@ -32,10 +34,11 @@
 <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col">ID</th>
-      <th scope="col">start</th>
-      <th scope="col">end</th>
-      <th scope="col">charge</th>
+      <th scope="col">予約番号</th>
+      <th scope="col">開始時間</th>
+      <th scope="col">終了時間</th>
+      <th scope="col">住所</th>
+      <th scope="col">料金</th>
     </tr>
   </thead>
 {% for item in data2 %}
@@ -44,6 +47,7 @@
       <th scope="row">{{item.id}}</th>
       <td>{{item.start_day}}.{{item.start_time}}</td>
       <td>{{item.end_day}}.{{item.end_time}}</td>
+      <td>{{item.address}}</td>
       <td>{{item.charge}}</td>
     </tr>
   </tbody>
