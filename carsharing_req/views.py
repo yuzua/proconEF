@@ -12,7 +12,7 @@ from parking_req .models import *
 from owners_req .models import HostUserModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
-import json
+import json, datetime
 
 # Create your views here.
 
@@ -214,3 +214,15 @@ class CalendarView(TemplateView):
         self.params['events'] = json.dumps(events)
         
         return render(request, 'carsharing_req/calendar.html', self.params)
+
+
+def details(request):
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+    booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+    params = {
+        'data': booking,
+        'data2': booking2,
+    }
+    return render(request, 'carsharing_req/details.html', params)

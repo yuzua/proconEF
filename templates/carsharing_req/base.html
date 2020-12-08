@@ -49,7 +49,7 @@
                     <a class="dropdown-item" href="/carsharing_req/carsharuserdata">個人登録情報確認</a>
                     <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
                     <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
-                    <a class="dropdown-item" href="#">利用明細</a>
+                    <a class="dropdown-item" href="/carsharing_req/details">利用明細</a>
                 </div>
             </li>
             {% else %}
@@ -94,7 +94,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 {% if request.session.owner_flag == True %}
-                    <a class="dropdown-item" href="#">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
+                    <a class="dropdown-item" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
                     <a class="dropdown-item" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
                 {% if request.session.parking_flag == True %}
@@ -277,7 +277,7 @@
                             <a href="/carsharing_booking/list">予約確認</a>
                         </li>
                         <li>
-                            <a href="#!">利用明細</a>
+                            <a href="/carsharing_req/details">利用明細</a>
                         </li>
                     </ul>
                 </div>
@@ -335,7 +335,7 @@
                         </li>
                         {% if request.session.owner_flag == True %}
                         <li>
-                            <a href="#!">貸し出し日時を登録する</a>
+                            <a href="/owners_req/createDate">貸し出し日時を登録する</a>
                         </li>
                         {% else %}
                         <li>
