@@ -54,7 +54,7 @@ function initMap() {
             map: map // マーカーを立てる地図を指定
         });
         infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-          content: '<div class="sample">' + markerData[i]['id'] + '</div><a href="/carsharing_booking/booking/'+ markerData[i]['id'] +'">ここを予約</a>' // 吹き出しに表示する内容
+          content: '<div class="sample">' + markerData[i]['address'] + '</div><a href="/carsharing_booking/booking/'+ markerData[i]['id'] +'">ここを予約</a>' // 吹き出しに表示する内容
         });
  
      markerEvent(i); // マーカーにクリックイベントを追加

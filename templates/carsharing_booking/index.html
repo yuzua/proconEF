@@ -1,18 +1,45 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_booking/css/index.css" %}'>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block main_contents %}
-<div class="card w-50 mt-5">
-    <h2 class="card-header bg-secondary text-white">地図から予約</h2>
-        <div class="card-body">
-        <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
-            <p class="card-text mt-3">利用したい場所を地図から選択して予約をします。</p>
-            <p class="card-text">近い場所から選んでね</p>
+<!-- 地図からの予約 -->
+<div class="card-park">
+    <h4 class="card-header-park">近隣の利用可能な車を探す</h2>
+        <div class="card-body-park">
+            <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="park"></a>
+            <div id="park">
+                <p class="card-text mt-3">利用したい場所を地図から選択して予約をします。</p>
+                <p class="card-text">近い場所から選んでね</p>
+                <a class="btn" id="parking" href="map">予約する</a>
+            </div>
         </div>
-    <div class="card-footer">
-    <a class="btn btn-secondary btn-sm m-0 font-weight-bold" href="map">予約する</a>
+</div>
+<div class="card-car">
+    <h4 class="card-header-car">乗りたい車両で探す</h2>
+    <div class="card-body-car">
+        <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="car"></a>
+        <div id="car">
+            <p class="card-text mt-3">利用したい車両を選択して予約をします。</p>
+            <p class="card-text">好きな車を選んでね</p>
+            <a class="btn" id="carsharing" href="car">予約する</a>
+        </div>
+    </div>
+</div>
+<div class="card-time">
+    <h4 class="card-header-time">過去の履歴から探す</h2>
+    <div class="card-body-time">
+        <a href="map"><img src='{% static "admin/img/carsharing.jpg" %}' class="time"></a>
+        <div id="time">
+            <p class="card-text mt-3">過去に利用した情報から予約します。</p>            
+            <p class="card-text">履歴から選んでね</p>
+            <a class="btn" id="timing" href="car">予約する</a>
+        </div>
     </div>
 </div>
 {% endblock %}

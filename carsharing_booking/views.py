@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from carsharing_req .models import CarsharUserModel
-from parking_req .models import *
-from owners_req .models import CarInfoParkingModel, CarInfoModel
+from parking_req .models import ParkingUserModel
+from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
-from .forms import BookingCreateForm
+from parking_booking .models import ParkingBookingModel
+from .forms import BookingCreateForm, CarCategory
 import json, datetime
 from django.contrib import messages
 from django.db.models import Q
@@ -30,12 +31,15 @@ def test_ajax_app(request):
 
 
 def map(request):
-    data = CarsharUserModel.objects.get(id=request.session['user_id'])
-    print(data.pref01+data.addr01+data.addr02)
-    add = data.pref01+data.addr01+data.addr02
+    if request.user.id == None:
+        add = '千葉県柏市末広町10-1'
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.filter(id__in=set_list)
-    item = item_all.values("id", "user_id", "lat", "lng")
+    item = item_all.values("id", "address", "user_id", "lat", "lng")
     item_list = list(item.all())
     data = {
         'markerData': item_list,
@@ -50,19 +54,109 @@ def map(request):
         params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
 
-def booking(request, num):
-    request.session['num'] = num
+def car(request):
+    max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()
+    max_num = max_num.get('category') + 1
+    set_QuerySet_car = CarInfoParkingModel.objects.values("car_id")
+    set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
+    addadd = {}
+    for index in set_QuerySet_parking:
+        address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
+        address = address[0]['address']
+        index = index['car_id']
+        addadd.setdefault(index, address)
+    # print(addadd)
+
+    item_all = CarInfoModel.objects.filter(id__in=set_QuerySet_car).order_by('parent_category', 'category')
+    # print(item_all.values('category'))
+    dict_car = {}
+    for key in range(1, max_num):
+        value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
+        if not value :
+            print('空')
+        else:
+            for num in range(1, len(value)+1):
+                if num == 1:
+                    value[0]['address'] = addadd[value[0]['id']]
+                    print(value[0])
+                else:
+                    print(num)
+                    value[num-1]['address'] = addadd[value[num-1]['id']]
+        dict_car.setdefault(key, value)
+        # print(key, value)
+
+    print(dict_car)
     params = {
-        'parking_obj': '',
+        'car_obj': item_all,
+        'form': CarCategory(),
+        'parentcategory_list': list(ParentCategory.objects.all()),
+        'category_set': list(Category.objects.all().values()),
+        'json_car': json.dumps(dict_car, ensure_ascii=False)
+    }
+    return render(request, "carsharing_booking/car.html", params)
+
+    print(dict_car)
+    params = {
+        'car_obj': item_all,
+        'form': CarCategory(),
+        'parentcategory_list': list(ParentCategory.objects.all()),
+        'category_set': list(Category.objects.all().values()),
+        'json_car': json.dumps(dict_car, ensure_ascii=False)
+    }
+    return render(request, "carsharing_booking/car.html", params)
+
+def booking_car(request, num):
+    request.session['select'] = "car"
+    params = {
+        'title': '予約',
+        'events': '',
+        'car_id': num,
+        'form': BookingCreateForm(),
+    }
+    events = []
+    # カーシェアリング予約
+    booking = BookingModel.objects.filter(car_id=num).exclude(charge=-1).order_by('end_day', 'end_time')
+    booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
+    for obj in booking:
+        title = obj.get("id")
+        start = obj.get("start_day") + 'T' + obj.get("start_time")
+        end = obj.get("end_day") + 'T' + obj.get("end_time")
+        event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#A9A9A9']))
+        events.append(event)
+    # 車両貸し出し制限
+    loaning = BookingModel.objects.filter(car_id=num, charge=-1).order_by('end_day', 'end_time')
+    loaning = loaning.values("id", "start_day", "start_time", "end_day", "end_time")
+    for obj in loaning:
+        title = obj.get("id")
+        start = obj.get("start_day") + 'T' + obj.get("start_time")
+        end = obj.get("end_day") + 'T' + obj.get("end_time")
+        event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#DC143C']))
+        events.append(event)
+
+    request.session['events'] = json.dumps(events)
+    params['events'] = request.session['events']
+    car_obj = CarInfoModel.objects.filter(id=num)
+    request.session['car_objs'] = car_obj
+    # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
+    # request.session['parking_id'] = parking_id[0]['parking_id']
+    request.session['obj_id'] = num
+
+    return render(request, "carsharing_booking/car_next.html", params)
+
+
+def booking(request, num):
+    request.session['select'] = "map"
+    request.session['obj_id'] = num
+    params = {
         'form': BookingCreateForm(),
         'message': '予約入力',
         'car_objs': '',
         'car_id': '',
-        'num': request.session['num'],
+        'num': request.session['obj_id'],
     }
-    num = request.session['num']
-    parking_obj = ParkingUserModel.objects.get(id=num)
-    params['parking_obj'] = parking_obj
+    num = request.session['obj_id']
+    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    params['address'] = address[0]['address']
     items = CarInfoParkingModel.objects.filter(parking_id=num).values('car_id')
     print(items)
     car_list = []
@@ -86,15 +180,21 @@ def checkBooking(request):
         'times': '',
         'car_obj': '',
         'car_objs': request.session['car_objs'],
-        'address': request.POST['address'],
+        'address': '',
 
     }
     # error時の入力保存しredirect
-    parking_obj = ParkingUserModel.objects.get(id=request.session['num'])
-    params['parking_obj'] = parking_obj
+    if request.session['select'] == 'map':
+        address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+        params['address'] = address[0]['address']
+    elif request.session['select'] == 'car':
+        params['events'] = request.session['events']
+        params['car_id'] = request.session['obj_id']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
     params['form'] = c_b
+        
+    
 
     # POSTデータを変数へ格納
     start_day = request.POST['start_day']
@@ -131,7 +231,10 @@ def checkBooking(request):
         if start <= booking_end and end >= booking_start:
             print("被り！！")
             messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の車両にするか時間帯を変更してください。<br>' + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
-            return render(request, 'carsharing_booking/booking.html', params)
+            if request.session['select'] == 'map':
+                return render(request, 'carsharing_booking/booking.html', params)
+            elif request.session['select'] == 'car':
+                return render(request, "carsharing_booking/car_next.html", params)
         else:
             print("大丈夫！")
 
@@ -164,13 +267,22 @@ def checkBooking(request):
     elif start_time >= end_time and d < 0:
         print('false')
         messages.error(request, '終了時刻が開始時刻よりも前です。')
-        return render(request, 'carsharing_booking/booking.html', params)
+        if request.session['select'] == 'map':
+            return render(request, 'carsharing_booking/booking.html', params)
+        elif request.session['select'] == 'car':
+            return render(request, "carsharing_booking/car_next.html", params)
     else:
         charge += int(m / 15 * 330)
         h = int(m / 60)
         m = int(m % 60)
         x = str(h) + '時間 ' + str(m) + '分'
         times += x
+    if d == 0 and m < 15 and h == 0:
+        messages.error(request, '15分以下は利用できません。')
+        if request.session['select'] == 'map':
+            return render(request, 'carsharing_booking/booking.html', params)
+        elif request.session['select'] == 'car':
+            return render(request, "carsharing_booking/car_next.html", params)
         
     data = {
         'car_id': request.POST['car_id'],
@@ -180,6 +292,8 @@ def checkBooking(request):
         'end_time': end_time,
         'charge': charge,
     }
+    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    params['address'] = address[0]['address']
     params['kingaku'] = "{:,}".format(charge)
     params['data'] = data
     params['times'] = times
@@ -198,21 +312,47 @@ def push(request):
         charge = int(request.POST['charge'])
         record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time, charge=charge)
         record.save()
+        if request.session['select'] == 'car':
+            del request.session['events']
         del request.session['car_objs']
-        del request.session['num']
+        del request.session['obj_id']
+        del request.session['select']
         messages.success(request, '予約が完了しました')
     else:
         messages.error(request, '不正なリクエストです')
     return redirect(to='/carsharing_req/index')
 
+
+#予約確認・一覧
 class ReservationList(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'カーシェアリング予約一覧',
-            'data': ''
+            'title': '予約一覧',
+            'data': '',
+            'data2': '',
         }
     
     def get(self, request):
-        booking = BookingModel.objects.filter(user_id=request.session['user_id']).order_by('-end_day', '-end_time')
+        dt_now = datetime.datetime.now()
+        d_now = dt_now.strftime('%Y-%m-%d')
+        print(d_now)
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
         self.params['data'] = booking
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        self.params['data'] = booking
+        self.params['data2'] = booking2
+
+        for item in list(booking):
+            print(item['car_id'])
+            num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
+            category = Category.objects.filter(id=num[0]['category']).values("category")
+            item['category'] = category[0]['category']
+            parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
+            address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            item['address'] = address[0]['address']
+            print(item)
+        for item in list(booking2):
+            address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
+            item['address'] = address[0]['address']
+            print(item)
         return render(request, 'carsharing_booking/list.html', self.params)

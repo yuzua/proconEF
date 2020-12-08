@@ -9,6 +9,7 @@ import json, datetime
 from .models import ParkingBookingModel
 from .forms import ParkingBookingForm
 from django.contrib import messages
+from django.db.models import Q
 
 # Create your views here.
 
@@ -38,12 +39,15 @@ def test(request):
 #     return HttpResponse(hoge)
 
 def map(request):
-    data = CarsharUserModel.objects.get(id=request.session['user_id'])
-    print(data.pref01+data.addr01+data.addr02)
-    add = data.pref01+data.addr01+data.addr02
+    if request.user.id == None:
+        add = '千葉県柏市末広町10-1'
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.exclude(id__in=set_list)
-    item = item_all.values("id", "user_id", "lat", "lng")
+    item = item_all.values("id", "user_id", "lat", "lng", "address")
     item_list = list(item.all())
     print(item)
     data = {
@@ -83,11 +87,13 @@ class ParkingBookingCreate(TemplateView):
 
     #入力データ保存
     def post(self, request):
+        # POSTデータを変数へ格納
         start_day = request.POST['start_day']
         end_day = request.POST['end_day']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        # charge = request.POST['charge']
+
+        # POSTデータをdatetime型へ変換
         start = start_day + ' ' + start_time
         start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
         print(start)
@@ -96,6 +102,33 @@ class ParkingBookingCreate(TemplateView):
         end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
         print(end)
         print(type(end))
+
+        booking_list = ParkingBookingModel.objects.filter(parking_id=request.session['user_parking_id'])
+        booking_list = booking_list.filter(Q(start_day=start_day) | Q(start_day=end_day) | Q(end_day=start_day) | Q(end_day=end_day))
+        print(booking_list)
+        booking_list = booking_list.values('id', 'start_day', 'start_time', 'end_day', 'end_time')
+        for item in booking_list:
+            booking_id = item['id']
+            booking_sd = item['start_day']
+            booking_st = item['start_time']
+            booking_ed = item['end_day']
+            booking_et = item['end_time']
+            print('item')
+            print(item)
+            booking_start = booking_sd + ' ' + booking_st
+            booking_start = datetime.datetime.strptime(booking_start, '%Y-%m-%d %H:%M')
+            booking_end = booking_ed + ' ' + booking_et
+            booking_end = datetime.datetime.strptime(booking_end, '%Y-%m-%d %H:%M')
+            if start <= booking_end and end >= booking_start:
+                print("被り！！")
+                messages.error(request, '申し訳ございません。その時間帯は既に予約済みです。別の駐車場にするか時間帯を変更してください。<br>' + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
+                return render(request, 'parking_booking/booking.html', self.params)
+            else:
+                print("大丈夫！")
+
+        print(booking_list)
+
+
         time = end - start
         d = int(time.days)
         m = int(time.seconds / 60)
@@ -108,12 +141,12 @@ class ParkingBookingCreate(TemplateView):
             print('1day')
         else:
             print('days')
-            charge = int(d * 10000)
+            charge = int(d * 50000)
             times = str(d) + '日 '
 
         if start_time < end_time:
             print('tule')
-            charge += int(m / 15 * 330)
+            charge += int(m / 15 * 220)
             h = int(m / 60)
             m = int(m % 60)
             x = str(h) + '時間 ' + str(m) + '分'
@@ -124,6 +157,9 @@ class ParkingBookingCreate(TemplateView):
             p_b = ParkingBookingForm(request.POST, instance=obj)
             self.params['form'] = p_b
             messages.error(request, '終了時刻が開始時刻よりも前です。')
+            return render(request, 'parking_booking/booking.html', self.params)
+        elif m < 15:
+            messages.error(request, '15分以下は利用できません。')
             return render(request, 'parking_booking/booking.html', self.params)
         else:
             charge += int(m / 15 * 330)

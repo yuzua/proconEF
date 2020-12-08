@@ -7,8 +7,12 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .models import CarsharUserModel
 from .forms import CarsharUserCreateForm
+from accounts .models import CustomUser
 from parking_req .models import *
 from owners_req .models import HostUserModel
+from carsharing_booking .models import BookingModel
+from parking_booking .models import ParkingBookingModel
+import json, datetime
 
 # Create your views here.
 
@@ -52,15 +56,20 @@ def set_session(request):
 
 
 # 説明ページ(HTML)ルーティング
-def pages(request, num):
+def pages(request, num, page):
     if num == 1:
-        return render(request, 'user_car.html')
+        if page == 0:
+            return render(request, 'page/user_car.html')
+        elif page == 1:
+            return render(request, 'page/user_car_1.html')
+        elif page == 3:
+            return render(request, 'page/user_car_3.html')
     elif num == 2:
-        return render(request, 'user_parking.html')
+        return render(request, 'page/user_parking.html')
     elif num == 3:
-        return render(request, 'owner_car.html')
+        return render(request, 'page/owner_car.html')
     elif num == 4:
-        return render(request, 'owner_parking.html')
+        return render(request, 'page/owner_parking.html')
     elif num == 0:
         pass
     else:
@@ -92,6 +101,18 @@ class CarsharUserInfo(TemplateView):
         self.params['message'] = msg
         self.params['form'] = CarsharUserCreateForm(request.POST)
         return render(request, 'carsharing_req/index.html', self.params)
+
+def carsharuserdata(request):
+    data = CarsharUserModel.objects.get(id=request.session['user_id'])
+    data2 = CustomUser.objects.get(email=request.user.email)
+    params = {
+        'title': '個人登録情報確認',
+        'message': 'ユーザ情報',
+        'data': data,
+        'data2': data2,
+    }
+    return render(request, 'carsharing_req/userdata.html', params)
+
 
 # class CarsharUserSendMail(generic.FormView):
 
@@ -137,3 +158,71 @@ class CreateView(TemplateView):
             print('data　exist')
             return redirect(to='carsharing_req:index')
         return render(request, 'carsharing_req/create.html', self.params)
+
+
+
+
+class CalendarView(TemplateView):
+    def __init__(self):
+        self.params = {
+        'title': 'FullCalendar',
+        'events': ''
+    }
+
+    def get(self, request):
+        # カーシェアリング予約
+        events = []
+        booking = BookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('end_day', 'end_time')
+        booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in booking:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#9BF9CC']))
+            events.append(event)
+        
+        # 駐車場予約
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('end_day', 'end_time')
+        booking2 = booking2.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in booking2:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '駐車場予約'+str(title)], ['start', start], ['end', end], ['color', '#A7F1FF']))
+            events.append(event)
+        
+        # 車両貸し出し制限
+        loaning1 = BookingModel.objects.filter(user_id=request.session['user_id'], charge=-1).order_by('end_day', 'end_time')
+        loaning1 = loaning1.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning1:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#00CC33']))
+            events.append(event)
+
+
+        # 駐車場貸し出し制限
+        loaning2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], charge=-1).order_by('end_day', 'end_time')
+        loaning2 = loaning2.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning2:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '駐車場貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#6495ED']))
+            events.append(event)
+        self.params['events'] = json.dumps(events)
+        
+        return render(request, 'carsharing_req/calendar.html', self.params)
+
+
+def details(request):
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+    booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
+    params = {
+        'data': booking,
+        'data2': booking2,
+    }
+    return render(request, 'carsharing_req/details.html', params)

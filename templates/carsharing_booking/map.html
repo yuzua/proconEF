@@ -6,10 +6,10 @@
 {% endblock %}
 
 {% block main_contents %}
-<div id="map_info">
+<div id="map_info" style="width: 750pt;">
   <p id="venue">{{ name }}</p>
   <p id="address">{{ add }}</p>
-  <p id="url"><a href="http://www.tokyo-skytree.jp/" target="_blank">www.tokyo-skytree.jp</a></p>
+  <p id="url"><a href="/carsharing_req/carsharuserdata" target="_blank">www.tokyo-skytree.jp</a></p>
   <p id="zoom">17</p>
 </div>
 <div id="map_container">
@@ -26,7 +26,6 @@
   </div>
 </div>
 </form>
-</body>
 <script>
   const data = JSON.parse('{{ data_json|safe }}');
 </script>

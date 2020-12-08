@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
-{% block contents %}
+{% extends 'carsharing_req/base.html' %}
+{% block main_contents %}
 <title>{{ title }}</title>
 <h1>{{ title }}</h1>
     <form action="" method="POST">
         {{ form.as_p }}
+        {{ form.media }}
         {% csrf_token %}
         <input class="btn btn-primary my-2" type="submit" value="駐車場登録画面へ">
     </form>

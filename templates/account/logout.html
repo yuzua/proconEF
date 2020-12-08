@@ -1,26 +1,72 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 
 {% block head_title %}{% trans "Sign Out" %}{% endblock %}
 
 {% block content %}
-<html style="background-color: #EEEEEE;">
-<body class="centerMiddle" style="border: solid;text-align: left;display:inline-block;border-width: 1pt;width: 400pt;margin: 300pt;margin-top: 100pt;margin-bottom: 100pt;">
-  <div style="padding: 30pt;">
-<h1 class="h3 mb-3 font-weight-normal" style="padding-left: 100pt;padding-right: 50pt;">{% trans "Sign Out" %}</h1>
+<html>
+<body class="centerMiddle">
+  <div class="logout">
+<h3><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign Out" %}</h3>
 
-<p style="padding-left: 100pt;padding-right: 50pt;">{% trans 'Are you sure you want to sign out?' %}</p>
+<p>{% trans 'Are you sure you want to sign out?' %}</p>
 
-<form method="post" action="{% url 'account_logout' %}" style="padding-left: 100pt;padding-right: 50pt;">
+<form method="post" action="{% url 'account_logout' %}">
   {% csrf_token %}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
   {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans 'Sign Out' %}</button>
+  <button class="btn" type="submit">{% trans 'Sign Out' %}</button>
 </form>
 </div>
 </body>
+<style>
+  img {
+    width: 35pt;
+    height: 35pt;
+  }
+
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    border: solid;
+    text-align: left;
+    display:inline-block;
+    border-width: 1pt;
+    width: 400pt;
+    margin: 150pt 350pt 0 350pt;
+    padding: 0.5em 1em;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
+
+  .btn {
+    height: 30pt;
+    width: 90pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    clear: both;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+</style>
 </html>
 
 {% endblock %}

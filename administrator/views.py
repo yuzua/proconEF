@@ -45,7 +45,7 @@ def test_ajax_response(request):
 class ParkingAdminCreate(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'ParkingAdminCreate',
+            'title': 'ステーション追加',
             'message': '駐車場情報入力',
             'form': AdminParkingForm(),
         }
@@ -56,11 +56,14 @@ class ParkingAdminCreate(TemplateView):
             messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
+            self.params['lat'] = request.session['user_lat']
+            self.params['lng'] = request.session['user_lng']
             return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
         dt_now = datetime.datetime.now()
         user_id = 0
+        address = request.POST['address']
         lat = request.session['user_lat']
         lng = request.session['user_lng']
         day = dt_now
@@ -70,7 +73,7 @@ class ParkingAdminCreate(TemplateView):
         height = request.POST['height']
         count = request.POST['count']
         admin = True
-        record = ParkingUserModel(user_id = user_id, lat = lat, lng=lng, day = day, parking_type = parking_type, \
+        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, parking_type = parking_type, \
             width = width, length = length, height = height, count = count, admin = admin)
         obj = ParkingUserModel()
         parking = AdminParkingForm(request.POST, instance=obj)
@@ -90,7 +93,7 @@ class ParkingAdminCreate(TemplateView):
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
-    admin_parking = s_p.values("id", "user_id", "lat", "lng")
+    admin_parking = s_p.values("id", "address", "user_id", "lat", "lng")
     if (request.method == 'POST'):
         #num = request.POST['obj.id']
         num1 = request.POST['command']
@@ -233,6 +236,7 @@ class SettingAdminInfo(TemplateView):
             'message': '駐車場、車両情報登録データ',
             'car_data': '',
             'parking_data': '',
+            # 'data_json': '',
         }
     def get(self, request):
         exclude_car= []
@@ -254,6 +258,12 @@ class SettingAdminInfo(TemplateView):
             parking_list = ParkingUserModel.objects.filter(user_id=0, countflag=True)
             self.params['car_data'] = car_list
             self.params['parking_data'] = parking_list
+            # item = parking_list.values("id", "user_id", "lat", "lng")
+            # item_list = list(item.all())
+            # data = {
+            #     'markerData': item_list,
+            # }
+            # self.params['data_json'] = json.dumps(data)
         return render(request, 'administrator/settinginfo.html', self.params)
 
     def post(self, request):

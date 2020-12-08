@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel
+from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel, Category
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import ParkingUserModel
 from .forms import HostUserForm
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.views import generic
-from .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
+from .forms import CarInfoForm, CarInfoParkingForm, ParkingLoaningForm
 import datetime
 import json
+from django.db.models import Q
+from parking_booking .models import ParkingBookingModel
+from carsharing_booking .models import BookingModel
+from django.db import connection
 
 
 
@@ -225,16 +229,7 @@ def carlist(request):
             'id': num,
             }
             return render(request, 'owners_req/deleteCar.html', params)
-        # if (num1 == 'createDate'):
-        #     create_date = CarInfoModel.objects.get(id=num)
-        #     params = {
-        #         'title': 'カーシェアリングオーナー日時選択',
-        #         'message': 'カーシェアリングオーナー日時選択',
-        #         'obj': create_date,
-        #         'id': num, 
-        #     }
     else:
-        #sample
         params = {
             'title': '車両情報一覧',
             'message': '車両データ',
@@ -242,90 +237,6 @@ def carlist(request):
         }
         return render(request, 'owners_req/carlist.html', params)    
 
-
-# def carparkinglist(request):
-   
-#     # user_id = request.session['user_id']
-#     # #car_id = request.session['car_id']
-#     # #parking_id = request.session['parking_id']
-#     # car_id = CarInfoParkingModel.objects.get(car_id=car_id)
-#     # parking_id = CarInfoParkingModel.objects.get(parking_id=parking_id)
-#     # obj = CarInfoParkingModel(user_id= user_id, car_id=car_id, parking_id=parking_id)
-#     # form = CarInfoParkingForm(request.POST, instance=obj)
-#     # if (form.is_valid()):
-#     #     record.save()
-      
-#     #     return redirect(to='/owners_req/carparkinglist')
-
-#     s_p = ParkingUserModel.objects.filter(user_id=request.session['user_id'])
-#     s_c = CarInfoModel.objects.filter(user_id=request.session['user_id'])
-#     sample_parking = s_p.values("id", "user_id", "lat", "lng")
-#     sample_carinfo = s_c.values("id", "user_id", "license_plate")
-#     if (request.method == 'POST'):
-#         num = request.POST['obj.id']
-#         num1 = request.POST['command']
-#         #駐車場情報変更
-#         if (num1 == 'editParking'):
-#             obj = ParkingUserModel.objects.get(id=num)
-#             params = {
-#             'title': '駐車場情報変更',
-#             'id':num,
-#             'form': ParkingForm(instance=obj), 
-#             }
-#             return render(request, 'owners_req/editParking.html', params)
-#         #駐車場情報削除
-#         if (num1 == 'deleteParking'):
-#             delete_parking = ParkingUserModel.objects.get(id=num)
-#             params = {
-#             'title': '駐車場情報削除',
-#             'message': '※以下のレコードを削除します。',
-#             'obj': delete_parking,
-#             'id': num,
-#             }
-#             return render(request, 'owners_req/deleteParking.html', params)
-#         #車両情報変更
-#         if (num1 == 'editCar'):
-#             obj = CarInfoModel.objects.get(id=num)
-#             params = {
-#             'title':'車情報変更', 
-#             'form': CarInfoForm(instance=obj),
-#             'message': '',
-#             'id':num,
-#             }
-#             return render(request, 'owners_req/editCar.html', params)
-#         #車両情報削除
-#         if (num1 == 'deleteCar'):
-#             delete_car = CarInfoModel.objects.get(id=num)
-#             params = {
-#             'title': '車情報削除',
-#             'message': '※以下のレコードを削除します。',
-#             'obj1': delete_car,
-#             'id': num,
-#             }
-#             return render(request, 'owners_req/deleteCar.html', params)
-#     else:
-#         data = CarsharUserModel.objects.get(id=request.session['user_id'])
-#         print(data.pref01+data.addr01+data.addr02)
-#         add = data.pref01+data.addr01+data.addr02
-#         #sample
-#         markerData = list(sample_parking.all())
-#         markerData2 = list(sample_carinfo.all())
-
-#         data = {
-#             'markerData': markerData,
-#             'markerData2': markerData2,
-#         }
-#         params = {
-#             'title': '駐車場、車両情報登録データ',
-#             'message': '駐車場、車両情報登録データ',
-#             'data': sample_parking,
-#             'data2': sample_carinfo,
-#             'name': '自宅',
-#             'add': add,
-#             'data_json': json.dumps(data),
-#             'form': CarInfoParkingForm()
-#         }
-#         return render(request, 'owners_req/carparkinglist.html', params)
 
 class SettingInfo(TemplateView):
     def __init__(self):
@@ -374,48 +285,130 @@ class CreateDateView(TemplateView):
     def __init__(self):
         self.params = {
             'title': '駐車場/車両一覧',
-            'message': '貸出可能日を設定してください',
-            'car_date': CarsharingDateForm(), 
-            'carinfo': '',  #登録済みの車情報表示
+            'message': '貸出不可能日時を設定してください',
+            'form': ParkingLoaningForm(), 
+            'car_info': '',  #登録済みの車情報表示
         }
     def get(self, request):
-        exclude_car= []
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
             messages.error(self.request, 'ログインしてください。')
             return redirect(to='/carsharing_req/index')
         else:
-            car_info = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
-            self.params['carinfo'] = car_info
-            # user_id = int(request.POST['user_id'])
-            # car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
-            # car_id = CarInfoModel.POST.get(id=request.POST['car_id'])
-            # parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
-            # record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
-            # carinfo = CarInfoParkingForm(request.POST, instance=record)
-            set_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).values("car_id")
-            for obj in set_list.values("car_id"):
-                for index in obj.values():
-                    exclude_car.append(index)
-            car_list = CarInfoModel.objects.filter(user_id=request.session['user_id']).exclude(id__in=exclude_car)
-        return render(request, 'owners_req/createDate.html', self.params)
+            print(request.user)
+            car_infos = CarInfoParkingModel.objects.filter(user_id=request.session['user_id']).values("car_id", "parking_id")
+            for car_info in car_infos:
+                num = CarInfoModel.objects.filter(id=car_info['car_id']).values("category")
+                category = Category.objects.filter(id=num[0]['category']).values("category")
+                car_info['category'] = category[0]['category']
+                address = ParkingUserModel.objects.filter(id=car_info['parking_id']).values("address")
+                car_info['address'] = address[0]['address']
+            self.params['car_info'] = car_infos
+            return render(request, 'owners_req/createDate.html', self.params)
     def post(self, request):
-        user_id = int(request.POST['user_id'])
-        car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
-        possible_date = request.POST['possible_date']
-        obj = CarsharingDateModel(user_id = user_id, car_id=car_id, possible_date = possible_date)
-        car_date = CarsharingDateForm(request.POST, instance=obj)
-        obj.save()
-        messages.success(self.request, '登録完了しました')
-        return render(request, "owners_req/check.html", self.params)
-        # return redirect(to='/carsharing_req/index')
+        start_day = request.POST['start_day']
+        end_day = request.POST['end_day']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+        request.session['user_car_id'] = request.POST['car_id']
+
+        # POSTデータをdatetime型へ変換
+        start = start_day + ' ' + start_time
+        start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
+        print(start)
+        print(type(start))
+        end = end_day + ' ' + end_time
+        end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
+        print(end)
+        print(type(end))
+
+        booking_list = BookingModel.objects.filter(car_id=request.session['user_car_id'])
+        booking_list = booking_list.filter(Q(start_day=start_day) | Q(start_day=end_day) | Q(end_day=start_day) | Q(end_day=end_day))
+        print(booking_list)
+        booking_list = booking_list.values('id', 'start_day', 'start_time', 'end_day', 'end_time')
+        for item in booking_list:
+            booking_id = item['id']
+            booking_sd = item['start_day']
+            booking_st = item['start_time']
+            booking_ed = item['end_day']
+            booking_et = item['end_time']
+            print('item')
+            print(item)
+            booking_start = booking_sd + ' ' + booking_st
+            booking_start = datetime.datetime.strptime(booking_start, '%Y-%m-%d %H:%M')
+            booking_end = booking_ed + ' ' + booking_et
+            booking_end = datetime.datetime.strptime(booking_end, '%Y-%m-%d %H:%M')
+            if start <= booking_end and end >= booking_start:
+                print("被り！！")
+                messages.error(request, '申し訳ございません。その時間帯は既に設定済みです。別の車両/駐車場にするか時間帯を変更してください。<br>' \
+                     + datetime.datetime.strftime(booking_start, "%Y年%m月%d日 %H:%M") + ' 〜 ' \
+                     + datetime.datetime.strftime(booking_end, "%Y年%m月%d日 %H:%M"))
+                return render(request, 'owners_req/createDate.html', self.params)
+            else:
+                print("大丈夫！")
+
+        print(booking_list)
+
+        time = end - start
+        d = int(time.days)
+        m = int(time.seconds / 60)
+        print(d)
+        print(int(m))
+        times = ''
+
+        if d <= 0:
+            print('1day')
+        else:
+            print('days')
+            times = str(d) + '日 '
+
+        if start_time < end_time:
+            print('tule')
+            h = int(m / 60)
+            m = int(m % 60)
+            x = str(h) + '時間 ' + str(m) + '分'
+            times += x
+        elif start_time >= end_time and d < 0:
+            print('false')
+            obj = BookingModel()
+            p_b = ParkingLoaningForm(request.POST, instance=obj)
+            self.params['form'] = p_b
+            messages.error(request, '終了時刻が開始時刻よりも前です。')
+            parking_obj = ParkingUserModel.objects.filter(user_id=request.session['user_id'], countflag=True)
+            self.params['parking_obj'] = parking_obj
+            return render(request, 'owners_req/createDate.html', self.params)
+        else:
+            h = int(m / 60)
+            m = int(m % 60)
+            x = str(h) + '時間 ' + str(m) + '分'
+            times += x
         
-def push(request):
+        charge = -1
+        data = {
+            'start_day': start_day,
+            'start_time': start_time,
+            'end_day': end_day,
+            'end_time': end_time,
+            'charge': charge,
+        }
+        self.params['kingaku'] = charge
+        self.params['data'] = data
+        self.params['times'] = times
+        self.params['message'] = '情報確認'
+        messages.warning(self.request, 'まだ貸し出し不可能日時登録を完了しておりません。<br>こちらの内容で宜しければ確定ボタンをクリックして下さい。')
+        return render(request, "owners_req/check.html", self.params)
+        
+def check(request):
     user_id = int(request.session['user_id'])
-    car_id = int(request.session['car_id'])
-    possible_date = request.POST['possible_date']
-    record = CarsharingDateModel(user_id = user_id, car_id = car_id, possible_date = possible_date)
+    car_id = int(request.session['user_car_id'])
+    start_day = request.POST['start_day']
+    end_day = request.POST['end_day']
+    start_time = request.POST['start_time']
+    end_time = request.POST['end_time']
+    charge = int(request.POST['charge'])
+    record = BookingModel(user_id = user_id, car_id = car_id, start_day = start_day, \
+        end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
     record.save()
-    messages.success(request, '貸出日が確定しました')
-    #del request.session['user_parking_id']
-    return redirect(to='/carsharing_req/index')
+    messages.success(request, '登録が完了しました。')
+    del request.session['user_car_id']
+    return redirect(to='owners_req:createDate')

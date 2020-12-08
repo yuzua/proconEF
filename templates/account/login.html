@@ -1,16 +1,16 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-<html style="background-color: #EEEEEE;">
-  <div class="centerMiddle" style="display:inline-block;text-align:left;padding: 30pt;padding-left: 40pt;">
-    <body style="border: solid;border-width: 1pt;width: 400pt;text-align: center;margin: 300pt;margin-top: 100pt;margin-bottom: 100pt;">
+<html>
+  <body class="centerMiddle">
+  <!-- ロゴ入れてみて！ -->
 <!-- ログイン -->
-<h1 class="h3 mb-3 font-weight-normal">{% trans "Sign In" %}</h1>
+<h3><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign In" %}</h3>
 
 {% get_providers as socialaccount_providers %}
 
@@ -18,11 +18,11 @@
 <!-- Google login -->
 <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers" style="padding: 0pt;">
+  <ul class="socialaccount_providers">
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
   </ul>
 
-  <div class="login-or">{% trans 'or' %}</div>
+  {% comment %} <div class="login-or">{% trans 'or' %}</div> {% endcomment %}
 
 </div>
 
@@ -36,18 +36,120 @@
 
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+  {% comment %} {{ form.as_p }} {% endcomment %}
+  <span>
+    <p class="text">メールアドレス：</p>
+    <input type="email" name="login" autocomplete="email" required id="id_login"  placeholder="メールアドレス">
+  </span>
+  <span>
+    <p class="text">パスワード：</p>
+    <input type="password" name="password" autocomplete="current-password" required id="id_password"  placeholder="パスワード">
+  </span>
+  <span style="clear: both;">
+    <p class="text">ログイン状態を保持：</p>
+    <input type="checkbox" name="remember" id="id_remember">
+  </span>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <!-- 新規登録 -->
-  <p>新規の方は<a href="{{ signup_url }}">新規登録</a></p>
+  <span class="new">新規の方は<a href="{{ signup_url }}" class="signup">新規登録</a></span>
   <!-- パスワード忘れ -->
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
+  <span>
+    <a class="but" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  </span>
   <!-- ログイン -->
-  <button class="primaryAction btn btn-primary" type="submit" style="margin-top: 15pt;">{% trans "Sign In" %}</button>
+  <button class="btn" type="submit">{% trans "Sign In" %}</button>
 </form>
 </body>
-</div>
+<style>
+  img {
+    width: 35pt;
+    height: 35pt;
+  }
+
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    display: inline-block;
+    text-align: center;
+    margin: 100pt 400pt 0 400pt;
+    padding: 10pt 40pt 20pt 40pt;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+    padding: 20pt;
+  }
+
+  .socialaccount_providers {
+    padding: 0;
+  }
+
+  .btn {
+    height: 30pt;
+    width: 250pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    clear: both;
+    margin-top: 15pt;
+  }
+
+  .signup {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .signup:hover {
+    color: #000;
+  }
+
+  .but {
+    color: #696969;
+    text-decoration: none;
+    font-size: small;
+    margin: 2pt 2pt;
+  }
+
+  .but:hover {
+    color: #000;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+  #id_remember {
+    width: 100%;
+    clear: both;
+  }
+
+  #id_login {
+    width: 250pt;
+  }
+
+  #id_password {
+    width: 250pt;
+  }
+
+  .new {
+    clear: both;
+    font-size: small;
+    margin: 2pt 2pt;
+  }
+
+  .text {
+    margin: 2px;
+    float: left;
+    font-size: small;
+  }
+</style>
 </html>
 {% endblock %}

@@ -8,8 +8,14 @@
 {% block title %}価格予測推移グラフ{% endblock %}
 
 {% block main_contents %}
-  <input id="purius" type="checkbox" value="purius" onchange="myfunc(this.value)"/> プリウス(トヨタ) 
-  <input id="minimini" type="checkbox" value="minimini" onchange="myfunc(this.value)"/>　ミニ(ミニ)
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="purius" value="purius" onchange="myfunc(this.value)" />
+  <label class="custom-control-label" for="purius"> プリウス(トヨタ) </label>
+</div>
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="minimini" value="minimini" onchange="myfunc(this.value)" />
+  <label class="custom-control-label" for="minimini">　ミニ(ミニ) </label>
+</div>
   <div class="container w-80" style="padding: 5px;">
     <canvas id="myChart"></canvas>
   </div>

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/top01.css" %}'>
+<link rel="stylesheet" href='{% static "carsharing_req/css/top.css" %}'>
 {% endblock %}
 
 {% block title %}トップページ{% endblock %}
@@ -102,24 +102,23 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">カーシェアリング予約</h5>
-                        <p class="card-text"><a class="flow" href="#">利用の流れ</a></p>
-                        <a href="#" class="btn">予約</a>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/1">利用の流れ</a></p>
+                        <a href="/carsharing_booking/" class="btn">予約</a>
                     </div>
                 </div>
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">駐車場予約</h5>
-                        <p class="card-text"><a class="flow" href="#">利用の流れ</a></p>
-                        <a href="#" class="btn">予約</a>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/2">利用の流れ</a></p>
+                        <a href="/parking_booking/map" class="btn">予約</a>
                     </div>
                 </div>
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">予約管理</h5>
-                        <a href="#" class="btn">変更</a>
-                        <a href="#" class="btn">削除</a>
+                        <h5 class="card-title">利用者予約管理</h5>
+                        <a href="/carsharing_booking/list" class="btn">一覧</a>
                     </div>
                 </div>
             </div>
@@ -127,25 +126,25 @@
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title">あなたへのおすすめ</h5>
+                        <p class="card-text"></p>
+                        <a href="#" class="btn">見てみる</a>
                     </div>
                 </div>
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title">中古車検索</h5>
+                        <p class="card-text"></p>
+                        <a href="#" class="btn">検索</a>
                     </div>
                 </div>
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title">AI価格予想</h5>
+                        <p class="card-text"></p>
+                        <a href="/secondhandcar/" class="btn">見てみる</a>
                     </div>
                 </div>
             </div>
@@ -153,31 +152,44 @@
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title">カーシェアリングオーナー</h5>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/3">利用の流れ</a></p>
+                {% if request.session.owner_flag == True %}
+                        <a href="#" class="btn">日時選択</a>
+                {% else %}
+                        <a href="/owners_req/create" class="btn">登録</a>
+                {% endif %}
                     </div>
                 </div>
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title">駐車場オーナー</h5>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/4">利用の流れ</a></p>
+                {% if request.session.owner_flag == True %}
+                        <a href="/parking_req/loaning/" class="btn">日時選択</a>
+                {% else %}
+                        <a href="#" class="btn">登録</a>
+                {% endif %}
                     </div>
                 </div>
+                {% if request.session.owner_flag == True or request.session.parking_flag == True %}
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn">Go somewhere</a>
+                        <h5 class="card-title" id="original">貸し出し追加</h5>
+                        <p class="card-text"></p>
+                        <div id="btn">
+                            <a href="/owners_req/createCar" class="btn" id="btn1">車両追加</a>
+                            <a href="/parking_req" class="btn" id="btn1">駐車場追加</a>
+                        </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
 
           <div id ="left">
-          <div class="float-left w-50 border">
+          <div class="news">
               <h2>お知らせ</h2>
               <dl>
                   <dt>2020.10.15</dt>
@@ -200,7 +212,7 @@
           </div>
           </div>
           <div id ="right">
-          <div class="float-left border w-50">
+          <div class="news">
                 <h2>よくあるご質問</h2>
                 <dl>
                     <dt>2020.10.15</dt>
@@ -223,8 +235,7 @@
             </div>
           </div>
           </div>
-          <div id ="under" class="float-left border clearfix w-100" style="height: 250pt;font-size: 13pt;">
-              <div class="mx-auto" style="width:100%;padding:15pt;padding-left: 50pt;padding-right: 50pt;padding-top: 70pt;">
+          <div id ="under">
               <h2>お問い合わせ</h2>
               <p style="display: table-cell;width: auto;padding: 16px;">
                   〇〇支店<br>
@@ -246,7 +257,6 @@
                   TEL<br>
                   XXX-XXXX-XXXX
             </p>
-          </div>
           </div>
       
     </div>
