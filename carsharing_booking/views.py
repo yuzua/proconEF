@@ -293,7 +293,13 @@ def checkBooking(request):
         'end_time': end_time,
         'charge': charge,
     }
-    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    if request.session['select'] == 'map':
+        address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    elif request.session['select'] == 'car':
+        parking_id = CarInfoParkingModel.objects.filter(car_id=request.session['obj_id']).values('parking_id')
+        print(parking_id)
+        address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values('address')
+        print(address)
     params['address'] = address[0]['address']
     params['kingaku'] = "{:,}".format(charge)
     params['data'] = data
