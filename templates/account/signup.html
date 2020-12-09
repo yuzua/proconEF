@@ -10,20 +10,21 @@
 <h3 class="title"><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign Up" %}</h3>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  <p>
-    <input type="email" name="login" autocomplete="email" required id="id_login" placeholder="メールアドレス">
-    </p>
-    <p>
-    <input type="password" name="password1" placeholder="パスワード" autocomplete="current-password" required id="id_password1">
-    </p>
-    <p>
+  {% csrf_token %}
+    <span>
+      <input type="email" name="email" autocomplete="email" required id="id_email" placeholder="メールアドレス">
+      {{ form.errors.email }}
+    </span>
+    <span>
+      <input type="password" name="password1" placeholder="パスワード" autocomplete="current-password" required id="id_password1">
+    </span>
+    <span>
       <input type="password" name="password2" placeholder="パスワード確認用" autocomplete="current-password" required id="id_password2">
-    </p>
-  <!-- {% csrf_token %}
-  {{ form.as_p }}
+      {{ form.errors.password2 }}
+    </span>
   {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %} -->
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
   <p class="already">すでにアカウントお持ちの方は<a href="{{ login_url }}" class="login">ログイン</a></p>
   <button class="btn" type="submit" >{% trans "Sign Up" %}</button>
 </form>
@@ -80,7 +81,7 @@
     border-width: 2pt;
   } */
 
-  #id_login {
+  #id_email {
     width: 250pt;
     margin: 5pt 5pt;
   }
@@ -98,6 +99,13 @@
   .already {
     font-size: small;
     margin: 5pt 5pt;
+  }
+  .errorlist {
+    font-size: small;
+    color: red;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 </style>
 </html>
