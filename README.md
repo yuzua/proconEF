@@ -146,6 +146,8 @@ pip install django-bootstrap-datepicker-plus
 
 [【Bootstrap】の基本「マージン」と「パディング」](https://design-studio-f.com/blog/bootstrap-utilities-spacing/)
 
+[スクロールに応じてトリガーするJavaScriptのライブラリ「ScrollTrigger」](https://www.willstyle.co.jp/blog/2869/)
+
 # proconEF($の付いているものはターミナルかコマンドプロンプトで実行)
 * Gitコマンド&流れ(エラーや質問は森正or斉藤へ)
 ## 11/4日にやること(1回のみ！！！)

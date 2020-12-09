@@ -56,3 +56,11 @@
     border-top: solid 5px #696969;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
 }
+
+.visible, .invisible {
+    opacity: 0.3;
+    transition: opacity 0.5s ease;
+}
+.visible {
+    opacity: 1.0;
+}

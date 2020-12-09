@@ -189,7 +189,7 @@
             </div>
 
           <div id ="left">
-          <div class="news">
+          <div data-trigger class="news">
               <h2>お知らせ</h2>
               <dl>
                   <dt>2020.10.15</dt>
@@ -212,7 +212,7 @@
           </div>
           </div>
           <div id ="right">
-          <div class="news">
+          <div data-trigger class="news">
                 <h2>よくあるご質問</h2>
                 <dl>
                     <dt>2020.10.15</dt>
@@ -235,7 +235,7 @@
             </div>
           </div>
           </div>
-          <div id ="under">
+          <div data-trigger id ="under">
               <h2>お問い合わせ</h2>
               <p style="display: table-cell;width: auto;padding: 16px;">
                   〇〇支店<br>
@@ -260,4 +260,9 @@
           </div>
       
     </div>
+{% endblock %}
+
+{% block includejs %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollTrigger/1.0.3/ScrollTrigger.min.js"></script>
+<script type="text/javascript" src='{% static "carsharing_req/js/scroll-trigger.js" %}'></script>
 {% endblock %}
