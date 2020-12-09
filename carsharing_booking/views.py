@@ -338,7 +338,7 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
     subject = "予約完了確認メール"
     message = str(request.user) + "様\n \
         ご予約ありがとうございます。\n \
-        お手続きが完了いたしました。\n \
+        お手続きが完了いたしました。\n\n \
         開始日:" + start_day + "\n \
         開始時刻:" + start_time + "\n \
         終了日:" + end_day + "\n \
