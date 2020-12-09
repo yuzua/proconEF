@@ -10,6 +10,7 @@ from .forms import BookingCreateForm, CarCategory
 import json, datetime
 from django.contrib import messages
 from django.db.models import Q
+from django.core.mail import EmailMessage
 # Create your views here.
 
 
@@ -318,10 +319,29 @@ def push(request):
         del request.session['obj_id']
         del request.session['select']
         messages.success(request, '予約が完了しました')
+        url = 'http://127.0.0.1:8000/carsharing_booking/list/'
+        #mail送信メソッドの呼び出し
+        success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url)
     else:
         messages.error(request, '不正なリクエストです')
     return redirect(to='/carsharing_req/index')
 
+
+def success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url):
+
+    subject = "予約完了確認メール"
+    message = str(request.user) + "様\n \
+        ご予約ありがとうございます。\n \
+        お手続きが完了いたしました。\n \
+        開始日:" + start_day + "\n \
+        開始時刻:" + start_time + "\n \
+        終了日:" + end_day + "\n \
+        終了時刻:" + end_time + "\n \
+        料金:" + str(charge) + "円\n"
+    user = request.user  # ログインユーザーを取得する
+    from_email = 'admin@gmail.com'  # 送信者
+    user.email_user(subject, message, from_email)  # メールの送信
+    return ()
 
 #予約確認・一覧
 class ReservationList(TemplateView):
