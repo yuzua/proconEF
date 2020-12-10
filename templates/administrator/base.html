@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="ja">
   <head>
@@ -16,7 +18,8 @@
   <body>
       <!--ヘッダー-->
       <header>
-        <p style="float: right;">
+        <div class="header">
+        <p style="float: right;margin: 5pt 5pt 5pt 0pt;">
             {% if user.is_authenticated %}
                 ようこそ{{ user.get_username }}
             {% else %}
@@ -45,7 +48,22 @@
         {% endif %}
 <!-- カーシェアリングオーナーに登録済か判定 -->
         </p>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;">
+        <ul class="nav">
+          <a class="navbar-brand" href="/"><img src='{% static "admin/img/logo03.png" %}' class="logo3">Administrator</a>
+          <li class="navbar01" style="border-right: 1px solid #333;width: 18%;text-align: center;">
+              <a class="nav-link" href="{% url 'administrator:createCar' %}">カーシェアリング車追加</a>
+          </li>
+          <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+              <a class="nav-link" href="#">駐車場追加</a>
+          </li>
+          <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+              <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">配車管理</a>
+          </li>
+            <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
+              <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">アンケート結果</a>
+          </li>
+        </ul>
+          <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px;">
             <a class="navbar-brand" href="/">Administrator</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -78,7 +96,8 @@
                 </li>
               </ul>
             </div>
-          </nav>
+          </nav> -->
+        </div>
       </header>
       <!--/ヘッダー-->
 
@@ -99,6 +118,75 @@
     <!--/wrapper-->
     <div class="footer-copyright text-center py-3">株式会社▲▲▲</div>
   </body>
+  <style>
+.logo3 {
+    width: 35pt;
+    height: 35pt;
+}
+
+.navbar-brand {
+  color: #333;
+  margin-left: 5pt;
+}
+
+.nav-link {
+    color:#696969;
+    width: 100%;
+}
+
+.header {
+    width: 100%;
+    background-color: #fff;
+    left:0;
+    line-height:1;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+}
+
+.navbar01 {
+    border-right: 1px solid #333;
+    width: 18%;
+    text-align: center;
+    padding-top: 8pt;
+    font-weight: bolder;
+    font-size: 12pt;
+}
+
+.navbar01:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.btn {
+    height: 30pt;
+    width: 75pt;
+    font-size: 12pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #CDCDCD;
+    float: right;
+    clear: both;
+    padding: auto;
+}
+
+.btn:hover {
+    background-color: #CDCDCD;
+}
+
+a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.nav {
+    padding: 10pt 0pt 10pt 0pt;
+}
+
+.dropdown-item {
+    margin: 4pt 0 4pt 0;
+}
+  </style>
 </html>
 {% block extrajs %}{% endblock %}
 {% block mapapi %}{% endblock %}
