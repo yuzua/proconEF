@@ -29,7 +29,7 @@
                     {% endif %}  
                         さん
                 </p>
-                {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
             <button class="btn" data-toggle="modal" data-target=".bd-example-modal-lg">
                 <a href="http://127.0.0.1:8000/accounts/logout/" class="logout">ログアウト</a>
             </button>
@@ -270,6 +270,7 @@
                     <!-- Links -->
                     <h5 class="font-weight-bold text-uppercase mt-3 mb-4">マイページ</h5>
                     <ul class="list-unstyled">
+                    {% if user.is_authenticated %}
                         <li>
                             <a href="/carsharing_req/carsharuserdata/">個人登録情報確認</a>
                         </li>
@@ -277,8 +278,16 @@
                             <a href="/carsharing_booking/list">予約確認</a>
                         </li>
                         <li>
+                            <a href="/carsharing_req/calendar">カレンダー確認</a>
+                        </li>
+                        <li>
                             <a href="/carsharing_req/details">利用明細</a>
                         </li>
+                    {% else %}
+                        <li>
+                            <a href="/accounts/signup/">新規会員登録</a>
+                        </li>
+                    {% endif %}
                     </ul>
                 </div>
                 <!-- Grid column -->
@@ -371,8 +380,13 @@
         </div>
         <!-- Footer Links -->
         <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">株式会社▲▲▲</div>
+        <div class="footer-copyright text-center py-3">
+            <p style="padding: 10px; margin:0; clear: none;"><img src='{% static "admin/img/logo03.png" %}' class="logo4">株式会社▲▲▲<img src='{% static "admin/img/logo03.png" %}' class="logo4"></p>
+        </div>
         <!-- Copyright -->
+        <span id="copy">
+            <p>&copy;<small>Copy Rights . 2020 CarSharingService . All Rights Reserved</small></p>
+        </span>
     </footer>
     <!-- Footer -->
   </body>
