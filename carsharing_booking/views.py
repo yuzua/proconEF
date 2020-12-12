@@ -168,6 +168,33 @@ def booking(request, num):
         car_obj = CarInfoModel.objects.filter(id__in=car_list)
     params['car_objs'] = car_obj
     request.session['car_objs'] = car_obj
+
+    event_dict = {}
+    # カーシェアリング予約
+    for carnum in car_list:
+        events = []
+        booking = BookingModel.objects.filter(car_id=carnum).exclude(charge=-1).order_by('end_day', 'end_time')
+        booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in booking:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#A9A9A9']))
+            events.append(event)
+        # 車両貸し出し制限
+        loaning = BookingModel.objects.filter(car_id=carnum, charge=-1).order_by('end_day', 'end_time')
+        loaning = loaning.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#DC143C']))
+            events.append(event)
+        event_dict[carnum] = events
+    request.session['events'] = json.dumps(event_dict)
+    params['events'] = request.session['events']
+    print(event_dict)
+
     
     return render(request, 'carsharing_booking/booking.html', params)
 
@@ -189,8 +216,8 @@ def checkBooking(request):
         address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
         params['address'] = address[0]['address']
     elif request.session['select'] == 'car':
-        params['events'] = request.session['events']
         params['car_id'] = request.session['obj_id']
+    params['events'] = request.session['events']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
     params['form'] = c_b
@@ -319,8 +346,7 @@ def push(request):
         charge = int(request.POST['charge'])
         record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time, charge=charge)
         record.save()
-        if request.session['select'] == 'car':
-            del request.session['events']
+        del request.session['events']
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
