@@ -51,7 +51,10 @@ class Survey(TemplateView):
         push(user_id, anser_dict, pattern)
         messages.success(request, 'ご回答ありがとうございました')
         del request.session['data']
-        return render(request, 'survey/questionnaire.html', self.params)
+        return redirect(to='carsharing_req:index')
+
+
+
 
 
 
