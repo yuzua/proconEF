@@ -1,4 +1,6 @@
 from django.db import models
+from carsharing_booking .models import BookingModel
+from django.utils import timezone
 
 # Create your models here.
 
@@ -18,3 +20,19 @@ class CarsharUserModel(models.Model):
     
     def __str__(self):
         return '<Friend:id=' + str(self.id) + ',' + self.name + '(' + str(self.age) + ')>'
+
+
+class UsageModel(models.Model):
+    
+    user_id = models.IntegerField()
+    car_id = models.IntegerField()
+    booking_id = models.ForeignKey(BookingModel, verbose_name='予約番号', default=0, on_delete=models.PROTECT)
+    start_day = models.CharField(verbose_name='開始日', max_length=10)
+    start_time = models.CharField(verbose_name='開始時刻', max_length=5)
+    end_day = models.CharField(verbose_name='終了日', max_length=10)
+    end_time = models.CharField(verbose_name='終了時刻', max_length=5)
+    charge = models.IntegerField(default=1000, verbose_name='利用料金')
+    regist_date = models.DateTimeField(default=timezone.now, verbose_name='登録日時')
+
+    def __str__(self):
+        return '<carshar_usage_id=' + str(self.id) + '>'
