@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import QuestionnaireDataModel, QuestionnaireAnswerModel, AnswerModel
+from .models import AnswerModel
 
 
 # Register your models here.
