@@ -49,6 +49,8 @@ def set_session(request):
         print('ok')
     else:
         surveyMail(request, check_usage_obj)
+        saveUsage(request, check_usage_obj)
+
     return redirect(to='carsharing_req:index')
 
 
@@ -264,3 +266,12 @@ def surveyMail(request, booking):
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     return ()
+
+
+def saveUsage(request, booking):
+    booking_id = BookingModel.objects.get(id=booking['id'])
+    record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
+        booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
+        end_day=booking['end_day'], end_time=booking['end_time'], charge=booking['charge'])
+    record.save()
+    pass
