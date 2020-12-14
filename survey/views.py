@@ -7,6 +7,7 @@ import random
 from operator import itemgetter
 import ast
 from django.contrib import messages
+import json
 #from .forms import QuestionnaireAnswerForm
 
 # Create your views here.
@@ -51,6 +52,8 @@ class Survey(TemplateView):
         push(user_id, anser_dict, pattern)
         messages.success(request, 'ご回答ありがとうございました')
         del request.session['data']
+        #jsonファイルを作成 (おすすめ車両AIに投げる用)
+        makeJsonFile(user_id)
         return redirect(to='carsharing_req:index')
 
 
@@ -85,7 +88,7 @@ def selectSurvey(pattern, user_id):
         for item in survey_list:
             rsl.append(item[1])
     else:
-        # 過去に答えた部分を省く
+        # 過去に答えた部分を省く (previous_answer: 蓄積データ)
         answer = AnswerModel.objects.filter(user_id=user_id).values('answer').order_by("id").last()
         previous_answer = answer['answer']
         previous_answer = ast.literal_eval(previous_answer)
@@ -207,9 +210,10 @@ def countCheck(user_id):
     #全件回答済
     elif answer_count['count'] == 3:
         pattern = 0
-    #未回答
+    #10件未回答
     elif answer_count['count'] == 1:
         pattern = 1
+    #5件未回答
     elif answer_count['count'] == 2:
         pattern = 2
 
@@ -244,3 +248,47 @@ def push(user_id, anser_dict, pattern):
         record.count = count
         print(record)
         record.save()
+
+
+
+#jsonファイル作成
+def makeJsonFile(user_id):
+    path = '/Django/data/recommend/user_' + str(user_id) + '.json'
+    data_list = list(AnswerModel.objects.filter(user_id=user_id).values("answer").order_by("id"))
+    print(data_list)
+    survey_list = [
+        (1, '乗り心地'),
+        (2, '荷室の使いやすさ'),
+        (3, '燃費の良さ'),
+        (4, '排気量の少なさ'),
+        (5, '車内空間が広い'),
+        (6, '静かに走る'),
+        (7, '馬力がある'),
+        (8, '乗車定員が多い'),
+        (9, '小回りが利く'),
+        (10, '乗車しやすい'),
+        (11, '安全性能が高い'),
+        (12, '走行性能が高い'),
+        (13, '車両サイズが小さい'),
+        (14, 'カスタムしやすい'),
+        (15, 'オプションが充実してる')
+    ]
+    json_list = []
+    for data_str in data_list:
+        data_dict = ast.literal_eval(data_str['answer'])
+        json_dict = {}
+        for index in range(1, 15):
+            # print(data_dict.get(index))
+            # print(survey_list[index][1])
+            if data_dict.get(index) != None:
+                json_dict[survey_list[index][1]] = data_dict.get(index)
+        json_list.append(json_dict)
+    # エンコード
+    json_data = json.dumps(json_list, sort_keys=True, indent=4)
+    # デコード
+    print(json.loads(json_data))
+
+    # ファイルを開く(上書きモード)
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
