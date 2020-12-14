@@ -265,7 +265,7 @@ def surveyMail(request, booking):
     user = request.user  # ログインユーザーを取得する
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
-    return ()
+    pass
 
 
 def saveUsage(request, booking):

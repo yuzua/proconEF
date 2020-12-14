@@ -373,7 +373,7 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
     user = request.user  # ログインユーザーを取得する
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
-    return ()
+    pass
 
 #予約確認・一覧
 class ReservationList(TemplateView):

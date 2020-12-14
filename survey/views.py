@@ -26,9 +26,7 @@ class Survey(TemplateView):
     def get(self, request):
         user_id = int(request.session['user_id'])
         pattern = countCheck(user_id)
-        print(pattern)
         rsl = selectSurvey(pattern, user_id)
-        print(rsl)
         self.params['data'] = rsl
         request.session['data'] = rsl
         return render(request, 'survey/questionnaire.html', self.params)
