@@ -258,21 +258,22 @@ def makeJsonFile(user_id):
         (12, '走行性能が高い'),
         (13, '車両サイズが小さい')
     ]
-    json_list = []
+    # json_list = []
+    json_dict = {}
     for data_str in data_list:
         data_dict = ast.literal_eval(data_str['answer'])
         print(data_dict)
-        json_dict = {}
+        # json_dict = {}
         for index in range(1, 14):
             print(index)
             print(data_dict.get(index))
             print(survey_list[index][1])
-            if data_dict.get(index) != None:
+            if data_dict.get(index) == True:
                 json_dict[survey_list[index][1]] = data_dict.get(index)
             print(data_dict)
-        json_list.append(json_dict)
+        # json_list.append(json_dict)
     # エンコード
-    json_data = json.dumps(json_list, sort_keys=True, indent=4)
+    json_data = json.dumps(json_dict, sort_keys=True, indent=4)
     # デコード
     print(json.loads(json_data))
 
