@@ -64,7 +64,7 @@ def selectSurvey(pattern, user_id):
     rsl = []
     #アンケート全項目
     survey_list = [
-        (1, '乗り心地'),
+        (1, '乗り心地がいい'),
         (2, '荷室の使いやすさ'),
         (3, '燃費の良さ'),
         (4, '排気量の少なさ'),
@@ -76,13 +76,11 @@ def selectSurvey(pattern, user_id):
         (10, '乗車しやすい'),
         (11, '安全性能が高い'),
         (12, '走行性能が高い'),
-        (13, '車両サイズが小さい'),
-        (14, 'カスタムしやすい'),
-        (15, 'オプションが充実してる')
+        (13, '車両サイズが小さい')
     ]
     if pattern == 0:
         # survey_listの中からランダムに5つ選ぶ
-        survey_list = random.sample(survey_list, 5)
+        survey_list = random.sample(survey_list, 4)
         for item in survey_list:
             rsl.append(item[1])
     else:
@@ -100,17 +98,17 @@ def selectSurvey(pattern, user_id):
         if pattern == 1:
             for item in survey_list:
                 if item[0] == del_list[index]:
-                    if index < 4:
+                    if index < 3:
                         index += 1
                 else:
                     rsl.append(item[1])
             print(rsl)
-            rsl = random.sample(rsl, 5)
+            rsl = random.sample(rsl, 4)
         # 未回答を抽出
         elif pattern == 2:
             for item in survey_list:
                 if item[0] == del_list[index]:
-                    if index < 9:
+                    if index < 7:
                         index += 1
                 else:
                     rsl.append(item[1])
@@ -121,7 +119,7 @@ def selectSurvey(pattern, user_id):
 #今回のアンケート結果を集計する関数(list, dict, bool), <void : dict>
 def checkAnswer(data, answer, flag):
     for item in data:
-        if item == '乗り心地':
+        if item == '乗り心地がいい':
             if flag == False:
                 answer[1] = False
             else:
@@ -186,16 +184,6 @@ def checkAnswer(data, answer, flag):
                 answer[13] = False
             else:
                 answer[13] = True
-        elif item == 'カスタムしやすい':
-            if flag == False:
-                answer[14] = False
-            else:
-                answer[14] = True
-        elif item == 'オプションが充実してる':
-            if flag == False:
-                answer[15] = False
-            else:
-                answer[15] = True
 
     return answer
 
@@ -255,7 +243,8 @@ def makeJsonFile(user_id):
     data_list = list(AnswerModel.objects.filter(user_id=user_id).values("answer").order_by("id"))
     print(data_list)
     survey_list = [
-        (1, '乗り心地'),
+        (0, '項目'),
+        (1, '乗り心地がいい'),
         (2, '荷室の使いやすさ'),
         (3, '燃費の良さ'),
         (4, '排気量の少なさ'),
@@ -267,19 +256,20 @@ def makeJsonFile(user_id):
         (10, '乗車しやすい'),
         (11, '安全性能が高い'),
         (12, '走行性能が高い'),
-        (13, '車両サイズが小さい'),
-        (14, 'カスタムしやすい'),
-        (15, 'オプションが充実してる')
+        (13, '車両サイズが小さい')
     ]
     json_list = []
     for data_str in data_list:
         data_dict = ast.literal_eval(data_str['answer'])
+        print(data_dict)
         json_dict = {}
-        for index in range(1, 15):
-            # print(data_dict.get(index))
-            # print(survey_list[index][1])
+        for index in range(1, 14):
+            print(index)
+            print(data_dict.get(index))
+            print(survey_list[index][1])
             if data_dict.get(index) != None:
                 json_dict[survey_list[index][1]] = data_dict.get(index)
+            print(data_dict)
         json_list.append(json_dict)
     # エンコード
     json_data = json.dumps(json_list, sort_keys=True, indent=4)
