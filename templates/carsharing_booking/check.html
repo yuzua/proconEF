@@ -14,7 +14,7 @@
 </div>
 <br>
 <div class="card">
-    <h2 class="card-header">入力情報</h2>
+    <h2 class="card-header">{{message}}</h2>
     <div class="card-body">
         <p>利用予約場所：{{address}}</p>
         <p>開始予定日時：{{data.start_day}} {{data.start_time}}</p>
@@ -23,6 +23,7 @@
         <p>支払い予定料金：{{kingaku}}円</p>
     </div>
     <div class="card-footer">
+    {% if request.session.select == 'map' or  request.session.select == 'car' %}
         <form action="{% url 'carsharing_booking:push' %}" method="post" >
             {% csrf_token %}
             {% for key, value in data.items %}
@@ -30,6 +31,9 @@
             {% endfor %}
                 <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
+    {% else %}
+        <a href="{% url 'carsharing_req:first' %}" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">TOPへ戻る</a>
+    {% endif %}
     </div>
 </div>
 

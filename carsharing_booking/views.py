@@ -350,18 +350,18 @@ def push(request):
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
-        messages.success(request, '予約が完了しました')
-        url = 'http://127.0.0.1:8000/carsharing_booking/list/'
+        messages.success(request, '予約が完了しました。<br>ご登録されているメールアドレスに予約完了メールを送信致しました。ご確認下さい。')
         #mail送信メソッドの呼び出し
-        success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url)
+        success_booking_mail(request, charge, start_day, start_time, end_day, end_time)
     else:
         messages.error(request, '不正なリクエストです')
-    return redirect(to='/carsharing_req/index')
+    return redirect(to='/carsharing_booking/reservation')
 
 
-def success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url):
+def success_booking_mail(request, charge, start_day, start_time, end_day, end_time):
 
     subject = "予約完了確認メール"
+    url = 'http://127.0.0.1:8000/carsharing_booking/list/'
     message = str(request.user) + "様\n \
         ご予約ありがとうございます。\n \
         お手続きが完了いたしました。\n\n \
@@ -369,11 +369,71 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
         開始時刻:" + start_time + "\n \
         終了日:" + end_day + "\n \
         終了時刻:" + end_time + "\n \
-        料金:" + str(charge) + "円\n"
+        料金:" + str(charge) + "円\n\n \
+        予約詳細はコチラから！！\n \
+        URL: " + url + "\n"
     user = request.user  # ログインユーザーを取得する
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
+
+def reservation(request):
+    booking = BookingModel.objects.filter(user_id=request.session['user_id']).values('id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge').last()
+    data = {
+        'car_id': booking['car_id'],
+        'start_day': booking['start_day'],
+        'start_time': booking['start_time'],
+        'end_day': booking['end_day'],
+        'end_time': booking['end_time'],
+        'charge': booking['charge'],
+    }
+    car_obj = CarInfoModel.objects.get(id=booking['car_id'])
+    parking_id = CarInfoParkingModel.objects.filter(car_id=booking['car_id']).values('parking_id')
+    address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values('address')
+    add = address[0]['address']
+
+    # str型をdatetime型へ変換
+    start = booking['start_day'] + ' ' + booking['start_time']
+    start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
+    end = booking['end_day'] + ' ' + booking['end_time']
+    end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
+
+    # 日にち　分数計算
+    time = end - start
+    d = int(time.days)
+    m = int(time.seconds / 60)
+    times = ''
+
+    # 利用合計日時計算
+    if d <= 0:
+        print('1day')
+    else:
+        times = str(d) + '日 '
+
+    if booking['start_time'] < booking['end_time']:
+        h = int(m / 60)
+        m = int(m % 60)
+        x = str(h) + '時間 ' + str(m) + '分'
+        times += x
+    else:
+        charge += int(m / 15 * 330)
+        h = int(m / 60)
+        m = int(m % 60)
+        x = str(h) + '時間 ' + str(m) + '分'
+        times += x
+
+    params = {
+        'title': '予約完了',
+        'message': '予約情報',
+        'address': add,
+        'car_obj': car_obj,
+        'data': data,
+        'times': times,
+        'kingaku': '',
+    }
+    params['kingaku'] = "{:,}".format(booking['charge'])
+    return render(request, "carsharing_booking/check.html", params)
+
 
 #予約確認・一覧
 class ReservationList(TemplateView):
