@@ -10,6 +10,7 @@ from .forms import BookingCreateForm, CarCategory
 import json, datetime
 from django.contrib import messages
 from django.db.models import Q
+from django.core.mail import EmailMessage
 # Create your views here.
 
 
@@ -167,6 +168,33 @@ def booking(request, num):
         car_obj = CarInfoModel.objects.filter(id__in=car_list)
     params['car_objs'] = car_obj
     request.session['car_objs'] = car_obj
+
+    event_dict = {}
+    # カーシェアリング予約
+    for carnum in car_list:
+        events = []
+        booking = BookingModel.objects.filter(car_id=carnum).exclude(charge=-1).order_by('end_day', 'end_time')
+        booking = booking.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in booking:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', 'カーシェアリング予約'+str(title)], ['start', start], ['end', end], ['color', '#A9A9A9']))
+            events.append(event)
+        # 車両貸し出し制限
+        loaning = BookingModel.objects.filter(car_id=carnum, charge=-1).order_by('end_day', 'end_time')
+        loaning = loaning.values("id", "start_day", "start_time", "end_day", "end_time")
+        for obj in loaning:
+            title = obj.get("id")
+            start = obj.get("start_day") + 'T' + obj.get("start_time")
+            end = obj.get("end_day") + 'T' + obj.get("end_time")
+            event = dict((['title', '車両貸し出し'+str(title)], ['start', start], ['end', end], ['color', '#DC143C']))
+            events.append(event)
+        event_dict[carnum] = events
+    request.session['events'] = json.dumps(event_dict)
+    params['events'] = request.session['events']
+    print(event_dict)
+
     
     return render(request, 'carsharing_booking/booking.html', params)
 
@@ -188,8 +216,8 @@ def checkBooking(request):
         address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
         params['address'] = address[0]['address']
     elif request.session['select'] == 'car':
-        params['events'] = request.session['events']
         params['car_id'] = request.session['obj_id']
+    params['events'] = request.session['events']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
     params['form'] = c_b
@@ -292,7 +320,13 @@ def checkBooking(request):
         'end_time': end_time,
         'charge': charge,
     }
-    address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    if request.session['select'] == 'map':
+        address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
+    elif request.session['select'] == 'car':
+        parking_id = CarInfoParkingModel.objects.filter(car_id=request.session['obj_id']).values('parking_id')
+        print(parking_id)
+        address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values('address')
+        print(address)
     params['address'] = address[0]['address']
     params['kingaku'] = "{:,}".format(charge)
     params['data'] = data
@@ -312,16 +346,34 @@ def push(request):
         charge = int(request.POST['charge'])
         record = BookingModel(user_id=user_id, car_id=car_id, start_day=start_day, start_time=start_time, end_day=end_day, end_time=end_time, charge=charge)
         record.save()
-        if request.session['select'] == 'car':
-            del request.session['events']
+        del request.session['events']
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
         messages.success(request, '予約が完了しました')
+        url = 'http://127.0.0.1:8000/carsharing_booking/list/'
+        #mail送信メソッドの呼び出し
+        success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url)
     else:
         messages.error(request, '不正なリクエストです')
     return redirect(to='/carsharing_req/index')
 
+
+def success_booking_mail(request, charge, start_day, start_time, end_day, end_time, url):
+
+    subject = "予約完了確認メール"
+    message = str(request.user) + "様\n \
+        ご予約ありがとうございます。\n \
+        お手続きが完了いたしました。\n\n \
+        開始日:" + start_day + "\n \
+        開始時刻:" + start_time + "\n \
+        終了日:" + end_day + "\n \
+        終了時刻:" + end_time + "\n \
+        料金:" + str(charge) + "円\n"
+    user = request.user  # ログインユーザーを取得する
+    from_email = 'admin@gmail.com'  # 送信者
+    user.email_user(subject, message, from_email)  # メールの送信
+    pass
 
 #予約確認・一覧
 class ReservationList(TemplateView):

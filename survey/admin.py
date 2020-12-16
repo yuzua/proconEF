@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import QuestionnaireDataModel, QuestionnaireAnswerModel
+from .models import AnswerModel
 
 
 # Register your models here.
-admin.site.register(QuestionnaireDataModel)
-admin.site.register(QuestionnaireAnswerModel)
+admin.site.register(AnswerModel)

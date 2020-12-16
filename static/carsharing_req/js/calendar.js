@@ -56,3 +56,6 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   calendar.render();
 });
+
+
+console.log(events);

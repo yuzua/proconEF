@@ -44,6 +44,7 @@
   <span>
     <p class="text">パスワード：</p>
     <input type="password" name="password" autocomplete="current-password" required id="id_password"  placeholder="パスワード">
+    {{ form.non_field_errors }}
   </span>
   <span style="clear: both;">
     <p class="text">ログイン状態を保持：</p>
@@ -149,6 +150,13 @@
     margin: 2px;
     float: left;
     font-size: small;
+  }
+  .errorlist {
+    font-size: small;
+    color: red;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 </style>
 </html>

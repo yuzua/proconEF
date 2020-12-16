@@ -61,7 +61,7 @@ class CreateView(TemplateView):
         self.params['form'] = form
         if (form.is_valid()):
             record.save()
-            return redirect(to='owners_req:index')
+            return redirect(to='owners_req:create')
         else:
             self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/create.html', self.params)
