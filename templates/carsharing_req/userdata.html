@@ -1,0 +1,51 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th scope="col">ID</th><td scope="row">{{data.id}}</td>
+    </tr>
+    <tr>
+      <th scope="col">メールアドレス</th><td scope="row">{{data.email}}</td>
+    </tr>
+    <tr>
+      <th scope="col">性別</th>
+      <td scope="row">
+        {% if data.gender == True %}
+            男性
+        {% else %}
+            女性
+        {% endif %}
+      </td>
+    </tr>
+    <tr>  
+      <th scope="col">年齢</th><td scope="row">{{data.age}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">生年月日</th><td scope="row">{{data.birthday}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">郵便番号</th><td scope="row">{{data.zip01}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">都道府県</th><td scope="row">{{data.pref01}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">住所</th><td scope="row">{{data.addr01}}{{data.addr02}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">system_flag</th><td scope="row">{{data.system_flag}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

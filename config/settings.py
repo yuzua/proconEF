@@ -34,11 +34,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'carsharing_req.apps.CarsharingReqConfig',
     'carsharing_booking.apps.CarsharingBookingConfig',
     'owners_req.apps.OwnersReqConfig',
     'parking_req.apps.ParkingReqConfig',
     'secondhandcar.apps.SecondhandcarConfig',
+    'accounts.apps.AccountsConfig',
+    'parking_booking.apps.ParkingBookingConfig',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +61,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 ROOT_URLCONF = 'config.urls'
 
@@ -116,9 +130,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# 日本語にするとテンプレートも勝手に日本語で表示される
+LANGUAGE_CODE = 'ja'
+# 英語にするとテンプレートも勝手に英語で表示される
+# LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -132,5 +149,44 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 #開発環境では、メールのシステムをスタブ化
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#ユーザー認証の設定
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# django-allauthで利用するdjango.contrib.sitesを使うためにサイト識別用IDを設定
+SITE_ID = 1
+
+#認証方法を複数使用
+AUTHENTICATION_BACKENDS = (
+    #一般ユーザー用（メールアドレス認証）
+    'allauth.account.auth_backends.AuthenticationBackend',
+    #管理サイト用（ユーザー名認証）
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+#メールアドレス認証に変更する設定
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+#サインアップ時にメールアドレス確認をはさむ設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+#ログイン／ログアウト時の遷移先の設定
+LOGIN_REDIRECT_URL = 'carsharing_req:first'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+
+#アラートメッセージ
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert alert-success',
+    messages.ERROR: 'alert alert-danger',
+    messages.WARNING: 'alert alert-warning',
+    messages.INFO: 'alert alert-info',
+}

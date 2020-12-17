@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <title>カレンダーサンプル</title>
+<link rel="stylesheet"href="{{ static_url('css/fullcalendar.min.css') }}"/>
+<link rel="stylesheet"href="{{ static_url('css/style.css') }}"/>
+<script type="text/javascript"src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript"src="{{ static_url('js/moment.min.js') }}"></script>
+<script type="text/javascript"src="{{ static_url('js/fullcalendar.min.js') }}"></script>
+<script type="text/javascript"src="{{ static_url('lang/ja.js') }}"></script>
+<script>
+// ページ読み込み時の処理
+$(document).ready(function(){
+ 
+// カレンダーの設定
+$('#calendar').fullCalendar({
+height:550,
+lang:"ja",
+header:{
+left:'prev,next today',
+center:'title',
+right:'month,basicWeek,basicDay'
+},
+selectable:true,
+selectHelper:true,
+navLinks:true,
+events:{
+url:'http://localhost:8080/getCalendar',
+error:function(){
+$('#script-warning').show();
+}
+},
+select:function(start,end){
+vartitle=prompt("予定タイトル:");
+vareventData;
+if(title){
+eventData={
+title:title,
+start:start,
+end:end
+};
+$('#calendar').fullCalendar('renderEvent',eventData,true);
+}
+$('#calendar').fullCalendar('unselect');
+},
+editable:true,
+eventLimit:true,
+});
+});
+</script>
+    </head>
+    <body>
+        <div id='calendar'></div>
+    </body>
+</html>

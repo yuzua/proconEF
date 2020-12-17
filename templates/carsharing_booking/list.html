@@ -1,0 +1,57 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_contents %}
+<h1>カーシェア予約一覧</h1>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">予約番号</th>
+      <th scope="col">開始時間</th>
+      <th scope="col">終了時間</th>
+      <th scope="col">車種</th>
+      <th scope="col">住所</th>
+      <th scope="col">料金</th>
+    </tr>
+  </thead>
+{% for item in data %}
+  <tbody>
+    <tr>
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.start_day}}.{{item.start_time}}</td>
+      <td>{{item.end_day}}.{{item.end_time}}</td>
+      <td>{{item.category}}</td>
+      <td>{{item.address}}</td>
+      <td>{{item.charge}}</td>
+    </tr>
+  </tbody>
+{% endfor %}
+</table>
+
+<h1>駐車場予約一覧</h1>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">予約番号</th>
+      <th scope="col">開始時間</th>
+      <th scope="col">終了時間</th>
+      <th scope="col">住所</th>
+      <th scope="col">料金</th>
+    </tr>
+  </thead>
+{% for item in data2 %}
+  <tbody>
+    <tr>
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.start_day}}.{{item.start_time}}</td>
+      <td>{{item.end_day}}.{{item.end_time}}</td>
+      <td>{{item.address}}</td>
+      <td>{{item.charge}}</td>
+    </tr>
+  </tbody>
+{% endfor %}
+</table>
+
+{% endblock %}

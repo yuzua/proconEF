@@ -1,0 +1,78 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+<div class="card">
+    <form action="" method="post" >
+        {% csrf_token %}
+        <h2 class="card-header">{{ message|safe }}</h2>
+        <div class="card-body">
+            {{ form.as_p }}
+        </div>
+        <div class="card-footer">
+            <input class="btn btn-outline-secondary" type="submit" value="駐車場登録画面へ" style="float: right;width: 120pt;height: 30pt;margin: 5pt;">
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        const parentCategoryElement = $('#id_parent_category');
+        const categoryElement = $('#id_category');
+        const categories = {
+            {% for parent in parentcategory_list %}
+                '{{ parent.pk }}': [
+                    {% for category in parent.category_set.all %}
+                        {
+                            'pk': '{{ category.pk }}',
+                            'name': '{{ category.category }}'
+                        },
+                    {% endfor %}
+                ],
+            {% endfor %}
+        };
+
+;;
+        const changeCategory = (select) => {
+            // 子カテゴリの選択欄を空にする。
+            categoryElement.children().remove();
+
+            // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
+            const parentId = parentCategoryElement.val();
+            const categoryList = categories[parentId];
+
+            // 子カテゴリの選択肢を作成・追加。
+            for (const category of categoryList) {
+                const option = $('<option>');
+                option.val(category['pk']);
+                option.text(category['name']);
+                categoryElement.append(option);
+            }
+
+            // 指定があれば、そのカテゴリを選択する
+            if (select !== undefined) {
+                categoryElement.val(select);
+            }
+        };
+
+
+        $('#id_parent_category').on('change', () => {
+            changeCategory();
+        });
+
+
+        // 入力値に問題があって再表示された場合、ページ表示時点で小カテゴリが絞り込まれるようにする
+        if (parentCategoryElement.val()) {
+            const selectedCategory = categoryElement.val();
+            changeCategory(selectedCategory);
+        }
+
+    </script>
+{% endblock %}
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    {% comment %} <script src="js/bootstrap.min.js"></script> {% endcomment %}
+    <title>{% block head_title %}{% endblock %}</title>
+    {% block extra_head %}
+    {% endblock %}
+ </head>
+ <body>
+ {% block body %}
+ 
+ {% if messages %}
+    {% comment %} <div>
+    <!-- <strong>Messages:</strong> -->
+    <ul>
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;">{{ message }}</li>
+    {% endfor %}
+    </ul>
+    </div> {% endcomment %}
+ {% endif %}
+    <!-- 河西 -->
+    <div class="container">
+    <div>
+      {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers" style="padding: 0pt;"> 
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style: none;margin-top: 5pt;">{{ message }}</li>
+      </ul>
+      {% endfor %}
+ </div>
+    <!-- 河西 -->
+    {% block content %}
+    {% endblock %}
+    {% endblock %}
+    {% block extra_body %}
+    {% endblock %}
+    <!-- 河西 -->
+    </div>
+    <!-- 河西 -->
+ </body>
+</html>

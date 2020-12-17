@@ -1,0 +1,66 @@
+.three {
+    width: 100%;
+    margin: 5pt;
+    clear: both;
+}
+
+.card {
+    width: 33%;
+    float: left;
+    height: 250pt;
+    margin: 5pt 0 5pt 0;
+}
+
+.flow {
+    color: #333;
+}
+
+.flow {
+    text-decoration: underline;
+}
+
+#btn1 {
+    width: 80pt;
+    float: right;
+    margin: 0 5pt 0 5pt;
+    clear: none;
+}
+
+.float-left {
+    background: linear-gradient(#fff,#f4f4f4);
+}
+
+/* 質問とお知らせ */
+.news {
+    float: left;
+    padding: 0.5em 1em;
+    margin: 5pt;
+    color: #696969;
+    background: white;
+    border-top: solid 5px #696969;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    width: 49%;
+}
+
+/* お問い合わせ */
+#under {
+    float: left;
+    clear: both;
+    width: 99%;
+    height: 250pt;
+    font-size: 13pt;
+    padding: 70pt 50pt 50pt 15pt;
+    margin: 5pt;
+    color: #696969;
+    background: white;
+    border-top: solid 5px #696969;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+}
+
+.visible, .invisible {
+    opacity: 0.3;
+    transition: opacity 2.0s ease;
+}
+.visible {
+    opacity: 1.0;
+}

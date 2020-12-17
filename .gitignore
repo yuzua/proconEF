@@ -130,3 +130,11 @@ dmypy.json
 
 #settings.py
 /config/settings.py
+
+#migrations
+**/migrations/*
+# __init__.py は必用なファイル
+!*/migrations/__init__.py
+
+# DS_Store
+*.DS_Store
