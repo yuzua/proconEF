@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import CarsharUserModel
+from .models import CarsharUserModel, UsageModel
 from .forms import CarsharUserCreateForm
 from accounts .models import CustomUser
 from parking_req .models import *
@@ -13,6 +13,7 @@ from owners_req .models import HostUserModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
 import json, datetime
+from django.core.mail import EmailMessage
 
 # Create your views here.
 
@@ -31,26 +32,24 @@ def index(request):
 # user_idをSESSIONに格納・オーナー登録済か判定用flagをSESSIONに格納
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
-    print(data.id)
     request.session['user_id'] = data.id
-    print(request.session['user_id'])
     paking_data = ParkingUserModel.objects.filter(user_id=data.id)
     if paking_data.first() is None:
-        print('no data')
         request.session['parking_flag'] = False
     else:
-        print(paking_data.values('user_id', 'id'))
         request.session['parking_flag'] = True
 
     owner_data = HostUserModel.objects.filter(user_id=data.id)
     if owner_data.first() is None:
-        print('no data')
         request.session['owner_flag'] = False
     else:
-        print(owner_data.values('user_id', 'id'))
         request.session['owner_flag'] = True
-
-
+    check_usage_obj = checkUsage(request.session['user_id'])
+    if check_usage_obj == None:
+        print('ok')
+    else:
+        surveyMail(request, check_usage_obj)
+        saveUsage(request, check_usage_obj)
 
     return redirect(to='carsharing_req:index')
 
@@ -226,3 +225,53 @@ def details(request):
         'data2': booking2,
     }
     return render(request, 'carsharing_req/details.html', params)
+
+
+
+
+
+def checkUsage(user_id):
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    t_now = dt_now.strftime('%H:%M')
+    usage = UsageModel.objects.filter(user_id=user_id).values('booking_id')
+    print(usage)
+    if len(usage) == 0:
+        print('first')
+        booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
+    else:
+        usage_list = []
+        for booking_id in usage:
+            usage_list.append(booking_id['booking_id'])
+            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+    print(booking)
+    return booking
+
+
+def surveyMail(request, booking):
+    
+    subject = "アンケート回答のお願い"
+    attachments = "http://127.0.0.1:8000/survey/questionnaire"
+    message = str(request.user) + "様\n \
+        時間内の返却ありがとうございました。\n \
+        またのご利用をお待ちしております。\n\n \
+        開始日: " + booking['start_day'] + "\n \
+        開始時刻: " + booking['start_time'] + "\n \
+        終了日: " + booking['end_day'] + "\n \
+        終了時刻: " + booking['end_time'] + "\n \
+        料金: " + str(booking['charge']) + "円\n\n \
+        アンケートにお答え下さい。\n \
+        URL: " + attachments + "\n"
+    user = request.user  # ログインユーザーを取得する
+    from_email = 'admin@gmail.com'  # 送信者
+    user.email_user(subject, message, from_email)  # メールの送信
+    pass
+
+
+def saveUsage(request, booking):
+    booking_id = BookingModel.objects.get(id=booking['id'])
+    record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
+        booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
+        end_day=booking['end_day'], end_time=booking['end_time'], charge=booking['charge'])
+    record.save()
+    pass

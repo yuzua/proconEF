@@ -7,6 +7,7 @@ import random
 from operator import itemgetter
 import ast
 from django.contrib import messages
+import json
 #from .forms import QuestionnaireAnswerForm
 
 # Create your views here.
@@ -25,9 +26,7 @@ class Survey(TemplateView):
     def get(self, request):
         user_id = int(request.session['user_id'])
         pattern = countCheck(user_id)
-        print(pattern)
         rsl = selectSurvey(pattern, user_id)
-        print(rsl)
         self.params['data'] = rsl
         request.session['data'] = rsl
         return render(request, 'survey/questionnaire.html', self.params)
@@ -51,7 +50,12 @@ class Survey(TemplateView):
         push(user_id, anser_dict, pattern)
         messages.success(request, 'ご回答ありがとうございました')
         del request.session['data']
-        return render(request, 'survey/questionnaire.html', self.params)
+        #jsonファイルを作成 (おすすめ車両AIに投げる用)
+        makeJsonFile(user_id)
+        return redirect(to='carsharing_req:index')
+
+
+
 
 
 
@@ -60,7 +64,7 @@ def selectSurvey(pattern, user_id):
     rsl = []
     #アンケート全項目
     survey_list = [
-        (1, '乗り心地'),
+        (1, '乗り心地がいい'),
         (2, '荷室の使いやすさ'),
         (3, '燃費の良さ'),
         (4, '排気量の少なさ'),
@@ -72,17 +76,15 @@ def selectSurvey(pattern, user_id):
         (10, '乗車しやすい'),
         (11, '安全性能が高い'),
         (12, '走行性能が高い'),
-        (13, '車両サイズが小さい'),
-        (14, 'カスタムしやすい'),
-        (15, 'オプションが充実してる')
+        (13, '車両サイズが小さい')
     ]
     if pattern == 0:
         # survey_listの中からランダムに5つ選ぶ
-        survey_list = random.sample(survey_list, 5)
+        survey_list = random.sample(survey_list, 4)
         for item in survey_list:
             rsl.append(item[1])
     else:
-        # 過去に答えた部分を省く
+        # 過去に答えた部分を省く (previous_answer: 蓄積データ)
         answer = AnswerModel.objects.filter(user_id=user_id).values('answer').order_by("id").last()
         previous_answer = answer['answer']
         previous_answer = ast.literal_eval(previous_answer)
@@ -96,17 +98,17 @@ def selectSurvey(pattern, user_id):
         if pattern == 1:
             for item in survey_list:
                 if item[0] == del_list[index]:
-                    if index < 4:
+                    if index < 3:
                         index += 1
                 else:
                     rsl.append(item[1])
             print(rsl)
-            rsl = random.sample(rsl, 5)
+            rsl = random.sample(rsl, 4)
         # 未回答を抽出
         elif pattern == 2:
             for item in survey_list:
                 if item[0] == del_list[index]:
-                    if index < 9:
+                    if index < 7:
                         index += 1
                 else:
                     rsl.append(item[1])
@@ -117,7 +119,7 @@ def selectSurvey(pattern, user_id):
 #今回のアンケート結果を集計する関数(list, dict, bool), <void : dict>
 def checkAnswer(data, answer, flag):
     for item in data:
-        if item == '乗り心地':
+        if item == '乗り心地がいい':
             if flag == False:
                 answer[1] = False
             else:
@@ -182,16 +184,6 @@ def checkAnswer(data, answer, flag):
                 answer[13] = False
             else:
                 answer[13] = True
-        elif item == 'カスタムしやすい':
-            if flag == False:
-                answer[14] = False
-            else:
-                answer[14] = True
-        elif item == 'オプションが充実してる':
-            if flag == False:
-                answer[15] = False
-            else:
-                answer[15] = True
 
     return answer
 
@@ -204,9 +196,10 @@ def countCheck(user_id):
     #全件回答済
     elif answer_count['count'] == 3:
         pattern = 0
-    #未回答
+    #10件未回答
     elif answer_count['count'] == 1:
         pattern = 1
+    #5件未回答
     elif answer_count['count'] == 2:
         pattern = 2
 
@@ -241,3 +234,58 @@ def push(user_id, anser_dict, pattern):
         record.count = count
         print(record)
         record.save()
+
+
+
+#jsonファイル作成
+def makeJsonFile(user_id):
+    path = '/Django/data/recommend/user_' + str(user_id) + '.json'
+    data_list = list(AnswerModel.objects.filter(user_id=user_id).values("answer").order_by("id"))
+    print(data_list)
+    survey_list = [
+        (0, '項目'),
+        (1, '乗り心地がいい'),
+        (2, '荷室の使いやすさ'),
+        (3, '燃費の良さ'),
+        (4, '排気量の少なさ'),
+        (5, '車内空間が広い'),
+        (6, '静かに走る'),
+        (7, '馬力がある'),
+        (8, '乗車定員が多い'),
+        (9, '小回りが利く'),
+        (10, '乗車しやすい'),
+        (11, '安全性能が高い'),
+        (12, '走行性能が高い'),
+        (13, '車両サイズが小さい')
+    ]
+    json_dict = {}
+    for data_str in data_list:
+        data_dict = ast.literal_eval(data_str['answer'])
+        print(data_dict)
+        for index in range(1, 14):
+            print(index)
+            print(data_dict.get(index))
+            print(survey_list[index][1])
+            if data_dict.get(index) == True:
+                json_dict[survey_list[index][1]] = data_dict.get(index)
+            print(data_dict)
+    # エンコード
+    json_data = json.dumps(json_dict, sort_keys=True, indent=4)
+    # デコード
+    print(json.loads(json_data))
+
+    # ファイルを開く(上書きモード)
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+
+# csv読み込み
+import csv
+def Lord_csv_file():
+    path = '/Django/data/car_csv/used_car_data.csv'
+    with open(path) as f:
+        for row in csv.reader(f):
+            print(f"Row: {row}")
+            print(f"Type of row: {type(row)}")
+            print(f"1st Data: {row[0]}")
+            print(f"Type of 1st Data: {type(row[0])}")

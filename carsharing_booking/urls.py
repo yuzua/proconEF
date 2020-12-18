@@ -13,5 +13,6 @@ urlpatterns = [
     path('booking/<int:num>', views.booking, name='booking'),
     path('checkbooking/', views.checkBooking, name='checkbooking'),
     path('push/', views.push, name='push'),
+    path('reservation/', views.reservation, name='reservation'),
     path('list/', ReservationList.as_view(), name='list'),
 ]
