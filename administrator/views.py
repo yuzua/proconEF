@@ -284,3 +284,9 @@ class SettingAdminInfo(TemplateView):
         print(nowint)
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/admin_main')
+
+
+
+# DB上に保存された全車両のデータをcsv形式で書き出し
+def AllCarDownload(request):
+    pass
