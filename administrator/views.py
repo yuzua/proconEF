@@ -7,6 +7,7 @@ from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm
 import datetime
 import json
+import openpyxl
 from accounts .models import CustomUser
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
@@ -27,6 +28,7 @@ def check_superuser(request):
         return redirect(to='/carsharing_req/')
 
 def index(request):
+    AllCarDownload(request)
     params = {
         'hoge': '',
     }
@@ -287,6 +289,26 @@ class SettingAdminInfo(TemplateView):
 
 
 
-# DB上に保存された全車両のデータをcsv形式で書き出し
+# DB上に追加保存された全車両のデータをxlsxに書き出し
 def AllCarDownload(request):
-    pass
+    data = [
+        ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート","型番","カスタム","乗車人数","タイヤ","使用年数","車検予定日"]
+    ]
+    data_list = list(CarInfoModel.objects.values())
+    for data_dict in data_list:
+        tmp = list(data_dict.values())
+        # datetime型は入力できない為、str型にlist内を全変換：map()
+        result = map((lambda x: str(x)), tmp)
+        data.append(list(result))
+
+    # ブックの読み込みとシート選択
+    wb = openpyxl.Workbook()
+    sheet = wb.worksheets[0]
+
+    # 行ごとに取り出し
+    for row in data:
+        sheet.append(row)
+
+    # xlsx型式で保存
+    file_name = "/Django/data/car_xlsx/demo.xlsx"
+    wb.save(file_name)
