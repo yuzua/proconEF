@@ -61,12 +61,12 @@ for(key in data){
     // ----------------------------
 
     // ID
-    var newElementId = document.createElement("td"); // td要素作成
-    var newContent = document.createTextNode(items.id); // テキストノードを作成
-    newElementId.appendChild(newContent); // td要素にテキストノードを追加
-    newElementId.setAttribute("id","child-td1"); // td要素にidを設定
-    newElementId.setAttribute("scope","row");
-    // ID
+    // var newElementId = document.createElement("td"); // td要素作成
+    // var newContent = document.createTextNode(items.id); // テキストノードを作成
+    // newElementId.appendChild(newContent); // td要素にテキストノードを追加
+    // newElementId.setAttribute("id","child-td1"); // td要素にidを設定
+    // newElementId.setAttribute("scope","row");
+    // 住所
     var newElementAddress = document.createElement("td"); // td要素作成
     var newContent = document.createTextNode(items.address); // テキストノードを作成
     newElementAddress.appendChild(newContent); // td要素にテキストノードを追加
@@ -112,9 +112,9 @@ for(key in data){
     parentDiv.insertBefore(newElementUsedYears, parentDiv.firstChild);
     parentDiv.insertBefore(newElementPeople, parentDiv.firstChild);
     parentDiv.insertBefore(newElementModelId, parentDiv.firstChild);
-    parentDiv.insertBefore(newElementCategory, parentDiv.firstChild);
     parentDiv.insertBefore(newElementAddress, parentDiv.firstChild);
-    parentDiv.insertBefore(newElementId, parentDiv.firstChild);
+    parentDiv.insertBefore(newElementCategory, parentDiv.firstChild);
+    // parentDiv.insertBefore(newElementId, parentDiv.firstChild);
 
     var newElementLink = document.createElement("a"); // td要素作成
     var newContent = document.createTextNode('予約する'); // テキストノードを作成
