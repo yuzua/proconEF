@@ -278,3 +278,14 @@ def makeJsonFile(user_id):
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
+
+# csv読み込み
+import csv
+def Lord_csv_file():
+    path = '/Django/data/car_csv/used_car_data.csv'
+    with open(path) as f:
+        for row in csv.reader(f):
+            print(f"Row: {row}")
+            print(f"Type of row: {type(row)}")
+            print(f"1st Data: {row[0]}")
+            print(f"Type of 1st Data: {type(row[0])}")
