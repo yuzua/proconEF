@@ -6,6 +6,7 @@ from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
+from .models import MediaModel
 from accounts .models import CustomUser
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
@@ -295,7 +296,6 @@ class UploadData(TemplateView):
     def __init__(self):
         self.params = {
             'title':'UploadData',
-            'data': 'none',
             'form': ''
         }
     def get(self, request):
@@ -303,24 +303,35 @@ class UploadData(TemplateView):
         self.params['form'] = form
         return render(request, 'administrator/upload_data.html', self.params)
     def post(self, request):
-        file_name = str(request.FILES['file'])
-        result = re.match(r'.*\.json$', file_name)
+        file_name = str(request.FILES['attach'])
+        result_json = re.match(r'.*\.json$', file_name)
+        result_xlsx = re.match(r'.*\.xlsx$', file_name)
         # .jsonの場合
-        if result:
+        if result_json:
             json_data = json.loads(request.POST['output'])
-            self.params['data'] = json_data
             if file_name[0] == 'p':
                 AllParentCategoryUpload(json_data)
+                messages.success(self.request, 'メーカー情報をDBへ格納しました。')
             elif file_name[0] == 'c':
                 AllCategoryUpload(json_data)
+                messages.success(self.request, '車種情報をDBへ格納しました。')
         # .xlsxの場合
+        elif result_xlsx:
+            #ファイルの場合はPOSTとFILEの両方を渡す
+            #instanseを設定することでリクエストではなく、サーバー側で自動設定できる値を決められる
+            mediaObj = MediaModel()
+            administrator:UploadFileForm = UploadFileForm(request.POST, request.FILES, instance=mediaObj)
+            administrator.errors
+            # 値が正しいか確認(バリデーション)
+            if administrator.is_valid():
+                # 値をDBへの登録
+                administrator.save()
+            xlsx_all_list = ImportXlsx(file_name)
+            AllCarUpload(xlsx_all_list)
+            messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
-            import codecs
-            xlsx = request.POST['output'].encode('cp932', "ignore")
-            print('error')
-            self.params['data'] = xlsx.decode('cp932')
-        return render(request, 'administrator/upload_data.html', self.params)
-
+            messages.error(self.request, 'error')
+        return redirect(to='administrator:upload_data')
 
 
 
@@ -381,8 +392,6 @@ def AllCategoryDownload(dt_now):
 def AllParentCategoryUpload(json_data):
     print(type(json_data))
     for data in json_data:
-        # print(list(data.keys()))
-        # print(list(data.values()))
         record = ParentCategory.objects.get(id=data['id'])
         record.parent_category = data['parent_category']
         record.save()
@@ -390,11 +399,58 @@ def AllParentCategoryUpload(json_data):
 def AllCategoryUpload(json_data):
     print(json_data)
     for data in json_data:
-        # print(list(data.keys()))
-        # print(list(data.values()))
         record = Category.objects.get(id=data['id'])
         record.parent_category_id = data['parent_category_id']
         record.category = data['category']
-        print(record)
         record.save()
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
+# ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+def ImportXlsx(file_name):
+    # 今取り込んだxlsxファイルのpathを取得
+    media = MediaModel.objects.values('attach')
+    file_name = file_name.replace(' ', '_')
+    file_name = file_name.replace(':', '')
+    for path in media:
+        if path['attach'][5:] == file_name:
+            media_path = path['attach']
+    
+    # 取得したpathからファイルを開く
+    wb = openpyxl.load_workbook("/Django/media/" + media_path)
+    # シートの名前を取得
+    sheet_name = wb.sheetnames[0]
+    sheet = wb[sheet_name]
+    # シートの行数を取得
+    m_row = sheet.max_row
+    # シートの項目数を取得
+    m_column = sheet.max_column
+    # 全件取り出し
+    l_2d = get_list_2d(sheet, 1, m_row, 1, m_column)
+    print(l_2d)
+    return l_2d
+
+def get_list_2d(sheet, start_row, end_row, start_col, end_col):
+    return get_value_list(sheet.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col))
+
+def get_value_list(t_2d):
+    return([[cell.value for cell in row] for row in t_2d])
+# ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
+def AllCarUpload(all_list):
+    print(all_list[0])
+    # 先頭のindexを削除
+    all_list.pop(0)
+    for car_list in all_list:
+        record = CarInfoModel.objects.get(id=car_list[0])
+        record.user_id = int(car_list[1])
+        record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+        record.parent_category_id = int(car_list[3])
+        record.category_id = int(car_list[4])
+        record.license_plate = car_list[5]
+        record.model_id = car_list[6]
+        record.custom = car_list[7]
+        record.people = int(car_list[8])
+        record.tire = car_list[9]
+        record.used_years = int(car_list[10])
+        record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
+        record.save()
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------

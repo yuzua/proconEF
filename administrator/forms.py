@@ -1,5 +1,6 @@
 from django import forms
 from parking_req .models import ParkingUserModel
+from .models import MediaModel
 
 class AdminParkingForm(forms.ModelForm):
 
@@ -25,5 +26,8 @@ class AdminParkingForm(forms.ModelForm):
         }
 
 
-class UploadFileForm(forms.Form):
-    file  = forms.FileField()
+class UploadFileForm(forms.ModelForm):
+
+    class Meta:
+        model = MediaModel
+        fields = ['attach']

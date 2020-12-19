@@ -1,7 +1,7 @@
 //Form要素を取得する
 var form = document.forms.dataform;
     
-form.file.addEventListener( 'change', function(e) {
+form.attach.addEventListener( 'change', function(e) {
 
     var result = e.target.files[0];
  
