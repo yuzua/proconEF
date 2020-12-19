@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.staticfiles.urls import static
+
+from . import settings
 
 urlpatterns = [
     path('', include('administrator.urls')),
@@ -29,3 +32,5 @@ urlpatterns = [
     path('parking_booking/', include('parking_booking.urls')),
     path('survey/', include('survey.urls')),
 ]
+# メディア配信を可能にする設定【開発用】
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
