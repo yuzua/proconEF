@@ -1,18 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
-from .forms import AdminParkingForm
-import datetime
-import json
-import openpyxl
+from .forms import AdminParkingForm, UploadFileForm
 from accounts .models import CustomUser
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
 from django.views import generic
+import datetime
+import json
+import openpyxl
+import re
+
 
 # Create your views here.
 def check_superuser(request):
@@ -28,7 +31,8 @@ def check_superuser(request):
         return redirect(to='/carsharing_req/')
 
 def index(request):
-    AllCarDownload(request)
+    # データのダウンロード
+    # AllCarDownload()
     params = {
         'hoge': '',
     }
@@ -287,10 +291,42 @@ class SettingAdminInfo(TemplateView):
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/admin_main')
 
+class UploadData(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'UploadData',
+            'data': 'none',
+            'form': ''
+        }
+    def get(self, request):
+        form = UploadFileForm()
+        self.params['form'] = form
+        return render(request, 'administrator/upload_data.html', self.params)
+    def post(self, request):
+        file_name = request.FILES['file']
+        json_data = json.loads(request.POST['output'])
+        self.params['data'] = json_data
+        if str(file_name)[0] == 'p':
+            AllParentCategoryUpload(json_data)
+        elif str(file_name)[0] == 'c':
+            AllCategoryUpload(json_data)
+        else:
+            print('error')
+            self.params['data'] = 'error'
+        return render(request, 'administrator/upload_data.html', self.params)
 
 
-# DB上に追加保存された全車両のデータをxlsxに書き出し
-def AllCarDownload(request):
+
+
+# -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
+def AllCarDownload():
+    dt_now = str(datetime.datetime.now())
+
+    # メーカー情報(親カテゴリー)をjsonでダウンロード
+    AllParentCategoryDownload(dt_now)
+    # 車種情報(子カテゴリー)をjsonでダウンロード
+    AllCategoryDownload(dt_now)
+
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート","型番","カスタム","乗車人数","タイヤ","使用年数","車検予定日"]
     ]
@@ -305,10 +341,49 @@ def AllCarDownload(request):
     wb = openpyxl.Workbook()
     sheet = wb.worksheets[0]
 
-    # 行ごとに取り出し
+    # 行ごとに取り出してからExcelへ挿入
     for row in data:
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "/Django/data/car_xlsx/demo.xlsx"
+    file_name = "/Django/data/car_data/" + dt_now + ".xlsx"
     wb.save(file_name)
+
+def AllParentCategoryDownload(dt_now):
+    p_c = list(ParentCategory.objects.values())
+    json_data = json.dumps(p_c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/car_data/pc_" + dt_now + ".json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+
+def AllCategoryDownload(dt_now):
+    c = list(Category.objects.values())
+    json_data = json.dumps(c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/car_data/c_" + dt_now + ".json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+# -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
+
+
+# --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
+def AllParentCategoryUpload(json_data):
+    print(type(json_data))
+    for data in json_data:
+        print(data['id'])
+        print(list(data.keys()))
+        print(list(data.values()))
+        record = ParentCategory.objects.get(id=data['id'])
+        print(record)
+        record.parent_category = data['parent_category']
+        print(record)
+        record.save()
+
+def AllCategoryUpload(json_data):
+    print(json_data)
+# --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 

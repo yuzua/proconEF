@@ -1,0 +1,42 @@
+[
+    {
+        "category": "\u30bb\u30ec\u30ca",
+        "id": 1,
+        "parent_category_id": 1
+    },
+    {
+        "category": "\u30de\u30fc\u30c1",
+        "id": 2,
+        "parent_category_id": 1
+    },
+    {
+        "category": "\u30d7\u30ea\u30a6\u30b9",
+        "id": 3,
+        "parent_category_id": 2
+    },
+    {
+        "category": "\u30b7\u30a8\u30f3\u30bf",
+        "id": 4,
+        "parent_category_id": 2
+    },
+    {
+        "category": "\u30cf\u30b9\u30e9\u30fc",
+        "id": 6,
+        "parent_category_id": 3
+    },
+    {
+        "category": "\u30ef\u30b4\u30f3R",
+        "id": 7,
+        "parent_category_id": 3
+    },
+    {
+        "category": "\u30ce\u30fc\u30c8",
+        "id": 8,
+        "parent_category_id": 1
+    },
+    {
+        "category": "\u30ea\u30fc\u30d5",
+        "id": 9,
+        "parent_category_id": 1
+    }
+]

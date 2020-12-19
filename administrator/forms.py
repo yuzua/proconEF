@@ -24,3 +24,6 @@ class AdminParkingForm(forms.ModelForm):
             'height': '高さ(m)',
         }
 
+
+class UploadFileForm(forms.Form):
+    file  = forms.FileField()
