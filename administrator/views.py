@@ -303,16 +303,22 @@ class UploadData(TemplateView):
         self.params['form'] = form
         return render(request, 'administrator/upload_data.html', self.params)
     def post(self, request):
-        file_name = request.FILES['file']
-        json_data = json.loads(request.POST['output'])
-        self.params['data'] = json_data
-        if str(file_name)[0] == 'p':
-            AllParentCategoryUpload(json_data)
-        elif str(file_name)[0] == 'c':
-            AllCategoryUpload(json_data)
+        file_name = str(request.FILES['file'])
+        result = re.match(r'.*\.json$', file_name)
+        # .jsonの場合
+        if result:
+            json_data = json.loads(request.POST['output'])
+            self.params['data'] = json_data
+            if file_name[0] == 'p':
+                AllParentCategoryUpload(json_data)
+            elif file_name[0] == 'c':
+                AllCategoryUpload(json_data)
+        # .xlsxの場合
         else:
+            import codecs
+            xlsx = request.POST['output'].encode('cp932', "ignore")
             print('error')
-            self.params['data'] = 'error'
+            self.params['data'] = xlsx.decode('cp932')
         return render(request, 'administrator/upload_data.html', self.params)
 
 
