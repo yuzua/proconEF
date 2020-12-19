@@ -375,15 +375,20 @@ def AllCategoryDownload(dt_now):
 def AllParentCategoryUpload(json_data):
     print(type(json_data))
     for data in json_data:
-        print(data['id'])
-        print(list(data.keys()))
-        print(list(data.values()))
+        # print(list(data.keys()))
+        # print(list(data.values()))
         record = ParentCategory.objects.get(id=data['id'])
-        print(record)
         record.parent_category = data['parent_category']
-        print(record)
         record.save()
 
 def AllCategoryUpload(json_data):
     print(json_data)
+    for data in json_data:
+        # print(list(data.keys()))
+        # print(list(data.values()))
+        record = Category.objects.get(id=data['id'])
+        record.parent_category_id = data['parent_category_id']
+        record.category = data['category']
+        print(record)
+        record.save()
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
