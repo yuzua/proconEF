@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ParkingAdminCreate, CreateCarAdminView, SettingAdminInfo, UploadData
+from .views import ParkingAdminCreate, CreateCarAdminView, SettingAdminInfo, DownloadData, UploadData
 
 app_name = 'administrator'
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path('delete/<int:num>', views.delete, name='delete'),
     path('createCar', CreateCarAdminView.as_view(), name='createCar'),
     path('settinginfo', SettingAdminInfo.as_view(), name='settinginfo'),
+    path('download_data', DownloadData.as_view(), name='download_data'),
     path('upload_data', UploadData.as_view(), name='upload_data'),
 ]

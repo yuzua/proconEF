@@ -1,0 +1,52 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+    <a href="/data/car_data/2020-12-19 13:40:07.499855.xlsx" download onclick="javascript: downloadFile('/data/car_data/2020-12-19 13:40:07.499855.xlsx', '2020-12-19 13:40:07.499855.xlsx'); return false;">2020-12-19 13:40:07.499855.xlsx</a>
+        <hr>
+    <a href="/data/car_data/c_2020-12-19 13:40:07.499855.json" download onclick="javascript: downloadFile('/data/car_data/c_2020-12-19 13:40:07.499855.json', 'c_2020-12-19 13:40:07.499855.json'); return false;">c_2020-12-19 13:40:07.499855.json</a>
+        <hr>
+    <a href="/data/car_data/pc_2020-12-19 13:40:07.499855.json" download onclick="javascript: downloadFile('/data/car_data/pc_2020-12-19 13:40:07.499855.json', 'pc_2020-12-19 13:40:07.499855.json'); return false;">pc_2020-12-19 13:40:07.499855.json</a>
+        <hr>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+function downloadFile(url, filename) {
+  "use strict";
+
+  // XMLHttpRequestオブジェクトを作成する
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.responseType = "blob"; // Blobオブジェクトとしてダウンロードする
+  xhr.onload = function (oEvent) {
+    // ダウンロード完了後の処理を定義する
+    var blob = xhr.response;
+    if (window.navigator.msSaveBlob) {
+      // IEとEdge
+      window.navigator.msSaveBlob(blob, filename);
+    }
+    else {
+      // それ以外のブラウザ
+      // Blobオブジェクトを指すURLオブジェクトを作る
+      var objectURL = window.URL.createObjectURL(blob);
+      // リンク（<a>要素）を生成し、JavaScriptからクリックする
+      var link = document.createElement("a");
+      document.body.appendChild(link);
+      link.href = objectURL;
+      link.download = filename;
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+  // XMLHttpRequestオブジェクトの通信を開始する
+  xhr.send();
+}    
+</script>
+{% endblock %}

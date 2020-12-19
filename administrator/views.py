@@ -32,8 +32,6 @@ def check_superuser(request):
         return redirect(to='/carsharing_req/')
 
 def index(request):
-    # データのダウンロード
-    # AllCarDownload()
     params = {
         'hoge': '',
     }
@@ -292,6 +290,18 @@ class SettingAdminInfo(TemplateView):
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/admin_main')
 
+# データのダウンロード
+class DownloadData(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'DownloadData'
+        }
+    def get(self, request):
+
+        return render(request, 'administrator/download_data.html', self.params)
+    # AllCarDownload()
+
+# データのアップロード
 class UploadData(TemplateView):
     def __init__(self):
         self.params = {
@@ -332,6 +342,7 @@ class UploadData(TemplateView):
         else:
             messages.error(self.request, 'error')
         return redirect(to='administrator:upload_data')
+
 
 
 

@@ -9,3 +9,5 @@ class MediaModel(models.Model):
             upload_to='xlsx/',
             validators=[FileExtensionValidator(['xlsx', ])],
         )
+    def __str__(self):
+        return self.attach.url
