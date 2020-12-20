@@ -139,8 +139,11 @@ class CreateView(TemplateView):
         email = request.user.email
         name = request.POST['name']
         gender = 'gender' in request.POST
-        age = request.POST['age']
-        birthday = request.POST['birthday']
+        birthday_str = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
+        birthday = birthdaySet(birthday_str)
+        # print(birthday)
+        age = calcAge(birthday_str)
+        # print(age)
         zip01 = request.POST['zip01']
         pref01 = request.POST['pref01']
         addr01 = request.POST['addr01']
@@ -157,7 +160,30 @@ class CreateView(TemplateView):
             print('data　exist')
             return redirect(to='carsharing_req:index')
         return render(request, 'carsharing_req/create.html', self.params)
+# 生年月日
+def birthdayCheck(y, m, d):
+    if len(m) == 1:
+        m = '0' + m
+    if len(d) == 1:
+        d = '0' + d
+    birthday = y + m + d
+    return birthday
 
+# 生年月日設定(型変換)
+def birthdaySet(ymd):
+    y = ymd[0:4]
+    m = ymd[4:6]
+    d = ymd[6:8]
+    tstr = y + '-' + m + '-' + d
+    tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
+    return tdatetime
+
+# 年齢計算関数
+def calcAge(birthdayStr):
+  if not (birthdayStr.isdigit() and len(birthdayStr)==8):
+    return -1
+  dStr = datetime.datetime.now().strftime("%Y%m%d")
+  return (int(dStr)-int(birthdayStr))//10000
 
 
 

@@ -12,6 +12,20 @@
     <form action="{% url 'carsharing_req:create' %}" method="post">
         {% csrf_token %}
         {{ form.as_table }}
+        <tr>
+            <th>
+                <label for="id_birthday">生年月日</label>
+            </th>
+            <td>
+                年<input type="number" name="birthday_year" class="form-control" required />
+            </td>
+            <td>
+                月<input type="number" name="birthday_month" class="form-control" required />
+            </td>
+            <td>
+                日<input type="number" name="birthday_day" class="form-control" required />
+            </td>
+        </tr>
         <tr><th>
             <input class="btn btn-primary my-2" type="submit" value="click">
         </th></tr>
