@@ -1,3 +1,4 @@
+{% comment %} {% load static %} {% endcomment %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9,15 +10,15 @@
 <body class="container">
     <h1 class="display-4 text-primary">{{ title }}</h1>
     <table class="table">
-    <form action="{% url 'carsharing_req:create' %}" method="post">
+    <form action="{% url 'carsharing_req:create' %}" method="post" enctype="multipart/form-data" id="form">
         {% csrf_token %}
-        {{ form.as_table }}
         <tr>
             <th>
-                <label for="id_birthday">生年月日</label>
+                <label for="id_birthday">生年月日:</label>
             </th>
             <td>
-                年<input type="number" name="birthday_year" class="form-control" required />
+                年<input type="number" name="birthday_year" id="id_birthday_year" max=2000 class="form-control" required />
+                <span id="birthday-year-error-message" style="display: none;">ERROR</span>
             </td>
             <td>
                 月<input type="number" name="birthday_month" class="form-control" required />
@@ -26,10 +27,25 @@
                 日<input type="number" name="birthday_day" class="form-control" required />
             </td>
         </tr>
+        {{ form.as_table }}
+        <tr>
+            <th>
+                <label for="id_img">免許証:</label>
+            </th>
+            <td>
+                <input type="file" name="img" id="id_img" class="form-control-file" required />
+            </td>
+        </tr>
         <tr><th>
-            <input class="btn btn-primary my-2" type="submit" value="click">
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="width: 80pt;height: 30pt;margin: 5pt;">
         </th></tr>
     </form>
     </table>
+    <p>{{min_year}}</p>
+    <p>{{max_year}}</p>
+
+
+{% comment %} <script type="text/javascript" src='{% static "carsharing_req/js/validation.js" %}'></script> {% endcomment %}
+
 </body>
 </html>

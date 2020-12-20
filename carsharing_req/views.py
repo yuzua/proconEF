@@ -132,6 +132,8 @@ class CreateView(TemplateView):
         self.params = {
         'title': 'Member Create',
         'form': CarsharUserCreateForm(),
+        'min_year': '',
+        'max_year': ''
     }
 
     def post(self, request):
@@ -153,6 +155,10 @@ class CreateView(TemplateView):
         return redirect(to='carsharing_req:first')
         
     def get(self, request):
+        dt_now = datetime.datetime.now()
+        min_year, max_year = LimitationAge(dt_now)
+        self.params['min_year'] = min_year
+        self.params['max_year'] = max_year
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
         if querySet.first() is None:
             print('no data')
@@ -160,6 +166,14 @@ class CreateView(TemplateView):
             print('data　exist')
             return redirect(to='carsharing_req:index')
         return render(request, 'carsharing_req/create.html', self.params)
+
+# -------------------------------------------------------------------------------------------------------
+# 年齢制限
+def LimitationAge(dt_now):
+    min_year = dt_now.year - 20
+    max_year = dt_now.year - 80
+    return min_year, max_year
+
 # 生年月日
 def birthdayCheck(y, m, d):
     if len(m) == 1:
@@ -184,7 +198,7 @@ def calcAge(birthdayStr):
     return -1
   dStr = datetime.datetime.now().strftime("%Y%m%d")
   return (int(dStr)-int(birthdayStr))//10000
-
+# -------------------------------------------------------------------------------------------------------
 
 
 class CalendarView(TemplateView):
