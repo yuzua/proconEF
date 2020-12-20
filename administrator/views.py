@@ -294,12 +294,16 @@ class SettingAdminInfo(TemplateView):
 class DownloadData(TemplateView):
     def __init__(self):
         self.params = {
-            'title':'DownloadData'
+            'title':'DownloadData',
+            'path_list': ''
         }
     def get(self, request):
-
+        path_list = AllCarDownload()
+        path_list[0] = path_list[0][8:]
+        path_list[1] = path_list[1][8:]
+        path_list[2] = path_list[2][8:]
+        self.params['path_list'] = path_list
         return render(request, 'administrator/download_data.html', self.params)
-    # AllCarDownload()
 
 # データのアップロード
 class UploadData(TemplateView):
@@ -349,11 +353,14 @@ class UploadData(TemplateView):
 # -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
 def AllCarDownload():
     dt_now = str(datetime.datetime.now())
+    path_list = []
 
     # メーカー情報(親カテゴリー)をjsonでダウンロード
-    AllParentCategoryDownload(dt_now)
+    pc_path = AllParentCategoryDownload(dt_now)
+    path_list.append(pc_path)
     # 車種情報(子カテゴリー)をjsonでダウンロード
-    AllCategoryDownload(dt_now)
+    c_path = AllCategoryDownload(dt_now)
+    path_list.append(c_path)
 
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート","型番","カスタム","乗車人数","タイヤ","使用年数","車検予定日"]
@@ -376,6 +383,8 @@ def AllCarDownload():
     # xlsx型式で保存
     file_name = "/Django/data/car_data/" + dt_now + ".xlsx"
     wb.save(file_name)
+    path_list.append(file_name)
+    return path_list
 
 def AllParentCategoryDownload(dt_now):
     p_c = list(ParentCategory.objects.values())
@@ -386,6 +395,7 @@ def AllParentCategoryDownload(dt_now):
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
+    return path
 
 def AllCategoryDownload(dt_now):
     c = list(Category.objects.values())
@@ -396,6 +406,7 @@ def AllCategoryDownload(dt_now):
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
+    return path
 # -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
 
 

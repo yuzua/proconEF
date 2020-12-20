@@ -8,12 +8,10 @@
 
 {% block main_contents %}
 <h1>{{ title }}</h1>
-    <a href="/data/car_data/2020-12-19 13:40:07.499855.xlsx" download onclick="javascript: downloadFile('/data/car_data/2020-12-19 13:40:07.499855.xlsx', '2020-12-19 13:40:07.499855.xlsx'); return false;">2020-12-19 13:40:07.499855.xlsx</a>
+{% for path in path_list %}
+    <a href="{{path}}" download onclick="javascript: downloadFile('{{path}}', '{{path}}'); return false;">{{path}}</a>
         <hr>
-    <a href="/data/car_data/c_2020-12-19 13:40:07.499855.json" download onclick="javascript: downloadFile('/data/car_data/c_2020-12-19 13:40:07.499855.json', 'c_2020-12-19 13:40:07.499855.json'); return false;">c_2020-12-19 13:40:07.499855.json</a>
-        <hr>
-    <a href="/data/car_data/pc_2020-12-19 13:40:07.499855.json" download onclick="javascript: downloadFile('/data/car_data/pc_2020-12-19 13:40:07.499855.json', 'pc_2020-12-19 13:40:07.499855.json'); return false;">pc_2020-12-19 13:40:07.499855.json</a>
-        <hr>
+{% endfor %}
 {% endblock %}
 
 {% block extrajs %}
