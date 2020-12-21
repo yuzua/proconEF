@@ -413,18 +413,32 @@ def AllCategoryDownload(dt_now):
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
 def AllParentCategoryUpload(json_data):
     print(type(json_data))
-    for data in json_data:
-        record = ParentCategory.objects.get(id=data['id'])
-        record.parent_category = data['parent_category']
-        record.save()
+    flag = len(list(ParentCategory.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            record = ParentCategory.objects.get(id=data['id'])
+            record.parent_category = data['parent_category']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = ParentCategory(id=data['id'], parent_category=data['parent_category'])
+            record.save()
 
 def AllCategoryUpload(json_data):
     print(json_data)
-    for data in json_data:
-        record = Category.objects.get(id=data['id'])
-        record.parent_category_id = data['parent_category_id']
-        record.category = data['category']
-        record.save()
+    flag = len(list(Category.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            record = Category.objects.get(id=data['id'])
+            record.parent_category_id = data['parent_category_id']
+            record.category = data['category']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = Category(id=data['id'], parent_category_id=data['parent_category_id'], category=data['category'])
+            record.save()
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
 def ImportXlsx(file_name):
@@ -461,18 +475,35 @@ def AllCarUpload(all_list):
     print(all_list[0])
     # 先頭のindexを削除
     all_list.pop(0)
-    for car_list in all_list:
-        record = CarInfoModel.objects.get(id=car_list[0])
-        record.user_id = int(car_list[1])
-        record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
-        record.parent_category_id = int(car_list[3])
-        record.category_id = int(car_list[4])
-        record.license_plate = car_list[5]
-        record.model_id = car_list[6]
-        record.custom = car_list[7]
-        record.people = int(car_list[8])
-        record.tire = car_list[9]
-        record.used_years = int(car_list[10])
-        record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
-        record.save()
+    flag = len(list(CarInfoModel.objects.all()))
+    if flag != 0:
+        for car_list in all_list:
+            record = CarInfoModel.objects.get(id=car_list[0])
+            record.user_id = int(car_list[1])
+            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            record.parent_category_id = int(car_list[3])
+            record.category_id = int(car_list[4])
+            record.license_plate = car_list[5]
+            record.model_id = car_list[6]
+            record.custom = car_list[7]
+            record.people = int(car_list[8])
+            record.tire = car_list[9]
+            record.used_years = int(car_list[10])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
+            record.save()
+    else:
+        for car_list in all_list:
+            record = CarInfoModel()
+            record.user_id = int(car_list[1])
+            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            record.parent_category_id = int(car_list[3])
+            record.category_id = int(car_list[4])
+            record.license_plate = car_list[5]
+            record.model_id = car_list[6]
+            record.custom = car_list[7]
+            record.people = int(car_list[8])
+            record.tire = car_list[9]
+            record.used_years = int(car_list[10])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
+            record.save()
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
