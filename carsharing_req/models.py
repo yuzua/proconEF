@@ -36,7 +36,8 @@ class CarsharUserModel(models.Model):
     credit_card_num = models.CharField(max_length=300)
     credit_card_num_check = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
     valid_thru = models.CharField(max_length=5)
-    security_code = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
+    security_code = models.CharField(max_length=300)
+    # security_code = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
     plan = models.CharField(max_length=30)
 
     

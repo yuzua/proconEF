@@ -135,7 +135,6 @@ class CreateView(TemplateView):
     }
 
     def post(self, request):
-
         email = request.user.email
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -156,12 +155,10 @@ class CreateView(TemplateView):
         last_en = request.POST['last_en']
         SECRET_KEY = request.POST['credit_card_num']
         credit_card_num = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
-        print(credit_card_num)
         credit_card_num_check = request.POST['credit_card_num'][13:]
         valid_thru = request.POST['valid_thru']
         SECRET_KEY = request.POST['security_code']
         security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
-        print(security_code)
         plan = request.POST['plan']
         img = request.FILES['img']
         record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
@@ -169,7 +166,7 @@ class CreateView(TemplateView):
             credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
             credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
             security_code=security_code, plan=plan, img=img)
-        # record.save()
+        record.save()
         return redirect(to='carsharing_req:first')
         
     def get(self, request):

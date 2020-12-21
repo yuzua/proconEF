@@ -17,6 +17,13 @@ class CarsharUserCreateForm(forms.ModelForm):
         ('JCB', 'JCB')
     ]
     credit_card_company = forms.ChoiceField(choices=CREDIT_CARD_COMPANY_LIST, label='カード会社', widget=forms.RadioSelect)
+    PLAN_LIST = [
+        ('a', '定額500円コース'), 
+        ('b', '定額1000円コース'),
+        ('c', '定額2000円コース'),
+        ('d', '夜間お得コース')
+    ]
+    plan = forms.ChoiceField(choices=PLAN_LIST, label='利用プラン', widget=forms.RadioSelect)
 
 
     class Meta:
@@ -39,9 +46,9 @@ class CarsharUserCreateForm(forms.ModelForm):
             'credit_card_company': forms.TextInput(attrs={'class': 'form-control'}),
             'first_en': forms.TextInput(attrs={'class': 'form-control'}),
             'last_en': forms.TextInput(attrs={'class': 'form-control'}),
-            'credit_card_num': forms.TextInput(attrs={'class': 'form-control'}),
+            'credit_card_num': forms.NumberInput(attrs={'class': 'form-control'}),
             'valid_thru': forms.TextInput(attrs={'class': 'form-control'}),
-            'security_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'security_code': forms.NumberInput(attrs={'class': 'form-control'}),
             'plan': forms.TextInput(attrs={'class': 'form-control'})
         }
         labels={
