@@ -14,6 +14,39 @@
         {% csrf_token %}
         <tr>
             <th>
+                <label for="id_name">お名前(漢字):</label>
+            </th>
+            <td>
+                氏<input type="text" name="first_name" class="form-control" required />
+            </td>
+            <td>
+                名<input type="text" name="last_name" class="form-control" required />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="id_name">お名前(ひらがな):</label>
+            </th>
+            <td>
+                氏<input type="text" name="first_ja" class="form-control" pattern="[\u3041-\u3096]*" required />
+            </td>
+            <td>
+                名<input type="text" name="last_ja" class="form-control" pattern="[\u3041-\u3096]*" required />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="id_gender">性別:</label>
+            </th>
+            <td>
+                <select name="gender" id="id_gender" class="form-control form-control-lg">
+                    <option value="True">男性</option>
+                    <option value="False">女性</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
                 <label for="id_birthday">生年月日:</label>
             </th>
             <td>
@@ -27,6 +60,19 @@
                 日<input type="number" name="birthday_day" class="form-control" required />
             </td>
         </tr>
+        {{ form.zip01 }}
+        <tr>
+            <th>
+                <label for="id_credit_card_company">Credit card company:</label>
+            </th>
+            <td>
+                <select name="credit_card_company" id="id_credit_card_company" class="form-control form-control-lg">
+                    <option value="VISA">VISA</option>
+                    <option value="MasterCard">MasterCard</option>
+                    <option value="JCB">JCB</option>
+                </select>
+            </td>
+        </tr>
         {{ form.as_table }}
         <tr>
             <th>
@@ -36,9 +82,9 @@
                 <input type="file" name="img" id="id_img" class="form-control-file" required />
             </td>
         </tr>
-        <tr><th>
-            <input class="btn btn-outline-secondary" type="submit" value="確定" style="width: 80pt;height: 30pt;margin: 5pt;">
-        </th></tr>
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
     </form>
     </table>
     <p>{{min_year}}</p>

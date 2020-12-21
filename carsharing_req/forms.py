@@ -6,23 +6,25 @@ class CarsharUserCreateForm(forms.ModelForm):
     # def __init__(self, *args, **kwd):
     #     super(CarsharUserCreateForm, self).__init__(*args, **kwd)
     #     self.fields["gender"].required = False
-    gender_list = [
+    GENDER_LIST = [
         (True, '男性'), 
         (False, '女性')
     ]
-    gender = forms.ChoiceField(choices=gender_list)
+    gender = forms.ChoiceField(choices=GENDER_LIST)
     credit_card_company_list = [
         ('VISA', 'VISA'), 
         ('MasterCard', 'MasterCard'),
-        ('JCB', 'JCB'),
+        ('JCB', 'JCB')
     ]
     credit_card_company = forms.ChoiceField(choices=credit_card_company_list)
 
 
     class Meta:
         model = CarsharUserModel
-        # fields = ['id', 'name', 'gender', 'age', 'birthday', 'zip01', 'pref01', 'addr01', 'addr02']
-        fields = ['id', 'first_name', 'last_name', 'first_ja', 'last_ja', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
+        # fields = ['id', 'first_name', 'last_name', 'first_ja', 'last_ja', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
+        #     'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
+        #     'plan']
+        fields = ['id', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
             'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
             'plan']
         widgets = {
@@ -34,6 +36,13 @@ class CarsharUserCreateForm(forms.ModelForm):
             'addr01': forms.TextInput(attrs={'class': 'form-control'}),
             'addr02': forms.TextInput(attrs={'class': 'form-control'}),
             'tel': forms.TextInput(attrs={'class': 'form-control'}),
+            'credit_card_company': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_en': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_en': forms.TextInput(attrs={'class': 'form-control'}),
+            'credit_card_num': forms.TextInput(attrs={'class': 'form-control'}),
+            'valid_thru': forms.TextInput(attrs={'class': 'form-control'}),
+            'security_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'plan': forms.TextInput(attrs={'class': 'form-control'})
         }
         labels={
             'first_name': '氏(漢字)',
