@@ -131,15 +131,16 @@ class CreateView(TemplateView):
     def __init__(self):
         self.params = {
         'title': 'Member Create',
-        'form': CarsharUserCreateForm(),
-        'min_year': '',
-        'max_year': ''
+        'form': CarsharUserCreateForm()
     }
 
     def post(self, request):
-        
+
         email = request.user.email
-        name = request.POST['name']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        first_ja = request.POST['first_ja']
+        last_ja = request.POST['last_ja']
         gender = 'gender' in request.POST
         birthday_str = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
         birthday = birthdaySet(birthday_str)
@@ -150,15 +151,25 @@ class CreateView(TemplateView):
         pref01 = request.POST['pref01']
         addr01 = request.POST['addr01']
         addr02 = request.POST['addr02']
-        record = CarsharUserModel(email = email,name = name, gender = gender, age = age, birthday = birthday, zip01 = zip01, pref01 = pref01, addr01 = addr01, addr02 = addr02)
+        credit_card_company = request.POST['credit_card_company']
+        first_en = request.POST['first_en']
+        last_en = request.POST['last_en']
+        credit_card_num = request.POST['credit_card_num']
+        credit_card_num_check = request.POST['credit_card_num'][13:]
+        valid_thru = request.POST['valid_thru']
+        security_code = request.POST['security_code']
+        plan = request.POST['plan']
+        img = request.FILES['img']
+        record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
+            gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, \
+            credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
+            credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
+            security_code=security_code, plan=plan, img=img)
         record.save()
         return redirect(to='carsharing_req:first')
         
     def get(self, request):
         dt_now = datetime.datetime.now()
-        min_year, max_year = LimitationAge(dt_now)
-        self.params['min_year'] = min_year
-        self.params['max_year'] = max_year
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
         if querySet.first() is None:
             print('no data')

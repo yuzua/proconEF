@@ -10,13 +10,13 @@ class CarsharUserCreateForm(forms.ModelForm):
         (True, '男性'), 
         (False, '女性')
     ]
-    gender = forms.ChoiceField(choices=GENDER_LIST)
-    credit_card_company_list = [
+    gender = forms.ChoiceField(choices=GENDER_LIST, label='性別', widget=forms.Select(attrs={'class': 'form-control'}))
+    CREDIT_CARD_COMPANY_LIST = [
         ('VISA', 'VISA'), 
         ('MasterCard', 'MasterCard'),
         ('JCB', 'JCB')
     ]
-    credit_card_company = forms.ChoiceField(choices=credit_card_company_list)
+    credit_card_company = forms.ChoiceField(choices=CREDIT_CARD_COMPANY_LIST, label='カード会社', widget=forms.RadioSelect)
 
 
     class Meta:
@@ -24,7 +24,7 @@ class CarsharUserCreateForm(forms.ModelForm):
         # fields = ['id', 'first_name', 'last_name', 'first_ja', 'last_ja', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
         #     'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
         #     'plan']
-        fields = ['id', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
+        fields = ['id', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
             'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
             'plan']
         widgets = {
