@@ -174,7 +174,7 @@ class CreateView(TemplateView):
             credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
             credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
             security_code=security_code, plan=plan, img=img)
-        # record.save()
+        record.save()
         return redirect(to='carsharing_req:first')
         
     def get(self, request):
