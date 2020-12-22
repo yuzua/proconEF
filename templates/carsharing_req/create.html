@@ -9,6 +9,12 @@
 </head>
 <body class="container">
     <h1 class="display-4 text-primary">{{ title }}</h1>
+    {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers"> 
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
+      </ul>
+    {% endfor %}
     <table class="table">
     <form action="{% url 'carsharing_req:create' %}" method="post" enctype="multipart/form-data" id="form">
         {% csrf_token %}
@@ -17,10 +23,10 @@
                 <label for="id_name">お名前(漢字):</label>
             </th>
             <td>
-                氏<input type="text" name="first_name" class="form-control" required />
+                氏{{form_name.first_name}}
             </td>
             <td>
-                名<input type="text" name="last_name" class="form-control" required />
+                名{{form_name.last_name}}
             </td>
         </tr>
         <tr>
@@ -28,36 +34,28 @@
                 <label for="id_name">お名前(ひらがな):</label>
             </th>
             <td>
-                し<input type="text" name="first_ja" class="form-control" pattern="[\u3041-\u3096]*" required />
+                し{{form_name.first_ja.errors}}{{form_name.first_ja}}
             </td>
             <td>
-                めい<input type="text" name="last_ja" class="form-control" pattern="[\u3041-\u3096]*" required />
+                めい{{form_name.last_ja.errors}}{{form_name.last_ja}}
             </td>
         </tr>
         <tr>
             <th>
-                <label for="id_birthday">生年月日:</label>
+                <label for="id_birthday">生年月日(西暦):</label>
             </th>
             <td>
-                年<input type="number" name="birthday_year" id="id_birthday_year" min={{max_year}} max={{min_year}} class="form-control" required />
-                <span id="birthday-year-error-message" style="display: none;">ERROR</span>
+                年{{form_name.birthday_year.errors}}{{form_name.birthday_year}}
+                {% comment %} <span id="birthday-year-error-message" style="display: none;">ERROR</span> {% endcomment %}
             </td>
             <td>
-                月<input type="number" name="birthday_month" min=1 max=12 class="form-control" required />
+                月{{form_name.birthday_month.errors}}{{form_name.birthday_month}}
             </td>
             <td>
-                日<input type="number" name="birthday_day" min=1 max=31 class="form-control" required />
+                日{{form_name.birthday_day.errors}}{{form_name.birthday_day}}
             </td>
         </tr>
         {{ form.as_table }}
-        {% comment %} <tr>
-            <th>
-                <label for="id_img">免許証:</label>
-            </th>
-            <td>
-                <input type="file" name="img" id="id_img" class="form-control-file" required />
-            </td>
-        </tr> {% endcomment %}
         <tr>
             <th>利用規約に同意します:</th>
             <td>

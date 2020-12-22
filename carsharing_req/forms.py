@@ -1,6 +1,8 @@
 from django import forms
 from django.core.mail import EmailMessage
 from .models import CarsharUserModel
+from django.core.validators import MinValueValidator, MaxValueValidator
+import datetime, re
 
 class CarsharUserCreateForm(forms.ModelForm):
     # def __init__(self, *args, **kwd):
@@ -28,16 +30,10 @@ class CarsharUserCreateForm(forms.ModelForm):
 
     class Meta:
         model = CarsharUserModel
-        # fields = ['id', 'first_name', 'last_name', 'first_ja', 'last_ja', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
-        #     'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
-        #     'plan']
         fields = ['id', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
             'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
             'plan', 'img']
         widgets = {
-            # 'name': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'gender': forms.widgets.Select,
-            # 'gender': forms.RadioSelect,
             'zip01': forms.NumberInput(attrs={'class': 'form-control', 'onKeyUp' : "AjaxZip3.zip2addr(this,'','pref01','addr01')"}),
             'pref01': forms.TextInput(attrs={'class': 'form-control'}),
             'addr01': forms.TextInput(attrs={'class': 'form-control'}),
@@ -57,8 +53,6 @@ class CarsharUserCreateForm(forms.ModelForm):
             'first_ja': '氏(ひらがな)',
             'last_ja': '名(ひらがな)',
             'gender': '性別',
-        #    'age': '年齢',
-        #    'birthday': '生年月日',
             'zip01': '郵便番号',
             'pref01': '都道府県名',
             'addr01': '市町村',
@@ -73,3 +67,38 @@ class CarsharUserCreateForm(forms.ModelForm):
             'plan': '利用プラン',
             'img': '免許証'
         }
+
+
+class CarsharUserNameForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(CarsharUserNameForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+
+    dt_now = datetime.datetime.now()
+    min_year = dt_now.year - 20
+    max_year = dt_now.year - 80
+
+    first_name = forms.CharField(label='id_name', max_length=100)
+    last_name = forms.CharField(label='id_name', max_length=100)
+    first_ja = forms.CharField(label='id_ja', max_length=100)
+    last_ja = forms.CharField(label='id_ja', max_length=100)
+    birthday_year = forms.IntegerField(label='id_birthday_year', \
+        validators=[MinValueValidator(max_year), MaxValueValidator(min_year)] )
+    birthday_month = forms.IntegerField(label='id_birthday_month', \
+        validators=[MinValueValidator(1), MaxValueValidator(12)] )
+    birthday_day = forms.IntegerField(label='id_birthday_day', \
+        validators=[MinValueValidator(1), MaxValueValidator(31)] )
+    
+
+    def clean_first_ja(self):
+        first_ja = re.search(r'^[\u3041-\u309F]*$', self.cleaned_data['first_ja'])
+        if first_ja is None:
+            raise forms.ValidationError("ひらがなで入力して下さい。")
+        return first_ja
+
+    def clean_last_ja(self):
+        last_ja = re.search(r'^[\u3041-\u309F]*$', self.cleaned_data['last_ja'])
+        if last_ja is None:
+            raise forms.ValidationError("ひらがなで入力して下さい。")
+        return last_ja

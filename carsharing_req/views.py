@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import generic
 from .models import CarsharUserModel, UsageModel
-from .forms import CarsharUserCreateForm
+from .forms import CarsharUserCreateForm, CarsharUserNameForm
 from accounts .models import CustomUser
 from parking_req .models import *
 from owners_req .models import HostUserModel
@@ -131,50 +131,85 @@ class CreateView(TemplateView):
     def __init__(self):
         self.params = {
         'title': '会員登録',
-        'form': CarsharUserCreateForm()
+        'form': CarsharUserCreateForm(),
+        'form_name': CarsharUserNameForm()
     }
 
     def post(self, request):
         form = CarsharUserCreateForm(request.POST, request.FILES)
-        if form.is_valid():
-            print(form.is_valid())
-            print(form.errors)
-        else:
-            print(form.is_valid())
-            print(form.errors)
+        form_name = CarsharUserNameForm(request.POST, request.FILES)
 
-        email = request.user.email
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        first_ja = request.POST['first_ja']
-        last_ja = request.POST['last_ja']
-        gender = 'gender' in request.POST
-        birthday_str = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
-        birthday = birthdaySet(birthday_str)
-        # print(birthday)
-        age = calcAge(birthday_str)
-        # print(age)
-        zip01 = request.POST['zip01']
-        pref01 = request.POST['pref01']
-        addr01 = request.POST['addr01']
-        addr02 = request.POST['addr02']
-        credit_card_company = request.POST['credit_card_company']
-        first_en = request.POST['first_en']
-        last_en = request.POST['last_en']
-        SECRET_KEY = request.POST['credit_card_num']
-        credit_card_num = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
-        credit_card_num_check = request.POST['credit_card_num'][13:]
-        valid_thru = request.POST['valid_thru']
-        SECRET_KEY = request.POST['security_code']
-        security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
-        plan = request.POST['plan']
-        img = request.FILES['img']
-        record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
-            gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, \
-            credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
-            credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
-            security_code=security_code, plan=plan, img=img)
-        record.save()
+        if form.is_valid() and form_name.is_valid():
+            email = request.user.email
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            first_ja = request.POST['first_ja']
+            last_ja = request.POST['last_ja']
+            gender = 'gender' in request.POST
+            birthday_str = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
+            birthday = birthdaySet(birthday_str)
+            age = calcAge(birthday_str)
+
+            # 二十歳未満の利用を制限
+            if age < 20:
+                self.params['form'] = form
+                self.params['form_name'] = form_name
+                messages.error(self.request, '20歳未満の方はご利用いただけません。')
+                return render(request, 'carsharing_req/create.html', self.params)
+            if age > 80:
+                self.params['form'] = form
+                self.params['form_name'] = form_name
+                messages.error(self.request, '80歳以上の方はご利用いただけません。')
+                return render(request, 'carsharing_req/create.html', self.params)
+
+            zip01 = request.POST['zip01']
+            pref01 = request.POST['pref01']
+            addr01 = request.POST['addr01']
+            addr02 = request.POST['addr02']
+            tel = request.POST['tel']
+            credit_card_company = request.POST['credit_card_company']
+            first_en = request.POST['first_en']
+            last_en = request.POST['last_en']
+            SECRET_KEY = request.POST['credit_card_num']
+            credit_card_num = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+            credit_card_num_check = request.POST['credit_card_num'][13:]
+            valid_thru = request.POST['valid_thru']
+
+            dt_now = datetime.datetime.now()
+            if 0 >= int(valid_thru[:2]) or int(valid_thru[:2]) > 12:
+                self.params['form'] = form
+                self.params['form_name'] = form_name
+                messages.error(self.request, 'クレジットカードの期限が不正です。')
+                return render(request, 'carsharing_req/create.html', self.params)
+            dt_now_y = str(dt_now.year)[:2]
+            if int(dt_now_y) > int(valid_thru[3:]):
+                self.params['form'] = form
+                self.params['form_name'] = form_name
+                messages.error(self.request, 'クレジットカードの有効期限が切れています。')
+                return render(request, 'carsharing_req/create.html', self.params)
+            elif int(dt_now_y) == int(valid_thru[3:]) and int(valid_thru[:2]) < dt_now.month:
+                self.params['form'] = form
+                self.params['form_name'] = form_name
+                messages.error(self.request, 'クレジットカードの有効期限が切れています。')
+                return render(request, 'carsharing_req/create.html', self.params)
+            # dt_now = datetime.datetime.now()
+            # dt_now.year()
+            # if int(valid_thru[3:])
+
+            SECRET_KEY = request.POST['security_code']
+            security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+            plan = request.POST['plan']
+            img = request.FILES['img']
+            record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
+                gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
+                credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
+                credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
+                security_code=security_code, plan=plan, img=img)
+            record.save()
+        else:
+            self.params['form'] = form
+            self.params['form_name'] = form_name
+            return render(request, 'carsharing_req/create.html', self.params)
         return redirect(to='carsharing_req:first')
         
     def get(self, request):
@@ -185,6 +220,7 @@ class CreateView(TemplateView):
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
         if querySet.first() is None:
             print('no data')
+            messages.info(self.request, '会員登録して下さい。')
         else:
             print('data　exist')
             return redirect(to='carsharing_req:index')
