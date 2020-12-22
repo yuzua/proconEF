@@ -135,6 +135,14 @@ class CreateView(TemplateView):
     }
 
     def post(self, request):
+        form = CarsharUserCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            print(form.is_valid())
+            print(form.errors)
+        else:
+            print(form.is_valid())
+            print(form.errors)
+
         email = request.user.email
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -166,11 +174,14 @@ class CreateView(TemplateView):
             credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
             credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
             security_code=security_code, plan=plan, img=img)
-        record.save()
+        # record.save()
         return redirect(to='carsharing_req:first')
         
     def get(self, request):
         dt_now = datetime.datetime.now()
+        min_year, max_year = LimitationAge(dt_now)
+        self.params['min_year'] = min_year
+        self.params['max_year'] = max_year
         querySet = CarsharUserModel.objects.filter(email__contains = request.user.email)
         if querySet.first() is None:
             print('no data')

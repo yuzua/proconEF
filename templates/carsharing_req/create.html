@@ -34,44 +34,21 @@
                 めい<input type="text" name="last_ja" class="form-control" pattern="[\u3041-\u3096]*" required />
             </td>
         </tr>
-        {% comment %} <tr>
-            <th>
-                <label for="id_gender">性別:</label>
-            </th>
-            <td>
-                <select name="gender" id="id_gender" class="form-control form-control-lg">
-                    <option value="True">男性</option>
-                    <option value="False">女性</option>
-                </select>
-            </td>
-        </tr> {% endcomment %}
         <tr>
             <th>
                 <label for="id_birthday">生年月日:</label>
             </th>
             <td>
-                年<input type="number" name="birthday_year" id="id_birthday_year" max=2000 class="form-control" required />
+                年<input type="number" name="birthday_year" id="id_birthday_year" min={{max_year}} max={{min_year}} class="form-control" required />
                 <span id="birthday-year-error-message" style="display: none;">ERROR</span>
             </td>
             <td>
-                月<input type="number" name="birthday_month" class="form-control" required />
+                月<input type="number" name="birthday_month" min=1 max=12 class="form-control" required />
             </td>
             <td>
-                日<input type="number" name="birthday_day" class="form-control" required />
+                日<input type="number" name="birthday_day" min=1 max=31 class="form-control" required />
             </td>
         </tr>
-        {% comment %} <tr>
-            <th>
-                <label for="id_credit_card_company">Credit card company:</label>
-            </th>
-            <td>
-                <select name="credit_card_company" id="id_credit_card_company" class="form-control form-control-lg">
-                    <option value="VISA">VISA</option>
-                    <option value="MasterCard">MasterCard</option>
-                    <option value="JCB">JCB</option>
-                </select>
-            </td>
-        </tr> {% endcomment %}
         {{ form.as_table }}
         <tr>
             <th>
@@ -79,6 +56,19 @@
             </th>
             <td>
                 <input type="file" name="img" id="id_img" class="form-control-file" required />
+            </td>
+        </tr>
+        <tr>
+            <th>利用規約に同意します:</th>
+            <td>
+                <div class="card">
+                    <div class="card-body">
+                        貸渡約款
+                    </div>
+                </div>
+            </td>
+            <td>
+                <input type="checkbox" required />
             </td>
         </tr>
         <tr><th></th><td>
