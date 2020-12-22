@@ -206,6 +206,7 @@ class CreateView(TemplateView):
                 credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
                 security_code=security_code, plan=plan, img=img)
             record.save()
+            messages.success(request, '会員登録が完了しました。')
         else:
             self.params['form'] = form
             self.params['form_name'] = form_name
