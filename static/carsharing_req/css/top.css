@@ -36,7 +36,6 @@
     margin: 5pt;
     color: #696969;
     background: white;
-    border-top: solid 5px #696969;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     width: 49%;
 }
@@ -59,3 +58,17 @@
     width: 100%;
     background-color: #333;
 }
+
+/* お問い合わせ */
+#under {
+    float: right;
+    width: 99%;
+    height: 250pt;
+    font-size: 10pt;
+    margin: 5pt;
+    color: #696969;
+    background: white;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    clear: both;
+}
+
