@@ -33,7 +33,7 @@ class CarsharUserCreateForm(forms.ModelForm):
         #     'plan']
         fields = ['id', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
             'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
-            'plan']
+            'plan', 'img']
         widgets = {
             # 'name': forms.TextInput(attrs={'class': 'form-control'}),
             # 'gender': forms.widgets.Select,
@@ -70,5 +70,6 @@ class CarsharUserCreateForm(forms.ModelForm):
             'credit_card_num': 'カード番号', 
             'valid_thru': '使用期限(月/年)',
             'security_code': 'セキュリティーコード',
-            'plan': '利用プラン'
+            'plan': '利用プラン',
+            'img': '免許証'
         }

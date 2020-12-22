@@ -130,7 +130,7 @@ def carsharuserdata(request):
 class CreateView(TemplateView):
     def __init__(self):
         self.params = {
-        'title': 'Member Create',
+        'title': '会員登録',
         'form': CarsharUserCreateForm()
     }
 
