@@ -95,9 +95,9 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 {% if request.session.owner_flag == True %}
                 <div class=""></div>
-                    <a class="dropdown-item" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
+                    <a class="dropdown-item-owner" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
+                    <a class="dropdown-item-owner" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
                 {% if request.session.parking_flag == True %}
                 <div class=""></div>
                     <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
@@ -133,7 +133,7 @@
     </div>
     <!--/wrapper-->
 
-
+    {% comment %}
       <!-- Footer -->
       <footer class="page-footer font-small indigo">
         <!-- Footer Links -->
@@ -148,13 +148,13 @@
                     {% if user.is_authenticated %}
                         <li>
                             <a href="/carsharing_req/carsharuserdata/">個人登録情報確認</a>
-                        </li>
+                        </li><br>
                         <li>
                             <a href="/carsharing_booking/list">予約確認</a>
-                        </li>
+                        </li><br>
                         <li>
                             <a href="/carsharing_req/calendar">カレンダー確認</a>
-                        </li>
+                        </li><br>
                         <li>
                             <a href="/carsharing_req/details">利用明細</a>
                         </li>
@@ -166,7 +166,7 @@
                     </ul>
                 </div>
                 <!-- Grid column -->
-                <hr class="clearfix w-100 d-md-none">
+                <hr class="w-100 d-md-none">
                 <!-- Grid column -->
                 <div class="col-md-15 mx-auto">
                     <!-- Links -->
@@ -198,10 +198,10 @@
                     <ul class="list-unstyled">
                         <li>
                             <a href="#!">あなたへのおすすめ</a>
-                        </li>
+                        </li><br>
                         <li>
                             <a href="#!">中古車検索</a>
-                        </li>
+                        </li><br>
                         <li>
                             <a href="/secondhandcar/">AI価格予測</a>
                         </li>
@@ -237,11 +237,11 @@
                     <ul class="list-unstyled">
                         <li>
                             <a href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a>
-                        </li>
+                        </li><br>
                         {% if request.session.parking_flag == True %}
                         <li>
                             <a href="/parking_req/loaning/">貸し出し日時を登録する</a>
-                        </li>
+                        </li><br>
                         {% else %}
                         <li>
                             <a href="#!">駐車場オーナーになる</a>
@@ -254,29 +254,43 @@
             <!-- Grid row -->
         </div>
         <!-- Footer Links -->
-        <div data-trigger id ="under">
-            <h2>お問い合わせ</h2>
-            <p>
-                〇〇支店<br>
-                TEL<br>
-                XXX-XXXX-XXXX
-            </p>
-            <p>
-                〇〇支店<br>
-                TEL<br>
-                XXX-XXXX-XXXX
-            </p>
-            <p>
-                〇〇支店<br>
-                TEL<br>
-                XXX-XXXX-XXXX
-            </p>
-            <p> 
-                〇〇支店<br>
-                TEL<br>
-                XXX-XXXX-XXXX
-            </p>
-        </div>
+        {% endcomment %}
+        <footer>
+            <div class="replay">
+            <ul>
+            <li>
+            {% if user.is_authenticated %}
+            <a href="/carsharing_booking/list" class="replay01" style="width: 70pt;">予約確認</a>
+            {% else %}
+            <a href="/accounts/signup/"  class="replay01" style="width: 90pt;">新規会員登録</a>
+            {% endif %}
+            </li>
+            <li>
+            <a href="/carsharing_booking/map"  class="replay01"  style="width: 150pt;">カーシェアリング検索</a>
+            </li>
+            <li>
+            <a href="/parking_booking/map"  class="replay01" style="width: 80pt;">駐車場検索</a>
+            </li>
+            <li>
+            <a href="#!"  class="replay01" style="width: 80pt;">中古車検索</a>
+            </li>
+            <li>
+            {% if request.session.owner_flag == True %}
+            <a href="/owners_req/createDate"  class="replay01" style="width: 180pt;">カーシェアオーナー日時登録</a>
+            {% else %}
+            <a href="/owners_req/create"  class="replay01" style="width: 200pt;">カーシェアオーナー新規登録</a>
+            {% endif %}
+            </li>
+            <li>
+            {% if request.session.parking_flag == True %}
+            <a href="/parking_req/loaning/"  class="replay01" style="width: 170pt;">駐車場オーナー日時登録</a>
+            {% else %}
+            <a href="#!"  class="replay01" style="width: 170pt;">駐車場オーナー新規登録</a>
+            {% endif %}
+            </li>
+            </ul>
+            </div>
+        </footer>
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
             <p style="padding: 10px; margin:0; clear: none;"><img src='{% static "admin/img/logo03.png" %}' class="logo4">株式会社▲▲▲<img src='{% static "admin/img/logo03.png" %}' class="logo4"></p>

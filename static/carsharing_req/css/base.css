@@ -44,6 +44,11 @@
     padding: 8pt;
     float: left;
     text-align: center;
+    /* border: dotted;
+    border-color: #333;
+    border-width: 2pt; */
+    width: 20%;
+    padding: 20pt;
 }
 
 .header {
@@ -137,16 +142,22 @@ footer a {
     font-size: small;
 }
 
-/* お問い合わせ */
-#under {
-    float: right;
-    width: 48%;
-    height: 190pt;
-    font-size: 12pt;
-    margin: 5pt;
-    color: #696969;
-    background: white;
-    border-top: solid 5px #696969;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+.dropdown-item-owner {
+    width: 250pt;
 }
 
+a {
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.replay01 {
+    font-size: 14pt;
+    color: #777777;
+    margin: 10pt 30pt 10pt 15pt;
+    width: 100%;
+    font-weight: bold;
+}
