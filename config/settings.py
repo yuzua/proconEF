@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'parking_booking.apps.ParkingBookingConfig',
     'survey.apps.SurveyConfig',
+    'administrator.apps.AdministratorConfig',
 
     'django.contrib.sites',
     'allauth',
