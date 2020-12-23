@@ -92,14 +92,14 @@ class CarsharUserInfo(TemplateView):
         # return render(request, 'carsharing_req/index.html', self.params)
         return render(request, 'carsharing_req/top.html', self.params)
     
-    def post(self, request):
-        msg = 'Your name is <b>' + request.POST['name'] + \
-            '(' + request.POST['age'] + \
-            ')</b><br>Your mail address is <b>' + request.POST['email'] + \
-            '</b><br>Thank you send to me!'
-        self.params['message'] = msg
-        self.params['form'] = CarsharUserCreateForm(request.POST)
-        return render(request, 'carsharing_req/index.html', self.params)
+    # def post(self, request):
+    #     msg = 'Your name is <b>' + request.POST['name'] + \
+    #         '(' + request.POST['age'] + \
+    #         ')</b><br>Your mail address is <b>' + request.POST['email'] + \
+    #         '</b><br>Thank you send to me!'
+    #     self.params['message'] = msg
+    #     self.params['form'] = CarsharUserCreateForm(request.POST)
+    #     return render(request, 'carsharing_req/index.html', self.params)
 
 def carsharuserdata(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
@@ -175,6 +175,7 @@ class CreateView(TemplateView):
             credit_card_num_check = request.POST['credit_card_num'][13:]
             valid_thru = request.POST['valid_thru']
 
+            # クレジットカードの有効期限チェック
             dt_now = datetime.datetime.now()
             if 0 >= int(valid_thru[:2]) or int(valid_thru[:2]) > 12:
                 self.params['form'] = form
@@ -192,9 +193,6 @@ class CreateView(TemplateView):
                 self.params['form_name'] = form_name
                 messages.error(self.request, 'クレジットカードの有効期限が切れています。')
                 return render(request, 'carsharing_req/create.html', self.params)
-            # dt_now = datetime.datetime.now()
-            # dt_now.year()
-            # if int(valid_thru[3:])
 
             SECRET_KEY = request.POST['security_code']
             security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
@@ -259,6 +257,7 @@ def calcAge(birthdayStr):
   dStr = datetime.datetime.now().strftime("%Y%m%d")
   return (int(dStr)-int(birthdayStr))//10000
 # -------------------------------------------------------------------------------------------------------
+
 
 
 class CalendarView(TemplateView):

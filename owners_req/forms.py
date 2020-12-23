@@ -7,32 +7,21 @@ from.models import *
 
 
 class HostUserForm(forms.ModelForm):
-    pay_list = [
-        ('銀行振込','銀行振込'),
-        ('QR決済','QR決済'),
-    ]
-    pay = forms.ChoiceField(choices=pay_list)
     
     class Meta:
         model = HostUserModel
-        fields = ['pay', 'bank_name', 'bank_code', \
-             'bank_account_number', 'QR_id']
-        widget = {
-            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+        fields = ['bank_code', 'branch_code', 'bank_account_number']
+        widgets = {
             'day': forms.DateInput(attrs={'class': 'form-control'}),
-            'bank_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'bank_code': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bank_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'branch_code': forms.NumberInput(attrs={'class': 'form-control'}),
             'bank_account_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'QR_id': forms.TextInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            #'user_id': 'ユーザID',
             'day': '登録日',
-            'pay': '支払方法',
-            'bank_name': '銀行名(カタカナ）',
-            'bank_code': '支店コード',
-            'bank_account_number': '口座番号',
-            'QR_id': 'QR決済ID',
+            'bank_code': '銀行コード',
+            'branch_code': '支店コード',
+            'bank_account_number': '口座番号'
         }
 
 
@@ -47,12 +36,12 @@ class CarInfoForm(forms.ModelForm):
 
     class Meta:
         model = CarInfoModel
-        fields = ['parent_category', 'category', 'license_plate', 'model_id', 'custom', 'people', \
-         'tire', 'used_years', 'vehicle_inspection_day']
-        #fields = '__all__'
+        # fields = ['parent_category', 'category', 'license_plate', 'model_id', 'people', \
+        #  'tire', 'used_years', 'vehicle_inspection_day']
+        fields = '__all__'
 
-    field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'custom', 'people', \
-         'tire', 'used_years', 'vehicle_inspection_day')
+    # field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'people', \
+    #      'tire', 'used_years', 'vehicle_inspection_day')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -71,7 +60,6 @@ class CarInfoForm(forms.ModelForm):
             #'user_id': 'ユーザID',
             'license_plate': 'ナンバープレート',
             'model_id': '型番',
-            'custom': 'カスタム',
             'people': '乗車人数',
             'day': '登録日',
             'tire': 'タイヤ',

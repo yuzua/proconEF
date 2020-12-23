@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block active_login %}
 <title>{{ title }}</title>
@@ -7,15 +8,43 @@
 
 {% block contents %}
 <p class="h5 mt-4">{{ message|safe }}</p>
+{% for bank in banks %}
+	<input type="button" value="{{bank.name}}" id="{{bank.code}}" />
+{% endfor %}
 <form action="{% url 'owners_req:create' %}" method="post">
-
-	{% csrf_token %}
+{% csrf_token %}
 	<table class="table">
-		{{ form.as_table }}
-			<tr><th><td>
+	<tr>
+		<th>
+			<label id="bank_code_l" for="id_bank_code">銀行コード:</label>
+		</th>
+		<td>
+			{{ form.bank_code.errors }}{{ form.bank_code }}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			<label id="branch_code_l" for="id_bank_account_number">支店コード:</label>
+		</th>
+		<td>
+			{{ form.branch_code.errors }}{{ form.branch_code }}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			<label id="bank_account_number_l" for="id_bank_account_number">口座番号:</label>
+		</th>
+		<td>
+			{{ form.bank_account_number.errors }}{{ form.bank_account_number }}
+		</td>
+	</tr>
+	<tr><th><td>
 		<input class="btn btn-primary my-2" type="submit" value="click">
-			</td></th></tr>
-		</table>
+	</td></th></tr>
+	</table>
 </form>
+{% endblock %}
 
+{% block extrajs %}
+	<script type="text/javascript" src='{% static "owners_req/js/bank.js" %}'></script>
 {% endblock %}

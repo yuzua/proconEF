@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.views import generic
 from .forms import CarInfoForm, CarInfoParkingForm, ParkingLoaningForm
 import datetime
-import json
+import json, ast
 from django.db.models import Q
 from parking_booking .models import ParkingBookingModel
 from carsharing_booking .models import BookingModel
@@ -21,6 +21,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the owners_req index.")
 
 
+
 class CreateView(TemplateView):
     def __init__(self):
         self.params = {
@@ -28,6 +29,7 @@ class CreateView(TemplateView):
         'message': '',
         'form': HostUserForm(),
         'data': '',
+        'banks': '',
         }
     def get(self, request):
         if str(request.user) == "AnonymousUser":
@@ -37,6 +39,14 @@ class CreateView(TemplateView):
         else:
             owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
             if owner_list.first() is None:
+                banks = [
+                    {'name': '三井住友銀行', 'code': '0009'},
+                    {'name': '三菱ＵＦＪ銀行', 'code': '0005'},
+                    {'name': 'みずほ銀行', 'code': '0001'},
+                    {'name': 'ゆうちょ銀行', 'code': '9900'}
+                ]
+                self.params['banks'] = banks
+                # BranchCodeCheck()
                 return render(request, 'owners_req/create.html', self.params)
                 print(request.user)
         self.params['title'] = 'オーナー情報確認'
@@ -46,27 +56,54 @@ class CreateView(TemplateView):
 
 
     def post(self, request):
-        dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
-        pay = request.POST['pay']
-        day = dt_now
-        bank_name = request.POST['bank_name']
-        bank_code = request.POST['bank_code']
-        bank_account_number = request.POST['bank_account_number']
-        QR_id = request.POST['QR_id']
-        record = HostUserModel(user_id = user_id, pay = pay, day = day, \
-            bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
+        if form.is_valid():
+            dt_now = datetime.datetime.now()
+            user_id = request.session['user_id']
+            day = dt_now
+            bank_code = request.POST['bank_code']
+            bank_name = BankCodeCheck(bank_code)
+            print(bank_name)
+            branch_code = request.POST['branch_code']
+            branch_name = BranchCodeCheck(bank_code, branch_code)
+            print(branch_name)
+            bank_account_number = request.POST['bank_account_number']
+            record = HostUserModel(user_id=user_id, day=day, bank_name=bank_name, bank_code=bank_code, \
+                branch_code=branch_code, branch_name=branch_name, bank_account_number=bank_account_number)
+            # record.save()
             return redirect(to='owners_req:create')
         else:
             self.params['message'] = '入力データに問題があります'
         return render(request, 'owners_req/create.html', self.params)
 
-    
+def BankCodeCheck(num):
+    path = "/Django/data/bank/bank.json"
+    with open(path, 'r') as f:
+        json_data = f.read()
+        # print(json_data)
+    json_data = ast.literal_eval(json_data)['branchdata']
+    for bank_data in json_data:
+        if bank_data['code'] == num:
+            bank_name = bank_data['name']
+            break
+    return bank_name
+
+def BranchCodeCheck(index, num):
+    if index != "0001" or "0005" or "0009":
+        return "no data"
+    path = "/Django/data/bank/" + index + ".json"
+    print(num)
+    with open(path, 'r') as f:
+        json_data = f.read()
+        json_data = json.loads(json_data)
+    for bank_data in list(json_data):
+        if bank_data['code'] == num:
+            branch_name = bank_data['name']
+            break
+    return branch_name
+
 def edit(request):
      if (request.method == 'POST'):
         num = request.POST['p_id']
@@ -412,3 +449,28 @@ def check(request):
     messages.success(request, '登録が完了しました。')
     del request.session['user_car_id']
     return redirect(to='owners_req:createDate')
+
+
+def AAA():
+    mylist=["支店名","削除","コード"]
+    add_list = []
+    my_dict = {}
+    for num in range(len(my_list)):
+        if num % 3 == 0:
+            my_dict['name'] = my_list[num]
+        if num % 3 == 2:
+            my_dict['code'] = my_list[num]
+
+        if num % 3 == 2:
+                add_list.append(my_dict)
+                my_dict = {}
+    
+    print(add_list)
+    json_data = json.dumps(add_list, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/bank/0001.json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+

@@ -27,9 +27,9 @@ class CarsharUserModel(models.Model):
     img = models.FileField(
             upload_to='users/license/%Y/%m/%d/',
             #拡張子バリデーター。アップロードファイルの拡張子が違う時にエラー
-            validators=[FileExtensionValidator(['jpg','png','gif', ])]
-            # blank=True, 
-            # null=True
+            validators=[FileExtensionValidator(['jpg','png','gif', ])],
+            blank=True, 
+            null=True
         )
     # カード情報
     credit_card_company = models.CharField(max_length=50)
