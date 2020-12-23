@@ -56,6 +56,13 @@ class CreateView(TemplateView):
 
 
     def post(self, request):
+        banks = [
+            {'name': '三井住友銀行', 'code': '0009'},
+            {'name': '三菱ＵＦＪ銀行', 'code': '0005'},
+            {'name': 'みずほ銀行', 'code': '0001'},
+            {'name': 'ゆうちょ銀行', 'code': '9900'}
+        ]
+        self.params['banks'] = banks
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
@@ -65,44 +72,96 @@ class CreateView(TemplateView):
             day = dt_now
             bank_code = request.POST['bank_code']
             bank_name = BankCodeCheck(bank_code)
-            print(bank_name)
-            branch_code = request.POST['branch_code']
-            branch_name = BranchCodeCheck(bank_code, branch_code)
-            print(branch_name)
-            bank_account_number = request.POST['bank_account_number']
-            record = HostUserModel(user_id=user_id, day=day, bank_name=bank_name, bank_code=bank_code, \
-                branch_code=branch_code, branch_name=branch_name, bank_account_number=bank_account_number)
+            if "ゆうちょ銀行" == bank_name:
+                branch_code = request.POST['branch_code']
+                bank_account_number = request.POST['bank_account_number']
+                if len(branch_code) != 5:
+                    self.params['form'] = form
+                    messages.error(self.request, '記号は数字5桁です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                if len(bank_account_number) != 8:
+                    self.params['form'] = form
+                    messages.error(self.request, '番号は数字8桁です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                branch_code = branch_code[1:3] + "8"
+                bank_account_number = bank_account_number[:7]
+                branch_name = "〇〇支店"
+            else:
+                if bank_name == False:
+                    self.params['form'] = form
+                    messages.error(self.request, '銀行コードが不正です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                branch_code = request.POST['branch_code']
+                branch_name = BranchCodeCheck(bank_code, branch_code)
+                print(branch_name)
+                if branch_name == False:
+                    self.params['form'] = form
+                    messages.error(self.request, '支店コードが不正です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                bank_account_number = request.POST['bank_account_number']
+            if len(branch_code) != 3:
+                self.params['form'] = form
+                messages.error(self.request, '支店コードが不正です。')
+                return render(request, 'owners_req/create.html', self.params)
+            if len(bank_account_number) != 7:
+                self.params['form'] = form
+                messages.error(self.request, '口座番号は数字7桁です。')
+                return render(request, 'owners_req/create.html', self.params)
+            # record = HostUserModel(user_id=user_id, day=day, bank_name=bank_name, bank_code=bank_code, \
+            #     branch_code=branch_code, branch_name=branch_name, bank_account_number=bank_account_number)
             # record.save()
+            print(user_id)
+            print(bank_code)
+            print(bank_name)
+            print(branch_code)
+            print(branch_name)
+            print(bank_account_number)
+            print(day)
             return redirect(to='owners_req:create')
         else:
-            self.params['message'] = '入力データに問題があります'
+            self.params['form'] = form
+            messages.error(self.request, '入力データに問題があります')
+            return render(request, 'owners_req/create.html', self.params)
         return render(request, 'owners_req/create.html', self.params)
 
+# ----------------------------------------------------------------------------------------------------------------
 def BankCodeCheck(num):
+    bank_name = None
     path = "/Django/data/bank/bank.json"
     with open(path, 'r') as f:
         json_data = f.read()
-        # print(json_data)
     json_data = ast.literal_eval(json_data)['branchdata']
     for bank_data in json_data:
         if bank_data['code'] == num:
             bank_name = bank_data['name']
             break
-    return bank_name
+    if  bank_name:
+        return bank_name
+    else:
+        return False
 
 def BranchCodeCheck(index, num):
-    if index != "0001" or "0005" or "0009":
-        return "no data"
-    path = "/Django/data/bank/" + index + ".json"
-    print(num)
-    with open(path, 'r') as f:
-        json_data = f.read()
-        json_data = json.loads(json_data)
-    for bank_data in list(json_data):
-        if bank_data['code'] == num:
-            branch_name = bank_data['name']
-            break
-    return branch_name
+    branch_name = None
+    print(index)
+    if index == "0001" or index == "0005" or index == "0009":
+        path = "/Django/data/bank/" + index + ".json"
+        print(num)
+        with open(path, 'r') as f:
+            json_data = f.read()
+            json_data = json.loads(json_data)
+        for bank_data in list(json_data):
+            if bank_data['code'] == num:
+                branch_name = bank_data['name']
+                break
+    else:
+        return "〇〇支店"
+    if branch_name:
+        return branch_name
+    else:
+        return False
+
+# ----------------------------------------------------------------------------------------------------------------
+
 
 def edit(request):
      if (request.method == 'POST'):
