@@ -1,6 +1,6 @@
 from django import forms
 from datetime import date
-from.models import HostUserModel
+from.models import HostUserModel, CarInfoModel
 from parking_booking .models import ParkingBookingModel
 import bootstrap_datepicker_plus as datetimepicker
 from.models import *
@@ -34,37 +34,71 @@ class CarInfoForm(forms.ModelForm):
         required=False
     )
 
-    class Meta:
-        model = CarInfoModel
-        # fields = ['parent_category', 'category', 'license_plate', 'model_id', 'people', \
-        #  'tire', 'used_years', 'vehicle_inspection_day']
-        fields = '__all__'
-
-    # field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'people', \
-    #      'tire', 'used_years', 'vehicle_inspection_day')
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-        widget = {
+        # super(CarsharUserCreateForm, self).__init__(*args, **kwd)
+        self.fields["img"].widget.attrs['class'] = 'form-control-file'
+        self.fields["vehicle_inspection_day"].widget.attrs['placeholder'] = '2021-01-01'
+
+    class Meta:
+        model = CarInfoModel
+        fields = ['parent_category', 'category', 'license_plate_place', 'license_plate_type', 'license_plate_how', 'license_plate_num', \
+            'model_id', 'people', 'tire', 'used_mileage', \
+            'used_years', 'vehicle_inspection_day', 'img']
+        # fields = '__all__'
+        # field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'people', \
+        #      'tire', 'used_years', 'vehicle_inspection_day')
+        widgets = {
             'vehicle_inspection_day': datetimepicker.DatePickerInput(
                 format='%Y-%m-%d',
                 options={
                     'locale': 'ja',
                     'dayViewHeaderFormat': 'YYYY年 MMMM',
-                })
+                }
+            ).start_of('次回車検予定日'),
+            'babysheet': forms.TextInput(attrs={'class': 'form-check'}),
         }
 
         labels = {
             #'user_id': 'ユーザID',
-            'license_plate': 'ナンバープレート',
+            'license_plate_place': 'ナンバープレート(地名)',
             'model_id': '型番',
             'people': '乗車人数',
-            'day': '登録日',
+            # 'day': '登録日',
             'tire': 'タイヤ',
             'used_years':'使用年数',
             'vehicle_inspection_day':'次回車検予定日'
+        }
+class CarOptionForm(forms.ModelForm):
+    ATMT_LIST = [
+        ('AT', 'AT'), 
+        ('MT', 'MT')
+    ]
+    at_mt = forms.ChoiceField(
+        choices=ATMT_LIST, 
+        label='AT車 or MT車', 
+        widget=forms.RadioSelect
+    )
+
+    class Meta:
+        model = CarInfoModel
+        fields = ['at_mt', 'babysheet', 'car_nav', 'etc', 'car_autonomous', 'around_view_monitor']
+        field_order = ('at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous')
+        widgets = {
+            'babysheet': forms.CheckboxInput(attrs={'class': 'form-check'}),
+            'car_nav': forms.CheckboxInput(attrs={'class': 'form-check'}),
+            'etc': forms.CheckboxInput(attrs={'class': 'form-check'}),
+            'around_view_monitor': forms.CheckboxInput(attrs={'class': 'form-check'}),
+            'car_autonomous': forms.CheckboxInput(attrs={'class': 'form-check'}),
+        }
+        labels = {
+            'babysheet': 'ベビーシート付き',
+            'car_nav': 'カーナビ付き', 
+            'etc': 'ETC付き', 
+            'around_view_monitor': '駐車アシスト機能付き',
+            'car_autonomous': '自動運転'
         }
 
 

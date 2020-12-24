@@ -3,11 +3,10 @@ from django.http import HttpResponse
 from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel, Category
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import ParkingUserModel
-from .forms import HostUserForm
+from .forms import HostUserForm, CarInfoForm, CarOptionForm, CarInfoParkingForm, ParkingLoaningForm
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.views import generic
-from .forms import CarInfoForm, CarInfoParkingForm, ParkingLoaningForm
 import datetime
 import json, ast
 from django.db.models import Q
@@ -244,6 +243,7 @@ class CreateCarView(TemplateView):
             'category_set': list(Category.objects.all().values()),
             'title': '車情報登録',
             'form': CarInfoForm(),
+            'form2': CarOptionForm()
         }
 
     def post(self, request):

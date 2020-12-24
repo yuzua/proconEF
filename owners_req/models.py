@@ -3,6 +3,7 @@ from django.db import models
 from datetime import date
 from django.core.validators import ValidationError, MinValueValidator, MaxValueValidator, RegexValidator
 from parking_req .models import ParkingUserModel
+from django.core.validators import FileExtensionValidator
 
 
 def katakana_only(value):
@@ -73,6 +74,13 @@ class CarInfoModel(models.Model):
     used_years = models.IntegerField(default=0, verbose_name='使用年数(年単位)', \
         validators=[RegexValidator(r'^[0-9]{2}$')] )
     vehicle_inspection_day = models.DateField(verbose_name='次回車検予定日')
+    img = models.FileField(
+            upload_to='car/%Y/%m/%d/',
+            #拡張子バリデーター。アップロードファイルの拡張子が違う時にエラー
+            validators=[FileExtensionValidator(['jpg','png','gif', ])],
+            blank=True, 
+            null=True
+        )
 
     def __str__(self):
          return '<car_id=' + str(self.id) + '>'  

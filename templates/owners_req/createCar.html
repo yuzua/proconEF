@@ -3,10 +3,17 @@
 <title>{{ title }}</title>
 <h1>{{ title }}</h1>
     <form action="" method="POST">
-        {{ form.as_p }}
-        {{ form.media }}
         {% csrf_token %}
-        <input class="btn btn-primary my-2" type="submit" value="駐車場登録画面へ">
+        {{ form.as_table }}
+        <div class="card">
+            <div class="card-body">
+            {{ form2.as_p }}
+            </div>
+        </div>
+        {{ form.media }}
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
     </form>
 {% endblock %}
 
