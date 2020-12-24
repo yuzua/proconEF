@@ -8,12 +8,6 @@
 
 {% block contents %}
 <p class="h5 mt-4">{{ message|safe }}</p>
-{% for message in messages %}
-    <!-- <strong>Messages:</strong> -->
-    <ul class="socialaccount_providers"> 
-	<li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
-    </ul>
-{% endfor %}
 {% for bank in banks %}
 	<input type="button" value="{{bank.name}}" id="{{bank.code}}" />
 {% endfor %}

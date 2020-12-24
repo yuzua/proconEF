@@ -10,6 +10,7 @@ app_name = 'owners_req'
 urlpatterns = [
     path('', views.index, name='index'),
     path('create', CreateView.as_view(), name='create'),
+    path('checkmember', views.checkmember, name='checkmember'),
     path('createCar', CreateCarView.as_view(), name='createCar'),
     path('edit', views.edit, name='edit'),
     path('delete/<int:num>', views.delete, name='delete'),

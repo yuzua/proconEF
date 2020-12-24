@@ -25,11 +25,11 @@ def index(request):
 class CreateView(TemplateView):
     def __init__(self):
         self.params = {
-        'title': 'カーシェアリングオーナー申請',
-        'message': '',
-        'form': HostUserForm(),
-        'data': '',
-        'banks': '',
+            'title': 'カーシェアリングオーナー申請',
+            'message': '',
+            'form': HostUserForm(),
+            'data': '',
+            'banks': '',
         }
     def get(self, request):
         if str(request.user) == "AnonymousUser":
@@ -67,10 +67,8 @@ class CreateView(TemplateView):
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
         if form.is_valid():
-            dt_now = datetime.datetime.now()
-            user_id = request.session['user_id']
-            day = dt_now
             bank_code = request.POST['bank_code']
+            bank_account_number = request.POST['bank_account_number']
             bank_name = BankCodeCheck(bank_code)
             if "ゆうちょ銀行" == bank_name:
                 branch_code = request.POST['branch_code']
@@ -107,22 +105,36 @@ class CreateView(TemplateView):
                 self.params['form'] = form
                 messages.error(self.request, '口座番号は数字7桁です。')
                 return render(request, 'owners_req/create.html', self.params)
-            # record = HostUserModel(user_id=user_id, day=day, bank_name=bank_name, bank_code=bank_code, \
-            #     branch_code=branch_code, branch_name=branch_name, bank_account_number=bank_account_number)
-            # record.save()
-            print(user_id)
-            print(bank_code)
-            print(bank_name)
-            print(branch_code)
-            print(branch_name)
-            print(bank_account_number)
-            print(day)
-            return redirect(to='owners_req:create')
+            
+            # 確認画面へ
+            data = {
+                "bank_code": bank_code,
+                "bank_name": bank_name,
+                "branch_code": branch_code,
+                "branch_name": branch_name,
+                "bank_account_number": bank_account_number
+            }
+            self.params['data'] = data
+            return render(request, 'owners_req/checkmember.html', self.params)
         else:
             self.params['form'] = form
             messages.error(self.request, '入力データに問題があります')
             return render(request, 'owners_req/create.html', self.params)
         return render(request, 'owners_req/create.html', self.params)
+
+def checkmember(request):
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        user_id = request.session['user_id']
+        day = dt_now
+        record = HostUserModel(user_id=user_id, day=day, bank_name=request.POST['bank_name'], bank_code=request.POST['bank_code'], \
+            branch_code=request.POST['branch_code'], branch_name=request.POST['branch_name'], bank_account_number=request.POST['bank_account_number'])
+        record.save()
+        messages.success(request, '登録完了しました。')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/index')
+
 
 # ----------------------------------------------------------------------------------------------------------------
 def BankCodeCheck(num):
