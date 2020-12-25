@@ -248,20 +248,44 @@ class CreateCarView(TemplateView):
 
     def post(self, request):
         dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
         day = dt_now
-        license_plate = request.POST['license_plate']
-        record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
-        form = CarInfoForm(request.POST, instance=record)
-        
+        user_id = request.session['user_id']
+        obj = CarInfoModel()
+        form = CarInfoForm(request.POST, instance=obj)
+        form2 = CarOptionForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
-            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
-            request.session['info_flag'] = True
-            return redirect(to='parking_req:index')
+        self.params['form2'] = form2
+        if form.is_valid() and form2.is_valid():
+            car_maker = list(ParentCategory.objects.filter(id=request.POST['parent_category']).values("parent_category"))
+            car_model = list(Category.objects.filter(id=request.POST['category']).values("category"))
+
+            # 確認画面へ
+            data = {
+                "parent_category": request.POST['parent_category'],
+                "category": request.POST['category'],
+                "license_plate_place": request.POST['license_plate_place'],
+                "license_plate_type": request.POST['license_plate_type'],
+                "license_plate_how": request.POST['license_plate_how'],
+                "license_plate_num": request.POST['license_plate_num'],
+                "model_id": request.POST['model_id'],
+                "people": request.POST['people'],
+                "tire": request.POST['tire'],
+                "at_mt": request.POST['at_mt'],
+                "babysheet": 'babysheet' in request.POST,
+                "car_nav": 'car_nav' in request.POST,
+                "etc": 'etc' in request.POST,
+                "car_autonomous": 'car_autonomous' in request.POST,
+                "around_view_monitor": 'around_view_monitor' in request.POST,
+                "used_mileage": request.POST['used_mileage'],
+                "used_years": request.POST['used_years'],
+                "vehicle_inspection_day": request.POST['vehicle_inspection_day']
+            }
+            self.params['data'] = data
+            self.params['car_maker'] = car_maker[0]['parent_category']
+            self.params['car_model'] = car_model[0]['category']
+            return render(request, 'owners_req/checkcar.html', self.params)
         else:
-            self.params['message'] = '入力データに問題があります'
+            messages.error(self.request, '入力データに問題があります')
         return render(request, 'owners_req/createCar.html', self.params)
 
         
@@ -280,6 +304,30 @@ class CreateCarView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
         return context
+
+def checkcar(request):
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        day = dt_now
+        user_id = request.session['user_id']
+        parent_category = ParentCategory.objects.get(id=request.POST['parent_category'])
+        category = Category.objects.get(id=request.POST['category'])
+        record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
+            license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
+            license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
+            model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
+            babysheet='babysheet' in request.POST, car_nav='car_nav' in request.POST, etc='etc' in request.POST, \
+            car_autonomous='car_autonomous' in request.POST, around_view_monitor='around_view_monitor' in request.POST, \
+            used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
+            vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day)
+        record.save()
+        messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+        request.session['info_flag'] = True
+        return redirect(to='parking_req:index')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/index')
+
 
 def editCar(request):
     if (request.method == 'POST'):

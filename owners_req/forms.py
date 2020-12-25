@@ -39,14 +39,14 @@ class CarInfoForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
         # super(CarsharUserCreateForm, self).__init__(*args, **kwd)
-        self.fields["img"].widget.attrs['class'] = 'form-control-file'
+        # self.fields["img"].widget.attrs['class'] = 'form-control-file'
         self.fields["vehicle_inspection_day"].widget.attrs['placeholder'] = '2021-01-01'
 
     class Meta:
         model = CarInfoModel
         fields = ['parent_category', 'category', 'license_plate_place', 'license_plate_type', 'license_plate_how', 'license_plate_num', \
             'model_id', 'people', 'tire', 'used_mileage', \
-            'used_years', 'vehicle_inspection_day', 'img']
+            'used_years', 'vehicle_inspection_day']
         # fields = '__all__'
         # field_order = ('parent_category', 'category', 'license_plate', 'model_id', 'people', \
         #      'tire', 'used_years', 'vehicle_inspection_day')

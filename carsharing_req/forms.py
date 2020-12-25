@@ -45,7 +45,9 @@ class CarsharUserCreateForm(forms.ModelForm):
             'credit_card_num': forms.NumberInput(attrs={'class': 'form-control'}),
             'valid_thru': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'02/21'}),
             'security_code': forms.NumberInput(attrs={'class': 'form-control'}),
-            'plan': forms.TextInput(attrs={'class': 'form-control'})
+            'plan': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'img': forms.FileInput(attrs={'class': 'form-control-file'})
+            'img': forms.FileInput(attrs={'class': 'form-control-file', 'required': 'True'})
         }
         labels={
             'first_name': '氏(漢字)',

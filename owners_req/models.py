@@ -69,12 +69,12 @@ class CarInfoModel(models.Model):
     car_nav = models.BooleanField(default=False, verbose_name='カーナビ')
     etc = models.BooleanField(default=False, verbose_name='ETC')
     car_autonomous = models.BooleanField(default=False, verbose_name='自動運転')
-    around_view_monitor = models.BooleanField(default=False, verbose_name='アラウンドビューモニタ')
+    around_view_monitor = models.BooleanField(default=False, verbose_name='アラウンドビューモニター')
     used_mileage = models.IntegerField(default=0, verbose_name='走行距離(km)')
-    used_years = models.IntegerField(default=0, verbose_name='使用年数(年単位)', \
-        validators=[RegexValidator(r'^[0-9]{2}$')] )
+    used_years = models.IntegerField(default=1, verbose_name='使用年数(年単位)', \
+        validators=[RegexValidator(r'^([0-9]{1})|([0-9]{2})$'), MinValueValidator(1)] )
     vehicle_inspection_day = models.DateField(verbose_name='次回車検予定日')
-    img = models.FileField(
+    img = models.ImageField(
             upload_to='car/%Y/%m/%d/',
             #拡張子バリデーター。アップロードファイルの拡張子が違う時にエラー
             validators=[FileExtensionValidator(['jpg','png','gif', ])],

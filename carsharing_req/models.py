@@ -24,13 +24,14 @@ class CarsharUserModel(models.Model):
     addr01 = models.CharField(max_length=100)
     addr02 = models.CharField(max_length=100)
     system_flag = models.IntegerField(default=0)
-    img = models.FileField(
-            upload_to='users/license/%Y/%m/%d/',
-            #拡張子バリデーター。アップロードファイルの拡張子が違う時にエラー
-            validators=[FileExtensionValidator(['jpg','png','gif', ])],
-            blank=True, 
-            null=True
-        )
+    # img = models.FileField(
+    img = models.ImageField(
+        upload_to='users/license/%Y/%m/%d/',
+        #拡張子バリデーター。アップロードファイルの拡張子が違う時にエラー
+        validators=[FileExtensionValidator(['jpg','png','gif', ])],
+        blank=True, 
+        null=True
+    )
     # カード情報
     credit_card_company = models.CharField(max_length=50)
     first_en = models.CharField(max_length=100, \
