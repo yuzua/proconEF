@@ -18,8 +18,7 @@ class CarsharUserModel(models.Model):
     birthday = models.DateField()
     tel = models.CharField(max_length=15, \
         validators=[RegexValidator(r'^\d{10}$|^\d{11}$', 'ハイフン無しの数字で入力して下さい。')] )
-    zip01 = models.IntegerField(max_length=7, \
-        validators=[RegexValidator(r'^\d{7}$', 'ハイフン無しの数字で入力して下さい。')] )
+    zip01 = models.IntegerField(validators=[RegexValidator(r'^\d{7}$', 'ハイフン無しの数字で入力して下さい。'), MaxValueValidator(9999999)] )
     pref01 = models.CharField(max_length=100)
     addr01 = models.CharField(max_length=100)
     addr02 = models.CharField(max_length=100)
