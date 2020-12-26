@@ -306,27 +306,46 @@ class CreateCarView(TemplateView):
         return context
 
 def checkcar(request):
+    params = {
+        'title': '車情報登録確認画面'
+    }
     if (request.method == 'POST'):
         dt_now = datetime.datetime.now()
         day = dt_now
         user_id = request.session['user_id']
         parent_category = ParentCategory.objects.get(id=request.POST['parent_category'])
         category = Category.objects.get(id=request.POST['category'])
+        # Str型からBool型に変換
+        babysheet = judgmentTF(request.POST['babysheet'])
+        car_nav = judgmentTF(request.POST['car_nav'])
+        etc = judgmentTF(request.POST['etc'])
+        car_autonomous = judgmentTF(request.POST['car_autonomous'])
+        around_view_monitor = judgmentTF(request.POST['around_view_monitor'])
+        
         record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
             license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
             license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
             model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
-            babysheet='babysheet' in request.POST, car_nav='car_nav' in request.POST, etc='etc' in request.POST, \
-            car_autonomous='car_autonomous' in request.POST, around_view_monitor='around_view_monitor' in request.POST, \
+            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, \
             used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
             vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day)
         record.save()
-        messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+        messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
         request.session['info_flag'] = True
         return redirect(to='parking_req:index')
     else:
         messages.error(request, '不正なリクエストです。')
     return redirect(to='/carsharing_req/index')
+
+# ----------------------------------------------------------------------------------------------------------
+def judgmentTF(string):
+    if string == "True":
+        boolean = True
+    else:
+        boolean = False
+
+    return boolean
+# ----------------------------------------------------------------------------------------------------------
 
 
 def editCar(request):

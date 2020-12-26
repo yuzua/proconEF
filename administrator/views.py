@@ -9,7 +9,7 @@ from .forms import AdminParkingForm, UploadFileForm
 from .models import MediaModel
 from accounts .models import CustomUser
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
-from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
+from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
 from django.views import generic
 import datetime
@@ -197,25 +197,48 @@ class CreateCarAdminView(TemplateView):
             'title': '車情報登録',
             'message': '車情報入力',
             'form': CarInfoForm(),
+            'form2': CarOptionForm()
         }
 
     def post(self, request):
-        dt_now = datetime.datetime.now()
-        user_id = 0
-        day = dt_now
-        license_plate = request.POST['license_plate']
-        record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
-        form = CarInfoForm(request.POST, instance=record)
-        
+        obj = CarInfoModel()
+        form = CarInfoForm(request.POST, instance=obj)
+        form2 = CarOptionForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
-            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
-            request.session['info_flag'] = True
-            return redirect(to='/administrator/index')
+        self.params['form2'] = form2
+        if form.is_valid() and form2.is_valid():
+            car_maker = list(ParentCategory.objects.filter(id=request.POST['parent_category']).values("parent_category"))
+            car_model = list(Category.objects.filter(id=request.POST['category']).values("category"))
+
+            # 確認画面へ
+            data = {
+                "parent_category": request.POST['parent_category'],
+                "category": request.POST['category'],
+                "license_plate_place": request.POST['license_plate_place'],
+                "license_plate_type": request.POST['license_plate_type'],
+                "license_plate_how": request.POST['license_plate_how'],
+                "license_plate_num": request.POST['license_plate_num'],
+                "model_id": request.POST['model_id'],
+                "people": request.POST['people'],
+                "tire": request.POST['tire'],
+                "at_mt": request.POST['at_mt'],
+                "babysheet": 'babysheet' in request.POST,
+                "car_nav": 'car_nav' in request.POST,
+                "etc": 'etc' in request.POST,
+                "car_autonomous": 'car_autonomous' in request.POST,
+                "around_view_monitor": 'around_view_monitor' in request.POST,
+                "used_mileage": request.POST['used_mileage'],
+                "used_years": request.POST['used_years'],
+                "vehicle_inspection_day": request.POST['vehicle_inspection_day']
+            }
+            self.params['data'] = data
+            self.params['car_maker'] = car_maker[0]['parent_category']
+            self.params['car_model'] = car_model[0]['category']
+            return render(request, 'administrator/checkcar.html', self.params)
         else:
-            self.params['message'] = '入力データに問題があります'
+            messages.error(self.request, '入力データに問題があります')
         return render(request, 'administrator/create.html', self.params)
+
 
         
     def get(self, request):
@@ -232,7 +255,50 @@ class CreateCarAdminView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
-        return context                    
+        return context
+
+def checkcar(request):
+    params = {
+        'title': '車情報登録確認画面'
+    }
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        day = dt_now
+        user_id = 0
+        parent_category = ParentCategory.objects.get(id=request.POST['parent_category'])
+        category = Category.objects.get(id=request.POST['category'])
+        # Str型からBool型に変換
+        babysheet = judgmentTF(request.POST['babysheet'])
+        car_nav = judgmentTF(request.POST['car_nav'])
+        etc = judgmentTF(request.POST['etc'])
+        car_autonomous = judgmentTF(request.POST['car_autonomous'])
+        around_view_monitor = judgmentTF(request.POST['around_view_monitor'])
+        
+        record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
+            license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
+            license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
+            model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
+            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, \
+            used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
+            vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day, key_flag=True)
+        record.save()
+        messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+        request.session['info_flag'] = True
+        # return redirect(to='administrator:index')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='administrator:index')
+
+# ----------------------------------------------------------------------------------------------------------
+def judgmentTF(string):
+    if string == "True":
+        boolean = True
+    else:
+        boolean = False
+
+    return boolean
+# ----------------------------------------------------------------------------------------------------------
+
 
 class SettingAdminInfo(TemplateView):
     def __init__(self):

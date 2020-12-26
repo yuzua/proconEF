@@ -8,15 +8,18 @@
 {% block main_contents %}
     <h1>{{ title }}</h1>
 <div class="card">
-    <form action="" method="post" >
+    <form action="" method="POST">
         {% csrf_token %}
-        <h2 class="card-header">{{ message|safe }}</h2>
-        <div class="card-body">
-            {{ form.as_p }}
+        {{ form.as_table }}
+        <div class="card">
+            <div class="card-body">
+            {{ form2.as_p }}
+            </div>
         </div>
-        <div class="card-footer">
-            <input class="btn btn-outline-secondary" type="submit" value="駐車場登録画面へ" style="float: right;width: 120pt;height: 30pt;margin: 5pt;">
-        </div>
+        {{ form.media }}
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
     </form>
 </div>
 {% endblock %}

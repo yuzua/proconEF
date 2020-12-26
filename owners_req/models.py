@@ -81,9 +81,10 @@ class CarInfoModel(models.Model):
             blank=True, 
             null=True
         )
+    key_flag =  models.BooleanField(default=False, verbose_name='鍵工事済み')
 
     def __str__(self):
-         return '<car_id=' + str(self.id) + '>'  
+         return '<car_id=' + str(self.id) + '>'
 
 
 class CarInfoParkingModel(models.Model):
