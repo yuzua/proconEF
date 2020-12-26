@@ -7,7 +7,6 @@ from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
 from .models import MediaModel
-from accounts .models import CustomUser
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
@@ -19,17 +18,6 @@ import re
 
 
 # Create your views here.
-def check_superuser(request):
-    if request.user.id == None:
-        return redirect(to='/carsharing_req/index')
-    flag = CustomUser.objects.filter(id=request.user.id)
-    flag = flag.values('is_superuser')
-    flag = flag[0]['is_superuser']
-    if flag == True:
-        print(request.user)
-        return redirect(to='/administrator/index')
-    else:
-        return redirect(to='/carsharing_req/')
 
 def index(request):
     params = {
