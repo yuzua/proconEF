@@ -38,6 +38,9 @@
         {% if car_obj.around_view_monitor == True %}
         <li>駐車アシスト</li>
         {% endif %}
+        {% if car_obj.non_smoking == True %}
+        <li>禁煙</li>
+        {% endif %}
         </td>
     </tr> 
 {% endfor %}

@@ -84,21 +84,23 @@ class CarOptionForm(forms.ModelForm):
 
     class Meta:
         model = CarInfoModel
-        fields = ['at_mt', 'babysheet', 'car_nav', 'etc', 'car_autonomous', 'around_view_monitor']
-        field_order = ('at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous')
+        fields = ['at_mt', 'babysheet', 'car_nav', 'etc', 'car_autonomous', 'around_view_monitor', 'non_smoking']
+        field_order = ('at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking')
         widgets = {
             'babysheet': forms.CheckboxInput(attrs={'class': 'form-check'}),
             'car_nav': forms.CheckboxInput(attrs={'class': 'form-check'}),
             'etc': forms.CheckboxInput(attrs={'class': 'form-check'}),
             'around_view_monitor': forms.CheckboxInput(attrs={'class': 'form-check'}),
             'car_autonomous': forms.CheckboxInput(attrs={'class': 'form-check'}),
+            'non_smoking': forms.CheckboxInput(attrs={'class': 'form-check'}),
         }
         labels = {
             'babysheet': 'ベビーシート付き',
             'car_nav': 'カーナビ付き', 
             'etc': 'ETC付き', 
             'around_view_monitor': '駐車アシスト機能付き',
-            'car_autonomous': '自動運転'
+            'car_autonomous': '自動運転',
+            'non_smoking': '禁煙車両'
         }
 
 

@@ -276,6 +276,7 @@ class CreateCarView(TemplateView):
                 "etc": 'etc' in request.POST,
                 "car_autonomous": 'car_autonomous' in request.POST,
                 "around_view_monitor": 'around_view_monitor' in request.POST,
+                "non_smoking": 'non_smoking' in request.POST,
                 "used_mileage": request.POST['used_mileage'],
                 "used_years": request.POST['used_years'],
                 "vehicle_inspection_day": request.POST['vehicle_inspection_day']
@@ -321,12 +322,13 @@ def checkcar(request):
         etc = judgmentTF(request.POST['etc'])
         car_autonomous = judgmentTF(request.POST['car_autonomous'])
         around_view_monitor = judgmentTF(request.POST['around_view_monitor'])
+        non_smoking = judgmentTF(request.POST['non_smoking'])
         
         record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
             license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
             license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
             model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
-            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, \
+            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, non_smoking=non_smoking, \
             used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
             vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day)
         record.save()

@@ -68,8 +68,9 @@ class CarInfoModel(models.Model):
     babysheet = models.BooleanField(default=False, verbose_name='ベビーシート')
     car_nav = models.BooleanField(default=False, verbose_name='カーナビ')
     etc = models.BooleanField(default=False, verbose_name='ETC')
-    car_autonomous = models.BooleanField(default=False, verbose_name='自動運転')
     around_view_monitor = models.BooleanField(default=False, verbose_name='アラウンドビューモニター')
+    car_autonomous = models.BooleanField(default=False, verbose_name='自動運転')
+    non_smoking = models.BooleanField(default=False, verbose_name='禁煙車両')
     used_mileage = models.IntegerField(default=0, verbose_name='走行距離(km)')
     used_years = models.IntegerField(default=1, verbose_name='使用年数(年単位)', \
         validators=[RegexValidator(r'^([0-9]{1})|([0-9]{2})$'), MinValueValidator(1)] )
