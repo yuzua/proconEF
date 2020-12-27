@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import SecondHandCarModel
 import json
+import csv
 # Create your views here.
 
 
@@ -86,3 +88,89 @@ def index(request):
         'minimini_json': json.dumps(minimini),
     }
     return render(request, 'secondhandcar/index.html', params)
+
+def importCSV(request):
+    with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            # print(row)
+            if row[0] != 'carID':
+                record = SecondHandCarModel()
+                record.id = row[0]
+                record.box_1 = row[1]
+                record.box_2 = row[2]
+                record.box_3 = row[3]
+                record.box_4 = row[4]
+                record.box_5 = row[5]
+                record.box_6 = row[6]
+                record.box_7 = row[7]
+                record.box_8 = row[8]
+                record.box_9 = row[9]
+                record.box_10 = row[10]
+                record.box_11 = row[11]
+                record.box_12 = row[12]
+                record.box_13 = row[13]
+                record.box_14 = row[14]
+                record.box_15 = row[15]
+                record.box_16 = row[16]
+                record.box_17 = row[17]
+                record.box_18 = row[18]
+                record.box_19 = row[19]
+                record.box_20 = row[20]
+                record.box_21 = row[21]
+                record.box_22 = row[22]
+                record.box_23 = row[23]
+                record.box_24 = row[24]
+                record.box_25 = row[25]
+                record.box_26 = row[26]
+                record.box_27 = row[27]
+                record.box_28 = row[28]
+                record.box_29 = row[29]
+                record.box_30 = row[30]
+                record.box_31 = row[31]
+                record.box_32 = row[32]
+                record.box_33 = row[33]
+                record.box_34 = row[34]
+                record.box_35 = row[35]
+                record.box_36 = row[36]
+                record.box_37 = row[37]
+                record.box_38 = row[38]
+                record.box_39 = row[39]
+                record.box_40 = row[40]
+                record.box_41 = row[41]
+                record.box_42 = row[42]
+                record.box_43 = row[43]
+                record.box_44 = row[44]
+                record.box_45 = row[45]
+                record.box_46 = row[46]
+                record.box_47 = row[47]
+                record.box_48 = row[48]
+                record.box_49 = row[49]
+                record.box_50 = row[50]
+                record.box_51 = row[51]
+                record.box_52 = row[52]
+                record.box_53 = row[53]
+                record.box_54 = row[54]
+                record.box_55 = row[55]
+                record.box_56 = row[56]
+                record.box_57 = row[57]
+                record.box_58 = row[58]
+                record.box_59 = row[59]
+                record.box_60 = row[60]
+                record.box_61 = row[61]
+                record.box_62 = row[62]
+                record.box_63 = row[63]
+                record.box_64 = row[64]
+                record.box_65 = row[65]
+                record.box_66 = row[66]
+                record.box_67 = row[67]
+                record.box_68 = row[68]
+                record.box_69 = row[69]
+                record.box_70 = row[70]
+                record.box_71 = row[71]
+                record.box_72 = row[72]
+                record.box_73 = row[73]
+                record.box_74 = row[74]
+                record.box_75 = row[75]
+                record.box_76 = row[76]
+                record.save()
