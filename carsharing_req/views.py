@@ -49,7 +49,7 @@ def set_session(request):
         print('ok')
     else:
         surveyMail(request, check_usage_obj)
-        saveUsage(request, check_usage_obj)
+        # saveUsage(request, check_usage_obj)
 
     return redirect(to='carsharing_req:index')
 
@@ -349,7 +349,7 @@ def checkUsage(user_id):
 
 def surveyMail(request, booking):
     
-    subject = "アンケート回答のお願い"
+    subject = "返却確認のお願い"
     attachments = "http://127.0.0.1:8000/survey/questionnaire"
     message = str(request.user) + "様\n \
         時間内の返却ありがとうございました。\n \
@@ -359,7 +359,7 @@ def surveyMail(request, booking):
         終了日: " + booking['end_day'] + "\n \
         終了時刻: " + booking['end_time'] + "\n \
         料金: " + str(booking['charge']) + "円\n\n \
-        アンケートにお答え下さい。\n \
+        コチラから返却確認処理をおこなってください。\n \
         URL: " + attachments + "\n"
     user = request.user  # ログインユーザーを取得する
     from_email = 'admin@gmail.com'  # 送信者
