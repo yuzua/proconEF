@@ -65,7 +65,7 @@ class CarInfoModel(models.Model):
     people = models.IntegerField(default=0, verbose_name='乗車人数')
     tire = models.CharField(max_length=128, verbose_name='タイヤ')
     at_mt = models.CharField(max_length=2, verbose_name='AT or MT')
-    babysheet = models.BooleanField(default=False, verbose_name='ベビーシート')
+    babysheet = models.BooleanField(default=False, verbose_name='チャイルドシート')
     car_nav = models.BooleanField(default=False, verbose_name='カーナビ')
     etc = models.BooleanField(default=False, verbose_name='ETC')
     around_view_monitor = models.BooleanField(default=False, verbose_name='アラウンドビューモニター')

@@ -25,11 +25,27 @@
         <p>乗車人数：{{ data.people }}</p>
         <p>タイヤ：{{ data.tire }}</p>
         <p>変速システム：{{ data.at_mt }}</p>
-            <p>支店名：{{ data.babysheet }}</p>
-            <p>口座番号：{{ data.car_nav }}</p>
-            <p>口座番号：{{ data.etc }}</p>
-            <p>銀行名：{{ data.car_autonomous }}</p>
-            <p>支店名：{{ data.around_view_monitor }}</p>
+        <p>搭載オプション：</p>
+        <ul>
+            {% if data.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if data.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if data.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if data.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if data.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if data.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+        </ul>
         <p>総走行距離：{{ data.used_mileage }}</p>
         <p>使用年数：{{ data.used_years }}</p>
         <p>車検予定日：{{ data.vehicle_inspection_day }}</p>

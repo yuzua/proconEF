@@ -95,7 +95,7 @@ class CarOptionForm(forms.ModelForm):
             'non_smoking': forms.CheckboxInput(attrs={'class': 'form-check'}),
         }
         labels = {
-            'babysheet': 'ベビーシート付き',
+            'babysheet': 'チャイルドシート付き',
             'car_nav': 'カーナビ付き', 
             'etc': 'ETC付き', 
             'around_view_monitor': '駐車アシスト機能付き',

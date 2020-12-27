@@ -419,7 +419,7 @@ def AllCarDownload():
     path_list.append(c_path)
 
     data = [
-        ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート","型番","カスタム","乗車人数","タイヤ","使用年数","車検予定日"]
+        ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
     ]
     data_list = list(CarInfoModel.objects.values())
     for data_dict in data_list:
@@ -539,13 +539,25 @@ def AllCarUpload(all_list):
             record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
             record.parent_category_id = int(car_list[3])
             record.category_id = int(car_list[4])
-            record.license_plate = car_list[5]
-            record.model_id = car_list[6]
-            record.custom = car_list[7]
-            record.people = int(car_list[8])
-            record.tire = car_list[9]
-            record.used_years = int(car_list[10])
-            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
+            record.license_plate_place = car_list[5]
+            record.license_plate_type = car_list[6]
+            record.license_plate_how = car_list[7]
+            record.license_plate_num = car_list[8]
+            record.model_id = car_list[9]
+            record.people = int(car_list[10])
+            record.tire = car_list[11]
+            record.at_mt = car_list[12]
+            record.babysheet = car_list[13]
+            record.car_nav = car_list[14]
+            record.etc = car_list[15]
+            record.around_view_monitor = car_list[16]
+            record.car_autonomous = car_list[17]
+            record.non_smoking = car_list[18]
+            record.used_mileage = car_list[19]
+            record.used_years = int(car_list[20])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            record.img = car_list[22]
+            record.key_flag = car_list[23]
             record.save()
     else:
         for car_list in all_list:
@@ -554,12 +566,24 @@ def AllCarUpload(all_list):
             record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
             record.parent_category_id = int(car_list[3])
             record.category_id = int(car_list[4])
-            record.license_plate = car_list[5]
-            record.model_id = car_list[6]
-            record.custom = car_list[7]
-            record.people = int(car_list[8])
-            record.tire = car_list[9]
-            record.used_years = int(car_list[10])
-            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[11], '%Y-%m-%d')
+            record.license_plate_place = car_list[5]
+            record.license_plate_type = car_list[6]
+            record.license_plate_how = car_list[7]
+            record.license_plate_num = car_list[8]
+            record.model_id = car_list[9]
+            record.people = int(car_list[10])
+            record.tire = car_list[11]
+            record.at_mt = car_list[12]
+            record.babysheet = car_list[13]
+            record.car_nav = car_list[14]
+            record.etc = car_list[15]
+            record.around_view_monitor = car_list[16]
+            record.car_autonomous = car_list[17]
+            record.non_smoking = car_list[18]
+            record.used_mileage = car_list[19]
+            record.used_years = int(car_list[20])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            record.img = car_list[22]
+            record.key_flag = car_list[23]
             record.save()
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
