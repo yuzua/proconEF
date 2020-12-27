@@ -32,18 +32,20 @@ def index(request):
 # user_idをSESSIONに格納・オーナー登録済か判定用flagをSESSIONに格納
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
+    user = CarsharUserModel.objects.get(id=data.id)
     request.session['user_id'] = data.id
-    paking_data = ParkingUserModel.objects.filter(user_id=data.id)
-    if paking_data.first() is None:
-        request.session['parking_flag'] = False
-    else:
-        request.session['parking_flag'] = True
+    request.session['system_flag'] = user.system_flag
+    # paking_data = ParkingUserModel.objects.filter(user_id=data.id)
+    # if paking_data.first() is None:
+    #     request.session['parking_flag'] = False
+    # else:
+    #     request.session['parking_flag'] = True
 
-    owner_data = HostUserModel.objects.filter(user_id=data.id)
-    if owner_data.first() is None:
-        request.session['owner_flag'] = False
-    else:
-        request.session['owner_flag'] = True
+    # owner_data = HostUserModel.objects.filter(user_id=data.id)
+    # if owner_data.first() is None:
+    #     request.session['owner_flag'] = False
+    # else:
+    #     request.session['owner_flag'] = True
     check_usage_obj = checkUsage(request.session['user_id'])
     if check_usage_obj == None:
         print('ok')

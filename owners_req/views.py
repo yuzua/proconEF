@@ -129,6 +129,9 @@ def checkmember(request):
         record = HostUserModel(user_id=user_id, day=day, bank_name=request.POST['bank_name'], bank_code=request.POST['bank_code'], \
             branch_code=request.POST['branch_code'], branch_name=request.POST['branch_name'], bank_account_number=request.POST['bank_account_number'])
         record.save()
+        set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+        set_flag.system_flag += 1
+        set_flag.save()
         messages.success(request, '登録完了しました。')
     else:
         messages.error(request, '不正なリクエストです。')
@@ -332,6 +335,10 @@ def checkcar(request):
             used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
             vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day)
         record.save()
+        if request.session['system_flag'] == 1 or request.session['system_flag'] == 5:
+            set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+            set_flag.system_flag += 2
+            set_flag.save()
         messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
         request.session['info_flag'] = True
         return redirect(to='parking_req:index')
@@ -451,6 +458,10 @@ class SettingInfo(TemplateView):
         parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
         record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
         record.save()
+        if request.session['system_flag'] <= 7:
+            set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+            set_flag.system_flag += 3
+            set_flag.save()
         countflag = False
         print(request.POST['parking_id'])
         ParkingUserModel.objects.filter(id=request.POST['parking_id']).update(countflag = countflag)

@@ -154,8 +154,12 @@
                     <div class="card-body">
                         <h5 class="card-title">カーシェアリングオーナー</h5>
                         <p class="card-text"><a class="flow" href="/carsharing_req/pages/3">利用の流れ</a></p>
-                {% if request.session.owner_flag == True %}
+                {% if request.session.system_flag >= 10 %}
                         <a href="#" class="btn">日時選択</a>
+                {% elif request.session.system_flag >= 7 %}
+                        <a href="/owners_req/settinginfo" class="btn">配車設定</a>
+                {% elif request.session.system_flag >= 1 %}
+                        <a href="/owners_req/createCar" class="btn" id="btn1">車両追加</a>
                 {% else %}
                         <a href="/owners_req/create" class="btn">登録</a>
                 {% endif %}
@@ -166,14 +170,16 @@
                     <div class="card-body">
                         <h5 class="card-title">駐車場オーナー</h5>
                         <p class="card-text"><a class="flow" href="/carsharing_req/pages/4">利用の流れ</a></p>
-                {% if request.session.owner_flag == True %}
+                {% if request.session.system_flag >= 5 %}
                         <a href="/parking_req/loaning/" class="btn">日時選択</a>
+                {% elif request.session.system_flag >= 1 %}
+                        <a href="/parking_req" class="btn" id="btn1">駐車場追加</a>
                 {% else %}
                         <a href="#" class="btn">登録</a>
                 {% endif %}
                     </div>
                 </div>
-                {% if request.session.owner_flag == True or request.session.parking_flag == True %}
+                {% if request.session.system_flag >= 1 %}
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">

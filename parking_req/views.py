@@ -74,6 +74,10 @@ class ParkingHostCreate(TemplateView):
         #バリデーションチェック
         if (parking.is_valid()):
             record.save()
+            if request.session['system_flag'] == 1 or request.session['system_flag'] == 3:
+                set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+                set_flag.system_flag += 4
+                set_flag.save()
             #セッションデータ削除
             del request.session['user_lat']
             del request.session['user_lng']

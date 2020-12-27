@@ -15,6 +15,7 @@ import datetime
 import json
 import openpyxl
 import re
+import os, shutil
 
 
 # Create your views here.
@@ -354,6 +355,7 @@ class DownloadData(TemplateView):
             'path_list': ''
         }
     def get(self, request):
+        DeleteUploadXlsx('/Django/data/car_data/')
         path_list = AllCarDownload()
         path_list[0] = path_list[0][8:]
         path_list[1] = path_list[1][8:]
@@ -398,6 +400,7 @@ class UploadData(TemplateView):
                 administrator.save()
             xlsx_all_list = ImportXlsx(file_name)
             AllCarUpload(xlsx_all_list)
+            DeleteUploadXlsx('/Django/media/xlsx/')
             messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
             messages.error(self.request, 'error')
@@ -586,4 +589,9 @@ def AllCarUpload(all_list):
             record.img = car_list[22]
             record.key_flag = car_list[23]
             record.save()
+
+# 引数に指定されたフォルダー内のファイルを削除
+def DeleteUploadXlsx(target_dir):
+    shutil.rmtree(target_dir)
+    os.mkdir(target_dir)
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
