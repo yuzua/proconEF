@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "parent_category": "\u65e5\u7523"
+    },
+    {
+        "id": 2,
+        "parent_category": "\u30c8\u30e8\u30bf"
+    },
+    {
+        "id": 3,
+        "parent_category": "\u30b9\u30ba\u30ad"
+    }
+]

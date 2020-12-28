@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('ajax/', views.test_ajax_response),
     path('create', ParkingHostCreate.as_view(), name='create'),
+    path('checkparking', views.checkparking, name='checkparking'),
     path('edit', views.edit, name='edit'),
     path('delete/<int:num>', views.delete, name='delete'),
     path('sample', views.sample, name='sample'),

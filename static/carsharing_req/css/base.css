@@ -1,12 +1,3 @@
-.navbar {
-    padding: 0px;
-    height: 50pt;
-    padding: 5pt 20pt 5pt 20pt;
-    width: 100%;
-    margin-bottom: 5pt;
-    background-color: #87CEEB;
-}
-
 .logo3 {
     width: 35pt;
     height: 35pt;
@@ -53,6 +44,11 @@
     padding: 8pt;
     float: left;
     text-align: center;
+    /* border: dotted;
+    border-color: #333;
+    border-width: 2pt; */
+    width: 20%;
+    padding: 20pt;
 }
 
 .header {
@@ -68,7 +64,7 @@
 
 .navbar01 {
     border-right: 1px solid #333;
-    width: 18%;
+    width: 15%;
     text-align: center;
     padding-top: 8pt;
     font-weight: bolder;
@@ -76,7 +72,7 @@
 }
 
 .navbar02 {
-    width: 18%;
+    width: 15%;
     text-align: center;
     padding-top: 8pt;
     font-weight: bolder;
@@ -89,6 +85,11 @@
 }
 
 .navbar02:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.navbar03:hover {
     background-color: #DCDCDC;
     color: #000;
 }
@@ -121,17 +122,42 @@ a:hover {
     margin: 4pt 0 4pt 0;
 }
 
-footer h5 {
+/* footer h5 {
     border-bottom: 3px solid grey;
     padding-bottom: 8px;
+} */
+
+footer h5 {
+    font-size: 13pt;
 }
 
 footer a {
     font-size: small;
+    float: left;
 }
 
 #copy {
     text-align: center;
     margin: 0;
     font-size: small;
+}
+
+.dropdown-item-owner {
+    width: 250pt;
+}
+
+a {
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.replay01 {
+    font-size: 14pt;
+    color: #777777;
+    margin: 10pt 30pt 10pt 15pt;
+    width: 100%;
+    font-weight: bold;
 }

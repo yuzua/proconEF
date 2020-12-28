@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% comment %} {% load static %} {% endcomment %}
+
+{% block active_login %}
+<title>{{ title }}</title>
+<h1>{{ title }}確認画面</h1>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block contents %}
+<p class="h5 mt-4">{{ message|safe }}</p>
+<div class="card">
+    <h2 class="card-header">{{ message|safe }}</h2>
+    <div class="card-body">
+        <p>メーカー：{{ car_maker }}</p>
+        <p>車種：{{ car_model }}</p>
+        <div class="card">
+            <p>①：{{ data.license_plate_place }}</p>
+            <p>②：{{ data.license_plate_type }}</p>
+            <p>③：{{ data.license_plate_how }}</p>
+            <p>④：{{ data.license_plate_num }}</p>
+        </div>
+        <p>型番：{{ data.model_id }}</p>
+        <p>乗車人数：{{ data.people }}</p>
+        <p>タイヤ：{{ data.tire }}</p>
+        <p>変速システム：{{ data.at_mt }}</p>
+        <p>搭載オプション：</p>
+        <ul>
+            {% if data.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if data.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if data.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if data.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if data.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if data.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+        </ul>
+        <p>総走行距離：{{ data.used_mileage }}</p>
+        <p>使用年数：{{ data.used_years }}</p>
+        <p>車検予定日：{{ data.vehicle_inspection_day }}</p>
+    </div>
+    <div class="card-footer">
+        <form action="{% url 'owners_req:checkcar' %}" method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for key, value in data.items %}
+                <input type="hidden" name="{{key}}" value="{{value}}">
+            {% endfor %}
+                <label for="id_img">画像:</label>
+                <input type="file" name="img" class="form-control-file" required accept="image/*" id="id_img">
+                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+    </div>
+</div>
+{% endblock %}

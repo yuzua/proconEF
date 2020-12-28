@@ -1,30 +1,24 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
-from .forms import AdminParkingForm
-import datetime
-import json
-from accounts .models import CustomUser
+from .forms import AdminParkingForm, UploadFileForm
+from .models import MediaModel
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
-from owners_req .forms import CarInfoForm, CarInfoParkingForm, CarsharingDateForm
+from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
 from django.views import generic
+import datetime
+import json
+import openpyxl
+import re
+import os, shutil
+
 
 # Create your views here.
-def check_superuser(request):
-    if request.user.id == None:
-        return redirect(to='/carsharing_req/index')
-    flag = CustomUser.objects.filter(id=request.user.id)
-    flag = flag.values('is_superuser')
-    flag = flag[0]['is_superuser']
-    if flag == True:
-        print(request.user)
-        return redirect(to='/administrator/index')
-    else:
-        return redirect(to='/carsharing_req/')
 
 def index(request):
     params = {
@@ -61,6 +55,37 @@ class ParkingAdminCreate(TemplateView):
             return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
+        obj = ParkingUserModel()
+        parking = AdminParkingForm(request.POST, instance=obj)
+        self.params['form'] = parking
+        #バリデーションチェック
+        if (parking.is_valid()):
+            address = request.POST['address']
+            parking_type = request.POST['parking_type']
+            ground_type = request.POST['ground_type']
+            width = request.POST['width']
+            length = request.POST['length']
+            height = request.POST['height']
+            count = request.POST['count']
+            # 確認画面へ
+            data = {
+                "address": address,
+                "parking_type": parking_type,
+                "ground_type": ground_type,
+                "width": width,
+                "length": length,
+                "height": height,
+                "count": count
+            }
+            self.params['data'] = data
+            return render(request, 'administrator/checkparking.html', self.params)
+        else:
+            self.params['form'] = form
+            messages.error(self.request, '入力データに問題があります')
+        return render(request, 'administrator/create.html', self.params)
+
+def checkparking(request):
+    if (request.method == 'POST'):
         dt_now = datetime.datetime.now()
         user_id = 0
         address = request.POST['address']
@@ -68,28 +93,29 @@ class ParkingAdminCreate(TemplateView):
         lng = request.session['user_lng']
         day = dt_now
         parking_type = request.POST['parking_type']
+        ground_type = request.POST['ground_type']
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
         count = request.POST['count']
-        admin = True
-        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, parking_type = parking_type, \
-            width = width, length = length, height = height, count = count, admin = admin)
-        obj = ParkingUserModel()
-        parking = AdminParkingForm(request.POST, instance=obj)
-        self.params['form'] = parking
-        if (parking.is_valid()):
-            record.save()
-            del request.session['user_lat']
-            del request.session['user_lng']
-            if 'info_flag' in request.session:
-                print(request.session['info_flag'])
-                return redirect(to='/administrator/settinginfo')
-            else:
-                print('none')
-                messages.success(self.request, '駐車場登録が完了しました。')
-                return redirect(to='/administrator/admin_main')
-        return render(request, 'administrator/create.html', self.params)
+        record = ParkingUserModel(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height, count=count)
+        record.save()
+        #セッションデータ削除
+        del request.session['user_lat']
+        del request.session['user_lng']
+        if 'info_flag' in request.session:
+            print(request.session['info_flag'])
+            messages.success(request, '駐車場登録が完了しました。引き続き貸し出し車両・駐車場を選択してください。')
+            return redirect(to='/administrator/settinginfo')
+        else:
+            print('none')
+            messages.success(request, '駐車場登録が完了しました。')
+            return redirect(to='/administrator/admin_main')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='administrator:index')
+
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
@@ -192,25 +218,49 @@ class CreateCarAdminView(TemplateView):
             'title': '車情報登録',
             'message': '車情報入力',
             'form': CarInfoForm(),
+            'form2': CarOptionForm()
         }
 
     def post(self, request):
-        dt_now = datetime.datetime.now()
-        user_id = 0
-        day = dt_now
-        license_plate = request.POST['license_plate']
-        record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
-        form = CarInfoForm(request.POST, instance=record)
-        
+        obj = CarInfoModel()
+        form = CarInfoForm(request.POST, instance=obj)
+        form2 = CarOptionForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
-            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
-            request.session['info_flag'] = True
-            return redirect(to='/administrator/index')
+        self.params['form2'] = form2
+        if form.is_valid() and form2.is_valid():
+            car_maker = list(ParentCategory.objects.filter(id=request.POST['parent_category']).values("parent_category"))
+            car_model = list(Category.objects.filter(id=request.POST['category']).values("category"))
+
+            # 確認画面へ
+            data = {
+                "parent_category": request.POST['parent_category'],
+                "category": request.POST['category'],
+                "license_plate_place": request.POST['license_plate_place'],
+                "license_plate_type": request.POST['license_plate_type'],
+                "license_plate_how": request.POST['license_plate_how'],
+                "license_plate_num": request.POST['license_plate_num'],
+                "model_id": request.POST['model_id'],
+                "people": request.POST['people'],
+                "tire": request.POST['tire'],
+                "at_mt": request.POST['at_mt'],
+                "babysheet": 'babysheet' in request.POST,
+                "car_nav": 'car_nav' in request.POST,
+                "etc": 'etc' in request.POST,
+                "car_autonomous": 'car_autonomous' in request.POST,
+                "around_view_monitor": 'around_view_monitor' in request.POST,
+                "non_smoking": 'non_smoking' in request.POST,
+                "used_mileage": request.POST['used_mileage'],
+                "used_years": request.POST['used_years'],
+                "vehicle_inspection_day": request.POST['vehicle_inspection_day']
+            }
+            self.params['data'] = data
+            self.params['car_maker'] = car_maker[0]['parent_category']
+            self.params['car_model'] = car_model[0]['category']
+            return render(request, 'administrator/checkcar.html', self.params)
         else:
-            self.params['message'] = '入力データに問題があります'
+            messages.error(self.request, '入力データに問題があります')
         return render(request, 'administrator/create.html', self.params)
+
 
         
     def get(self, request):
@@ -227,7 +277,51 @@ class CreateCarAdminView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
-        return context                    
+        return context
+
+def checkcar(request):
+    params = {
+        'title': '車情報登録確認画面'
+    }
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        day = dt_now
+        user_id = 0
+        parent_category = ParentCategory.objects.get(id=request.POST['parent_category'])
+        category = Category.objects.get(id=request.POST['category'])
+        # Str型からBool型に変換
+        babysheet = judgmentTF(request.POST['babysheet'])
+        car_nav = judgmentTF(request.POST['car_nav'])
+        etc = judgmentTF(request.POST['etc'])
+        car_autonomous = judgmentTF(request.POST['car_autonomous'])
+        around_view_monitor = judgmentTF(request.POST['around_view_monitor'])
+        non_smoking = judgmentTF(request.POST['non_smoking'])
+        
+        record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
+            license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
+            license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
+            model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
+            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, non_smoking=non_smoking, \
+            used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
+            vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day, key_flag=True)
+        record.save()
+        messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+        request.session['info_flag'] = True
+        # return redirect(to='administrator:index')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='administrator:index')
+
+# ----------------------------------------------------------------------------------------------------------
+def judgmentTF(string):
+    if string == "True":
+        boolean = True
+    else:
+        boolean = False
+
+    return boolean
+# ----------------------------------------------------------------------------------------------------------
+
 
 class SettingAdminInfo(TemplateView):
     def __init__(self):
@@ -284,3 +378,252 @@ class SettingAdminInfo(TemplateView):
         print(nowint)
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/admin_main')
+
+# データのダウンロード
+class DownloadData(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'DownloadData',
+            'path_list': ''
+        }
+    def get(self, request):
+        DeleteUploadXlsx('/Django/data/car_data/')
+        path_list = AllCarDownload()
+        path_list[0] = path_list[0][8:]
+        path_list[1] = path_list[1][8:]
+        path_list[2] = path_list[2][8:]
+        self.params['path_list'] = path_list
+        return render(request, 'administrator/download_data.html', self.params)
+
+# データのアップロード
+class UploadData(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title':'UploadData',
+            'form': ''
+        }
+    def get(self, request):
+        form = UploadFileForm()
+        self.params['form'] = form
+        return render(request, 'administrator/upload_data.html', self.params)
+    def post(self, request):
+        file_name = str(request.FILES['attach'])
+        result_json = re.match(r'.*\.json$', file_name)
+        result_xlsx = re.match(r'.*\.xlsx$', file_name)
+        # .jsonの場合
+        if result_json:
+            json_data = json.loads(request.POST['output'])
+            if file_name[0] == 'p':
+                AllParentCategoryUpload(json_data)
+                messages.success(self.request, 'メーカー情報をDBへ格納しました。')
+            elif file_name[0] == 'c':
+                AllCategoryUpload(json_data)
+                messages.success(self.request, '車種情報をDBへ格納しました。')
+        # .xlsxの場合
+        elif result_xlsx:
+            #ファイルの場合はPOSTとFILEの両方を渡す
+            #instanseを設定することでリクエストではなく、サーバー側で自動設定できる値を決められる
+            mediaObj = MediaModel()
+            administrator:UploadFileForm = UploadFileForm(request.POST, request.FILES, instance=mediaObj)
+            administrator.errors
+            # 値が正しいか確認(バリデーション)
+            if administrator.is_valid():
+                # 値をDBへの登録
+                administrator.save()
+            xlsx_all_list = ImportXlsx(file_name)
+            AllCarUpload(xlsx_all_list)
+            DeleteUploadXlsx('/Django/media/xlsx/')
+            messages.success(self.request, '車両情報をDBへ格納しました。')
+        else:
+            messages.error(self.request, 'error')
+        return redirect(to='administrator:upload_data')
+
+
+
+
+# -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
+def AllCarDownload():
+    dt_now = str(datetime.datetime.now())
+    path_list = []
+
+    # メーカー情報(親カテゴリー)をjsonでダウンロード
+    pc_path = AllParentCategoryDownload(dt_now)
+    path_list.append(pc_path)
+    # 車種情報(子カテゴリー)をjsonでダウンロード
+    c_path = AllCategoryDownload(dt_now)
+    path_list.append(c_path)
+
+    data = [
+        ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
+    ]
+    data_list = list(CarInfoModel.objects.values())
+    for data_dict in data_list:
+        tmp = list(data_dict.values())
+        # datetime型は入力できない為、str型にlist内を全変換：map()
+        result = map((lambda x: str(x)), tmp)
+        data.append(list(result))
+
+    # ブックの読み込みとシート選択
+    wb = openpyxl.Workbook()
+    sheet = wb.worksheets[0]
+
+    # 行ごとに取り出してからExcelへ挿入
+    for row in data:
+        sheet.append(row)
+
+    # xlsx型式で保存
+    file_name = "/Django/data/car_data/" + dt_now + ".xlsx"
+    wb.save(file_name)
+    path_list.append(file_name)
+    return path_list
+
+def AllParentCategoryDownload(dt_now):
+    p_c = list(ParentCategory.objects.values())
+    json_data = json.dumps(p_c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/car_data/pc_" + dt_now + ".json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+    return path
+
+def AllCategoryDownload(dt_now):
+    c = list(Category.objects.values())
+    json_data = json.dumps(c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/car_data/c_" + dt_now + ".json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+    return path
+# -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
+
+
+# --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
+def AllParentCategoryUpload(json_data):
+    print(type(json_data))
+    flag = len(list(ParentCategory.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            record = ParentCategory.objects.get(id=data['id'])
+            record.parent_category = data['parent_category']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = ParentCategory(id=data['id'], parent_category=data['parent_category'])
+            record.save()
+
+def AllCategoryUpload(json_data):
+    print(json_data)
+    flag = len(list(Category.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            record = Category.objects.get(id=data['id'])
+            record.parent_category_id = data['parent_category_id']
+            record.category = data['category']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = Category(id=data['id'], parent_category_id=data['parent_category_id'], category=data['category'])
+            record.save()
+# --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
+# ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+def ImportXlsx(file_name):
+    # 今取り込んだxlsxファイルのpathを取得
+    media = MediaModel.objects.values('attach')
+    file_name = file_name.replace(' ', '_')
+    file_name = file_name.replace(':', '')
+    for path in media:
+        if path['attach'][5:] == file_name:
+            media_path = path['attach']
+    
+    # 取得したpathからファイルを開く
+    wb = openpyxl.load_workbook("/Django/media/" + media_path)
+    # シートの名前を取得
+    sheet_name = wb.sheetnames[0]
+    sheet = wb[sheet_name]
+    # シートの行数を取得
+    m_row = sheet.max_row
+    # シートの項目数を取得
+    m_column = sheet.max_column
+    # 全件取り出し
+    l_2d = get_list_2d(sheet, 1, m_row, 1, m_column)
+    print(l_2d)
+    return l_2d
+
+def get_list_2d(sheet, start_row, end_row, start_col, end_col):
+    return get_value_list(sheet.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col))
+
+def get_value_list(t_2d):
+    return([[cell.value for cell in row] for row in t_2d])
+# ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
+def AllCarUpload(all_list):
+    print(all_list[0])
+    # 先頭のindexを削除
+    all_list.pop(0)
+    flag = len(list(CarInfoModel.objects.all()))
+    if flag != 0:
+        for car_list in all_list:
+            record = CarInfoModel.objects.get(id=car_list[0])
+            record.user_id = int(car_list[1])
+            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            record.parent_category_id = int(car_list[3])
+            record.category_id = int(car_list[4])
+            record.license_plate_place = car_list[5]
+            record.license_plate_type = car_list[6]
+            record.license_plate_how = car_list[7]
+            record.license_plate_num = car_list[8]
+            record.model_id = car_list[9]
+            record.people = int(car_list[10])
+            record.tire = car_list[11]
+            record.at_mt = car_list[12]
+            record.babysheet = car_list[13]
+            record.car_nav = car_list[14]
+            record.etc = car_list[15]
+            record.around_view_monitor = car_list[16]
+            record.car_autonomous = car_list[17]
+            record.non_smoking = car_list[18]
+            record.used_mileage = car_list[19]
+            record.used_years = int(car_list[20])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            record.img = car_list[22]
+            record.key_flag = car_list[23]
+            record.save()
+    else:
+        for car_list in all_list:
+            record = CarInfoModel()
+            record.user_id = int(car_list[1])
+            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            record.parent_category_id = int(car_list[3])
+            record.category_id = int(car_list[4])
+            record.license_plate_place = car_list[5]
+            record.license_plate_type = car_list[6]
+            record.license_plate_how = car_list[7]
+            record.license_plate_num = car_list[8]
+            record.model_id = car_list[9]
+            record.people = int(car_list[10])
+            record.tire = car_list[11]
+            record.at_mt = car_list[12]
+            record.babysheet = car_list[13]
+            record.car_nav = car_list[14]
+            record.etc = car_list[15]
+            record.around_view_monitor = car_list[16]
+            record.car_autonomous = car_list[17]
+            record.non_smoking = car_list[18]
+            record.used_mileage = car_list[19]
+            record.used_years = int(car_list[20])
+            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            record.img = car_list[22]
+            record.key_flag = car_list[23]
+            record.save()
+
+# 引数に指定されたフォルダー内のファイルを削除
+def DeleteUploadXlsx(target_dir):
+    shutil.rmtree(target_dir)
+    os.mkdir(target_dir)
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------

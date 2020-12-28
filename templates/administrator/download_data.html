@@ -1,0 +1,51 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+{% for path in path_list %}
+    <a href="{{path}}" download onclick="javascript: downloadFile('{{path}}', '{{path}}'); return false;">{{path}}</a>
+        <hr>
+{% endfor %}
+{% endblock %}
+
+{% block extrajs %}
+{% comment %} <script data-main="app.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.js"></script> {% endcomment %}
+<script>
+function downloadFile(url, filename) {
+  "use strict";
+
+  // XMLHttpRequestオブジェクトを作成する
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.responseType = "blob"; // Blobオブジェクトとしてダウンロードする
+  xhr.onload = function (oEvent) {
+    // ダウンロード完了後の処理を定義する
+    var blob = xhr.response;
+    if (window.navigator.msSaveBlob) {
+      // IEとEdge
+      window.navigator.msSaveBlob(blob, filename);
+    }
+    else {
+      // それ以外のブラウザ
+      // Blobオブジェクトを指すURLオブジェクトを作る
+      var objectURL = window.URL.createObjectURL(blob);
+      // リンク（<a>要素）を生成し、JavaScriptからクリックする
+      var link = document.createElement("a");
+      document.body.appendChild(link);
+      link.href = objectURL;
+      link.download = filename;
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+  // XMLHttpRequestオブジェクトの通信を開始する
+  xhr.send();
+}    
+</script>
+{% endblock %}

@@ -8,6 +8,9 @@ from operator import itemgetter
 import ast
 from django.contrib import messages
 import json
+import datetime
+from carsharing_req .models import UsageModel
+from carsharing_booking .models import BookingModel
 #from .forms import QuestionnaireAnswerForm
 
 # Create your views here.
@@ -18,7 +21,7 @@ class Survey(TemplateView):
 
     def __init__(self):
         self.params = {
-            'title': 'アンケート',
+            'title': '返却確認処理・アンケート',
             'message': '車選びで重視するものを選択してください',
             'data': ''
         }
@@ -52,6 +55,12 @@ class Survey(TemplateView):
         del request.session['data']
         #jsonファイルを作成 (おすすめ車両AIに投げる用)
         makeJsonFile(user_id)
+        check_usage_obj = checkUsage(request.session['user_id'])
+        if check_usage_obj == None:
+            print('ok')
+        else:
+            # surveyMail(request, check_usage_obj)
+            saveUsage(request, check_usage_obj)
         return redirect(to='carsharing_req:index')
 
 
@@ -278,3 +287,41 @@ def makeJsonFile(user_id):
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
+
+# csv読み込み
+import csv
+def Lord_csv_file():
+    path = '/Django/data/car_csv/used_car_data.csv'
+    with open(path) as f:
+        for row in csv.reader(f):
+            print(f"Row: {row}")
+            print(f"Type of row: {type(row)}")
+            print(f"1st Data: {row[0]}")
+            print(f"Type of 1st Data: {type(row[0])}")
+
+
+# 返却処理後、利用DBへ保存。
+def checkUsage(user_id):
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    t_now = dt_now.strftime('%H:%M')
+    usage = UsageModel.objects.filter(user_id=user_id).values('booking_id')
+    print(usage)
+    if len(usage) == 0:
+        print('first')
+        booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
+    else:
+        usage_list = []
+        for booking_id in usage:
+            usage_list.append(booking_id['booking_id'])
+            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+    print(booking)
+    return booking
+
+def saveUsage(request, booking):
+    booking_id = BookingModel.objects.get(id=booking['id'])
+    record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
+        booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
+        end_day=booking['end_day'], end_time=booking['end_time'], charge=booking['charge'])
+    record.save()
+    pass

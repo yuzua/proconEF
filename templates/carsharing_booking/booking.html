@@ -19,9 +19,30 @@
 <form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
     {% csrf_token %}
 <table class="table">
-    <tr class="card-header"><th>予約</th><th>車両ID</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>カスタム</th><th>タイヤ</th></tr>
+    <tr class="card-header"><th>予約</th><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
 {% for car_obj in car_objs %}
-    <tr><td><input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required></td><td>{{car_obj.id}}</td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}</td><td>{{car_obj.custom}}</td><td>{{car_obj.tire}}</td></tr> 
+    <tr><td><input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required><td><img src="/media/{{car_obj.img}}" width="110" height="80" border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
+        <td>
+        {% if car_obj.babysheet == True %}
+        <li>チャイルドシート</li>
+        {% endif %}
+        {% if car_obj.car_nav == True %}
+        <li>カーナビ</li>
+        {% endif %}
+        {% if car_obj.etc == True %}
+        <li>ETC</li>
+        {% endif %}
+        {% if car_obj.car_autonomous == True %}
+        <li>自動運動</li>
+        {% endif %}
+        {% if car_obj.around_view_monitor == True %}
+        <li>駐車アシスト</li>
+        {% endif %}
+        {% if car_obj.non_smoking == True %}
+        <li>禁煙</li>
+        {% endif %}
+        </td>
+    </tr> 
 {% endfor %}
 </table>
 </div>

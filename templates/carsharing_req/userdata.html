@@ -10,7 +10,10 @@
 <table class="table">
   <tbody>
     <tr>
-      <th scope="col">ID</th><td scope="row">{{data.id}}</td>
+      <th scope="col">お名前</th><td scope="row">{{data.first_name}}{{data.last_name}}　様</td>
+    </tr>
+    <tr>
+      <th scope="col">ふりがな</th><td scope="row">{{data.first_ja}}{{data.last_ja}}　様</td>
     </tr>
     <tr>
       <th scope="col">メールアドレス</th><td scope="row">{{data.email}}</td>
@@ -26,7 +29,7 @@
       </td>
     </tr>
     <tr>  
-      <th scope="col">年齢</th><td scope="row">{{data.age}}</td>
+      <th scope="col">年齢</th><td scope="row">{{data.age}} 歳</td>
     </tr>
     <tr>  
       <th scope="col">生年月日</th><td scope="row">{{data.birthday}}</td>
@@ -41,7 +44,33 @@
       <th scope="col">住所</th><td scope="row">{{data.addr01}}{{data.addr02}}</td>
     </tr>
     <tr>  
-      <th scope="col">system_flag</th><td scope="row">{{data.system_flag}}</td>
+      <th scope="col">カード会社</th><td scope="row">{{data.credit_card_company}}</td>
+    </tr>
+    <tr>
+      <th scope="col">名義</th><td scope="row">{{data.first_en}} {{data.last_en}}　様</td>
+    </tr>
+    <tr>  
+      <th scope="col">カード番号(下3桁)</th><td scope="row">**** **** **** *{{data.credit_card_num_check}}</td>
+    </tr>
+    <tr>  
+      <th scope="col">使用期限</th><td scope="row">{{data.valid_thru}}</td>
+    </tr>
+
+    <tr>  
+      <th scope="col">ご契約中のプラン</th>
+      <td scope="row">
+      {% if data.plan == 'a' %}
+        定額500円コース
+      {% elif data.plan == 'b' %}
+        定額1000円コース
+      {% elif data.plan == 'c' %}
+        定額2000円コース
+      {% elif data.plan == 'd' %}
+        夜間お得コース
+      {% else %}
+        コース
+      {% endif %}
+      </td>
     </tr>
     <tr>  
       <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>

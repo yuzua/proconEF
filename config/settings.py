@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'secondhandcar.apps.SecondhandcarConfig',
     'accounts.apps.AccountsConfig',
     'parking_booking.apps.ParkingBookingConfig',
+    'survey.apps.SurveyConfig',
+    'administrator.apps.AdministratorConfig',
 
     'django.contrib.sites',
     'allauth',
@@ -152,6 +154,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# 静的なメディアファイルのルーティング
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 #開発環境では、メールのシステムをスタブ化
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
