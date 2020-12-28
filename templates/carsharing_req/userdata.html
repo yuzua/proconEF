@@ -57,7 +57,20 @@
     </tr>
 
     <tr>  
-      <th scope="col">ご契約中のプラン</th><td scope="row">{{data.plan}}</td>
+      <th scope="col">ご契約中のプラン</th>
+      <td scope="row">
+      {% if data.plan == 'a' %}
+        定額500円コース
+      {% elif data.plan == 'b' %}
+        定額1000円コース
+      {% elif data.plan == 'c' %}
+        定額2000円コース
+      {% elif data.plan == 'd' %}
+        夜間お得コース
+      {% else %}
+        コース
+      {% endif %}
+      </td>
     </tr>
     <tr>  
       <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>

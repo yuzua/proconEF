@@ -34,7 +34,7 @@ def test_ajax_response(request):
 class ParkingHostCreate(TemplateView):
     def __init__(self):
         self.params = {
-            'title': 'ParkingHostCreate',
+            'title': '駐車場登録',
             'message': '駐車場情報入力',
             'form': ParkingForm(),
         }
@@ -56,6 +56,36 @@ class ParkingHostCreate(TemplateView):
 
     #入力データとセッションデータを保存
     def post(self, request):
+        obj = ParkingUserModel()
+        parking = ParkingForm(request.POST, instance=obj)
+        self.params['form'] = parking
+        #バリデーションチェック
+        if (parking.is_valid()):
+            address = request.POST['address']
+            parking_type = request.POST['parking_type']
+            ground_type = request.POST['ground_type']
+            width = request.POST['width']
+            length = request.POST['length']
+            height = request.POST['height']
+            # 確認画面へ
+            data = {
+                "address": address,
+                "parking_type": parking_type,
+                "ground_type": ground_type,
+                "width": width,
+                "length": length,
+                "height": height
+            }
+            self.params['data'] = data
+            return render(request, 'parking_req/checkparking.html', self.params)
+        else:
+            self.params['form'] = form
+            messages.error(self.request, '入力データに問題があります')
+        return render(request, 'parking_req/create.html', self.params)
+
+
+def checkparking(request):
+    if (request.method == 'POST'):
         dt_now = datetime.datetime.now()
         user_id = request.session['user_id']
         address = request.POST['address']
@@ -63,32 +93,32 @@ class ParkingHostCreate(TemplateView):
         lng = request.session['user_lng']
         day = dt_now
         parking_type = request.POST['parking_type']
+        ground_type = request.POST['ground_type']
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
-        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, \
-            parking_type = parking_type, width = width, length = length, height = height)
-        obj = ParkingUserModel()
-        parking = ParkingForm(request.POST, instance=obj)
-        self.params['form'] = parking
-        #バリデーションチェック
-        if (parking.is_valid()):
-            record.save()
-            if request.session['system_flag'] == 1 or request.session['system_flag'] == 3:
-                set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
-                set_flag.system_flag += 4
-                set_flag.save()
-            #セッションデータ削除
-            del request.session['user_lat']
-            del request.session['user_lng']
-            if 'info_flag' in request.session:
-                print(request.session['info_flag'])
-                return redirect(to='/owners_req/settinginfo')
-            else:
-                print('none')
-                messages.success(self.request, '駐車場登録が完了しました。')
-                return redirect(to='/parking_req/sample')
-        return render(request, 'parking_req/create.html', self.params)
+        record = ParkingUserModel(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height)
+        record.save()
+        if request.session['system_flag'] == 1 or request.session['system_flag'] == 3:
+            set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+            set_flag.system_flag += 4
+            set_flag.save()
+        #セッションデータ削除
+        del request.session['user_lat']
+        del request.session['user_lng']
+        if 'info_flag' in request.session:
+            print(request.session['info_flag'])
+            messages.success(request, '駐車場登録が完了しました。引き続き貸し出し車両・駐車場を選択してください。')
+            return redirect(to='/owners_req/settinginfo')
+        else:
+            print('none')
+            messages.success(request, '駐車場登録が完了しました。')
+            return redirect(to='/parking_req/sample')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/index')
+
 
 def edit(request):
     if (request.method == 'POST'):

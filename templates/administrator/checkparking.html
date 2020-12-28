@@ -1,0 +1,31 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+<p class="h5 mt-4">{{ message|safe }}</p>
+<div class="card">
+    <h2 class="card-header">{{ message|safe }}</h2>
+    <div class="card-body">
+        <p>住所：{{ data.address }}</p>
+        <p>駐車場タイプ：{{ data.parking_type }}</p>
+        <p>土地タイプ：{{ data.ground_type }}</p>
+        <p>横幅：{{ data.width }}m</p>
+        <p>奥行き：{{ data.length }}m</p>
+        <p>高さ：{{ data.height }}m</p>
+        <p>収容台数：{{ data.count }}台</p>
+    </div>
+    <div class="card-footer">
+        <form action="{% url 'administrator:checkparking' %}" method="post" >
+            {% csrf_token %}
+            {% for key, value in data.items %}
+                <input type="text" name="{{key}}" value="{{value}}">
+            {% endfor %}
+                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+    </div>
+</div>
+{% endblock %}

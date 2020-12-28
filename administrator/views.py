@@ -55,6 +55,37 @@ class ParkingAdminCreate(TemplateView):
             return render(request, 'administrator/create.html', self.params)
 
     def post(self, request):
+        obj = ParkingUserModel()
+        parking = AdminParkingForm(request.POST, instance=obj)
+        self.params['form'] = parking
+        #バリデーションチェック
+        if (parking.is_valid()):
+            address = request.POST['address']
+            parking_type = request.POST['parking_type']
+            ground_type = request.POST['ground_type']
+            width = request.POST['width']
+            length = request.POST['length']
+            height = request.POST['height']
+            count = request.POST['count']
+            # 確認画面へ
+            data = {
+                "address": address,
+                "parking_type": parking_type,
+                "ground_type": ground_type,
+                "width": width,
+                "length": length,
+                "height": height,
+                "count": count
+            }
+            self.params['data'] = data
+            return render(request, 'administrator/checkparking.html', self.params)
+        else:
+            self.params['form'] = form
+            messages.error(self.request, '入力データに問題があります')
+        return render(request, 'administrator/create.html', self.params)
+
+def checkparking(request):
+    if (request.method == 'POST'):
         dt_now = datetime.datetime.now()
         user_id = 0
         address = request.POST['address']
@@ -62,28 +93,29 @@ class ParkingAdminCreate(TemplateView):
         lng = request.session['user_lng']
         day = dt_now
         parking_type = request.POST['parking_type']
+        ground_type = request.POST['ground_type']
         width = request.POST['width']
         length = request.POST['length']
         height = request.POST['height']
         count = request.POST['count']
-        admin = True
-        record = ParkingUserModel(user_id = user_id, address = address, lat = lat, lng=lng, day = day, parking_type = parking_type, \
-            width = width, length = length, height = height, count = count, admin = admin)
-        obj = ParkingUserModel()
-        parking = AdminParkingForm(request.POST, instance=obj)
-        self.params['form'] = parking
-        if (parking.is_valid()):
-            record.save()
-            del request.session['user_lat']
-            del request.session['user_lng']
-            if 'info_flag' in request.session:
-                print(request.session['info_flag'])
-                return redirect(to='/administrator/settinginfo')
-            else:
-                print('none')
-                messages.success(self.request, '駐車場登録が完了しました。')
-                return redirect(to='/administrator/admin_main')
-        return render(request, 'administrator/create.html', self.params)
+        record = ParkingUserModel(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height, count=count)
+        record.save()
+        #セッションデータ削除
+        del request.session['user_lat']
+        del request.session['user_lng']
+        if 'info_flag' in request.session:
+            print(request.session['info_flag'])
+            messages.success(request, '駐車場登録が完了しました。引き続き貸し出し車両・駐車場を選択してください。')
+            return redirect(to='/administrator/settinginfo')
+        else:
+            print('none')
+            messages.success(request, '駐車場登録が完了しました。')
+            return redirect(to='/administrator/admin_main')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='administrator:index')
+
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
