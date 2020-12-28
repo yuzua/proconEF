@@ -12,6 +12,33 @@
 
 {% block main_contents %}
     <br>
+    <div class="card">
+    <table class="table">
+        <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
+        <tr><td><img src="/media/{{car_data.img}}" width="110" height="80" border="0" /></td></td><td>{{car_data.parent_category}}</td><td>{{car_data.category}}</td><td>{{car_data.model_id}}</td><td>{{car_data.people}}</td><td>{{car_data.tire}}</td><td>{{car_data.at_mt}}車</td>
+            <td>
+            {% if car_data.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if car_data.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if car_data.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if car_data.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if car_data.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if car_data.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+            </td>
+        </tr> 
+    </table>
+    </div>
     <div class="clearfix">
         <div class="w-50 float-left p-5" id="calendar"></div>
         <div class="w-50 float-left p-5">
