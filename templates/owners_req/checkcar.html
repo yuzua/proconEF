@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
-{% comment %} {% load static %} {% endcomment %}
+{% load static %}
 
 {% block active_login %}
-<title>{{ title }}</title>
 <h1>{{ title }}確認画面</h1>
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
 {% endblock %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -11,15 +14,20 @@
 {% block contents %}
 <p class="h5 mt-4">{{ message|safe }}</p>
 <div class="card">
-    <h2 class="card-header">{{ message|safe }}</h2>
+    {% comment %} <h2 class="card-header">{{ message|safe }}</h2> {% endcomment %}
     <div class="card-body">
         <p>メーカー：{{ car_maker }}</p>
         <p>車種：{{ car_model }}</p>
-        <div class="card">
-            <p>①：{{ data.license_plate_place }}</p>
-            <p>②：{{ data.license_plate_type }}</p>
-            <p>③：{{ data.license_plate_how }}</p>
-            <p>④：{{ data.license_plate_num }}</p>
+        <p>ナンバープレート：</p>
+        <div class="card m-1" id="numberplate">
+            <div class="container clearfix" id="numberplate-top">
+                <p class="numberplate-top-item">{{ data.license_plate_place }}</p>
+                <p class="numberplate-top-item">{{ data.license_plate_type }}</p>
+            </div>
+            <div class="container clearfix" id="numberplate-bottom">
+                <p class="numberplate-bottom-item1">{{ data.license_plate_how }}</p>
+                <p class="numberplate-bottom-item2">{{ data.license_plate_num }}</p>
+            </div>
         </div>
         <p>型番：{{ data.model_id }}</p>
         <p>乗車人数：{{ data.people }}</p>

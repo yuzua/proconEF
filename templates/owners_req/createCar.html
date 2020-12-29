@@ -1,11 +1,27 @@
 {% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
+{% endblock %}
+
 {% block main_contents %}
 <title>{{ title }}</title>
 <h1>{{ title }}</h1>
+    <div class="card m-5" id="numberplate">
+        <div class="container clearfix" id="numberplate-top">
+            <p class="numberplate-top-item">品川</p>
+            <p class="numberplate-top-item">567</p>
+        </div>
+        <div class="container clearfix" id="numberplate-bottom">
+            <p class="numberplate-bottom-item1">あ</p>
+            <p class="numberplate-bottom-item2">24-68</p>
+        </div>
+    </div>
     <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_table }}
-        <div class="card">
+        <div class="card m-5">
             <div class="card-body">
             {{ form2.as_p }}
             </div>
