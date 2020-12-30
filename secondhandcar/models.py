@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class SecondHandCarModel(models.Model):
+class SecondHandCarAIModel(models.Model):
     box_1 = models.CharField(max_length=999, verbose_name='駆動方式')
     box_2 = models.CharField(max_length=999, verbose_name='乗車定員')
     box_3 = models.CharField(max_length=999, verbose_name='ドア枚数')

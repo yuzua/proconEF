@@ -15,6 +15,7 @@ from carsharing_booking .models import BookingModel
 
 # Create your views here.
 def index(request):
+    Lord_csv_file()
     return HttpResponse('survey')
 
 class Survey(TemplateView):
@@ -291,7 +292,7 @@ def makeJsonFile(user_id):
 # csv読み込み
 import csv
 def Lord_csv_file():
-    path = '/Django/data/car_csv/used_car_data.csv'
+    path = '/Django/data/car_csv/secondhandcar-record.csv'
     with open(path) as f:
         for row in csv.reader(f):
             print(f"Row: {row}")
