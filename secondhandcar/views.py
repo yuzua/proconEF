@@ -4,6 +4,7 @@ from .models import SecondHandCarAIModel, SecondHandCarInfoModel
 import json
 import csv
 import os
+import time
 from ai import preprocessing, recoai
 # Create your views here.
 
@@ -216,8 +217,78 @@ def exportCSV(request):
     preprocessing.Preprocessing()
 
 def recommend_car(request):
-    data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+    # ゲストの答えたアンケート(POSTデータ)から提案
+    if (request.method == 'POST'):
+        #チェックされたアンケート項目を取得
+        checks_value = request.POST.getlist('checks[]')
+        print(checks_value)
+        anser_dict = {}
+        for anser in checks_value:
+            anser_dict[anser] = True
+        json_data = json.dumps(anser_dict, sort_keys=True, indent=4)
+        print(json_data)
+        ut = int(time.time())
+        print(ut)
+        path = '/Django/data/recommend/user_' + str(ut) + '.json'
+        with open(path, 'w') as f:
+            f.write(json_data)
+        recoai.RecommendAI('user_' + str(ut) + '.json')
+        data = importRecoJson('/Django/data/recommend/reco_user_' + str(ut) + '.json', str(ut))
 
+        secondhandcar_list = setSecondHandCarList(data)
+        # ゲストデータを削除
+        os.remove('/Django/data/recommend/reco_user_' + str(ut) + '.json')
+
+        params = {
+            'secondhandcar_list': secondhandcar_list,
+            'title': 'あなたへのおすすめ'
+        }
+        return render(request, 'secondhandcar/recommend.html', params)
+
+    # 会員か非会員か判定
+    if str(request.user) == "AnonymousUser":
+        # 非会員は先にアンケートに回答
+        survey_list = [
+            '乗り心地がいい',
+            '荷室の使いやすさ',
+            '燃費の良さ',
+            '排気量の少なさ',
+            '車内空間が広い',
+            '静かに走る',
+            '馬力がある',
+            '乗車定員が多い',
+            '小回りが利く',
+            '乗車しやすい',
+            '安全性能が高い',
+            '走行性能が高い',
+            '車両サイズが小さい'
+        ]
+        params = {
+            'data': survey_list
+        }
+        return render(request, 'secondhandcar/gestquestionnaire.html', params)
+    else:
+        # 作成されたjsonデータを使用しておすすめを提案
+        data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+
+    secondhandcar_list = setSecondHandCarList(data)
+
+    params = {
+        'secondhandcar_list': secondhandcar_list,
+        'title': 'あなたへのおすすめ'
+    }
+    return render(request, 'secondhandcar/recommend.html', params)
+
+
+
+def importRecoJson(path, user_id):
+    with open(path, 'r') as f:
+            json_data = f.read()
+            json_object = json.loads(json_data)
+    data = json_object['user_' + user_id]
+    return data
+
+def setSecondHandCarList(data):
     one = data['0']
     two = data['1']
     three = data['2']
@@ -231,15 +302,4 @@ def recommend_car(request):
     five = SecondHandCarInfoModel.objects.get(second_hand_car_id=five)
     six = SecondHandCarInfoModel.objects.get(second_hand_car_id=six)
     secondhandcar_list = [one,two,three,four,five,six]
-    params = {
-        'secondhandcar_list': secondhandcar_list,
-        'title': 'あなたへのおすすめ'
-    }
-    return render(request, 'secondhandcar/recommend.html', params)
-
-def importRecoJson(path, user_id):
-    with open(path, 'r') as f:
-            json_data = f.read()
-            json_object = json.loads(json_data)
-    data = json_object['user_' + user_id]
-    return data
+    return secondhandcar_list
