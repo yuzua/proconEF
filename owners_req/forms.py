@@ -40,6 +40,10 @@ class CarInfoForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
         # super(CarsharUserCreateForm, self).__init__(*args, **kwd)
         # self.fields["img"].widget.attrs['class'] = 'form-control-file'
+        self.fields["license_plate_place"].widget.attrs['placeholder'] = '品川'
+        self.fields["license_plate_type"].widget.attrs['placeholder'] = '567'
+        self.fields["license_plate_how"].widget.attrs['placeholder'] = 'あ'
+        self.fields["license_plate_num"].widget.attrs['placeholder'] = '12-34'
         self.fields["vehicle_inspection_day"].widget.attrs['placeholder'] = '2021-01-01'
 
     class Meta:

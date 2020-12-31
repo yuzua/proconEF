@@ -113,6 +113,7 @@ def booking_car(request, num):
         'events': '',
         'car_id': num,
         'form': BookingCreateForm(),
+        'car_data': CarInfoModel.objects.get(id=num)
     }
     events = []
     # カーシェアリング予約

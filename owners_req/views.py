@@ -135,7 +135,7 @@ def checkmember(request):
         messages.success(request, '登録完了しました。')
     else:
         messages.error(request, '不正なリクエストです。')
-    return redirect(to='/carsharing_req/index')
+    return redirect(to='/carsharing_req/')
 
 
 # ----------------------------------------------------------------------------------------------------------------

@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import SecondHandCarModel
+from .models import SecondHandCarAIModel, SecondHandCarInfoModel
 import json
 import csv
+import os
+import time
+from ai import preprocessing, recoai
 # Create your views here.
 
 
@@ -95,7 +98,7 @@ def importCSV(request):
         for row in reader:
             # print(row)
             if row[0] != 'carID':
-                record = SecondHandCarModel()
+                record = SecondHandCarAIModel()
                 record.id = row[0]
                 record.box_1 = row[1]
                 record.box_2 = row[2]
@@ -174,3 +177,131 @@ def importCSV(request):
                 record.box_75 = row[75]
                 record.box_76 = row[76]
                 record.save()
+    
+    count = -1
+    with open('/Django/data/car_csv/used_car_data.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            # print(row)
+            if count != -1:
+                record = SecondHandCarInfoModel()
+                record.second_hand_car_id_id = str(count)
+                record.parent_category = row[0]
+                record.category = row[1]
+                record.grade = row[2]
+                record.release_period = row[3]
+                record.model = row[4]
+                record.img1 = row[130]
+                record.img2 = row[131]
+                record.img3 = row[132]
+                record.save()
+            count += 1
+
+
+def exportCSV(request):
+    # 月１処理とcsv作成
+    filename = '/Django/data/car_csv/reco_car_data.csv'
+    second_hand_car = list(SecondHandCarAIModel.objects.all())
+    second_hand_car_list = []
+    index = ["carID","駆動方式","乗車定員","ドア枚数","エンジン型式","エンジン種類","エンジン区分","環境対策エンジン","総排気量(cc)","過給器","ホイールベース(mm)","車両重量(kg)","最低地上高(mm)","最小回転半径(m)","サスペンション形式前","サスペンション形式後","ブレーキ形式後","使用燃料","燃料タンク容量(L)","エアフィルター","2列目シート","アルミホイール","リアスポイラー","フロントフォグランプ","ETC","助手席エアバッグ","サイドエアバッグ","カーテンエアバッグ","頸部衝撃緩和ヘッドレスト","EBD付ABS","セキュリティアラーム","マニュアルモード","チップアップシート","ドアイージークローザー","レーンアシスト","車間距離自動制御システム","前席シートヒーター","床下ラゲージボックス","オーディオソース_DVD","ブレーキアシスト","駐車支援システム","防水加工","地上波デジタルテレビチューナー","ソナー","サイドモニター","その他ナビゲーション","インテリジェントAFS","運転席パワーシート","本革シート","AC電源","ステアリングヒーター","リアフォグランプ","レインセンサー","インテリジェントパーキングアシスト","エマージェンシーサービス","フロント両席パワーシート","オーディオソース_HDD","ニーエアバッグ","ヘッドライトウォッシャー","後退時連動式ドアミラー","VGS/VGRS","ABS","2列目ウォークスルー","3列目シート","電動バックドア","リアエンターテイメントシステム","電気式4WD","HDDナビゲーション","全長(mm)","全幅(mm)","全高(mm)","室内全長(mm)","室内全幅(mm)","室内全高(mm)","マニュアルエアコン","片側スライドドア","最高出力(ps)"]
+    second_hand_car_list.append(index)
+    for item in second_hand_car:
+        item_list = [item.id,item.box_1,item.box_2,item.box_3,item.box_4,item.box_5,item.box_6,item.box_7,item.box_8,item.box_9,item.box_10,item.box_11,item.box_12,item.box_13,item.box_14,item.box_15,item.box_16,item.box_17,item.box_18,item.box_19,item.box_20,item.box_21,item.box_22,item.box_23,item.box_24,item.box_25,item.box_26,item.box_27,item.box_28,item.box_29,item.box_30,item.box_31,item.box_32,item.box_33,item.box_34,item.box_35,item.box_36,item.box_37,item.box_38,item.box_39,item.box_40,item.box_41,item.box_42,item.box_43,item.box_44,item.box_45,item.box_46,item.box_47,item.box_48,item.box_49,item.box_50,item.box_51,item.box_52,item.box_53,item.box_54,item.box_55,item.box_56,item.box_57,item.box_58,item.box_59,item.box_60,item.box_61,item.box_62,item.box_63,item.box_64,item.box_65,item.box_66,item.box_67,item.box_68,item.box_69,item.box_70,item.box_71,item.box_72,item.box_73,item.box_74,item.box_75,item.box_76]
+        second_hand_car_list.append(item_list)
+    # print(second_hand_car_list)
+    # csv作成
+    with open(filename, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(second_hand_car_list)
+
+    preprocessing.Preprocessing()
+
+def recommend_car(request):
+    # ゲストの答えたアンケート(POSTデータ)から提案
+    if (request.method == 'POST'):
+        # チェックされたアンケート項目を取得
+        checks_value = request.POST.getlist('checks[]')
+        anser_dict = {}
+        # アンケートをjsonファイルへexport
+        for anser in checks_value:
+            anser_dict[anser] = True
+        json_data = json.dumps(anser_dict, sort_keys=True, indent=4)
+        ut = int(time.time())
+        path = '/Django/data/recommend/user_' + str(ut) + '.json'
+        with open(path, 'w') as f:
+            f.write(json_data)
+        # おすすめAI起動
+        recoai.RecommendAI('user_' + str(ut) + '.json')
+        # 作成されたjsonファイルをimport
+        data = importRecoJson('/Django/data/recommend/reco_user_' + str(ut) + '.json', str(ut))
+
+        secondhandcar_list = setSecondHandCarList(data)
+        # ゲストデータを削除
+        os.remove('/Django/data/recommend/reco_user_' + str(ut) + '.json')
+
+        params = {
+            'secondhandcar_list': secondhandcar_list,
+            'title': 'あなたへのおすすめ'
+        }
+        return render(request, 'secondhandcar/recommend.html', params)
+
+    # 会員か非会員か判定
+    if str(request.user) == "AnonymousUser":
+        # 非会員は先にアンケートに回答
+        survey_list = [
+            '乗り心地がいい',
+            '荷室の使いやすさ',
+            '燃費の良さ',
+            '排気量の少なさ',
+            '車内空間が広い',
+            '静かに走る',
+            '馬力がある',
+            '乗車定員が多い',
+            '小回りが利く',
+            '乗車しやすい',
+            '安全性能が高い',
+            '走行性能が高い',
+            '車両サイズが小さい'
+        ]
+        params = {
+            'data': survey_list,
+            'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
+            'title': "アンケートにお答え下さい"
+        }
+        return render(request, 'secondhandcar/gestquestionnaire.html', params)
+    else:
+        # 作成されたjsonデータを使用しておすすめを提案
+        data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+
+    secondhandcar_list = setSecondHandCarList(data)
+
+    params = {
+        'secondhandcar_list': secondhandcar_list,
+        'title': 'あなたへのおすすめ'
+    }
+    return render(request, 'secondhandcar/recommend.html', params)
+
+
+
+def importRecoJson(path, user_id):
+    with open(path, 'r') as f:
+            json_data = f.read()
+            json_object = json.loads(json_data)
+    data = json_object['user_' + user_id]
+    return data
+
+def setSecondHandCarList(data):
+    one = data['0']
+    two = data['1']
+    three = data['2']
+    four = data['3']
+    five = data['4']
+    six = data['5']
+    one = SecondHandCarInfoModel.objects.get(second_hand_car_id=one)
+    two = SecondHandCarInfoModel.objects.get(second_hand_car_id=two)
+    three = SecondHandCarInfoModel.objects.get(second_hand_car_id=three)
+    four = SecondHandCarInfoModel.objects.get(second_hand_car_id=four)
+    five = SecondHandCarInfoModel.objects.get(second_hand_car_id=five)
+    six = SecondHandCarInfoModel.objects.get(second_hand_car_id=six)
+    secondhandcar_list = [one,two,three,four,five,six]
+    return secondhandcar_list

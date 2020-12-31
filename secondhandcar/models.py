@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class SecondHandCarModel(models.Model):
+class SecondHandCarAIModel(models.Model):
     box_1 = models.CharField(max_length=999, verbose_name='駆動方式')
     box_2 = models.CharField(max_length=999, verbose_name='乗車定員')
     box_3 = models.CharField(max_length=999, verbose_name='ドア枚数')
@@ -81,3 +81,18 @@ class SecondHandCarModel(models.Model):
 
     def __str__(self):
          return '<secondhandcar_id=' + str(self.id) + '>'
+
+
+class SecondHandCarInfoModel(models.Model):
+    second_hand_car_id = models.ForeignKey(SecondHandCarAIModel, verbose_name='中古車ID', on_delete=models.PROTECT)
+    parent_category = models.CharField(max_length=999, verbose_name='メーカー')
+    category = models.CharField(max_length=999, verbose_name='車種')
+    grade = models.CharField(max_length=999, verbose_name='グレード')
+    release_period = models.CharField(max_length=999, verbose_name='発売期間')
+    model = models.CharField(max_length=999, verbose_name='型式')
+    img1 = models.URLField(verbose_name='img1')
+    img2 = models.URLField(verbose_name='img2')
+    img3 = models.URLField(verbose_name='img3')
+
+    def __str__(self):
+         return str(self.second_hand_car_id)

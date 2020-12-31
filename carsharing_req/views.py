@@ -354,7 +354,7 @@ def surveyMail(request, booking):
     subject = "返却確認のお願い"
     attachments = "http://127.0.0.1:8000/survey/questionnaire"
     message = str(request.user) + "様\n \
-        時間内の返却ありがとうございました。\n \
+        運転お疲れ様でした。返却のお時間です。\n \
         またのご利用をお待ちしております。\n\n \
         開始日: " + booking['start_day'] + "\n \
         開始時刻: " + booking['start_time'] + "\n \

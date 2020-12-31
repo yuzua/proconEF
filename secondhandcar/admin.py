@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import SecondHandCarModel
+from .models import SecondHandCarAIModel, SecondHandCarInfoModel
 
 # Register your models here.
-admin.site.register(SecondHandCarModel)
+admin.site.register(SecondHandCarAIModel)
+admin.site.register(SecondHandCarInfoModel)

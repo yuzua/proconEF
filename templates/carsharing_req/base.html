@@ -82,23 +82,23 @@
                     中古車購入
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">あなたへのおすすめ</a>
+                    <a class="dropdown-item" href="/secondhandcar/recommend_car">あなたへのおすすめ</a>
                     <a class="dropdown-item" href="#">中古車検索</a>
                     <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
                   </div>
             </li>
-            {% if request.session.owner_flag == True or request.session.parking_flag == True %}
+            {% if request.session.system_flag >= 1 %}
               <li class="navbar02">
                 <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     オーナー
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                {% if request.session.owner_flag == True %}
+                {% if request.session.system_flag >= 10 %}
                 <div class=""></div>
                     <a class="dropdown-item-owner" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
                     <a class="dropdown-item-owner" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
-                {% if request.session.parking_flag == True %}
+                {% if request.session.system_flag >= 5 %}
                 <div class=""></div>
                     <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
                 {% endif %}
@@ -275,15 +275,19 @@
             <a href="#!"  class="replay01" style="width: 80pt;">中古車検索</a>
             </li>
             <li>
-            {% if request.session.owner_flag == True %}
+            {% if request.session.system_flag >= 10 %}
             <a href="/owners_req/createDate"  class="replay01" style="width: 180pt;">カーシェアオーナー日時登録</a>
+            {% elif request.session.system_flag >= 1 %}
+            <a href="#!"  class="replay01" style="width: 170pt;">車両追加</a>
             {% else %}
             <a href="/owners_req/create"  class="replay01" style="width: 200pt;">カーシェアオーナー新規登録</a>
             {% endif %}
             </li>
             <li>
-            {% if request.session.parking_flag == True %}
+            {% if request.session.system_flag >= 5 %}
             <a href="/parking_req/loaning/"  class="replay01" style="width: 170pt;">駐車場オーナー日時登録</a>
+            {% elif request.session.system_flag >= 1 %}
+            <a href="#!"  class="replay01" style="width: 170pt;">駐車場追加</a>
             {% else %}
             <a href="#!"  class="replay01" style="width: 170pt;">駐車場オーナー新規登録</a>
             {% endif %}
