@@ -219,20 +219,20 @@ def exportCSV(request):
 def recommend_car(request):
     # ゲストの答えたアンケート(POSTデータ)から提案
     if (request.method == 'POST'):
-        #チェックされたアンケート項目を取得
+        # チェックされたアンケート項目を取得
         checks_value = request.POST.getlist('checks[]')
-        print(checks_value)
         anser_dict = {}
+        # アンケートをjsonファイルへexport
         for anser in checks_value:
             anser_dict[anser] = True
         json_data = json.dumps(anser_dict, sort_keys=True, indent=4)
-        print(json_data)
         ut = int(time.time())
-        print(ut)
         path = '/Django/data/recommend/user_' + str(ut) + '.json'
         with open(path, 'w') as f:
             f.write(json_data)
+        # おすすめAI起動
         recoai.RecommendAI('user_' + str(ut) + '.json')
+        # 作成されたjsonファイルをimport
         data = importRecoJson('/Django/data/recommend/reco_user_' + str(ut) + '.json', str(ut))
 
         secondhandcar_list = setSecondHandCarList(data)
@@ -264,7 +264,9 @@ def recommend_car(request):
             '車両サイズが小さい'
         ]
         params = {
-            'data': survey_list
+            'data': survey_list,
+            'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
+            'title': "アンケートにお答え下さい"
         }
         return render(request, 'secondhandcar/gestquestionnaire.html', params)
     else:
