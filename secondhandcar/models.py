@@ -81,3 +81,18 @@ class SecondHandCarAIModel(models.Model):
 
     def __str__(self):
          return '<secondhandcar_id=' + str(self.id) + '>'
+
+
+class SecondHandCarInfoModel(models.Model):
+    second_hand_car_id = models.ForeignKey(SecondHandCarAIModel, verbose_name='中古車ID', on_delete=models.PROTECT)
+    parent_category = models.CharField(max_length=999, verbose_name='メーカー')
+    category = models.CharField(max_length=999, verbose_name='車種')
+    grade = models.CharField(max_length=999, verbose_name='グレード')
+    release_period = models.CharField(max_length=999, verbose_name='発売期間')
+    model = models.CharField(max_length=999, verbose_name='型式')
+    img1 = models.URLField(verbose_name='img1')
+    img2 = models.URLField(verbose_name='img2')
+    img3 = models.URLField(verbose_name='img3')
+
+    def __str__(self):
+         return str(self.second_hand_car_id)

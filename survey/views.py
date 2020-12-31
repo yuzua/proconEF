@@ -11,6 +11,7 @@ import json
 import datetime
 from carsharing_req .models import UsageModel
 from carsharing_booking .models import BookingModel
+from ai import recoai
 #from .forms import QuestionnaireAnswerForm
 
 # Create your views here.
@@ -56,7 +57,8 @@ class Survey(TemplateView):
         del request.session['data']
         #jsonファイルを作成 (おすすめ車両AIに投げる用)
         makeJsonFile(user_id)
-        check_usage_obj = checkUsage(request.session['user_id'])
+        recoai.RecommendAI('user_' + str(user_id) + '.json')
+        check_usage_obj = checkUsage(user_id)
         if check_usage_obj == None:
             print('ok')
         else:
@@ -292,13 +294,17 @@ def makeJsonFile(user_id):
 # csv読み込み
 import csv
 def Lord_csv_file():
-    path = '/Django/data/car_csv/secondhandcar-record.csv'
+    path = '/Django/data/car_csv/used_car_data.csv'
+    count = -1
     with open(path) as f:
         for row in csv.reader(f):
+            # print(row)
+            print(count)
             print(f"Row: {row}")
             print(f"Type of row: {type(row)}")
             print(f"1st Data: {row[0]}")
             print(f"Type of 1st Data: {type(row[0])}")
+            count += 1
 
 
 # 返却処理後、利用DBへ保存。

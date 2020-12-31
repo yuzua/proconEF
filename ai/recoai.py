@@ -17,7 +17,7 @@ def RecommendAI(path):
     json_load = json.load(json_open)
 
     #アンケートデータ読み込んだら削除
-    # os.remove(result_path)
+    os.remove(result_path)
 
 
     #中古車スクレイピング用データ(数値変換済み)

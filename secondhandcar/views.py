@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import SecondHandCarAIModel
+from .models import SecondHandCarAIModel, SecondHandCarInfoModel
 import json
 import csv
+import os
 from ai import preprocessing, recoai
 # Create your views here.
 
@@ -175,6 +176,26 @@ def importCSV(request):
                 record.box_75 = row[75]
                 record.box_76 = row[76]
                 record.save()
+    
+    count = -1
+    with open('/Django/data/car_csv/used_car_data.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            # print(row)
+            if count != -1:
+                record = SecondHandCarInfoModel()
+                record.second_hand_car_id_id = str(count)
+                record.parent_category = row[0]
+                record.category = row[1]
+                record.grade = row[2]
+                record.release_period = row[3]
+                record.model = row[4]
+                record.img1 = row[130]
+                record.img2 = row[131]
+                record.img3 = row[132]
+                record.save()
+            count += 1
+
 
 def exportCSV(request):
     # 月１処理とcsv作成
@@ -195,4 +216,30 @@ def exportCSV(request):
     preprocessing.Preprocessing()
 
 def recommend_car(request):
-    recoai.RecommendAI('user_' + str(request.session['user_id']) + '.json')
+    data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+
+    one = data['0']
+    two = data['1']
+    three = data['2']
+    four = data['3']
+    five = data['4']
+    six = data['5']
+    one = SecondHandCarInfoModel.objects.get(second_hand_car_id=one)
+    two = SecondHandCarInfoModel.objects.get(second_hand_car_id=two)
+    three = SecondHandCarInfoModel.objects.get(second_hand_car_id=three)
+    four = SecondHandCarInfoModel.objects.get(second_hand_car_id=four)
+    five = SecondHandCarInfoModel.objects.get(second_hand_car_id=five)
+    six = SecondHandCarInfoModel.objects.get(second_hand_car_id=six)
+    secondhandcar_list = [one,two,three,four,five,six]
+    params = {
+        'secondhandcar_list': secondhandcar_list,
+        'title': 'あなたへのおすすめ'
+    }
+    return render(request, 'secondhandcar/recommend.html', params)
+
+def importRecoJson(path, user_id):
+    with open(path, 'r') as f:
+            json_data = f.read()
+            json_object = json.loads(json_data)
+    data = json_object['user_' + user_id]
+    return data
