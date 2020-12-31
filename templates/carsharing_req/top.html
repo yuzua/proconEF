@@ -102,7 +102,7 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">カーシェアリング予約</h5>
-                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/1">利用の流れ</a></p>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/1/0"><small>利用の流れ</small></a></p>
                         <a href="/carsharing_booking/" class="btn">予約</a>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">駐車場予約</h5>
-                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/2">利用の流れ</a></p>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/2/0"><small>利用の流れ</small></a></p>
                         <a href="/parking_booking/map" class="btn">予約</a>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">あなたへのおすすめ</h5>
-                        <p class="card-text"></p>
+                        <p class="card-text"><small>AIがあなたにぴったりな車を診断します。</small></p>
                         <a href="/secondhandcar/recommend_car" class="btn">見てみる</a>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">カーシェアリングオーナー</h5>
-                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/3">利用の流れ</a></p>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/3/0"><small>利用の流れ</small></a></p>
                 {% if request.session.system_flag >= 10 %}
                         <a href="#" class="btn">日時選択</a>
                 {% elif request.session.system_flag >= 7 %}
@@ -169,7 +169,7 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
                         <h5 class="card-title">駐車場オーナー</h5>
-                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/4">利用の流れ</a></p>
+                        <p class="card-text"><a class="flow" href="/carsharing_req/pages/4/0"><small>利用の流れ</small></a></p>
                 {% if request.session.system_flag >= 5 %}
                         <a href="/parking_req/loaning/" class="btn">日時選択</a>
                 {% elif request.session.system_flag >= 1 %}
