@@ -433,7 +433,10 @@ class UploadData(TemplateView):
                 # 値をDBへの登録
                 administrator.save()
             xlsx_all_list = ImportXlsx(file_name)
-            AllCarUpload(xlsx_all_list)
+            if file_name[0] == 'p':
+                AllParkingUpload(xlsx_all_list)
+            else:
+                AllCarUpload(xlsx_all_list)
             DeleteUploadXlsx('/Django/media/xlsx/')
             messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
@@ -504,7 +507,7 @@ def AllParkingDownload(dt_now):
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "/Django/data/parking_data/" + dt_now + ".xlsx"
+    file_name = "/Django/data/parking_data/p_" + dt_now + ".xlsx"
     wb.save(file_name)
     return file_name
 
@@ -594,6 +597,7 @@ def get_list_2d(sheet, start_row, end_row, start_col, end_col):
 def get_value_list(t_2d):
     return([[cell.value for cell in row] for row in t_2d])
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
 def AllCarUpload(all_list):
     print(all_list[0])
@@ -655,8 +659,52 @@ def AllCarUpload(all_list):
             record.key_flag = car_list[23]
             record.save()
 
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
+
+# --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
+def AllParkingUpload(all_list):
+    print(all_list[0])
+    # 先頭のindexを削除
+    all_list.pop(0)
+    flag = len(list(ParkingUserModel.objects.all()))
+    if flag != 0:
+        for parking_list in all_list:
+            record = ParkingUserModel.objects.get(id=parking_list[0])
+            record.user_id = int(parking_list[1])
+            record.address = parking_list[2]
+            record.lat = parking_list[3]
+            record.lng = parking_list[4]
+            record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            record.parking_type = parking_list[6]
+            record.ground_type = parking_list[7]
+            record.width = int(parking_list[8])
+            record.length = int(parking_list[9])
+            record.height = int(parking_list[10])
+            record.count = int(parking_list[11])
+            record.admin = parking_list[12]
+            record.countflag = parking_list[13]
+            record.save()
+    else:
+        for parking_list in all_list:
+            record = CarInfoModel()
+            record.user_id = int(parking_list[1])
+            record.address = parking_list[2]
+            record.lat = parking_list[3]
+            record.lng = parking_list[4]
+            record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            record.parking_type = parking_list[6]
+            record.ground_type = parking_list[7]
+            record.width = int(parking_list[8])
+            record.length = int(parking_list[9])
+            record.height = int(parking_list[10])
+            record.count = int(parking_list[11])
+            record.admin = parking_list[12]
+            record.countflag = parking_list[13]
+            record.save()
+
+# --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
+
 # 引数に指定されたフォルダー内のファイルを削除
 def DeleteUploadXlsx(target_dir):
     shutil.rmtree(target_dir)
     os.mkdir(target_dir)
-# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
