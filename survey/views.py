@@ -55,9 +55,11 @@ class Survey(TemplateView):
         push(user_id, anser_dict, pattern)
         messages.success(request, 'ご回答ありがとうございました')
         del request.session['data']
-        #jsonファイルを作成 (おすすめ車両AIに投げる用)
+        # jsonファイルを作成 (おすすめ車両AIに投げる用)
         makeJsonFile(user_id)
+        # おすすめ車両AI起動！
         recoai.RecommendAI('user_' + str(user_id) + '.json')
+        # 実利用DBへ情報を保存
         check_usage_obj = checkUsage(user_id)
         if check_usage_obj == None:
             print('ok')
