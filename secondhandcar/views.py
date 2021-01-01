@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.generic import TemplateView
+from django.core.paginator import Paginator
 from .models import SecondHandCarAIModel, SecondHandCarInfoModel
 import json
 import csv
@@ -9,7 +11,7 @@ from ai import preprocessing, recoai
 # Create your views here.
 
 
-def index(request):
+def price(request):
     purius = {
         "2018-01-01": 197.50772153703286,
         "2018-02-01": 198.3735075655772,
@@ -90,7 +92,7 @@ def index(request):
         'purius_json': json.dumps(purius),
         'minimini_json': json.dumps(minimini),
     }
-    return render(request, 'secondhandcar/index.html', params)
+    return render(request, 'secondhandcar/price.html', params)
 
 def importCSV(request):
     with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
@@ -305,3 +307,37 @@ def setSecondHandCarList(data):
     six = SecondHandCarInfoModel.objects.get(second_hand_car_id=six)
     secondhandcar_list = [one,two,three,four,five,six]
     return secondhandcar_list
+
+
+def detail(request, num):
+    car_obj1 = SecondHandCarAIModel.objects.get(id=num)
+    car_obj2 = SecondHandCarInfoModel.objects.get(second_hand_car_id=num)
+    params = {
+        'title': '中古車',
+        'car_obj1': car_obj1,
+        'car_obj2': car_obj2
+    }
+    return render(request, 'secondhandcar/detail.html', params)
+
+
+def search(request, num=1):
+    if (request.method == 'POST'):
+        secondhandcar_info = list(SecondHandCarInfoModel.objects.filter(parent_category=request.POST['parent_category']).values())
+        for index in secondhandcar_info:
+            index['id'] = str(int(index['id']) - 1)    
+        params = {
+            'title': '中古車',
+            'secondhandcar_info': secondhandcar_info,
+            'POST': True
+        }
+    else:
+        secondhandcar_info = list(SecondHandCarInfoModel.objects.values())
+        for index in secondhandcar_info:
+            index['id'] = str(int(index['id']) - 1)
+        page = Paginator(secondhandcar_info, 5)
+        params = {
+            'title': '中古車',
+            'secondhandcar_info': page.get_page(num),
+            'POST': False
+        }
+    return render(request, 'secondhandcar/search.html', params)

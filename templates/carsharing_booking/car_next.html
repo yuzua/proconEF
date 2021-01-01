@@ -15,7 +15,7 @@
     <div class="card">
     <table class="table">
         <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
-        <tr><td><img src="/media/{{car_data.img}}" width="110" height="80" border="0" /></td></td><td>{{car_data.parent_category}}</td><td>{{car_data.category}}</td><td>{{car_data.model_id}}</td><td>{{car_data.people}}</td><td>{{car_data.tire}}</td><td>{{car_data.at_mt}}車</td>
+        <tr><td><img src="/media/{{car_data.img}}" width="110" border="0" /></td></td><td>{{car_data.parent_category}}</td><td>{{car_data.category}}</td><td>{{car_data.model_id}}</td><td>{{car_data.people}}</td><td>{{car_data.tire}}</td><td>{{car_data.at_mt}}車</td>
             <td>
             {% if car_data.babysheet == True %}
             <li>チャイルドシート</li>
