@@ -9,6 +9,12 @@
     <h1>{{ title }}</h1>
     <form action="{% url 'survey:questionnaire' %}" method="post" >
     <div class="card">
+        <div class="w-5">
+            <p>事故に合いませんでした。：<input type="checkbox" required /></p>
+            <p>借りた場所に返しました。：<input type="checkbox" required /></p>
+        </div>
+    </div>
+    <div class="card">
         {% csrf_token %}
         <h2 class="card-header">{{ message|safe }}</h2>
         <div class="card-body">

@@ -3,13 +3,12 @@ from django.http import HttpResponse
 from .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel, CarsharingDateModel, Category
 from carsharing_req .models import CarsharUserModel
 from parking_req .models import ParkingUserModel
-from .forms import HostUserForm
+from .forms import HostUserForm, CarInfoForm, CarOptionForm, CarInfoParkingForm, ParkingLoaningForm
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.views import generic
-from .forms import CarInfoForm, CarInfoParkingForm, ParkingLoaningForm
 import datetime
-import json
+import json, ast
 from django.db.models import Q
 from parking_booking .models import ParkingBookingModel
 from carsharing_booking .models import BookingModel
@@ -21,13 +20,15 @@ def index(request):
     return HttpResponse("Hello, world. You're at the owners_req index.")
 
 
+
 class CreateView(TemplateView):
     def __init__(self):
         self.params = {
-        'title': 'カーシェアリングオーナー申請',
-        'message': '',
-        'form': HostUserForm(),
-        'data': '',
+            'title': 'カーシェアリングオーナー申請',
+            'message': '',
+            'form': HostUserForm(),
+            'data': '',
+            'banks': '',
         }
     def get(self, request):
         if str(request.user) == "AnonymousUser":
@@ -37,6 +38,14 @@ class CreateView(TemplateView):
         else:
             owner_list = HostUserModel.objects.filter(user_id=request.session['user_id'])
             if owner_list.first() is None:
+                banks = [
+                    {'name': '三井住友銀行', 'code': '0009'},
+                    {'name': '三菱ＵＦＪ銀行', 'code': '0005'},
+                    {'name': 'みずほ銀行', 'code': '0001'},
+                    {'name': 'ゆうちょ銀行', 'code': '9900'}
+                ]
+                self.params['banks'] = banks
+                # BranchCodeCheck()
                 return render(request, 'owners_req/create.html', self.params)
                 print(request.user)
         self.params['title'] = 'オーナー情報確認'
@@ -46,27 +55,128 @@ class CreateView(TemplateView):
 
 
     def post(self, request):
-        dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
-        pay = request.POST['pay']
-        day = dt_now
-        bank_name = request.POST['bank_name']
-        bank_code = request.POST['bank_code']
-        bank_account_number = request.POST['bank_account_number']
-        QR_id = request.POST['QR_id']
-        record = HostUserModel(user_id = user_id, pay = pay, day = day, \
-            bank_name = bank_name, bank_code = bank_code, bank_account_number = bank_account_number, QR_id = QR_id)
+        banks = [
+            {'name': '三井住友銀行', 'code': '0009'},
+            {'name': '三菱ＵＦＪ銀行', 'code': '0005'},
+            {'name': 'みずほ銀行', 'code': '0001'},
+            {'name': 'ゆうちょ銀行', 'code': '9900'}
+        ]
+        self.params['banks'] = banks
         obj = HostUserModel()
         form = HostUserForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
-            return redirect(to='owners_req:create')
+        if form.is_valid():
+            bank_code = request.POST['bank_code']
+            bank_account_number = request.POST['bank_account_number']
+            bank_name = BankCodeCheck(bank_code)
+            if "ゆうちょ銀行" == bank_name:
+                branch_code = request.POST['branch_code']
+                bank_account_number = request.POST['bank_account_number']
+                if len(branch_code) != 5:
+                    self.params['form'] = form
+                    messages.error(self.request, '記号は数字5桁です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                if len(bank_account_number) != 8:
+                    self.params['form'] = form
+                    messages.error(self.request, '番号は数字8桁です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                branch_code = branch_code[1:3] + "8"
+                bank_account_number = bank_account_number[:7]
+                branch_name = "〇〇支店"
+            else:
+                if bank_name == False:
+                    self.params['form'] = form
+                    messages.error(self.request, '銀行コードが不正です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                branch_code = request.POST['branch_code']
+                branch_name = BranchCodeCheck(bank_code, branch_code)
+                print(branch_name)
+                if branch_name == False:
+                    self.params['form'] = form
+                    messages.error(self.request, '支店コードが不正です。')
+                    return render(request, 'owners_req/create.html', self.params)
+                bank_account_number = request.POST['bank_account_number']
+            if len(branch_code) != 3:
+                self.params['form'] = form
+                messages.error(self.request, '支店コードが不正です。')
+                return render(request, 'owners_req/create.html', self.params)
+            if len(bank_account_number) != 7:
+                self.params['form'] = form
+                messages.error(self.request, '口座番号は数字7桁です。')
+                return render(request, 'owners_req/create.html', self.params)
+            
+            # 確認画面へ
+            data = {
+                "bank_code": bank_code,
+                "bank_name": bank_name,
+                "branch_code": branch_code,
+                "branch_name": branch_name,
+                "bank_account_number": bank_account_number
+            }
+            self.params['data'] = data
+            return render(request, 'owners_req/checkmember.html', self.params)
         else:
-            self.params['message'] = '入力データに問題があります'
+            self.params['form'] = form
+            messages.error(self.request, '入力データに問題があります')
+            return render(request, 'owners_req/create.html', self.params)
         return render(request, 'owners_req/create.html', self.params)
 
-    
+def checkmember(request):
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        user_id = request.session['user_id']
+        day = dt_now
+        record = HostUserModel(user_id=user_id, day=day, bank_name=request.POST['bank_name'], bank_code=request.POST['bank_code'], \
+            branch_code=request.POST['branch_code'], branch_name=request.POST['branch_name'], bank_account_number=request.POST['bank_account_number'])
+        record.save()
+        set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+        set_flag.system_flag += 1
+        set_flag.save()
+        messages.success(request, '登録完了しました。')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/')
+
+
+# ----------------------------------------------------------------------------------------------------------------
+def BankCodeCheck(num):
+    bank_name = None
+    path = "/Django/data/bank/bank.json"
+    with open(path, 'r') as f:
+        json_data = f.read()
+    json_data = ast.literal_eval(json_data)['branchdata']
+    for bank_data in json_data:
+        if bank_data['code'] == num:
+            bank_name = bank_data['name']
+            break
+    if  bank_name:
+        return bank_name
+    else:
+        return False
+
+def BranchCodeCheck(index, num):
+    branch_name = None
+    print(index)
+    if index == "0001" or index == "0005" or index == "0009":
+        path = "/Django/data/bank/" + index + ".json"
+        print(num)
+        with open(path, 'r') as f:
+            json_data = f.read()
+            json_data = json.loads(json_data)
+        for bank_data in list(json_data):
+            if bank_data['code'] == num:
+                branch_name = bank_data['name']
+                break
+    else:
+        return "〇〇支店"
+    if branch_name:
+        return branch_name
+    else:
+        return False
+
+# ----------------------------------------------------------------------------------------------------------------
+
+
 def edit(request):
      if (request.method == 'POST'):
         num = request.POST['p_id']
@@ -136,24 +246,50 @@ class CreateCarView(TemplateView):
             'category_set': list(Category.objects.all().values()),
             'title': '車情報登録',
             'form': CarInfoForm(),
+            'form2': CarOptionForm()
         }
 
     def post(self, request):
         dt_now = datetime.datetime.now()
-        user_id = request.session['user_id']
         day = dt_now
-        license_plate = request.POST['license_plate']
-        record = CarInfoModel(user_id = user_id, day = day, license_plate=license_plate)
-        form = CarInfoForm(request.POST, instance=record)
-        
+        user_id = request.session['user_id']
+        obj = CarInfoModel()
+        form = CarInfoForm(request.POST, instance=obj)
+        form2 = CarOptionForm(request.POST, instance=obj)
         self.params['form'] = form
-        if (form.is_valid()):
-            record.save()
-            messages.success(self.request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
-            request.session['info_flag'] = True
-            return redirect(to='parking_req:index')
+        self.params['form2'] = form2
+        if form.is_valid() and form2.is_valid():
+            car_maker = list(ParentCategory.objects.filter(id=request.POST['parent_category']).values("parent_category"))
+            car_model = list(Category.objects.filter(id=request.POST['category']).values("category"))
+
+            # 確認画面へ
+            data = {
+                "parent_category": request.POST['parent_category'],
+                "category": request.POST['category'],
+                "license_plate_place": request.POST['license_plate_place'],
+                "license_plate_type": request.POST['license_plate_type'],
+                "license_plate_how": request.POST['license_plate_how'],
+                "license_plate_num": request.POST['license_plate_num'],
+                "model_id": request.POST['model_id'],
+                "people": request.POST['people'],
+                "tire": request.POST['tire'],
+                "at_mt": request.POST['at_mt'],
+                "babysheet": 'babysheet' in request.POST,
+                "car_nav": 'car_nav' in request.POST,
+                "etc": 'etc' in request.POST,
+                "car_autonomous": 'car_autonomous' in request.POST,
+                "around_view_monitor": 'around_view_monitor' in request.POST,
+                "non_smoking": 'non_smoking' in request.POST,
+                "used_mileage": request.POST['used_mileage'],
+                "used_years": request.POST['used_years'],
+                "vehicle_inspection_day": request.POST['vehicle_inspection_day']
+            }
+            self.params['data'] = data
+            self.params['car_maker'] = car_maker[0]['parent_category']
+            self.params['car_model'] = car_model[0]['category']
+            return render(request, 'owners_req/checkcar.html', self.params)
         else:
-            self.params['message'] = '入力データに問題があります'
+            messages.error(self.request, '入力データに問題があります')
         return render(request, 'owners_req/createCar.html', self.params)
 
         
@@ -172,6 +308,54 @@ class CreateCarView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
         return context
+
+def checkcar(request):
+    params = {
+        'title': '車情報登録確認画面'
+    }
+    if (request.method == 'POST'):
+        dt_now = datetime.datetime.now()
+        day = dt_now
+        user_id = request.session['user_id']
+        parent_category = ParentCategory.objects.get(id=request.POST['parent_category'])
+        category = Category.objects.get(id=request.POST['category'])
+        # Str型からBool型に変換
+        babysheet = judgmentTF(request.POST['babysheet'])
+        car_nav = judgmentTF(request.POST['car_nav'])
+        etc = judgmentTF(request.POST['etc'])
+        car_autonomous = judgmentTF(request.POST['car_autonomous'])
+        around_view_monitor = judgmentTF(request.POST['around_view_monitor'])
+        non_smoking = judgmentTF(request.POST['non_smoking'])
+        
+        record = CarInfoModel(user_id=user_id, parent_category=parent_category, category=category, \
+            license_plate_place=request.POST['license_plate_place'], license_plate_type=request.POST['license_plate_type'], \
+            license_plate_how=request.POST['license_plate_how'], license_plate_num=request.POST['license_plate_num'], \
+            model_id=request.POST['model_id'], people=request.POST['people'], tire=request.POST['tire'], at_mt=request.POST['at_mt'], \
+            babysheet=babysheet, car_nav=car_nav, etc=etc, car_autonomous=car_autonomous, around_view_monitor=around_view_monitor, non_smoking=non_smoking, \
+            used_mileage=request.POST['used_mileage'], used_years=request.POST['used_years'], \
+            vehicle_inspection_day=request.POST['vehicle_inspection_day'], img=request.FILES['img'], day=day)
+        record.save()
+        if request.session['system_flag'] == 1 or request.session['system_flag'] == 5:
+            set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+            set_flag.system_flag += 2
+            set_flag.save()
+        messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
+        request.session['info_flag'] = True
+        return redirect(to='parking_req:index')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/index')
+
+# ----------------------------------------------------------------------------------------------------------
+def judgmentTF(string):
+    if string == "True":
+        boolean = True
+    else:
+        boolean = False
+
+    return boolean
+# ----------------------------------------------------------------------------------------------------------
+
 
 def editCar(request):
     if (request.method == 'POST'):
@@ -274,6 +458,10 @@ class SettingInfo(TemplateView):
         parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
         record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
         record.save()
+        if request.session['system_flag'] <= 7:
+            set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
+            set_flag.system_flag += 3
+            set_flag.save()
         countflag = False
         print(request.POST['parking_id'])
         ParkingUserModel.objects.filter(id=request.POST['parking_id']).update(countflag = countflag)
@@ -412,3 +600,28 @@ def check(request):
     messages.success(request, '登録が完了しました。')
     del request.session['user_car_id']
     return redirect(to='owners_req:createDate')
+
+
+def AAA():
+    mylist=["支店名","削除","コード"]
+    add_list = []
+    my_dict = {}
+    for num in range(len(my_list)):
+        if num % 3 == 0:
+            my_dict['name'] = my_list[num]
+        if num % 3 == 2:
+            my_dict['code'] = my_list[num]
+
+        if num % 3 == 2:
+                add_list.append(my_dict)
+                my_dict = {}
+    
+    print(add_list)
+    json_data = json.dumps(add_list, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/bank/0001.json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+

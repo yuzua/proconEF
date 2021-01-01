@@ -32,24 +32,26 @@ def index(request):
 # user_idをSESSIONに格納・オーナー登録済か判定用flagをSESSIONに格納
 def set_session(request):
     data = CarsharUserModel.objects.get(email=request.user.email)
+    user = CarsharUserModel.objects.get(id=data.id)
     request.session['user_id'] = data.id
-    paking_data = ParkingUserModel.objects.filter(user_id=data.id)
-    if paking_data.first() is None:
-        request.session['parking_flag'] = False
-    else:
-        request.session['parking_flag'] = True
+    request.session['system_flag'] = user.system_flag
+    # paking_data = ParkingUserModel.objects.filter(user_id=data.id)
+    # if paking_data.first() is None:
+    #     request.session['parking_flag'] = False
+    # else:
+    #     request.session['parking_flag'] = True
 
-    owner_data = HostUserModel.objects.filter(user_id=data.id)
-    if owner_data.first() is None:
-        request.session['owner_flag'] = False
-    else:
-        request.session['owner_flag'] = True
+    # owner_data = HostUserModel.objects.filter(user_id=data.id)
+    # if owner_data.first() is None:
+    #     request.session['owner_flag'] = False
+    # else:
+    #     request.session['owner_flag'] = True
     check_usage_obj = checkUsage(request.session['user_id'])
     if check_usage_obj == None:
         print('ok')
     else:
         surveyMail(request, check_usage_obj)
-        saveUsage(request, check_usage_obj)
+        # saveUsage(request, check_usage_obj)
 
     return redirect(to='carsharing_req:index')
 
@@ -92,14 +94,14 @@ class CarsharUserInfo(TemplateView):
         # return render(request, 'carsharing_req/index.html', self.params)
         return render(request, 'carsharing_req/top.html', self.params)
     
-    def post(self, request):
-        msg = 'Your name is <b>' + request.POST['name'] + \
-            '(' + request.POST['age'] + \
-            ')</b><br>Your mail address is <b>' + request.POST['email'] + \
-            '</b><br>Thank you send to me!'
-        self.params['message'] = msg
-        self.params['form'] = CarsharUserCreateForm(request.POST)
-        return render(request, 'carsharing_req/index.html', self.params)
+    # def post(self, request):
+    #     msg = 'Your name is <b>' + request.POST['name'] + \
+    #         '(' + request.POST['age'] + \
+    #         ')</b><br>Your mail address is <b>' + request.POST['email'] + \
+    #         '</b><br>Thank you send to me!'
+    #     self.params['message'] = msg
+    #     self.params['form'] = CarsharUserCreateForm(request.POST)
+    #     return render(request, 'carsharing_req/index.html', self.params)
 
 def carsharuserdata(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
@@ -175,6 +177,7 @@ class CreateView(TemplateView):
             credit_card_num_check = request.POST['credit_card_num'][13:]
             valid_thru = request.POST['valid_thru']
 
+            # クレジットカードの有効期限チェック
             dt_now = datetime.datetime.now()
             if 0 >= int(valid_thru[:2]) or int(valid_thru[:2]) > 12:
                 self.params['form'] = form
@@ -192,9 +195,6 @@ class CreateView(TemplateView):
                 self.params['form_name'] = form_name
                 messages.error(self.request, 'クレジットカードの有効期限が切れています。')
                 return render(request, 'carsharing_req/create.html', self.params)
-            # dt_now = datetime.datetime.now()
-            # dt_now.year()
-            # if int(valid_thru[3:])
 
             SECRET_KEY = request.POST['security_code']
             security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
@@ -259,6 +259,7 @@ def calcAge(birthdayStr):
   dStr = datetime.datetime.now().strftime("%Y%m%d")
   return (int(dStr)-int(birthdayStr))//10000
 # -------------------------------------------------------------------------------------------------------
+
 
 
 class CalendarView(TemplateView):
@@ -350,17 +351,17 @@ def checkUsage(user_id):
 
 def surveyMail(request, booking):
     
-    subject = "アンケート回答のお願い"
+    subject = "返却確認のお願い"
     attachments = "http://127.0.0.1:8000/survey/questionnaire"
     message = str(request.user) + "様\n \
-        時間内の返却ありがとうございました。\n \
+        運転お疲れ様でした。返却のお時間です。\n \
         またのご利用をお待ちしております。\n\n \
         開始日: " + booking['start_day'] + "\n \
         開始時刻: " + booking['start_time'] + "\n \
         終了日: " + booking['end_day'] + "\n \
         終了時刻: " + booking['end_time'] + "\n \
         料金: " + str(booking['charge']) + "円\n\n \
-        アンケートにお答え下さい。\n \
+        コチラから返却確認処理をおこなってください。\n \
         URL: " + attachments + "\n"
     user = request.user  # ログインユーザーを取得する
     from_email = 'admin@gmail.com'  # 送信者

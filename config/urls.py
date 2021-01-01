@@ -20,7 +20,8 @@ from django.contrib.staticfiles.urls import static
 from . import settings
 
 urlpatterns = [
-    path('', include('administrator.urls')),
+    # path('', include('administrator.urls')),
+    path('', include('accounts.urls')),
     path('carsharing_req/', include('carsharing_req.urls')),
     path('carsharing_booking/', include('carsharing_booking.urls')),
     path('owners_req/', include('owners_req.urls')),
