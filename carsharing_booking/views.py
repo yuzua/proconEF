@@ -7,7 +7,8 @@ from owners_req .models import ParentCategory, Category, CarInfoParkingModel, Ca
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm, CarCategory
-import json, datetime
+import json
+import datetime, locale
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
@@ -449,11 +450,9 @@ class ReservationList(TemplateView):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
         print(d_now)
-        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        self.params['data'] = booking
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        self.params['data'] = booking
-        self.params['data2'] = booking2
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        
 
         for item in list(booking):
             print(item['car_id'])
@@ -462,10 +461,67 @@ class ReservationList(TemplateView):
             item['category'] = category[0]['category']
             parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
             address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            if item['start_day'] == item['end_day']:
+                flag = True
+            else:
+                flag = False
             item['address'] = address[0]['address']
+            item['start_day'] = dateStr(item['start_day'])
+            item['start_time'] = timeStr(item['start_time'])
+            item['end_day'] = dateStr(item['end_day'])
+            item['end_time'] = timeStr(item['end_time'])
+            if flag == True:
+                item['end_day'] = ''
+            item['charge'] = "{:,}".format(item['charge'])
+            car_obj = CarInfoModel.objects.get(id=item['car_id'])
+            item['img'] = car_obj.img
             print(item)
         for item in list(booking2):
             address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
+            if item['start_day'] == item['end_day']:
+                flag = True
+            else:
+                flag = False
             item['address'] = address[0]['address']
+            item['start_day'] = dateStr(item['start_day'])
+            item['start_time'] = timeStr(item['start_time'])
+            item['end_day'] = dateStr(item['end_day'])
+            item['end_time'] = timeStr(item['end_time'])
+            if flag == True:
+                item['end_day'] = ''
+            item['charge'] = "{:,}".format(item['charge'])
             print(item)
+        self.params['data'] = booking
+        self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
+
+def dateStr(day):
+    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
+    day_week = day_date.weekday()
+    print(type(day_date))
+    if day_week == 0:
+        day_week = '(月)'
+    elif day_week == 1:
+        day_week = '(火)'
+    elif day_week == 2:
+        day_week = '(水)'
+    elif day_week == 3:
+        day_week = '(木)'
+    elif day_week == 4:
+        day_week = '(金)'
+    elif day_week == 5:
+        day_week = '(土)'
+    else:
+        day_week = '(日)'
+    y_date = day_date.year
+    m_date = day_date.month
+    d_date = day_date.day
+    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
+    print(day)
+    print(day_week)
+    return day + day_week
+
+def timeStr(time):
+    time = time.replace(':', '時')
+    time += '分'
+    return time
