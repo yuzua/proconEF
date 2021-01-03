@@ -449,7 +449,18 @@ class ReservationList(TemplateView):
 
     def post(self, request):
         self.params['title'] = "予約詳細"
-        booking = BookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        if request.POST['flag'] == 'car':
+            car_obj = CarInfoModel.objects.get(id=request.POST['car'])
+            self.params['flag'] = "car"
+            self.params['data'] = car_obj
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['data2'] = parking_obj
+            booking = BookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        else:
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['flag'] = "parking"
+            self.params['data2'] = parking_obj
+            booking = ParkingBookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
         booking.start_day = dateStr(booking.start_day)
         booking.start_time = timeStr(booking.start_time)
         booking.end_day = dateStr(booking.end_day)
@@ -457,26 +468,14 @@ class ReservationList(TemplateView):
         booking.charge = "{:,}".format(booking.charge)
         self.params['booking'] = booking
 
-        if request.POST['flag'] == 'car':
-            car_obj = CarInfoModel.objects.get(id=request.POST['car'])
-            self.params['flag'] = "car"
-            self.params['data'] = car_obj
-            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
-            self.params['data2'] = parking_obj
-        else:
-            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
-            self.params['flag'] = "parking"
-            self.params['data2'] = parking_obj
-            
-
         return render(request, 'carsharing_booking/list_next.html', self.params)
 
     def get(self, request):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
         print(d_now)
-        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
         
 
         for item in list(booking):
