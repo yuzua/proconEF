@@ -22,11 +22,11 @@
     <a class="navbar-brand" href="/" style="color: #333;margin-left: 5pt;"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
 {% if user.is_authenticated %}
     <button class="btn" id="log-btn" data-toggle="modal" data-target=".bd-example-modal-lg">
-        <a href="http://127.0.0.1:8000/accounts/logout/" class="logout">ログアウト</a>
+        <a href="/accounts/logout/" class="logout">ログアウト</a>
     </button>
 {% else %}
     <button class="btn" id="log-btn" data-toggle="modal" data-target=".bd-example-modal-lg">
-        <a href="http://127.0.0.1:8000/accounts/login/" class="login">ログイン</a>
+        <a href="/accounts/login/" class="login">ログイン</a>
     </button>
 {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,9 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="/carsharing_req/carsharuserdata">個人登録情報確認</a>
+            {% if request.session.system_flag >= 1 %}
+                <a class="dropdown-item" href="/owners_req/create">オーナー登録情報</a>
+            {% endif %}
                 <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
                 <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
                 <a class="dropdown-item" href="/carsharing_req/details">利用明細</a>
@@ -134,6 +137,9 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="/carsharing_req/carsharuserdata">個人登録情報確認</a>
+                {% if request.session.system_flag >= 1 %}
+                    <a class="dropdown-item" href="/owners_req/create">オーナー登録情報確認</a>
+                {% endif %}
                     <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
                     <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
                     <a class="dropdown-item" href="/carsharing_req/details">利用明細</a>
@@ -181,15 +187,13 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 {% if request.session.system_flag >= 10 %}
-                <div class=""></div>
-                    <a class="dropdown-item-owner" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
+                    <a class="dropdown-item small" href="/owners_req/createDate">カーシェアリングオーナー：貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item-owner" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
+                    <a class="dropdown-item small" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
                 {% if request.session.system_flag >= 5 %}
-                <div class=""></div>
-                    <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
+                    <a class="dropdown-item small" href="/parking_req/loaning/">駐車場オーナー：貸し出し日時を登録する</a>
                 {% endif %}
-                    <a class="dropdown-item" href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a> 
+                    <a class="dropdown-item small" href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a> 
                 </div>
             </li>
             {% else %}
