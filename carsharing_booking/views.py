@@ -437,7 +437,7 @@ def reservation(request):
     return render(request, "carsharing_booking/check.html", params)
 
 
-#予約確認・一覧
+#予約確認・一覧・詳細
 class ReservationList(TemplateView):
     def __init__(self):
         self.params = {
@@ -446,6 +446,31 @@ class ReservationList(TemplateView):
             'data2': '',
         }
     
+
+    def post(self, request):
+        self.params['title'] = "予約詳細"
+        booking = BookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        booking.start_day = dateStr(booking.start_day)
+        booking.start_time = timeStr(booking.start_time)
+        booking.end_day = dateStr(booking.end_day)
+        booking.end_time = timeStr(booking.end_time)
+        booking.charge = "{:,}".format(booking.charge)
+        self.params['booking'] = booking
+
+        if request.POST['flag'] == 'car':
+            car_obj = CarInfoModel.objects.get(id=request.POST['car'])
+            self.params['flag'] = "car"
+            self.params['data'] = car_obj
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['data2'] = parking_obj
+        else:
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['flag'] = "parking"
+            self.params['data2'] = parking_obj
+            
+
+        return render(request, 'carsharing_booking/list_next.html', self.params)
+
     def get(self, request):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
@@ -461,11 +486,12 @@ class ReservationList(TemplateView):
             item['category'] = category[0]['category']
             parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
             address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            item['parking_id'] = parking_id[0]['parking_id']
+            item['address'] = address[0]['address']
             if item['start_day'] == item['end_day']:
                 flag = True
             else:
                 flag = False
-            item['address'] = address[0]['address']
             item['start_day'] = dateStr(item['start_day'])
             item['start_time'] = timeStr(item['start_time'])
             item['end_day'] = dateStr(item['end_day'])
