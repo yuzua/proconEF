@@ -57,6 +57,7 @@
 .carousel-item {
     width: 100%;
     background-color: #333;
+    margin-top: 60pt;
 }
 
 /* お問い合わせ */
@@ -71,4 +72,3 @@
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     clear: both;
 }
-

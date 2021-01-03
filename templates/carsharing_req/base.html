@@ -115,7 +115,7 @@
       
     <!--wrapper-->
     {% comment %} <div id="wrapper" class="container w-80"> {% endcomment %}
-    <div id="wrapper" class="container w-80" style="margin-top: 75px;">
+    <div id="wrapper" class="container w-80">
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
@@ -125,11 +125,11 @@
     {% endfor %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->
-    </div>
     <div id="top_wrapper" class="w-100">
     {% block box %}{% endblock %}
     {% block top %}{% endblock %}
     {% block extrajs %}{% endblock %}
+    </div>
     </div>
     <!--/wrapper-->
 
@@ -255,6 +255,7 @@
         </div>
         <!-- Footer Links -->
         {% endcomment %}
+
         <footer>
             <div class="replay">
             <ul>
