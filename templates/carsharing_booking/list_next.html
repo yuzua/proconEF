@@ -1,0 +1,74 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+<div class="card m-5">
+    <h5 class="card-header">{{ title }}</h5>
+        <div class="card-body p-2">
+            <p>開始日：{{booking.start_day}}</p>
+            <p>開始時刻：{{booking.start_time}}</p>
+            <p>終了日：{{booking.end_day}}</p>
+            <p>終了時刻：{{booking.end_time}}</p>
+            <p>料金：{{booking.charge}}円</p>
+        </div>
+{% if flag == "car" %}
+    <h5 class="card-header">車両{{ title }}</h5>
+        <div class="card-body p-2">
+            <div class="m-2">
+                <img border="0" src="/media/{{data.img}}" width="200" alt="{{data.img}}">
+            </div>
+            <p>車種(メーカー)：{{data.category}}({{data.parent_category}})</p>
+            <p>型番：{{data.model_id}}</p>
+            <p>乗車人数：{{data.people}}人</p>
+            <p>変速システム：{{data.at_mt}}車</p>
+            <p>搭載機能：</p>
+            {% if data.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if data.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if data.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if data.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if data.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if data.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+        </div>
+{% endif %}
+    <h5 class="card-header">駐車場{{ title }}</h5>
+        <div class="card-body p-2">
+            <div id="map" style="width:720px; height:400px"></div>
+            <p>住所：{{data2.address}}</p>
+            <p>駐車場タイプ：{{data2.parking_type}}</p>
+            <p>土地タイプ：{{data2.ground_type}}</p>
+            <p>横幅：{{data2.width}}m</p>
+            <p>奥行き：{{data2.length}}m</p>
+            {% if data2.height != 0 %}
+            <p>高さ：{{data2.height}}m</p>
+            {% endif %}
+        </div>
+</div>
+<script>
+const lat = {{data2.lat}};
+const lng = {{data2.lng}};
+</script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/booking-map.js" %}'></script>
+{% endblock %}
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
+{% endblock %}

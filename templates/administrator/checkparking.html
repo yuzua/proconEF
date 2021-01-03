@@ -22,7 +22,7 @@
         <form action="{% url 'administrator:checkparking' %}" method="post" >
             {% csrf_token %}
             {% for key, value in data.items %}
-                <input type="text" name="{{key}}" value="{{value}}">
+                <input type="hidden" name="{{key}}" value="{{value}}">
             {% endfor %}
                 <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>

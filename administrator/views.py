@@ -388,10 +388,12 @@ class DownloadData(TemplateView):
         }
     def get(self, request):
         DeleteUploadXlsx('/Django/data/car_data/')
+        DeleteUploadXlsx('/Django/data/parking_data/')
         path_list = AllCarDownload()
         path_list[0] = path_list[0][8:]
         path_list[1] = path_list[1][8:]
         path_list[2] = path_list[2][8:]
+        path_list[3] = path_list[3][8:]
         self.params['path_list'] = path_list
         return render(request, 'administrator/download_data.html', self.params)
 
@@ -431,7 +433,10 @@ class UploadData(TemplateView):
                 # 値をDBへの登録
                 administrator.save()
             xlsx_all_list = ImportXlsx(file_name)
-            AllCarUpload(xlsx_all_list)
+            if file_name[0] == 'p':
+                AllParkingUpload(xlsx_all_list)
+            else:
+                AllCarUpload(xlsx_all_list)
             DeleteUploadXlsx('/Django/media/xlsx/')
             messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
@@ -452,6 +457,9 @@ def AllCarDownload():
     # 車種情報(子カテゴリー)をjsonでダウンロード
     c_path = AllCategoryDownload(dt_now)
     path_list.append(c_path)
+    # 駐車場情報をExcelファイルで作成、ダウンロード
+    parking_path = AllParkingDownload(dt_now)
+    path_list.append(parking_path)
 
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
@@ -477,6 +485,33 @@ def AllCarDownload():
     path_list.append(file_name)
     return path_list
 
+# ------------------------ DB上に追加保存された全駐車場のデータをxlsxに書き出し ------------------------ 
+def AllParkingDownload(dt_now):
+
+    data = [
+        ["駐車場ID","ユーザID","住所","緯度","経度","登録日","駐車場タイプ","土地タイプ","横幅","奥行き","高さ","収容台数","管理者","制限台数フラグ"]
+    ]
+    data_list = list(ParkingUserModel.objects.values())
+    for data_dict in data_list:
+        tmp = list(data_dict.values())
+        # datetime型は入力できない為、str型にlist内を全変換：map()
+        result = map((lambda x: str(x)), tmp)
+        data.append(list(result))
+
+    # ブックの読み込みとシート選択
+    wb = openpyxl.Workbook()
+    sheet = wb.worksheets[0]
+
+    # 行ごとに取り出してからExcelへ挿入
+    for row in data:
+        sheet.append(row)
+
+    # xlsx型式で保存
+    file_name = "/Django/data/parking_data/p_" + dt_now + ".xlsx"
+    wb.save(file_name)
+    return file_name
+
+# ---------------------- DB上に追加保存された全メーカー名(親カテゴリー)をjsonに書き出し ------------------------ 
 def AllParentCategoryDownload(dt_now):
     p_c = list(ParentCategory.objects.values())
     json_data = json.dumps(p_c, sort_keys=True, indent=4)
@@ -488,6 +523,7 @@ def AllParentCategoryDownload(dt_now):
         f.write(json_data)
     return path
 
+# ------------------------- DB上に追加保存された全車種名(カテゴリー)をjsonに書き出し ------------------------------ 
 def AllCategoryDownload(dt_now):
     c = list(Category.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
@@ -498,10 +534,10 @@ def AllCategoryDownload(dt_now):
         # jsonファイルの書き出し
         f.write(json_data)
     return path
-# -------------------------- DB上に追加保存された全車両のデータをxlsxに書き出し -------------------------- 
+# --------------------------------------------------------------------------------------------------------- 
 
 
-# --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
+# --------------------------------- 読み込んだjsonファイルをDBへ格納 ------------------------------------------- 
 def AllParentCategoryUpload(json_data):
     print(type(json_data))
     flag = len(list(ParentCategory.objects.all()))
@@ -561,6 +597,7 @@ def get_list_2d(sheet, start_row, end_row, start_col, end_col):
 def get_value_list(t_2d):
     return([[cell.value for cell in row] for row in t_2d])
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
+
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
 def AllCarUpload(all_list):
     print(all_list[0])
@@ -622,8 +659,52 @@ def AllCarUpload(all_list):
             record.key_flag = car_list[23]
             record.save()
 
+# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
+
+# --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
+def AllParkingUpload(all_list):
+    print(all_list[0])
+    # 先頭のindexを削除
+    all_list.pop(0)
+    flag = len(list(ParkingUserModel.objects.all()))
+    if flag != 0:
+        for parking_list in all_list:
+            record = ParkingUserModel.objects.get(id=parking_list[0])
+            record.user_id = int(parking_list[1])
+            record.address = parking_list[2]
+            record.lat = parking_list[3]
+            record.lng = parking_list[4]
+            record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            record.parking_type = parking_list[6]
+            record.ground_type = parking_list[7]
+            record.width = int(parking_list[8])
+            record.length = int(parking_list[9])
+            record.height = int(parking_list[10])
+            record.count = int(parking_list[11])
+            record.admin = parking_list[12]
+            record.countflag = parking_list[13]
+            record.save()
+    else:
+        for parking_list in all_list:
+            record = CarInfoModel()
+            record.user_id = int(parking_list[1])
+            record.address = parking_list[2]
+            record.lat = parking_list[3]
+            record.lng = parking_list[4]
+            record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            record.parking_type = parking_list[6]
+            record.ground_type = parking_list[7]
+            record.width = int(parking_list[8])
+            record.length = int(parking_list[9])
+            record.height = int(parking_list[10])
+            record.count = int(parking_list[11])
+            record.admin = parking_list[12]
+            record.countflag = parking_list[13]
+            record.save()
+
+# --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
+
 # 引数に指定されたフォルダー内のファイルを削除
 def DeleteUploadXlsx(target_dir):
     shutil.rmtree(target_dir)
     os.mkdir(target_dir)
-# ---------------------------------------- 車情報をDBへ保存 -----------------------------------------

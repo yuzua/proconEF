@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from carsharing_req .models import CarsharUserModel
+from carsharing_req .models import CarsharUserModel, UsageModel
 from parking_req .models import ParkingUserModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm, CarCategory
-import json, datetime
+import json
+import datetime, locale
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
@@ -106,6 +107,72 @@ def car(request):
     }
     return render(request, "carsharing_booking/car.html", params)
 
+def history(request):
+    booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+    for item in list(booking):
+        num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
+        category = Category.objects.get(id=num[0]['category'])
+        item['category'] = category.category
+        item['parent_category'] = category.parent_category
+        parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
+        p_obj = ParkingUserModel.objects.get(id=parking_id[0]['parking_id'])
+        item['parking_id'] = parking_id[0]['parking_id']
+        item['address'] = p_obj.address
+        item['lat'] = p_obj.lat
+        item['lng'] = p_obj.lng
+        if item['start_day'] == item['end_day']:
+            flag = True
+        else:
+            flag = False
+        item['start_day'] = dateStr(item['start_day'])
+        item['start_time'] = timeStr(item['start_time'])
+        item['end_day'] = dateStr(item['end_day'])
+        item['end_time'] = timeStr(item['end_time'])
+        if flag == True:
+            item['end_day'] = ''
+        item['charge'] = "{:,}".format(item['charge'])
+        car_obj = CarInfoModel.objects.get(id=item['car_id'])
+        item['img'] = car_obj.img
+        print(item)
+    params = {
+        'title': '履歴から予約',
+        'data': booking
+    }
+    return render(request, "carsharing_booking/history.html", params)
+
+# 日付を日本語(str型)に変換するメソッド
+def dateStr(day):
+    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
+    day_week = day_date.weekday()
+    print(type(day_date))
+    if day_week == 0:
+        day_week = '(月)'
+    elif day_week == 1:
+        day_week = '(火)'
+    elif day_week == 2:
+        day_week = '(水)'
+    elif day_week == 3:
+        day_week = '(木)'
+    elif day_week == 4:
+        day_week = '(金)'
+    elif day_week == 5:
+        day_week = '(土)'
+    else:
+        day_week = '(日)'
+    y_date = day_date.year
+    m_date = day_date.month
+    d_date = day_date.day
+    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
+    print(day)
+    print(day_week)
+    return day + day_week
+
+# 時間を日本語(str型)に変換するメソッド
+def timeStr(time):
+    time = time.replace(':', '時')
+    time += '分'
+    return time
+
 def booking_car(request, num):
     request.session['select'] = "car"
     params = {
@@ -198,6 +265,11 @@ def booking(request, num):
 
     
     return render(request, 'carsharing_booking/booking.html', params)
+
+
+def booking_history(request, num):
+    pass
+
 
 def checkBooking(request):
     params = {
@@ -436,7 +508,7 @@ def reservation(request):
     return render(request, "carsharing_booking/check.html", params)
 
 
-#予約確認・一覧
+#予約確認・一覧・詳細
 class ReservationList(TemplateView):
     def __init__(self):
         self.params = {
@@ -445,15 +517,37 @@ class ReservationList(TemplateView):
             'data2': '',
         }
     
+
+    def post(self, request):
+        self.params['title'] = "予約詳細"
+        if request.POST['flag'] == 'car':
+            car_obj = CarInfoModel.objects.get(id=request.POST['car'])
+            self.params['flag'] = "car"
+            self.params['data'] = car_obj
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['data2'] = parking_obj
+            booking = BookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        else:
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['flag'] = "parking"
+            self.params['data2'] = parking_obj
+            booking = ParkingBookingModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        booking.start_day = dateStr(booking.start_day)
+        booking.start_time = timeStr(booking.start_time)
+        booking.end_day = dateStr(booking.end_day)
+        booking.end_time = timeStr(booking.end_time)
+        booking.charge = "{:,}".format(booking.charge)
+        self.params['booking'] = booking
+
+        return render(request, 'carsharing_booking/list_next.html', self.params)
+
     def get(self, request):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
         print(d_now)
-        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        self.params['data'] = booking
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        self.params['data'] = booking
-        self.params['data2'] = booking2
+        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        
 
         for item in list(booking):
             print(item['car_id'])
@@ -462,10 +556,68 @@ class ReservationList(TemplateView):
             item['category'] = category[0]['category']
             parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
             address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            item['parking_id'] = parking_id[0]['parking_id']
             item['address'] = address[0]['address']
+            if item['start_day'] == item['end_day']:
+                flag = True
+            else:
+                flag = False
+            item['start_day'] = dateStr(item['start_day'])
+            item['start_time'] = timeStr(item['start_time'])
+            item['end_day'] = dateStr(item['end_day'])
+            item['end_time'] = timeStr(item['end_time'])
+            if flag == True:
+                item['end_day'] = ''
+            item['charge'] = "{:,}".format(item['charge'])
+            car_obj = CarInfoModel.objects.get(id=item['car_id'])
+            item['img'] = car_obj.img
             print(item)
         for item in list(booking2):
             address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
+            if item['start_day'] == item['end_day']:
+                flag = True
+            else:
+                flag = False
             item['address'] = address[0]['address']
+            item['start_day'] = dateStr(item['start_day'])
+            item['start_time'] = timeStr(item['start_time'])
+            item['end_day'] = dateStr(item['end_day'])
+            item['end_time'] = timeStr(item['end_time'])
+            if flag == True:
+                item['end_day'] = ''
+            item['charge'] = "{:,}".format(item['charge'])
             print(item)
+        self.params['data'] = booking
+        self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
+
+def dateStr(day):
+    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
+    day_week = day_date.weekday()
+    print(type(day_date))
+    if day_week == 0:
+        day_week = '(月)'
+    elif day_week == 1:
+        day_week = '(火)'
+    elif day_week == 2:
+        day_week = '(水)'
+    elif day_week == 3:
+        day_week = '(木)'
+    elif day_week == 4:
+        day_week = '(金)'
+    elif day_week == 5:
+        day_week = '(土)'
+    else:
+        day_week = '(日)'
+    y_date = day_date.year
+    m_date = day_date.month
+    d_date = day_date.day
+    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
+    print(day)
+    print(day_week)
+    return day + day_week
+
+def timeStr(time):
+    time = time.replace(':', '時')
+    time += '分'
+    return time

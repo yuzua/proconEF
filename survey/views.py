@@ -53,7 +53,7 @@ class Survey(TemplateView):
         pattern = countCheck(user_id)
         print(pattern)
         push(user_id, anser_dict, pattern)
-        messages.success(request, 'ご回答ありがとうございました')
+        messages.success(request, '返却処理を完了致しました。\nアンケートのご協力ありがとうございました。')
         del request.session['data']
         # jsonファイルを作成 (おすすめ車両AIに投げる用)
         makeJsonFile(user_id)

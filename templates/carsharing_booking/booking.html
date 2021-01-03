@@ -21,7 +21,7 @@
 <table class="table">
     <tr class="card-header"><th>予約</th><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
 {% for car_obj in car_objs %}
-    <tr><td><input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required><td><img src="/media/{{car_obj.img}}" width="110"　border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
+    <tr><td><input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required><td><img src="/media/{{car_obj.img}}" width="110"　border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}人</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
         <td>
         {% if car_obj.babysheet == True %}
         <li>チャイルドシート</li>
@@ -53,7 +53,7 @@
             <input id="addressPush" type="hidden" name="address">
                 {{ form.as_p }}
                 {{ form.media }}
-            <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+            <input class="btn btn-outline-secondary" type="submit" value="確認" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
     </div>
 </div>
 </form>
