@@ -30,14 +30,6 @@
         </div>
     </div>
 </div>
-      {% comment %} <form method="post" >
-        {% csrf_token %}
-        <input type="hidden" name="flag" value="car">
-        <input type="hidden" name="booking" value="{{item.id}}">
-        <input type="hidden" name="car" value="{{item.car_id}}">
-        <input type="hidden" name="parking" value="{{item.parking_id}}">
-        <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
-</form> {% endcomment %}
 {% endfor %}
 <script>
     var count = {{count}};
