@@ -1,0 +1,103 @@
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  ul {
+    padding: 0;
+  }
+  li {
+    list-style-type: none;
+  }
+  dd {
+    margin-left: 0;
+  }
+  
+  .flow {
+    padding-left: 120px;
+    position: relative;
+  }
+  .flow::before {
+    content: "";
+    width: 15px;
+    height: 100%;
+    background: #eee;
+    margin-left: -8px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 120px;
+  }
+  .flow > li {
+    position: relative;
+  }
+  .flow > li:not(:last-child) {
+    margin-bottom: 8vh;
+  }
+  .flow > li .icon {
+    font-size: 12px;
+    color: #fff;
+    background: rgb(107,144,219);
+    background: -moz-linear-gradient(left, rgba(107,144,219,1) 0%, rgba(102,213,233,1) 100%);
+    background: -webkit-linear-gradient(left, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
+    background: linear-gradient(to right, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b90db', endColorstr='#66d5e9',GradientType=1 );
+    padding: 8px 20px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -120px;
+    z-index: 100;
+  }
+  .flow > li .icon::after {
+    content: "";
+    border-style: solid;
+    border-width: 5px 0 5px 10px;
+    border-color: transparent transparent transparent #66d5e9;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  .flow > li dl {
+    padding-left: 70px;
+    position: relative;
+  }
+  .flow > li dl::before,
+  .flow > li dl::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 15px;
+  }
+  .flow > li dl::before {
+    width: 7px;
+    height: 7px;
+    margin-top: -3px;
+    background: #6b90db;
+    border-radius: 50%;
+    left: -4px;
+  }
+  .flow > li dl::after {
+    width: 50px;
+    border-bottom: 1px dashed #999;
+    position: absolute;
+    left: 5px;
+  }
+  .flow > li dl dt {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(107,144,219);
+    margin-bottom: 1vh;
+  }
+
+  .all {
+      width: 80%;
+  }

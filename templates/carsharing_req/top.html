@@ -38,66 +38,63 @@
 
 {% block top %}
 <div id ="main">
-    {% comment %}
-          <div id=nav class="clearfix" style="width: 840pt;">
-              <div class="card" >
-                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96" style="height: 200pt;"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/carsharing.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">カーシェアリング予約</h5>
-                    <p class="card-text">template</p>
-                    <a href="/carsharing_booking/map" class="btn btn-primary">予約</a>
-                </div>
-            </div>
-            <div class="card">
-                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/parking.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">駐車場予約</h5>
-                    <p class="card-text">template</p>
-                    <a href="/parking_booking/map" class="btn btn-primary">予約</a>
-                </div>
-            </div>
-            <div class="card">
-                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/carsharing01.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">カーシェアリングオーナー日時選択</h5>
-                    <p class="card-text">template</p>
-                    <a href="#" class="btn btn-primary">選択</a>
-                </div>
-            </div>
-            <div class="card">
-                <!-- <svg class="bd-placeholder-img card-img-top"xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/parking_owner.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">駐車場オーナー日時選択</h5>
-                    <p class="card-text">template</p>
-                    <a href="#" class="btn btn-primary">選択</a>
-                </div>
-            </div>
-            <div class="card">
-                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/choce.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">あなたへのおすすめ</h5>
-                    <p class="card-text">template</p>
-                    <a href="#" class="btn btn-primary">見てみる</a>
-                </div>
-            </div>
-            <div class="card">
-                <!-- <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> -->
-                <p><img src='{% static "admin/img/oldcar.jpg" %}' alt="Google" class="img" style="height: 150pt;"></p>
-                <div class="card-body">
-                    <h5 class="card-title">中古車検索</h5>
-                    <p class="card-text">template</p>
-                    <a href="#" class="btn btn-primary">検索</a>
-                </div>
-            </div>
-            {% endcomment %}
-
-
-            <div class="three">
+      <div class="area-6">
+        <div class="hover-6"></div>
+        <span class="font-6">MORE</span>
+      </div>
+      <div class="area-6">
+        <div class="hover-6"></div>
+        <span class="font-6">MORE</span>
+      </div>
+      <div class="area-6">
+        <div class="hover-6"></div>
+        <span class="font-6">MORE</span>
+      </div>
+      <style>
+        .area-6 {
+          position: relative;
+          display: inline-block;
+          overflow: hidden;
+          width: 250pt;
+          height: 200pt;
+          margin: 5pt 12pt 5pt 12pt;
+        }
+        .hover-6 {
+          display: inline-block;
+          width: 250pt;
+          height: 200pt;
+          background-image: url('{% static "admin/img/choce.jpg" %}');
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          transition: all 0.2s ease-out;
+          cursor: pointer;
+        }
+        .font-6 {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 250pt;
+          height: 200pt;
+          line-height: 200pt;
+          text-align: center;
+          font-size: 30pt;
+          font-weight: bold;
+          letter-spacing: 12px;
+          color: #fff;
+          opacity: 0;
+          cursor: pointer;
+          transition: all 0.3s ease-out;
+        }
+        .area-6:hover .font-6 {
+          opacity: 0.6;
+        }
+        .area-6:hover .hover-6 {
+          transform: scale(1.1);
+          filter: blur(2px);
+        }
+      </style>
+            <!-- <div class="three">
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
                     <div class="card-body">
@@ -192,7 +189,7 @@
                     </div>
                 </div>
                 {% endif %}
-            </div>
+            </div> -->
                 {% comment %} 解説動画（YouTube） {% endcomment %}
             <div data-trigger class="card float-none" style="width: 900px; height: 500px; margin: 0 auto;">
                 <div class="card-header">

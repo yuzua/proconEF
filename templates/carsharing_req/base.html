@@ -115,7 +115,7 @@
       
     <!--wrapper-->
     {% comment %} <div id="wrapper" class="container w-80"> {% endcomment %}
-    <div id="wrapper" class="container w-80" style="margin-top: 75px;">
+    <div id="wrapper" class="container w-80">
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
@@ -125,11 +125,11 @@
     {% endfor %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->
-    </div>
     <div id="top_wrapper" class="w-100">
     {% block box %}{% endblock %}
     {% block top %}{% endblock %}
     {% block extrajs %}{% endblock %}
+    </div>
     </div>
     <!--/wrapper-->
 
@@ -255,36 +255,35 @@
         </div>
         <!-- Footer Links -->
         {% endcomment %}
+
         <footer>
             <div class="replay">
             <ul>
-            <li>
+            <li class="none">
             {% if user.is_authenticated %}
             <a href="/carsharing_booking/list" class="replay01" style="width: 70pt;">予約確認</a>
             {% else %}
             <a href="/accounts/signup/"  class="replay01" style="width: 90pt;">新規会員登録</a>
             {% endif %}
             </li>
-            <li>
+            <li class="none">
             <a href="/carsharing_booking/map"  class="replay01"  style="width: 150pt;">カーシェアリング検索</a>
             </li>
-            <li>
+            <li class="none">
             <a href="/parking_booking/map"  class="replay01" style="width: 80pt;">駐車場検索</a>
             </li>
-            <li>
+            <li class="none">
             <a href="#!"  class="replay01" style="width: 80pt;">中古車検索</a>
             </li>
-            <li>
-            {% if request.session.system_flag >= 10 %}
-            <a href="/owners_req/createDate"  class="replay01" style="width: 180pt;">カーシェアオーナー日時登録</a>
-            {% elif request.session.system_flag >= 1 %}
-            <a href="#!"  class="replay01" style="width: 170pt;">車両追加</a>
+            <li class="none">
+            {% if request.session.owner_flag == True %}
+            <a href="/owners_req/createDate"  class="replay01" style="width: 200pt;">カーシェアオーナー日時登録</a>
             {% else %}
             <a href="/owners_req/create"  class="replay01" style="width: 200pt;">カーシェアオーナー新規登録</a>
             {% endif %}
             </li>
-            <li>
-            {% if request.session.system_flag >= 5 %}
+            <li class="none">
+            {% if request.session.parking_flag == True %}
             <a href="/parking_req/loaning/"  class="replay01" style="width: 170pt;">駐車場オーナー日時登録</a>
             {% elif request.session.system_flag >= 1 %}
             <a href="#!"  class="replay01" style="width: 170pt;">駐車場追加</a>

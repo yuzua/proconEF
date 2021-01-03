@@ -127,13 +127,14 @@ a:hover {
     padding-bottom: 8px;
 } */
 
-footer h5 {
+/* フッター */
+/* footer h5 {
     font-size: 13pt;
-}
+} */
 
 footer a {
-    font-size: small;
     float: left;
+    color: #333;
 }
 
 #copy {
@@ -146,10 +147,6 @@ footer a {
     width: 250pt;
 }
 
-a {
-    color: #333;
-}
-
 a:hover {
     text-decoration: underline;
 }
@@ -160,4 +157,13 @@ a:hover {
     margin: 10pt 30pt 10pt 15pt;
     width: 100%;
     font-weight: bold;
+    clear: both;
+}
+
+.none {
+    text-decoration: none;
+}
+
+#wrapper {
+    width: 900pt;
 }
