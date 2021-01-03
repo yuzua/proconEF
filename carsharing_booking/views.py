@@ -134,9 +134,11 @@ def history(request):
         car_obj = CarInfoModel.objects.get(id=item['car_id'])
         item['img'] = car_obj.img
         print(item)
+    count = len(booking)
     params = {
         'title': '履歴から予約',
-        'data': booking
+        'data': booking,
+        'count': count
     }
     return render(request, "carsharing_booking/history.html", params)
 

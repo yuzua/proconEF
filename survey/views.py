@@ -323,7 +323,7 @@ def checkUsage(user_id):
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
-            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
     print(booking)
     return booking
 
