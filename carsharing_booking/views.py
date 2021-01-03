@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from carsharing_req .models import CarsharUserModel
+from carsharing_req .models import CarsharUserModel, UsageModel
 from parking_req .models import ParkingUserModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
@@ -107,6 +107,72 @@ def car(request):
     }
     return render(request, "carsharing_booking/car.html", params)
 
+def history(request):
+    booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+    for item in list(booking):
+        num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
+        category = Category.objects.get(id=num[0]['category'])
+        item['category'] = category.category
+        item['parent_category'] = category.parent_category
+        parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
+        p_obj = ParkingUserModel.objects.get(id=parking_id[0]['parking_id'])
+        item['parking_id'] = parking_id[0]['parking_id']
+        item['address'] = p_obj.address
+        item['lat'] = p_obj.lat
+        item['lng'] = p_obj.lng
+        if item['start_day'] == item['end_day']:
+            flag = True
+        else:
+            flag = False
+        item['start_day'] = dateStr(item['start_day'])
+        item['start_time'] = timeStr(item['start_time'])
+        item['end_day'] = dateStr(item['end_day'])
+        item['end_time'] = timeStr(item['end_time'])
+        if flag == True:
+            item['end_day'] = ''
+        item['charge'] = "{:,}".format(item['charge'])
+        car_obj = CarInfoModel.objects.get(id=item['car_id'])
+        item['img'] = car_obj.img
+        print(item)
+    params = {
+        'title': '履歴から予約',
+        'data': booking
+    }
+    return render(request, "carsharing_booking/history.html", params)
+
+# 日付を日本語(str型)に変換するメソッド
+def dateStr(day):
+    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
+    day_week = day_date.weekday()
+    print(type(day_date))
+    if day_week == 0:
+        day_week = '(月)'
+    elif day_week == 1:
+        day_week = '(火)'
+    elif day_week == 2:
+        day_week = '(水)'
+    elif day_week == 3:
+        day_week = '(木)'
+    elif day_week == 4:
+        day_week = '(金)'
+    elif day_week == 5:
+        day_week = '(土)'
+    else:
+        day_week = '(日)'
+    y_date = day_date.year
+    m_date = day_date.month
+    d_date = day_date.day
+    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
+    print(day)
+    print(day_week)
+    return day + day_week
+
+# 時間を日本語(str型)に変換するメソッド
+def timeStr(time):
+    time = time.replace(':', '時')
+    time += '分'
+    return time
+
 def booking_car(request, num):
     request.session['select'] = "car"
     params = {
@@ -199,6 +265,11 @@ def booking(request, num):
 
     
     return render(request, 'carsharing_booking/booking.html', params)
+
+
+def booking_history(request, num):
+    pass
+
 
 def checkBooking(request):
     params = {

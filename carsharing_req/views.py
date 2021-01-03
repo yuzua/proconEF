@@ -311,13 +311,13 @@ class CalendarView(TemplateView):
 class DetailsList(TemplateView):
     def __init__(self):
         self.params = {
-            'title': '利用一覧',
+            'title': '利用履歴一覧',
             'data': '',
             'data2': '',
         }
 
     def post(self, request):
-        self.params['title'] = "利用詳細"
+        self.params['title'] = "利用履歴詳細"
         booking = UsageModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
         booking.start_day = dateStr(booking.start_day)
         booking.start_time = timeStr(booking.start_time)
