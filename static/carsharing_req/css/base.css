@@ -1,3 +1,6 @@
+#phone-nav{
+    display: none;
+}
 .logo3 {
     width: 35pt;
     height: 35pt;
@@ -166,4 +169,39 @@ a:hover {
 
 #wrapper {
     width: 900pt;
+}
+
+@media screen and (max-width: 599px) {
+    #phone-nav{
+        display: block;
+        /* width: 100%; */
+        position:fixed;
+        top:0;
+        z-index:100;
+        padding: 0.5;
+        width: 100;
+    }
+    body {
+        background-color:#9c9c9a;
+    }
+    header {
+        display: none;
+    }
+    body, #wrapper{
+        width: 100%;
+    }
+    .logout {
+        font-size: 9pt;
+        font-weight: 100;
+    }
+    #log-btn{
+        height: 25pt;
+        width: 65pt;
+        margin: 7pt 0pt 3pt 0pt;
+        border-color: #CDCDCD;
+        float: left;
+        clear: none;
+        padding: 0;
+        /* margin: 0; */
+    }
 }

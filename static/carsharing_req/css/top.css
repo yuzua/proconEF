@@ -60,6 +60,12 @@
     margin-top: 60pt;
 }
 
+#youtube{
+    width: 900px;
+    height: 500px;
+    margin: 0 auto;
+}
+
 /* お問い合わせ */
 #under {
     float: right;
@@ -71,4 +77,11 @@
     background: white;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     clear: both;
+}
+
+@media screen and (max-width: 599px) {
+    #youtube{
+        width: 400px;
+        height: 800px;
+    }
 }
