@@ -347,52 +347,53 @@
         <!-- Footer Links -->
         {% endcomment %}
 
-        <footer>
-            <div class="replay">
-            <ul>
-            <li class="none">
-            {% if user.is_authenticated %}
-            <a href="/carsharing_booking/list" class="replay01" style="width: 70pt;">予約確認</a>
-            {% else %}
-            <a href="/accounts/signup/"  class="replay01" style="width: 90pt;">新規会員登録</a>
-            {% endif %}
-            </li>
-            <li class="none">
-            <a href="/carsharing_booking/map"  class="replay01"  style="width: 150pt;">カーシェアリング検索</a>
-            </li>
-            <li class="none">
-            <a href="/parking_booking/map"  class="replay01" style="width: 80pt;">駐車場検索</a>
-            </li>
-            <li class="none">
-            <a href="#!"  class="replay01" style="width: 80pt;">中古車検索</a>
-            </li>
-            <li class="none">
-            {% if request.session.owner_flag == True %}
-            <a href="/owners_req/createDate"  class="replay01" style="width: 200pt;">カーシェアオーナー日時登録</a>
-            {% else %}
-            <a href="/owners_req/create"  class="replay01" style="width: 200pt;">カーシェアオーナー新規登録</a>
-            {% endif %}
-            </li>
-            <li class="none">
-            {% if request.session.parking_flag == True %}
-            <a href="/parking_req/loaning/"  class="replay01" style="width: 170pt;">駐車場オーナー日時登録</a>
-            {% elif request.session.system_flag >= 1 %}
-            <a href="#!"  class="replay01" style="width: 170pt;">駐車場追加</a>
-            {% else %}
-            <a href="#!"  class="replay01" style="width: 170pt;">駐車場オーナー新規登録</a>
-            {% endif %}
-            </li>
-            </ul>
+        <footer class="w-100 clearfix">
+            <div class="replay w-50 float-left">
+                <ul style="list-style-type: none">
+                <li class="none">
+                {% if user.is_authenticated %}
+                <a href="/carsharing_booking/list" class="replay01" style="width: 70pt;">予約確認</a>
+                {% else %}
+                <a href="/accounts/signup/"  class="replay01" style="width: 90pt;">新規会員登録</a>
+                {% endif %}
+                </li>
+                <li class="none">
+                <a href="/carsharing_booking/map"  class="replay01"  style="width: 150pt;">カーシェアリング検索</a>
+                </li>
+                <li class="none">
+                <a href="/parking_booking/map"  class="replay01" style="width: 80pt;">駐車場検索</a>
+                </li>
+                <li class="none">
+                <a href="#!"  class="replay01" style="width: 80pt;">中古車検索</a>
+                </li>
+                <li class="none">
+                {% if request.session.owner_flag == True %}
+                <a href="/owners_req/createDate"  class="replay01" style="width: 200pt;">カーシェアオーナー日時登録</a>
+                {% else %}
+                <a href="/owners_req/create"  class="replay01" style="width: 200pt;">カーシェアオーナー新規登録</a>
+                {% endif %}
+                </li>
+                <li class="none">
+                {% if request.session.parking_flag == True %}
+                <a href="/parking_req/loaning/"  class="replay01" style="width: 170pt;">駐車場オーナー日時登録</a>
+                {% elif request.session.system_flag >= 1 %}
+                <a href="#!"  class="replay01" style="width: 170pt;">駐車場追加</a>
+                {% else %}
+                <a href="#!"  class="replay01" style="width: 170pt;">駐車場オーナー新規登録</a>
+                {% endif %}
+                </li>
+                </ul>
             </div>
-        </footer>
         <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">
-            <p style="padding: 10px; margin:0; clear: none;"><img src='{% static "admin/img/logo03.png" %}' class="logo4">株式会社▲▲▲<img src='{% static "admin/img/logo03.png" %}' class="logo4"></p>
+        <div class="w-50 pt-5 pb-5 mt-5 float-left">
+            <div class="footer-copyright text-center py-3">
+                <p style="padding: 10px; margin:0; clear: none;"><img src='{% static "admin/img/logo03.png" %}' class="logo4">株式会社▲▲▲<img src='{% static "admin/img/logo03.png" %}' class="logo4"></p>
+            </div>
+            <!-- Copyright -->
+            <span id="copy">
+                <p>&copy;<small>Copy Rights . 2020 CarSharingService . All Rights Reserved</small></p>
+            </span>
         </div>
-        <!-- Copyright -->
-        <span id="copy">
-            <p>&copy;<small>Copy Rights . 2020 CarSharingService . All Rights Reserved</small></p>
-        </span>
     </footer>
     <!-- Footer -->
   </body>
