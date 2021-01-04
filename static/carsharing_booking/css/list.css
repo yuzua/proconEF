@@ -51,3 +51,14 @@ fieldset {
 .table td, .table th{
     vertical-align: middle;
 }
+#delete-btn{
+    float: right;
+}
+#delete-btn small:hover {
+    color: #fff;
+}
+#delete-box {
+    border: 2px solid;
+    border-color: #6f6f74;
+    border-radius: 8px;
+}

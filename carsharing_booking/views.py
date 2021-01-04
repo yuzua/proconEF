@@ -565,6 +565,60 @@ class ReservationList(TemplateView):
         self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
 
+class DeleteBooking(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': '予約キャンセル',
+        }
+    def post(self, request):
+        if request.POST['flag'] == 'car':
+            booking = BookingModel.objects.get(id=request.POST['id'])
+            booking.delete()
+            messages.error(request, '予約をキャンセルしました。')
+        else:
+            booking = ParkingBookingModel.objects.get(id=request.POST['id'])
+            booking.delete()
+            messages.error(request, '予約をキャンセルしました。')
+        return redirect(to='carsharing_req:first')
+    def get(self, request, flag, num):
+        if flag == 'car':
+            self.params['flag'] = 'car'
+            booking = BookingModel.objects.get(id=num)
+            if booking.user_id == request.session['user_id']:
+                booking.start_day = dateStr(booking.start_day)
+                booking.start_time = timeStr(booking.start_time)
+                booking.end_day = dateStr(booking.end_day)
+                booking.end_time = timeStr(booking.end_time)
+                booking.charge = "{:,}".format(booking.charge)
+                self.params['booking'] = booking
+                car_id = booking.car_id
+                parking_id = CarInfoParkingModel.objects.get(car_id=car_id).parking_id_id
+                self.params['car_obj'] = CarInfoModel.objects.get(id=car_id)
+                self.params['parking_obj'] = ParkingUserModel.objects.get(id=parking_id)
+                messages.warning(request, 'まだ予約のキャンセル処理を完了しておりません。<br>本当にキャンセルして宜しければ、キャンセル確定ボタンをクリックして下さい。')
+                return render(request, 'carsharing_booking/delete.html', self.params)
+            else:
+                messages.error(request, '不正なリクエストです')
+                return redirect(to='carsharing_req:index')
+        else:
+            booking = ParkingBookingModel.objects.get(id=num)
+            if booking.user_id == request.session['user_id']:
+                # booking.delete()
+                booking.start_day = dateStr(booking.start_day)
+                booking.start_time = timeStr(booking.start_time)
+                booking.end_day = dateStr(booking.end_day)
+                booking.end_time = timeStr(booking.end_time)
+                booking.charge = "{:,}".format(booking.charge)
+                self.params['booking'] = booking
+                parking_id = booking.parking_id
+                self.params['parking_obj'] = ParkingUserModel.objects.get(id=parking_id)
+                messages.warning(request, 'まだ予約のキャンセル処理を完了しておりません。<br>本当にキャンセルして宜しければ、キャンセル確定ボタンをクリックして下さい。')
+                return render(request, 'carsharing_booking/delete.html', self.params)
+            else:
+                messages.error(request, '不正なリクエストです')
+                return redirect(to='carsharing_req:index')
+        
+
 # 日付を日本語(str型)に変換するメソッド
 def dateStr(day):
     day_date = datetime.datetime.strptime(day, "%Y-%m-%d")

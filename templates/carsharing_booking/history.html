@@ -15,7 +15,7 @@
     <h6 class="card-header">{{item.start_day}}{{item.start_time}}~{{item.end_day}}{{item.end_time}}</h6>
     <div class="card-body p-1">
         <div class="w-50 float-left p-3">
-            <p><strong>{{item.category}}({{item.parent_category}})</strong></p>
+            <h4><strong>{{item.category}}({{item.parent_category}})</strong></h4>
             <div>
                 <img border="0" src="/media/{{item.img}}" width="350" alt="{{num.img1}}">
             </div>
@@ -23,7 +23,7 @@
         </div>
         <div class="w-50 float-left p-3">
             <div id="map{{item.id}}" style="width:350; height:300px"></div>
-            <p>{{item.address}}</p>
+            <p class="m-0">{{item.address}}</p>
             <input type="hidden" id="lat{{item.id}}" value="{{item.lat}}"/>
             <input type="hidden" id="lng{{item.id}}" value="{{item.lng}}"/>
             <a class="float-right" href="../booking/{{item.parking_id}}">この場所から予約する</a>

@@ -97,7 +97,7 @@
     color: #000;
 }
 
-.btn {
+#log-btn {
     height: 30pt;
     width: 75pt;
     font-size: 12pt;
@@ -108,8 +108,9 @@
     padding: auto;
 }
 
-.btn:hover {
+#log-btn:hover {
     background-color: #CDCDCD;
+    text-decoration: none;
 }
 
 a:hover {
