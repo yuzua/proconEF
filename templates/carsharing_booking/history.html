@@ -19,14 +19,14 @@
             <div>
                 <img border="0" src="/media/{{item.img}}" width="350" alt="{{num.img1}}">
             </div>
-        <a class="float-right" href="../car/{{item.car_id}}">もう一度この車を予約する</a>
+        <a class="float-right text-secondary" href="../car/{{item.car_id}}">もう一度この車を予約する &raquo;</a>
         </div>
         <div class="w-50 float-left p-3">
             <div id="map{{item.id}}" style="width:350; height:300px"></div>
             <p class="m-0">{{item.address}}</p>
             <input type="hidden" id="lat{{item.id}}" value="{{item.lat}}"/>
             <input type="hidden" id="lng{{item.id}}" value="{{item.lng}}"/>
-            <a class="float-right" href="../booking/{{item.parking_id}}">この場所から予約する</a>
+            <a class="float-right text-secondary" href="../booking/{{item.parking_id}}">この場所から予約する &raquo;</a>
         </div>
     </div>
 </div>

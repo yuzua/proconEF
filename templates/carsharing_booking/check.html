@@ -3,6 +3,9 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/check.css" %}'>
+{% endblock %}
 
 {% block main_contents %}
     <h1>{{ title }}</h1>
