@@ -8,12 +8,12 @@
     <form action="{% url 'secondhandcar:search' %}" method="post" >
     {% csrf_token %}
     <div class="m-1 clearfix" style="border-top: solid 3px #000;border-bottom: solid 3px #000;">
-        <input type="submit" class="btn btn-dark" name="parent_category" value="ホンダ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark" name="parent_category" value="日産" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark" name="parent_category" value="トヨタ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark" name="parent_category" value="スズキ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark" name="parent_category" value="ＢＭＷ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark" name="parent_category" value="ダイハツ" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ホンダ" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="日産" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="トヨタ" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="スズキ" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ＢＭＷ" style="float:left;clear:none;"/>
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ダイハツ" style="float:left;clear:none;"/>
     </div>
     </form>
 {% for car_obj in secondhandcar_info %}
@@ -41,7 +41,7 @@
             <p class="card-text">型番：{{car_obj.model}}</p>
             <p class="card-text">発売期間：{{car_obj.release_period}}</p>
             <p class="card-text">グレード：{{car_obj.grade}}</p>
-            <a href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る>></a>
+            <a class="text-secondary" href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る &raquo;</a>
         </div>
     </div>
 {% endfor %}
