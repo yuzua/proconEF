@@ -409,6 +409,9 @@ def dateStr(day):
 def timeStr(time):
     time = time.replace(':', '時')
     time += '分'
+    h = (int(time[0:2]))
+    m = (time[2:])
+    time = str(h) + m
     return time
 
 

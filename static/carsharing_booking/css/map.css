@@ -33,3 +33,7 @@ div {
     width: 250px;
     height: 70px;
   }
+
+.table td, .table th{
+  vertical-align: middle;
+}

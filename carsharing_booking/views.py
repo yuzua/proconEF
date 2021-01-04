@@ -142,38 +142,6 @@ def history(request):
     }
     return render(request, "carsharing_booking/history.html", params)
 
-# 日付を日本語(str型)に変換するメソッド
-def dateStr(day):
-    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
-    day_week = day_date.weekday()
-    print(type(day_date))
-    if day_week == 0:
-        day_week = '(月)'
-    elif day_week == 1:
-        day_week = '(火)'
-    elif day_week == 2:
-        day_week = '(水)'
-    elif day_week == 3:
-        day_week = '(木)'
-    elif day_week == 4:
-        day_week = '(金)'
-    elif day_week == 5:
-        day_week = '(土)'
-    else:
-        day_week = '(日)'
-    y_date = day_date.year
-    m_date = day_date.month
-    d_date = day_date.day
-    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
-    print(day)
-    print(day_week)
-    return day + day_week
-
-# 時間を日本語(str型)に変換するメソッド
-def timeStr(time):
-    time = time.replace(':', '時')
-    time += '分'
-    return time
 
 def booking_car(request, num):
     request.session['select'] = "car"
@@ -211,7 +179,9 @@ def booking_car(request, num):
     # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
     # request.session['parking_id'] = parking_id[0]['parking_id']
     request.session['obj_id'] = num
-
+    parking_id = CarInfoParkingModel.objects.filter(id=num).values("parking_id")
+    request.session['address'] = ParkingUserModel.objects.get(id=parking_id[0]["parking_id"]).address
+    params['address'] = request.session['address']
     return render(request, "carsharing_booking/car_next.html", params)
 
 
@@ -292,6 +262,8 @@ def checkBooking(request):
         params['address'] = address[0]['address']
     elif request.session['select'] == 'car':
         params['car_id'] = request.session['obj_id']
+        params['address'] = request.session['address']
+        params['car_data'] = CarInfoModel.objects.get(id=request.session['obj_id'])
     params['events'] = request.session['events']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
@@ -593,6 +565,7 @@ class ReservationList(TemplateView):
         self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
 
+# 日付を日本語(str型)に変換するメソッド
 def dateStr(day):
     day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
     day_week = day_date.weekday()
@@ -619,7 +592,11 @@ def dateStr(day):
     print(day_week)
     return day + day_week
 
+# 時間を日本語(str型)に変換するメソッド
 def timeStr(time):
     time = time.replace(':', '時')
     time += '分'
+    h = (int(time[0:2]))
+    m = (time[2:])
+    time = str(h) + m
     return time

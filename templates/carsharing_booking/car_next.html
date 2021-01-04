@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js"></script>
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/car_next.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
-    <br>
+    <div id="map_info">
+        {{address}}
+    </div>
     <div class="card">
     <table class="table">
         <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
