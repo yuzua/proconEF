@@ -463,7 +463,6 @@ def reservation(request):
         x = str(h) + '時間 ' + str(m) + '分'
         times += x
     else:
-        charge += int(m / 15 * 330)
         h = int(m / 60)
         m = int(m % 60)
         x = str(h) + '時間 ' + str(m) + '分'
@@ -580,7 +579,7 @@ class DeleteBooking(TemplateView):
             booking.delete()
             messages.error(request, '予約をキャンセルしました。')
         return redirect(to='carsharing_req:first')
-    def get(self, request, flag, num):
+    def get(self, request, flag='error', num=0):
         if flag == 'car':
             self.params['flag'] = 'car'
             booking = BookingModel.objects.get(id=num)
@@ -600,7 +599,7 @@ class DeleteBooking(TemplateView):
             else:
                 messages.error(request, '不正なリクエストです')
                 return redirect(to='carsharing_req:index')
-        else:
+        elif flag == 'parking':
             booking = ParkingBookingModel.objects.get(id=num)
             if booking.user_id == request.session['user_id']:
                 # booking.delete()
@@ -617,6 +616,9 @@ class DeleteBooking(TemplateView):
             else:
                 messages.error(request, '不正なリクエストです')
                 return redirect(to='carsharing_req:index')
+        else:
+            messages.error(request, '不正なリクエストです')
+            return redirect(to='carsharing_req:index')
         
 
 # 日付を日本語(str型)に変換するメソッド

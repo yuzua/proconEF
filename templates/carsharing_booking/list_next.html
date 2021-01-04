@@ -61,10 +61,12 @@
             {% endif %}
         </div>
 </div>
-{% if flag == "car" %}
-    <a href="../delete/{{flag}}/{{booking.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>キャンセル</small></a>
-{% else %}
-    <a href="../delete/{{flag}}/{{booking.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>キャンセル</small></a>
+{% if title == "予約詳細" %}
+    {% if flag == "car" %}
+        <a href="../delete/{{flag}}/{{booking.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>キャンセル</small></a>
+    {% else %}
+        <a href="../delete/{{flag}}/{{booking.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>キャンセル</small></a>
+    {% endif %}
 {% endif %}
 <script>
 const lat = {{data2.lat}};
