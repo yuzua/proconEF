@@ -489,7 +489,6 @@ class ReservationList(TemplateView):
             'data': '',
             'data2': '',
         }
-    
 
     def post(self, request):
         self.params['title'] = "予約詳細"
@@ -511,7 +510,6 @@ class ReservationList(TemplateView):
         booking.end_time = timeStr(booking.end_time)
         booking.charge = "{:,}".format(booking.charge)
         self.params['booking'] = booking
-
         return render(request, 'carsharing_booking/list_next.html', self.params)
 
     def get(self, request):
@@ -520,8 +518,6 @@ class ReservationList(TemplateView):
         print(d_now)
         booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
         booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        
-
         for item in list(booking):
             print(item['car_id'])
             num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
@@ -564,11 +560,13 @@ class ReservationList(TemplateView):
         self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
 
+
 class DeleteBooking(TemplateView):
     def __init__(self):
         self.params = {
             'title': '予約キャンセル',
         }
+
     def post(self, request):
         if request.POST['flag'] == 'car':
             booking = BookingModel.objects.get(id=request.POST['id'])
@@ -579,6 +577,7 @@ class DeleteBooking(TemplateView):
             booking.delete()
             messages.error(request, '予約をキャンセルしました。')
         return redirect(to='carsharing_req:first')
+
     def get(self, request, flag='error', num=0):
         if flag == 'car':
             self.params['flag'] = 'car'
