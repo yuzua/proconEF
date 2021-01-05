@@ -83,6 +83,18 @@ class CarsharUserInfo(TemplateView):
             print('ゲスト')
         else:
             print(request.user)
+            user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            if user_data.charge_flag == False:
+                if user_data.plan == 'a':
+                    user_data.charge = 500
+                elif user_data.plan == 'b':
+                    user_data.charge = 1000
+                elif user_data.plan == 'c':
+                    user_data.charge = 2000
+                else:
+                    user_data.charge = 0
+            user_data.charge_flag = True
+            user_data.save()
         # return render(request, 'carsharing_req/index.html', self.params)
         return render(request, 'carsharing_req/top.html', self.params)
     
