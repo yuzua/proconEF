@@ -95,7 +95,6 @@ class CarsharUserInfo(TemplateView):
                     user_data.charge = 0
             user_data.charge_flag = True
             user_data.save()
-        # return render(request, 'carsharing_req/index.html', self.params)
         return render(request, 'carsharing_req/top.html', self.params)
     
     # def post(self, request):

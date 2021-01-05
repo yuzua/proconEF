@@ -67,6 +67,12 @@
     {% else %}
         <a href="../delete/{{flag}}/{{booking.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>キャンセル</small></a>
     {% endif %}
+{% else %}
+    {% if flag == "car" %}
+        <a href="/carsharing_booking/car/{{data.id}}" id="delete-btn" class="btn btn-outline-secondary text-secondary" role="button"><small>もう一度予約</small></a>
+    {% comment %} {% else %}
+        <a href="/carsharing_booking/booking/{{data2.id}}" id="delete-btn" class="btn btn-outline-danger text-danger" role="button"><small>もう一度予約</small></a> {% endcomment %}
+    {% endif %}
 {% endif %}
 <script>
 const lat = {{data2.lat}};
