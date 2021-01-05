@@ -43,9 +43,8 @@
       <th scope="col">詳細</th>
     </tr>
   </thead>
-    <tbody style="overflow: scroll visible; height:300px;">
+    <tbody>
 {% for item in data %}
-  {% comment %} <tbody style="overflow: scroll; height:300px;"> {% endcomment %}
     <tr>
       <td class="outer"><img src="/media/{{item.img}}" class="inner" style="height: 50pt;"></td>
       <td>{{item.start_day}}<br>{{item.start_time}}</td>
@@ -62,7 +61,6 @@
         <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
       </form>
     </tr>
-  {% comment %} </tbody> {% endcomment %}
 {% endfor %}
   </tbody>
 </table>
@@ -79,8 +77,8 @@
       <th scope="col">詳細</th>
     </tr>
   </thead>
+  <tbody>
 {% for item in data2 %}
-  <tbody data-spy="scroll" style="overflow: scroll visible; height:100px;">
     <tr>
       <td>{{item.start_day}}<br>{{item.start_time}}</td>
       <td>{{item.end_day}}<br>{{item.end_time}}</td>
@@ -94,8 +92,8 @@
         <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
       </form>
     </tr>
-  </tbody>
 {% endfor %}
+  </tbody>
 </table>
 </div>
 {% endblock %}
