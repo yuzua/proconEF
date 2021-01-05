@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$('#form').ready(function(){
     $("input").hover(
     function () {
 
@@ -15,8 +15,8 @@ $(document).ready(function(){
 
         if (start_day != "" && start_time != "" && end_day != "" && end_time != "") {
 
-            var startdate = new Date(start_day + ' ' + start_time + ':00');
-            var enddate = new Date(end_day + ' ' + end_time + ':00');
+            var startdate = new Date(start_day.replace(/-/g,"/") + ' ' + start_time + ':00');
+            var enddate = new Date(end_day.replace(/-/g,"/") + ' ' + end_time + ':00');
             var answertime = (enddate.getTime() - startdate.getTime())/1000/60;
             var answerdate = enddate.getDate() - startdate.getDate();
             var charge = 0;
@@ -53,7 +53,7 @@ $(document).ready(function(){
             }else{
                 charge = changeYen(Math.floor(charge));
                 function changeYen(num){
-                    return '¥' + String(num).split("").reverse().join("").match(/\d{1,3}/g).join(",").split("").reverse().join("");
+                    return　'¥' + String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')
                 }
                 $('#jquery').html('<p>ご利用時間： ' + times + '</p><p>お支払い金額： ' + charge + '</p>');
                 console.log(times);

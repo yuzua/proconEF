@@ -45,7 +45,7 @@
     <div class="clearfix">
         <div class="w-50 float-left p-5" id="calendar"></div>
         <div class="w-50 float-left p-5">
-        <form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
+        <form id="form" action="{% url 'carsharing_booking:checkbooking' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="car_id" value="{{car_id}}" required>
             {{ form.as_p }}
