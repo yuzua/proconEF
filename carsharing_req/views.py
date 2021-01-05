@@ -12,7 +12,7 @@ from parking_req .models import *
 from owners_req .models import *
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
-import json, datetime, hashlib
+import json, datetime, calendar, hashlib
 from django.core.mail import EmailMessage
 
 # Create your views here.
@@ -335,7 +335,7 @@ class DetailsList(TemplateView):
             'data2': '',
         }
 
-    def post(self, request):
+    def post(self, request, year=0, month=0):
         self.params['title'] = "利用履歴詳細"
         booking = UsageModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
         booking.start_day = dateStr(booking.start_day)
@@ -359,12 +359,20 @@ class DetailsList(TemplateView):
 
         return render(request, 'carsharing_booking/list_next.html', self.params)
 
-    def get(self, request):
-        dt_now = datetime.datetime.now()
-        d_now = dt_now.strftime('%Y-%m-%d')
-        print(d_now)
-        booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
-        booking2 = ParkingUsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+    def get(self, request, year=datetime.datetime.now().strftime('%Y'), month=datetime.datetime.now().strftime('%m')):
+        last_day = calendar.monthrange(int(year), int(month))[1]
+        farst_day = year + '-' + month + '-01'
+        last_day = year + '-' + month + '-' + str(last_day) 
+        print(farst_day)
+        print(last_day)
+        # dt_now = datetime.datetime.now()
+        # d_now = dt_now.strftime('%Y-%m-%d')
+        # print(d_now)
+        prev_url, next_url = SetUrl(year, month)
+        self.params['prev_url'] = prev_url
+        self.params['next_url'] = next_url
+        booking = UsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+        booking2 = ParkingUsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
         
 
         for item in list(booking):
@@ -390,11 +398,11 @@ class DetailsList(TemplateView):
             item['charge'] = "{:,}".format(item['charge'])
             car_obj = CarInfoModel.objects.get(id=item['car_id'])
             item['img'] = car_obj.img
-            print(item)
+            # print(item)
         for item in list(booking2):
             address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
             item['address'] = address[0]['address']
-            print(item)
+            # print(item)
         self.params['data'] = booking
         self.params['data2'] = booking2
         return render(request, 'carsharing_booking/list.html', self.params)
@@ -402,7 +410,6 @@ class DetailsList(TemplateView):
 def dateStr(day):
     day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
     day_week = day_date.weekday()
-    print(type(day_date))
     if day_week == 0:
         day_week = '(月)'
     elif day_week == 1:
@@ -421,8 +428,6 @@ def dateStr(day):
     m_date = day_date.month
     d_date = day_date.day
     day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
-    print(day)
-    print(day_week)
     return day + day_week
 
 def timeStr(time):
@@ -433,7 +438,26 @@ def timeStr(time):
     time = str(h) + m
     return time
 
-
+def SetUrl(year, month):
+    prev_year = year
+    prev_month = str(int(month) - 1)
+    next_year = year
+    next_month = str(int(month) + 1)
+    if month == '01':
+        prev_year = str(int(year) - 1)
+        prev_month = '12'
+    elif month == '12':
+        next_year = str(int(year) + 1)
+        next_month = '01'
+    if len(prev_month) == 1:
+        prev_month = '0' + prev_month
+    if len(next_month) == 1:
+        next_month = '0' + next_month
+    prev_url = "/carsharing_req/details/" + prev_year + "/" + prev_month
+    next_url = "/carsharing_req/details/" + next_year + "/" + next_month
+    # print(prev_url)
+    # print(next_url)
+    return prev_url, next_url
 
 
 def checkUsage(user_id):
@@ -441,16 +465,16 @@ def checkUsage(user_id):
     d_now = dt_now.strftime('%Y-%m-%d')
     t_now = dt_now.strftime('%H:%M')
     usage = UsageModel.objects.filter(user_id=user_id).values('booking_id')
-    print(usage)
+    # print(usage)
     if len(usage) == 0:
-        print('first')
+        # print('first')
         booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
     else:
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
             booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
-    print(booking)
+    # print(booking)
     return booking
 
 def checkParkingUsage(user_id):
@@ -458,16 +482,16 @@ def checkParkingUsage(user_id):
     d_now = dt_now.strftime('%Y-%m-%d')
     t_now = dt_now.strftime('%H:%M')
     usage = ParkingUsageModel.objects.filter(user_id=user_id).values('booking_id')
-    print(usage)
+    # print(usage)
     if len(usage) == 0:
-        print('first')
+        # print('first')
         booking = ParkingBookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
     else:
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
             booking = ParkingBookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
-    print(booking)
+    # print(booking)
     return booking
 
 

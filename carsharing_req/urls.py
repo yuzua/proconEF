@@ -14,4 +14,5 @@ urlpatterns = [
     path('set_session/', views.set_session, name='set_session'),
     path('calendar/', CalendarView.as_view(), name='calendar'),
     path('details/', DetailsList.as_view(), name='details'),
+    path('details/<str:year>/<str:month>', DetailsList.as_view(), name='details'),
 ]

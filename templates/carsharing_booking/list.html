@@ -23,6 +23,12 @@
       両{{title}}
   </label>
 </fieldset>
+{% if title == "利用履歴一覧" %}
+<div class="clearfix">
+  <a href="{{prev_url}}" class="btn btn-mycolor btn-lg float-left" role="button">先月</a>
+  <a href="{{next_url}}" class="btn btn-mycolor btn-lg float-right" role="button">翌月</a>
+</div>
+{% endif %}
 <div id="div1">
 <h1>カーシェア{{title}}</h1>
 <table class="table table-sm">
@@ -37,8 +43,9 @@
       <th scope="col">詳細</th>
     </tr>
   </thead>
+    <tbody style="overflow: scroll visible; height:300px;">
 {% for item in data %}
-  <tbody>
+  {% comment %} <tbody style="overflow: scroll; height:300px;"> {% endcomment %}
     <tr>
       <td class="outer"><img src="/media/{{item.img}}" class="inner" style="height: 50pt;"></td>
       <td>{{item.start_day}}<br>{{item.start_time}}</td>
@@ -55,8 +62,9 @@
         <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
       </form>
     </tr>
-  </tbody>
+  {% comment %} </tbody> {% endcomment %}
 {% endfor %}
+  </tbody>
 </table>
 </div>
 <div id="div2">
@@ -72,7 +80,7 @@
     </tr>
   </thead>
 {% for item in data2 %}
-  <tbody>
+  <tbody data-spy="scroll" style="overflow: scroll visible; height:100px;">
     <tr>
       <td>{{item.start_day}}<br>{{item.start_time}}</td>
       <td>{{item.end_day}}<br>{{item.end_time}}</td>
