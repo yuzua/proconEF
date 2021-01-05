@@ -70,3 +70,18 @@ fieldset {
     opacity: 0.7;
     color: #000;
 }
+.now{
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    background: #f4f4f4;
+    border-left: solid 6px hsl(240, 4%, 22%);
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.33);
+    width: 9%;
+    position:fixed;
+    opacity: 0.8;
+}
+.now p {
+    margin: 0; 
+    padding: 0;
+    font-weight: 500;
+}

@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block main_contents %}
+{% if title == "利用履歴一覧" %}
+  <div class="now">
+    <p style="text-alain:center;">{{now}}</p>
+  </div>
+{% endif %}
 <fieldset class="mt-4">
   <input id="item-1" class="radio-inline__input" type="radio" name="accessible-radio" value="item-1" onchange="displayswitch()" checked="checked"/>
   <label class="radio-inline__label" for="item-1">

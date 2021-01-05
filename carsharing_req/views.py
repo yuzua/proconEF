@@ -371,6 +371,11 @@ class DetailsList(TemplateView):
         prev_url, next_url = SetUrl(year, month)
         self.params['prev_url'] = prev_url
         self.params['next_url'] = next_url
+        print(month[:1])
+        if month[:1] == '0':
+            print(month[1:2])
+            month = month[1:2]
+        self.params['now'] = year + '年' + month + '月'
         booking = UsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
         booking2 = ParkingUsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
         
