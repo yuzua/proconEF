@@ -49,6 +49,8 @@ class CarsharUserModel(models.Model):
         validators=[RegexValidator(r'^\d{3}$')] )
     # security_code = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
     plan = models.CharField(max_length=30)
+    charge = models.IntegerField(default=0)
+    charge_flag = models.BooleanField(default=False)
 
     
     def __str__(self):

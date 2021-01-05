@@ -192,11 +192,19 @@ class CreateView(TemplateView):
             security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
             plan = request.POST['plan']
             img = request.FILES['img']
+            if plan == 'a':
+                charge = 500
+            elif plan == 'b':
+                charge = 1000
+            elif plan == 'c':
+                charge = 2000
+            else:
+                charge = 0
             record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
                 gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
                 credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
                 credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
-                security_code=security_code, plan=plan, img=img)
+                security_code=security_code, plan=plan, charge=charge, charge_flag=True, img=img)
             record.save()
             messages.success(request, '会員登録が完了しました。')
         else:
