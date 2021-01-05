@@ -54,6 +54,7 @@
                 {{ form.as_p }}
                 {{ form.media }}
             <input class="btn btn-outline-secondary" type="submit" value="確認" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+    <div id="jquery"></div>
     </div>
 </div>
 </form>
@@ -64,4 +65,5 @@
     var all_events = JSON.parse('{{ events|safe }}');
 </script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/map-calendar.js" %}'></script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/booking-jquery.js" %}'></script>
 {% endblock %}
