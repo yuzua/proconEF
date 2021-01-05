@@ -329,12 +329,12 @@ def checkBooking(request):
         print('1day')
     else:
         print('days')
-        charge = int(d * 10000)
+        charge = int(d * 20000)
         times = str(d) + '日 '
 
     if start_time < end_time:
         print('tule')
-        charge += int(m / 15 * 330)
+        charge += int(m / 15 * 225)
         h = int(m / 60)
         m = int(m % 60)
         x = str(h) + '時間 ' + str(m) + '分'
@@ -347,13 +347,13 @@ def checkBooking(request):
         elif request.session['select'] == 'car':
             return render(request, "carsharing_booking/car_next.html", params)
     else:
-        charge += int(m / 15 * 330)
+        charge += int(m / 15 * 225)
         h = int(m / 60)
         m = int(m % 60)
         x = str(h) + '時間 ' + str(m) + '分'
         times += x
-    if d == 0 and m < 15 and h == 0:
-        messages.error(request, '15分以下は利用できません。')
+    if d == 0 and m <= 15 and h == 0:
+        messages.error(request, '15分未満は利用できません。')
         if request.session['select'] == 'map':
             return render(request, 'carsharing_booking/booking.html', params)
         elif request.session['select'] == 'car':

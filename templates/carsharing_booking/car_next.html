@@ -52,6 +52,7 @@
             {{ form.media }}
             <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
+        <div id="jquery"></div>
         </div>
     </div>
 {% endblock %}
@@ -61,4 +62,5 @@
   var events = JSON.parse('{{ events|safe }}');
 </script>
 <script type="text/javascript" src='{% static "carsharing_req/js/calendar.js" %}'></script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/booking-jquery.js" %}'></script>
 {% endblock %}
