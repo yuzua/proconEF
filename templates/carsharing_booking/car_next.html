@@ -45,11 +45,14 @@
     <div class="clearfix">
         <div class="w-50 float-left p-5" id="calendar"></div>
         <div class="w-50 float-left p-5">
-        <span id="hour-box">
-            <input name="hour" type="radio" value="1"/>1時間
-            <input name="hour" type="radio" value="3"/>3時間
-            <input name="hour" type="radio" value="6"/>6時間
-        </span>
+        <div id="hour-box" class="hour-button-box">
+            <input name="hour" type="radio" value="1" id="rb_1" />
+	        <label for="rb_1">1時間</label>
+            <input name="hour" type="radio" value="3" id="rb_3" />
+	        <label for="rb_3">3時間</label>
+            <input name="hour" type="radio" value="6" id="rb_6" />
+	        <label for="rb_6">6時間</label>
+        </div>
         <form id="form" action="{% url 'carsharing_booking:checkbooking' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="car_id" value="{{car_id}}" required>
