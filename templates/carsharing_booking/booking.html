@@ -50,6 +50,11 @@
 <div class="clearfix">
     <div class="w-50 float-left p-5" id="calendar"></div>
     <div id="form" class="w-50 float-left p-5">
+    <span id="hour-box">
+        <input name="hour" type="radio" value="1"/>1時間
+        <input name="hour" type="radio" value="3"/>3時間
+        <input name="hour" type="radio" value="6"/>6時間
+    </span>
             <input id="addressPush" type="hidden" name="address">
                 {{ form.as_p }}
                 {{ form.media }}
