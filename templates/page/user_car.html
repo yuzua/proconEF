@@ -10,8 +10,8 @@
 <!-- 1 -->
 <div class="all" style="padding: 5px;">
   <!--メイン-->
-  <div id="main">
-    <h4 style="font-size: 25px;text-align: center;">カーシェアリング利用の流れ</h4>  
+  <div id="main" style="margin-top: 60pt;">
+    <h4 class="title">カーシェアリング利用の流れ</h4>  
     <!-- <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
       <div class="card-body" style="margin-left: 230px;">
@@ -97,44 +97,62 @@
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;">会員登録</a>
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;"style="border: 1px solid #000;">カーシェアリング検索</a>
       </div> -->
+
+      <ul class="flow">
+        <li>
+          <span class="icon">STEP.01</span>
+          <dl>
+            <dt>会員登録</dt>
+            <dd>まずは会員登録！</dd>
+            <dd>
+              <a href="./1" class="btn">詳細</a>
+              <i class="fas fa-angle-right fa-position-right"></i>
+            </dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.02</span>
+          <dl>
+            <dt>検索・予約</dt>
+            <dd>日時、場所、乗車人数、利用時間を限定し検索、そのまま予約もカンタン！</dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.03</span>
+          <dl>
+            <dt>解錠</dt>
+            <dd>共通鍵を使って解錠！</dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.04</span>
+          <dl>
+            <dt>乗車</dt>
+            <dd>本サービスと交通のルールを守って楽しく安全に運転してください！</dd>
+          </dl>
+        </li>
+
+        <li>
+          <span class="icon">STEP.05</span>
+          <dl>
+            <dt>返却</dt>
+            <dd>車を出発したステーションに戻し、ドアを施錠してください！</dd>
+          </dl>
+        </li>
+
+        <li>
+          <span class="icon">STEP.06</span>
+          <dl>
+            <dt>精算</dt>
+            <dd>当月ご利用された分の料金を、ご指定いただいたクレジットカードでお支払いください！</dd>
+          </dl>
+        </li>
+      </ul>
     </div>
   <!--/メイン-->
 </div>
-<ul class="flow">
-  <li>
-    <span class="icon">STEP.01</span>
-    <dl>
-      <dt>会員登録</dt>
-      <dd>エントリーフォームに入力のうえ、ご応募ください。</dd>
-    </dl>
-  </li>
-
-  <li>
-    <span class="icon">STEP.02</span>
-    <dl>
-      <dt>書類選考</dt>
-      <dd>書類選考を通過した方には、追ってご連絡いたします。</dd>
-    </dl>
-  </li>
-
-  <li>
-    <span class="icon">STEP.03</span>
-    <dl>
-      <dt>面接</dt>
-      <dd>人事または事業部責任者との面接を行います。</dd>
-    </dl>
-  </li>
-
-  <li>
-    <dl>
-      <dt><span class="icon">STEP.04</span>内定</dt>
-      <dd>応募から内定までは2週間程度を想定しております。</dd>
-    </dl>
-  </li>
-</ul>
-
-
-
-Resources
 <!--/wrapper-->
 {% endblock %}
