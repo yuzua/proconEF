@@ -162,6 +162,7 @@ a:hover {
     width: 100%;
     font-weight: bold;
     clear: both;
+    display: inline-block;
 }
 
 .none {
