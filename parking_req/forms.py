@@ -1,47 +1,82 @@
 from django import forms
 from.models import ParkingUserModel
+from parking_booking .models import ParkingBookingModel
+import bootstrap_datepicker_plus as datetimepicker
 
-# class ParkingForm(forms.Form):
-
-#     #carsharing_id = forms.IntegerField(label='カーシェアリングID')
-#     #parking_id = forms.CharField(label='駐車場ID')
-#     coordinate = forms.CharField(label='駐車場座標')
-#     day = forms.DateField(label='登録日')
-#     parking_type = forms.CharField(label='駐車場タイプ')
-#     width = forms.IntegerField(label='横幅')
-#     length = forms.IntegerField(label='奥行き')
-#     height = forms.IntegerField(label='高さ')
-#     car_id = forms.IntegerField(label='車両ID')
 
 class ParkingForm(forms.ModelForm):
 
-    parkingtype_list = [
+    PARKINGTYPE_LIST = [
         ('平面駐車場', '平面駐車場'),
         ('立体駐車場', '立体駐車場'),
     ]
-    parking_type = forms.ChoiceField(choices=parkingtype_list, label='駐車場タイプ')
+    parking_type = forms.ChoiceField(choices=PARKINGTYPE_LIST, label='駐車場タイプ', widget=forms.Select(attrs={'class': 'form-control'}))
+    GROUNDTYPE_LIST = [
+        ('コンクリート', 'コンクリート'),
+        ('平地', '平地'),
+        ('砂利', '砂利'),
+        ('砂地', '砂地'),
+    ]
+    ground_type = forms.ChoiceField(choices=GROUNDTYPE_LIST, label='土地タイプ', widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = ParkingUserModel
-        fields = ['lat','lng','parking_type','width','length','height']
-        widget = {
-            'lat': forms.TextInput(attrs={'class': 'form-control'}),
-            'lng': forms.TextInput(attrs={'class': 'form-control'}),
-            'day': forms.DateInput(attrs={'class': 'form-control'}),
-            #'parking_type': forms.NumberInput(attrs={'class': 'form-control'}),
+        fields = ['parking_type', 'ground_type', 'width','length','height']
+        widgets = {
             'width': forms.NumberInput(attrs={'class': 'form-control'}),
             'length': forms.NumberInput(attrs={'class': 'form-control'}),
-            'height': forms.NumberInput(attrs={'class': 'form-control'}),
-            #'user_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            'height': forms.NumberInput(attrs={'class': 'form-control', 'readonly':''})
         }
         labels = {
-            'lat': '緯度',
-            'lng': '経度',
-            'day': '登録日',
-            #'parking_type': '駐車場タイプ',
             'width': '横幅(m)',
             'length': '奥行き(m)',
             'height': '高さ(m)',
-            #'user_id': 'ユーザID',
         }
 
+
+
+class ParkingLoaningForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(ParkingLoaningForm, self).__init__(*args, **kwd)
+
+    class Meta:
+        model = ParkingBookingModel
+        fields = ['start_day', 'start_time', 'end_day', 'end_time']
+        widgets = {
+            'user_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'parking_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).start_of('期間'),
+            'start_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+            'end_day': datetimepicker.DatePickerInput(
+                format='%Y-%m-%d',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ).end_of('期間'),
+            'end_time': datetimepicker.DateTimePickerInput(
+                format='%H:%M',
+                options={
+                    'locale': 'ja',
+                    'dayViewHeaderFormat': 'YYYY年 MMMM',
+                }
+            ),
+        }
+        labels = {
+            'start_day': '貸し出し制限開始日',
+            'end_day': '貸し出し制限終了日',
+            'start_time': '貸し出し制限開始時刻',
+            'end_time': '貸し出し制限終了時刻',
+        }

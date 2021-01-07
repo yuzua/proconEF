@@ -1,0 +1,27 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+<div class="card">
+    <h2 class="card-header">{{ message|safe }}</h2>
+    <div class="card-body">
+        <p>貸し出し制限開始日時：{{data.start_day}} {{data.start_time}}</p>
+        <p>貸し出し制限終了日時：{{data.end_day}} {{data.end_time}}</p>
+        <p>貸し出し制限時間：{{times}}</p>
+    </div>
+    <div class="card-footer">
+        <form action="{% url 'owners_req:check' %}" method="post" >
+            {% csrf_token %}
+            {% for key, value in data.items %}
+                <input type="hidden" name="{{key}}" value="{{value}}">
+            {% endfor %}
+                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

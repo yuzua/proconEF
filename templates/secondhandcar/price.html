@@ -1,0 +1,32 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+{% endblock %}
+    
+{% block title %}価格予測推移グラフ{% endblock %}
+
+{% block main_contents %}
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="purius" value="purius" onchange="myfunc(this.value)" />
+  <label class="custom-control-label" for="purius"> プリウス(トヨタ) </label>
+</div>
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="minimini" value="minimini" onchange="myfunc(this.value)" />
+  <label class="custom-control-label" for="minimini">　ミニ(ミニ) </label>
+</div>
+  <div class="container w-80" style="padding: 5px;">
+    <canvas id="myChart"></canvas>
+  </div>
+<script>
+  var data = JSON.parse('{{ purius_json|safe }}');
+  var Purius = data;
+  var days = Object.keys(Purius);
+  var purius_prices = Object.values(Purius);
+  var data = JSON.parse('{{ minimini_json|safe }}');
+  var Minimini = data;
+  var minimini_prices = Object.values(Minimini);
+</script>
+<script type="text/javascript" src='{% static "secondhandcar/js/graph.js" %}'></script>
+{% endblock %}

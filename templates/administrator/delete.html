@@ -1,0 +1,30 @@
+{% extends 'administrator/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<div class="card">
+<h2 class="card-header">{{ message|safe }}</h2>
+<div class="card-body">
+<table class="table">
+    <tr><th>ユーザID</th><td>{{obj.user_id}}</td></tr>
+    <tr><th>緯度</th><td>{{obj.lat}}</td></tr>
+    <tr><th>経度</th><td>{{obj.lng}}</td></tr>
+    <tr><th>登録日</th><td>{{obj.day}}</td><tr>
+    <tr><th>駐車場タイプ</th><td>{{obj.parking_type}}</td></tr>
+    <tr><th>横幅(m)</th><td>{{obj.width}}</td></tr>
+    <tr><th>奥行き(m)</th><td>{{obj.length}}</td></tr>
+    <tr><th>高さ(m)</th><td>{{obj.height}}</td></tr>
+    <tr><th>収容台数</th><td>{{obj.count}}</td></tr>
+</table>
+</div>
+<div class="card-footer">    
+<form action="{% url 'administrator:delete' id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="削除" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">   
+</form>
+</div>        
+{% endblock %}

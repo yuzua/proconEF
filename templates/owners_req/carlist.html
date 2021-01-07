@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block active_login %}
+{% endblock %}
+
+{% block contents %}
+<h1>{{ title }}</h1>
+<p class="h5 mt-4">{{ message|safe }}</p>
+{% for obj in data %}
+<table class="table">
+    <tr><th>ユーザID</th><td>{{obj.user_id}}</td></tr>
+    <tr><th>メーカー</th><td>{{obj.parent_category}}</td></tr>
+    <tr><th>車種</th><td>{{obj.category}}</td></tr>
+    <tr><th>ナンバープレート</th><td>{{obj.license_plate}}</td><tr>
+    <tr><th>型番</th><td>{{obj.model_id}}</td></tr>
+    <tr><th>カスタム</th><td>{{obj.custom}}</td></tr>
+    <tr><th>乗車人数</th><td>{{obj.people}}</td></tr>
+    <tr><th>登録日</th><td>{{obj.day}}</td></tr>
+    <tr><th>タイヤ</th><td>{{obj.tire}}</td></tr>
+    <tr><th>使用年数(年単位)</th><td>{{obj.used_years}}</td></tr>
+    <tr><th>次回車検予定日</th><td>{{obj.vehicle_inspection_day}}</td></tr>
+    {% comment %} <tr><td><a href="{% url 'owners_req:editCar' obj.user_id %}">Edit</a></td><td><a href="{% url 'parking_req:delete' obj.id %}">Delete</a></td></tr>   {% endcomment %}
+    <tr>
+        <td>
+            <form action="{% url 'owners_req:carlist' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input type="hidden" name="command" value="editCar">
+                <input class="btn btn-primary my-2" type="submit" value="Edit">
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'owners_req:carlist' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="obj.id" value="{{obj.id}}">
+                <input type="hidden" name="command" value="deleteCar">
+                <input class="btn btn-primary my-2" type="submit" value="Delete">
+            </form>
+        </td>
+    </tr>
+</table>
+{% endfor %}
+{% comment %} <a href="{% url 'owners_req:editCar' %}">車情報変更</a>
+<a href="{% url 'owners_req:deleteCar' %}">車情報削除</a> {% endcomment %}
+{% comment %} <form action="{% url 'owners_req:editCar' %}" method="post">
+    {{obj.user_id}}
+    <input class="btn btn-primary my-2" type="submit" value="Edit">
+</form> {% endcomment %}
+{% endblock %}
+

@@ -1,0 +1,90 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+<title>{{ title }}</title>
+<h1>{{ title }}</h1>
+    <div class="card m-5" id="numberplate">
+        <div class="container clearfix" id="numberplate-top">
+            <p class="numberplate-top-item">品川</p>
+            <p class="numberplate-top-item">567</p>
+        </div>
+        <div class="container clearfix" id="numberplate-bottom">
+            <p class="numberplate-bottom-item1">あ</p>
+            <p class="numberplate-bottom-item2">12-34</p>
+        </div>
+    </div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <div class="card m-5">
+            <div class="card-body">
+            {{ form2.as_p }}
+            </div>
+        </div>
+        {{ form.media }}
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
+    </form>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        const parentCategoryElement = $('#id_parent_category');
+        const categoryElement = $('#id_category');
+        const categories = {
+            {% for parent in parentcategory_list %}
+                '{{ parent.pk }}': [
+                    {% for category in parent.category_set.all %}
+                        {
+                            'pk': '{{ category.pk }}',
+                            'name': '{{ category.category }}'
+                        },
+                    {% endfor %}
+                ],
+            {% endfor %}
+        };
+
+;;
+        const changeCategory = (select) => {
+            // 子カテゴリの選択欄を空にする。
+            categoryElement.children().remove();
+
+            // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
+            const parentId = parentCategoryElement.val();
+            const categoryList = categories[parentId];
+
+            // 子カテゴリの選択肢を作成・追加。
+            for (const category of categoryList) {
+                const option = $('<option>');
+                option.val(category['pk']);
+                option.text(category['name']);
+                categoryElement.append(option);
+            }
+
+            // 指定があれば、そのカテゴリを選択する
+            if (select !== undefined) {
+                categoryElement.val(select);
+            }
+        };
+
+
+        $('#id_parent_category').on('change', () => {
+            changeCategory();
+        });
+
+
+        // 入力値に問題があって再表示された場合、ページ表示時点で小カテゴリが絞り込まれるようにする
+        if (parentCategoryElement.val()) {
+            const selectedCategory = categoryElement.val();
+            changeCategory(selectedCategory);
+        }
+
+    </script>
+{% endblock %}
+

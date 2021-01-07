@@ -1,21 +1,114 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
-
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<html>
+<body class="centerMiddle">
+<h3 class="title"><img src='{% static "admin/img/logo03.png" %}'/>{% trans "Sign Up" %}</h3>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+    <span>
+      <input type="email" name="email" autocomplete="email" required id="id_email" placeholder="メールアドレス">
+      {{ form.errors.email }}
+    </span>
+    <span>
+      <input type="password" name="password1" placeholder="パスワード" autocomplete="current-password" required id="id_password1">
+      {{ form.errors.password1 }}
+    </span>
+    <span>
+      <input type="password" name="password2" placeholder="パスワード確認用" autocomplete="current-password" required id="id_password2">
+      {{ form.errors.password2 }}
+    </span>
   {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <p class="already">すでにアカウントお持ちの方は<a href="{{ login_url }}" class="login">ログイン</a></p>
+  <button class="btn" type="submit" >{% trans "Sign Up" %}</button>
 </form>
+</body>
+<style>
+  img {
+    width: 35pt;
+    height: 35pt;
+  }
+
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    display:inline-block;
+    text-align: center;
+    margin: 100pt 400pt 0 400pt;
+    padding: 10pt 40pt 20pt 40pt;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+    padding: 20pt;
+  }
+
+  .btn {
+    height: 30pt;
+    width: 250pt;
+    font-size: 11pt;
+    margin: 5pt 10pt 5pt 10pt;
+    border-color: #696969;
+    clear: both;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+
+  .login {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .login:hover {
+    color: #000;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+  #id_email {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  #id_password1 {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  #id_password2 {
+    width: 250pt;
+    margin: 5pt 5pt;
+  }
+
+  .already {
+    font-size: small;
+    margin: 5pt 5pt;
+  }
+  .errorlist {
+    font-size: small;
+    color: red;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+</html>
 
 {% endblock %}

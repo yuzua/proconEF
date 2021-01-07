@@ -1,0 +1,52 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+  <script type="text/javascript" src='{% static "carsharing_booking/js/display-switch.js" %}'></script>
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{title}}</h1>
+{% for item in data %}
+<div class="card m-3">
+    <h6 class="card-header">{{item.start_day}}{{item.start_time}}~{{item.end_day}}{{item.end_time}}</h6>
+    <div class="card-body p-1">
+        <div class="w-50 float-left p-3">
+            <h4><strong>{{item.category}}({{item.parent_category}})</strong></h4>
+            <div>
+                <img border="0" src="/media/{{item.img}}" width="350" alt="{{num.img1}}">
+            </div>
+        <a class="float-right text-secondary" href="../car/{{item.car_id}}">もう一度この車を予約する &raquo;</a>
+        </div>
+        <div class="w-50 float-left p-3">
+            <div id="map{{item.id}}" style="width:350; height:300px"></div>
+            <p class="m-0">{{item.address}}</p>
+            <input type="hidden" id="lat{{item.id}}" value="{{item.lat}}"/>
+            <input type="hidden" id="lng{{item.id}}" value="{{item.lng}}"/>
+            <a class="float-right text-secondary" href="../booking/{{item.parking_id}}">この場所から予約する &raquo;</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+    var count = {{count}};
+    var latList = [];
+    var lngList = [];
+    for (let i = 1; i <= count; i++) {
+        var latElement = document.getElementById('lat'+i).value;
+        latList.push(latElement);
+        var lngElement = document.getElementById('lng'+i).value;
+        lngList.push(lngElement);
+    }
+    console.log(latList[4])
+</script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/history-map.js" %}'></script>
+{% endblock %}
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
+{% endblock %}

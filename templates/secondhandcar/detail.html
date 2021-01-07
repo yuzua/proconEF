@@ -1,0 +1,254 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+    
+{% block title %}{{title}}{% endblock %}
+
+{% block main_contents %}
+<div class="card m-3">
+    <h3 class="card-header">{{car_obj2.category}}({{car_obj2.parent_category}})</h3>
+    <div class="card-body p-1">
+        <div>
+            <img src="{{car_obj2.img1}}" class="img" style="height: 191pt;">
+            <img src="{{car_obj2.img2}}" class="img" style="height: 191pt;">
+            <img src="{{car_obj2.img3}}" class="img" style="height: 191pt;">
+        </div>
+        <div class="clearfix">
+            <div class="float-left m-3" >
+                <p>型番：{{car_obj2.model}}</p>
+                <p>発売期間：{{car_obj2.release_period}}</p>
+                <p>グレード：{{car_obj2.grade}}</p>
+                <p>乗車定員：{{ car_obj1.box_2 }}人</p>
+                <p>ドア枚数：{{ car_obj1.box_3 }}枚</p>
+                <p>エンジン型式：{{ car_obj1.box_4 }}</p>
+                <p>エンジン種類：{{ car_obj1.box_5 }}</p>
+                <p>エンジン区分：{{ car_obj1.box_6 }}</p>
+                <p>環境対策エンジン：{{ car_obj1.box_7 }}</p>
+                <p>総排気量：{{ car_obj1.box_8 }}cc</p>
+            </div>
+            <div class="float-left m-4 ml-5" >
+                <p>全長：{{ car_obj1.box_68 }}mm</p>
+                <p>全幅：{{ car_obj1.box_69 }}mm</p>
+                <p>全高：{{ car_obj1.box_70 }}mm</p>
+                <p>室内全長：{{ car_obj1.box_71 }}mm</p>
+                <p>室内全幅：{{ car_obj1.box_72 }}mm</p>
+                <p>室内全高：{{ car_obj1.box_73 }}mm</p>
+                <p>車両重量：{{ car_obj1.box_11 }}kg</p>
+                <p>最低地上高：{{ car_obj1.box_12 }}mm</p>
+            </div>
+            <div class="float-right m-2" >
+                <p>使用燃料：{{ car_obj1.box_17 }}</p>
+                <p>燃料タンク容量：{{ car_obj1.box_18 }}L</p>
+                <p>過給器：{{ car_obj1.box_9 }}</p>
+                <p>ホイールベース：{{ car_obj1.box_10 }}mm</p>
+                <p>最小回転半径：{{ car_obj1.box_13 }}m</p>
+                <p>サスペンション形式前：{{ car_obj1.box_14 }}</p>
+                <p>サスペンション形式後：{{ car_obj1.box_15 }}</p>
+                <p>ブレーキ形式後：{{ car_obj1.box_16 }}</p>
+            </div>
+        </div>
+        <div>
+        <table class="table table-sm table-striped table-bordered">
+            <thead>
+                <tr>
+                <th scope="col">エアフィルター</th>
+                <th scope="col">2列目シート</th>
+                <th scope="col">アルミホイール</th>
+                <th scope="col">リアスポイラー</th>
+                <th scope="col">フロントフォグランプ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_19 }}</td>
+                <td>{{ car_obj1.box_20 }}</td>
+                <td>{{ car_obj1.box_21 }}</td>
+                <td>{{ car_obj1.box_22 }}</td>
+                <td>{{ car_obj1.box_23 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">ETC</th>
+                <th scope="col">助手席エアバッグ</th>
+                <th scope="col">サイドエアバッグ</th>
+                <th scope="col">カーテンエアバッグ</th>
+                <th scope="col">頸部衝撃緩和ヘッドレスト</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_24 }}</td>
+                <td>{{ car_obj1.box_25 }}</td>
+                <td>{{ car_obj1.box_26 }}</td>
+                <td>{{ car_obj1.box_27 }}</td>
+                <td>{{ car_obj1.box_28 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">EBD付ABS</th>
+                <th scope="col">セキュリティアラーム</th>
+                <th scope="col">マニュアルモード</th>
+                <th scope="col">チップアップシート</th>
+                <th scope="col">ドアイージークローザー</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_29 }}</td>
+                <td>{{ car_obj1.box_30 }}</td>
+                <td>{{ car_obj1.box_31 }}</td>
+                <td>{{ car_obj1.box_32 }}</td>
+                <td>{{ car_obj1.box_33 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">レーンアシスト</th>
+                <th scope="col">車間距離自動制御システム</th>
+                <th scope="col">前席シートヒーター</th>
+                <th scope="col">床下ラゲージボックス</th>
+                <th scope="col">オーディオソース_DVD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_34 }}</td>
+                <td>{{ car_obj1.box_35 }}</td>
+                <td>{{ car_obj1.box_36 }}</td>
+                <td>{{ car_obj1.box_37 }}</td>
+                <td>{{ car_obj1.box_38 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">ブレーキアシスト</th>
+                <th scope="col">駐車支援システム</th>
+                <th scope="col">防水加工</th>
+                <th scope="col">地上波デジタルテレビチューナー</th>
+                <th scope="col">ソナー</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_39 }}</td>
+                <td>{{ car_obj1.box_40 }}</td>
+                <td>{{ car_obj1.box_41 }}</td>
+                <td>{{ car_obj1.box_42 }}</td>
+                <td>{{ car_obj1.box_43 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">サイドモニター</th>
+                <th scope="col">その他ナビゲーション</th>
+                <th scope="col">インテリジェントAFS</th>
+                <th scope="col">運転席パワーシート</th>
+                <th scope="col">本革シート</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_44 }}</td>
+                <td>{{ car_obj1.box_45 }}</td>
+                <td>{{ car_obj1.box_46 }}</td>
+                <td>{{ car_obj1.box_47 }}</td>
+                <td>{{ car_obj1.box_48 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">AC電源</th>
+                <th scope="col">ステアリングヒーター</th>
+                <th scope="col">リアフォグランプ</th>
+                <th scope="col">レインセンサー</th>
+                <th scope="col">インテリジェントパーキングアシスト</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_49 }}</td>
+                <td>{{ car_obj1.box_50 }}</td>
+                <td>{{ car_obj1.box_51 }}</td>
+                <td>{{ car_obj1.box_52 }}</td>
+                <td>{{ car_obj1.box_53 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">エマージェンシーサービス</th>
+                <th scope="col">フロント両席パワーシート</th>
+                <th scope="col">オーディオソース_HDD</th>
+                <th scope="col">ニーエアバッグ</th>
+                <th scope="col">ヘッドライトウォッシャー</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_54 }}</td>
+                <td>{{ car_obj1.box_55 }}</td>
+                <td>{{ car_obj1.box_56 }}</td>
+                <td>{{ car_obj1.box_57 }}</td>
+                <td>{{ car_obj1.box_58 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">後退時連動式ドアミラー</th>
+                <th scope="col">VGS/VGRS</th>
+                <th scope="col">ABS</th>
+                <th scope="col">2列目ウォークスルー</th>
+                <th scope="col">3列目シート</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_59 }}</td>
+                <td>{{ car_obj1.box_60 }}</td>
+                <td>{{ car_obj1.box_61 }}</td>
+                <td>{{ car_obj1.box_62 }}</td>
+                <td>{{ car_obj1.box_63 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">電動バックドア</th>
+                <th scope="col">リアエンターテイメントシステム</th>
+                <th scope="col">電気式4WD</th>
+                <th scope="col">HDDナビゲーション</th>
+                <th scope="col">マニュアルエアコン</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_64 }}</td>
+                <td>{{ car_obj1.box_65 }}</td>
+                <td>{{ car_obj1.box_66 }}</td>
+                <td>{{ car_obj1.box_67 }}</td>
+                <td>{{ car_obj1.box_74 }}</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                <th scope="col">片側スライドドア</th>
+                <th scope="col">最高出力</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>{{ car_obj1.box_75 }}</td>
+                <td>{{ car_obj1.box_76 }}ps</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
