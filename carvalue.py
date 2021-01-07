@@ -5,13 +5,16 @@ from matplotlib import pylab as plt
 import seaborn as sns
 %matplotlib inline
 
+# dataNormal = pd.read_csv('sample-T.csv')
+# dataNormal
+# dataNormal.iloc[:,0:2].to_csv("test.csv",index=False)
+
+# data = pd.read_csv("test.csv")
+# data
 dataNormal = pd.read_csv('sample-T.csv')
-dataNormal
-dataNormal.iloc[:,0:2].to_csv("test.csv",index=False)
-
-data = pd.read_csv("test.csv")
-data
-
+x = dataNormal.iloc[:,0:1]
+y = dataNormal.iloc[:,18:19]
+datasample = pd.concat([x,y],axis=1).to_csv("test.csv",index=False)
 # float型にしないとモデルを推定する際にエラーがでる
 data = data.astype({"トヨタ/プリウス":float})
 # datetime型にしてインデックスにする
@@ -88,6 +91,7 @@ modelSelection = pd.DataFrame(index=range(pattern), columns=["model", "aic"])
 
 # 自動SARIMA選択
 num = 0
+jadge = []
 
 for p in range(1, max_p + 1):
     for d in range(0, max_d + 1):
@@ -103,31 +107,62 @@ for p in range(1, max_p + 1):
                         ).fit()
                         modelSelection.loc[num]["model"] = "order=(" + str(p) + ","+ str(d) + ","+ str(q) + "), season=("+ str(sp) + ","+ str(sd) + "," + str(sq) + ")"
                         modelSelection.loc[num]["aic"] = sarima.aic
+                        jadge_x = []
+                        jadge_y = []
+                        jadge_z =[]
+                        jadge_x.append(sarima.aic)
+                        jadge_y.extend([p,d,q,sp,sd,sq])
+                        jadge_z.extend([jadge_x,jadge_y])
+                        jadge.append(jadge_z)
                         num = num + 1
 
 modelSelection.sort_values(by='aic').head()
+jadge.sort()
 
-SARIMA_1_1_0_101 = sm.tsa.SARIMAX(train_data["トヨタ/プリウス"], order=(1,1,0), seasonal_order=(1,0,1,12)).fit()
+for i in range(len(jadge)):
+    SARIMA_1_1_0_101 = sm.tsa.SARIMAX(train_data["トヨタ/プリウス"], order=(jadge[i][1][0],jadge[i][1][1],jadge[i][1][2]), seasonal_order=(jadge[i][1][3],jadge[i][1][4],jadge[i][1][5],12),initialization = 'approximate_diffuse').fit()
 
+# 自動学習実験コード
 # Ljungbox検定
-ljungbox_result = sm.stats.diagnostic.acorr_ljungbox(SARIMA_1_1_0_101.resid, lags=10)
-df_ljungbox_result = pd.DataFrame({"p-value":ljungbox_result[1]})
-df_ljungbox_result[df_ljungbox_result["p-value"] <  0.05]
+    a = []
+    ljungbox_result = sm.stats.diagnostic.acorr_ljungbox(SARIMA_1_1_0_101.resid, lags=10)
+    df_ljungbox_result = pd.DataFrame({"p-value":ljungbox_result[1]})
+    a = df_ljungbox_result[df_ljungbox_result["p-value"] <  0.05]
 
-# 予測
-pred = SARIMA_1_1_0_101.predict('2018-11-01', '2020-12-01')
-# 実データと予測結果の図示
-plt.plot(train_data["トヨタ/プリウス"], label="train")
-plt.plot(pred, "r", label="pred")
-plt.legend()
+    sampletest = np.array(a)
 
-# 予測
-ts_pred = SARIMA_1_1_0_101.predict('2018-01-01', '2020-12-01')
+    if len(sampletest) == 0:
+        # 予測
+        pred = SARIMA_1_1_0_101.predict('2018-11-01', '2020-12-01')
+        # 実データと予測結果の図示
+        plt.plot(train_data["トヨタ/プリウス"], label="train")
+        plt.plot(pred, "r", label="pred")
+        plt.legend()
 
-# 実データと予測結果の図示
-plt.plot(train_data["トヨタ/プリウス"], label='original')
-plt.plot(ts_pred, label='predicted', color='red')
-plt.legend(loc='best')
-print(ts_pred)
+        # 予測
+        ts_pred = SARIMA_1_1_0_101.predict('2018-01-01', '2020-12-01')
 
+        # 実データと予測結果の図示
+        plt.plot(train_data["トヨタ/プリウス"], label='original')
+        plt.plot(ts_pred, label='predicted', color='red')
+        plt.legend(loc='best')
+        print(ts_pred)
+        break
+    else:
+        pass
+# # 予測
+# pred = SARIMA_1_1_0_101.predict('2018-11-01', '2020-12-01')
+# # 実データと予測結果の図示
+# plt.plot(train_data["トヨタ/プリウス"], label="train")
+# plt.plot(pred, "r", label="pred")
+# plt.legend()
+
+# # 予測
+# ts_pred = SARIMA_1_1_0_101.predict('2018-01-01', '2020-12-01')
+
+# # 実データと予測結果の図示
+# plt.plot(train_data["トヨタ/プリウス"], label='original')
+# plt.plot(ts_pred, label='predicted', color='red')
+# plt.legend(loc='best')
+# print(ts_pred)
 
