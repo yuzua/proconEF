@@ -17,6 +17,7 @@ numpy = "*"
 sklearn = "*"
 matplotlib = "*"
 scipy = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
