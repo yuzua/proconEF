@@ -12,7 +12,7 @@ services:
       - static_volume:/usr/src/app/staticfiles
       - '.:/Django'
     tty: True
-    stdin_open:  True
+    stdin_open: True
     depends_on:
         - db
     links: 
