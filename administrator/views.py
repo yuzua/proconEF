@@ -686,7 +686,7 @@ def AllParkingUpload(all_list):
             record.save()
     else:
         for parking_list in all_list:
-            record = CarInfoModel()
+            record = ParkingUserModel()
             record.user_id = int(parking_list[1])
             record.address = parking_list[2]
             record.lat = parking_list[3]
