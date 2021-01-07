@@ -184,16 +184,40 @@ class ParkingBookingCreate(TemplateView):
         
 
 def push(request):
-    user_id = int(request.session['user_id'])
-    parking_id = int(request.session['user_parking_id'])
-    start_day = request.POST['start_day']
-    end_day = request.POST['end_day']
-    start_time = request.POST['start_time']
-    end_time = request.POST['end_time']
-    charge = int(request.POST['charge'])
-    record = ParkingBookingModel(user_id = user_id, parking_id = parking_id, start_day = start_day, \
-        end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
-    record.save()
-    messages.success(request, '予約が完了しました。')
-    del request.session['user_parking_id']
+    if (request.method == 'POST'):
+        user_id = int(request.session['user_id'])
+        parking_id = int(request.session['user_parking_id'])
+        start_day = request.POST['start_day']
+        end_day = request.POST['end_day']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+        charge = int(request.POST['charge'])
+        record = ParkingBookingModel(user_id = user_id, parking_id = parking_id, start_day = start_day, \
+            end_day = end_day, start_time = start_time, end_time = end_time, charge = charge)
+        record.save()
+        messages.success(request, '予約が完了しました。<br>ご登録されているメールアドレスに予約完了メールを送信致しました。ご確認下さい。')
+        del request.session['user_parking_id']
+        #mail送信メソッドの呼び出し
+        success_booking_mail(request, charge, start_day, start_time, end_day, end_time)
+    else:
+        messages.error(request, '不正なリクエストです')
     return redirect(to='parking_booking:map')
+
+def success_booking_mail(request, charge, start_day, start_time, end_day, end_time):
+
+    subject = "予約完了確認メール"
+    url = 'http://127.0.0.1:8000/carsharing_booking/list/'
+    message = str(request.user) + "様\n \
+        ご予約ありがとうございます。\n \
+        お手続きが完了いたしました。\n\n \
+        開始日:" + start_day + "\n \
+        開始時刻:" + start_time + "\n \
+        終了日:" + end_day + "\n \
+        終了時刻:" + end_time + "\n \
+        料金:" + str(charge) + "円\n\n \
+        予約詳細はコチラから！！\n \
+        URL: " + url + "\n"
+    user = request.user  # ログインユーザーを取得する
+    from_email = 'admin@gmail.com'  # 送信者
+    user.email_user(subject, message, from_email)  # メールの送信
+    pass

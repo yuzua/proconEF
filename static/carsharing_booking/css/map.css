@@ -10,7 +10,7 @@ div {
     border-top: solid 5px #5d627b;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     opacity: 1;
-    width: 80%;
+    width: 97%;
   
   }
   #map_container {
@@ -33,3 +33,7 @@ div {
     width: 250px;
     height: 70px;
   }
+
+.table td, .table th{
+  vertical-align: middle;
+}

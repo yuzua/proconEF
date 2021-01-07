@@ -8,6 +8,16 @@ verify_ssl = true
 [packages]
 django = "==2.2.3"
 django-allauth = "*"
+psycopg2-binary = "*"
+django-bootstrap-datepicker-plus = "*"
+openpyxl = "*"
+pillow = "*"
+pandas = "*"
+numpy = "*"
+sklearn = "*"
+matplotlib = "*"
+scipy = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"

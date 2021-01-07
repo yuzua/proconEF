@@ -9,10 +9,10 @@ from .models import CarsharUserModel, UsageModel
 from .forms import CarsharUserCreateForm, CarsharUserNameForm
 from accounts .models import CustomUser
 from parking_req .models import *
-from owners_req .models import HostUserModel
+from owners_req .models import *
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
-import json, datetime, hashlib
+import json, datetime, calendar, hashlib
 from django.core.mail import EmailMessage
 
 # Create your views here.
@@ -35,25 +35,17 @@ def set_session(request):
     user = CarsharUserModel.objects.get(id=data.id)
     request.session['user_id'] = data.id
     request.session['system_flag'] = user.system_flag
-    # paking_data = ParkingUserModel.objects.filter(user_id=data.id)
-    # if paking_data.first() is None:
-    #     request.session['parking_flag'] = False
-    # else:
-    #     request.session['parking_flag'] = True
-
-    # owner_data = HostUserModel.objects.filter(user_id=data.id)
-    # if owner_data.first() is None:
-    #     request.session['owner_flag'] = False
-    # else:
-    #     request.session['owner_flag'] = True
     check_usage_obj = checkUsage(request.session['user_id'])
+    check_p_usage_obj = checkParkingUsage(request.session['user_id'])
+    if check_p_usage_obj != None:
+        ParkingEndMail(request, check_p_usage_obj)
+        saveParkingUsage(check_p_usage_obj)
     if check_usage_obj == None:
-        print('ok')
+        return redirect(to='carsharing_req:index')
     else:
         surveyMail(request, check_usage_obj)
-        # saveUsage(request, check_usage_obj)
-
-    return redirect(to='carsharing_req:index')
+        messages.warning(request, '返却確認処理をおこなってください。')
+        return redirect(to='survey:questionnaire')
 
 
 # 説明ページ(HTML)ルーティング
@@ -91,7 +83,18 @@ class CarsharUserInfo(TemplateView):
             print('ゲスト')
         else:
             print(request.user)
-        # return render(request, 'carsharing_req/index.html', self.params)
+            user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            if user_data.charge_flag == False:
+                if user_data.plan == 'a':
+                    user_data.charge = 500
+                elif user_data.plan == 'b':
+                    user_data.charge = 1000
+                elif user_data.plan == 'c':
+                    user_data.charge = 2000
+                else:
+                    user_data.charge = 0
+            user_data.charge_flag = True
+            user_data.save()
         return render(request, 'carsharing_req/top.html', self.params)
     
     # def post(self, request):
@@ -200,11 +203,19 @@ class CreateView(TemplateView):
             security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
             plan = request.POST['plan']
             img = request.FILES['img']
+            if plan == 'a':
+                charge = 500
+            elif plan == 'b':
+                charge = 1000
+            elif plan == 'c':
+                charge = 2000
+            else:
+                charge = 0
             record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
                 gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
                 credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
                 credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
-                security_code=security_code, plan=plan, img=img)
+                security_code=security_code, plan=plan, charge=charge, charge_flag=True, img=img)
             record.save()
             messages.success(request, '会員登録が完了しました。')
         else:
@@ -315,20 +326,143 @@ class CalendarView(TemplateView):
         
         return render(request, 'carsharing_req/calendar.html', self.params)
 
+#利用確認・一覧・詳細
+class DetailsList(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': '利用履歴一覧',
+            'data': '',
+            'data2': '',
+        }
 
-def details(request):
-    dt_now = datetime.datetime.now()
-    d_now = dt_now.strftime('%Y-%m-%d')
-    booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
-    booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__lt=dt_now).exclude(charge=-1).order_by('-end_day', '-end_time')
-    params = {
-        'data': booking,
-        'data2': booking2,
-    }
-    return render(request, 'carsharing_req/details.html', params)
+    def post(self, request, year=0, month=0):
+        self.params['title'] = "利用履歴詳細"
+        booking = UsageModel.objects.get(user_id=request.session['user_id'], id=request.POST['booking'])
+        booking.start_day = dateStr(booking.start_day)
+        booking.start_time = timeStr(booking.start_time)
+        booking.end_day = dateStr(booking.end_day)
+        booking.end_time = timeStr(booking.end_time)
+        booking.charge = "{:,}".format(booking.charge)
+        self.params['booking'] = booking
 
+        if request.POST['flag'] == 'car':
+            car_obj = CarInfoModel.objects.get(id=request.POST['car'])
+            self.params['flag'] = "car"
+            self.params['data'] = car_obj
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['data2'] = parking_obj
+        else:
+            parking_obj = ParkingUserModel.objects.get(id=request.POST['parking'])
+            self.params['flag'] = "parking"
+            self.params['data2'] = parking_obj
+            
 
+        return render(request, 'carsharing_booking/list_next.html', self.params)
 
+    def get(self, request, year=datetime.datetime.now().strftime('%Y'), month=datetime.datetime.now().strftime('%m')):
+        last_day = calendar.monthrange(int(year), int(month))[1]
+        farst_day = year + '-' + month + '-01'
+        last_day = year + '-' + month + '-' + str(last_day) 
+        print(farst_day)
+        print(last_day)
+        # dt_now = datetime.datetime.now()
+        # d_now = dt_now.strftime('%Y-%m-%d')
+        # print(d_now)
+        prev_url, next_url = SetUrl(year, month)
+        self.params['prev_url'] = prev_url
+        self.params['next_url'] = next_url
+        print(month[:1])
+        if month[:1] == '0':
+            print(month[1:2])
+            month = month[1:2]
+        self.params['now'] = year + '年' + month + '月'
+        booking = UsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+        booking2 = ParkingUsageModel.objects.filter(user_id=request.session['user_id'], start_day__range=(farst_day, last_day)).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+        
+
+        for item in list(booking):
+            print(item['car_id'])
+            num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
+            category = Category.objects.filter(id=num[0]['category']).values("category")
+            item['category'] = category[0]['category']
+            parking_id = CarInfoParkingModel.objects.filter(car_id=item['car_id']).values("parking_id")
+            address = ParkingUserModel.objects.filter(id=parking_id[0]['parking_id']).values("address")
+            item['parking_id'] = parking_id[0]['parking_id']
+            item['address'] = address[0]['address']
+            if item['start_day'] == item['end_day']:
+                flag = True
+            else:
+                flag = False
+            item['address'] = address[0]['address']
+            item['start_day'] = dateStr(item['start_day'])
+            item['start_time'] = timeStr(item['start_time'])
+            item['end_day'] = dateStr(item['end_day'])
+            item['end_time'] = timeStr(item['end_time'])
+            if flag == True:
+                item['end_day'] = ''
+            item['charge'] = "{:,}".format(item['charge'])
+            car_obj = CarInfoModel.objects.get(id=item['car_id'])
+            item['img'] = car_obj.img
+            # print(item)
+        for item in list(booking2):
+            address = ParkingUserModel.objects.filter(id=item['parking_id']).values("address")
+            item['address'] = address[0]['address']
+            # print(item)
+        self.params['data'] = booking
+        self.params['data2'] = booking2
+        return render(request, 'carsharing_booking/list.html', self.params)
+
+def dateStr(day):
+    day_date = datetime.datetime.strptime(day, "%Y-%m-%d")
+    day_week = day_date.weekday()
+    if day_week == 0:
+        day_week = '(月)'
+    elif day_week == 1:
+        day_week = '(火)'
+    elif day_week == 2:
+        day_week = '(水)'
+    elif day_week == 3:
+        day_week = '(木)'
+    elif day_week == 4:
+        day_week = '(金)'
+    elif day_week == 5:
+        day_week = '(土)'
+    else:
+        day_week = '(日)'
+    y_date = day_date.year
+    m_date = day_date.month
+    d_date = day_date.day
+    day = str(y_date) + "年" + str(m_date) + "月" + str(d_date) + "日"
+    return day + day_week
+
+def timeStr(time):
+    time = time.replace(':', '時')
+    time += '分'
+    h = (int(time[0:2]))
+    m = (time[2:])
+    time = str(h) + m
+    return time
+
+def SetUrl(year, month):
+    prev_year = year
+    prev_month = str(int(month) - 1)
+    next_year = year
+    next_month = str(int(month) + 1)
+    if month == '01':
+        prev_year = str(int(year) - 1)
+        prev_month = '12'
+    elif month == '12':
+        next_year = str(int(year) + 1)
+        next_month = '01'
+    if len(prev_month) == 1:
+        prev_month = '0' + prev_month
+    if len(next_month) == 1:
+        next_month = '0' + next_month
+    prev_url = "/carsharing_req/details/" + prev_year + "/" + prev_month
+    next_url = "/carsharing_req/details/" + next_year + "/" + next_month
+    # print(prev_url)
+    # print(next_url)
+    return prev_url, next_url
 
 
 def checkUsage(user_id):
@@ -336,21 +470,37 @@ def checkUsage(user_id):
     d_now = dt_now.strftime('%Y-%m-%d')
     t_now = dt_now.strftime('%H:%M')
     usage = UsageModel.objects.filter(user_id=user_id).values('booking_id')
-    print(usage)
+    # print(usage)
     if len(usage) == 0:
-        print('first')
+        # print('first')
         booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
     else:
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
-            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
-    print(booking)
+            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+    # print(booking)
+    return booking
+
+def checkParkingUsage(user_id):
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    t_now = dt_now.strftime('%H:%M')
+    usage = ParkingUsageModel.objects.filter(user_id=user_id).values('booking_id')
+    # print(usage)
+    if len(usage) == 0:
+        # print('first')
+        booking = ParkingBookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
+    else:
+        usage_list = []
+        for booking_id in usage:
+            usage_list.append(booking_id['booking_id'])
+            booking = ParkingBookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+    # print(booking)
     return booking
 
 
 def surveyMail(request, booking):
-    
     subject = "返却確認のお願い"
     attachments = "http://127.0.0.1:8000/survey/questionnaire"
     message = str(request.user) + "様\n \
@@ -368,10 +518,25 @@ def surveyMail(request, booking):
     user.email_user(subject, message, from_email)  # メールの送信
     pass
 
+def ParkingEndMail(request, booking):
+    subject = "駐車場利用時間終了のお知らせ"
+    message = str(request.user) + "様\n \
+        ご利用ありがとうございました。\n \
+        お気を付けて、いってらっしゃいませ。\n\n \
+        開始日: " + booking['start_day'] + "\n \
+        開始時刻: " + booking['start_time'] + "\n \
+        終了日: " + booking['end_day'] + "\n \
+        終了時刻: " + booking['end_time'] + "\n \
+        料金: " + str(booking['charge']) + "円\n\n \
+        またのご利用お待ちしております。"
+    user = request.user  # ログインユーザーを取得する
+    from_email = 'admin@gmail.com'  # 送信者
+    user.email_user(subject, message, from_email)  # メールの送信
+    pass
 
-def saveUsage(request, booking):
-    booking_id = BookingModel.objects.get(id=booking['id'])
-    record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
+def saveParkingUsage(booking):
+    booking_id = ParkingBookingModel.objects.get(id=booking['id'])
+    record = ParkingUsageModel(user_id=booking['user_id'], parking_id=booking['parking_id'], \
         booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
         end_day=booking['end_day'], end_time=booking['end_time'], charge=booking['charge'])
     record.save()

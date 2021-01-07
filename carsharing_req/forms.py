@@ -20,7 +20,7 @@ class CarsharUserCreateForm(forms.ModelForm):
     ]
     credit_card_company = forms.ChoiceField(choices=CREDIT_CARD_COMPANY_LIST, label='カード会社', widget=forms.RadioSelect)
     PLAN_LIST = [
-        ('a', '定額500円コース'), 
+        ('a', '定額500円コース<h1>jsで属性やクラス指定</h1>'), 
         ('b', '定額1000円コース'),
         ('c', '定額2000円コース'),
         ('d', '夜間お得コース')

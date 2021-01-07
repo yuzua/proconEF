@@ -53,7 +53,7 @@ class Survey(TemplateView):
         pattern = countCheck(user_id)
         print(pattern)
         push(user_id, anser_dict, pattern)
-        messages.success(request, 'ご回答ありがとうございました')
+        messages.success(request, '返却処理を完了致しました。\nアンケートのご協力ありがとうございました。')
         del request.session['data']
         # jsonファイルを作成 (おすすめ車両AIに投げる用)
         makeJsonFile(user_id)
@@ -318,19 +318,22 @@ def checkUsage(user_id):
     print(usage)
     if len(usage) == 0:
         print('first')
-        booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).values().order_by('end_day', 'end_time').last()
+        booking = BookingModel.objects.filter(user_id=user_id, start_day__gte=d_now).exclude(charge=-1).exclude(start_day=d_now, start_time__lte=t_now).values().order_by('start_day', 'start_time').last()
     else:
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
-            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_time__gte=t_now).values().order_by('end_day', 'end_time').last()
+            booking = BookingModel.objects.filter(user_id=user_id, start_day__gte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(charge=-1).exclude(start_day=d_now, start_time__lte=t_now).values().order_by('start_day', 'start_time').last()
     print(booking)
     return booking
 
 def saveUsage(request, booking):
     booking_id = BookingModel.objects.get(id=booking['id'])
+    dt_now = datetime.datetime.now()
+    d_now = dt_now.strftime('%Y-%m-%d')
+    t_now = dt_now.strftime('%H:%M')
     record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
         booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
-        end_day=booking['end_day'], end_time=booking['end_time'], charge=booking['charge'])
+        end_day=d_now, end_time=t_now, charge=booking['charge'])
     record.save()
     pass

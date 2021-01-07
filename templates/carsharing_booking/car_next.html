@@ -8,14 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js"></script>
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/car_next.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
-    <br>
+    <div id="map_info">
+        {{address}}
+    </div>
     <div class="card">
     <table class="table">
         <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
-        <tr><td><img src="/media/{{car_data.img}}" width="110" height="80" border="0" /></td></td><td>{{car_data.parent_category}}</td><td>{{car_data.category}}</td><td>{{car_data.model_id}}</td><td>{{car_data.people}}</td><td>{{car_data.tire}}</td><td>{{car_data.at_mt}}車</td>
+        <tr><td><img src="/media/{{car_data.img}}" width="110" border="0" /></td></td><td>{{car_data.parent_category}}</td><td>{{car_data.category}}</td><td>{{car_data.model_id}}</td><td>{{car_data.people}}</td><td>{{car_data.tire}}</td><td>{{car_data.at_mt}}車</td>
             <td>
             {% if car_data.babysheet == True %}
             <li>チャイルドシート</li>
@@ -42,13 +45,22 @@
     <div class="clearfix">
         <div class="w-50 float-left p-5" id="calendar"></div>
         <div class="w-50 float-left p-5">
-        <form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
+        <div id="hour-box" class="hour-button-box">
+            <input name="hour" type="radio" value="1" id="rb_1" />
+	        <label for="rb_1">1時間</label>
+            <input name="hour" type="radio" value="3" id="rb_3" />
+	        <label for="rb_3">3時間</label>
+            <input name="hour" type="radio" value="6" id="rb_6" />
+	        <label for="rb_6">6時間</label>
+        </div>
+        <form id="form" action="{% url 'carsharing_booking:checkbooking' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="car_id" value="{{car_id}}" required>
             {{ form.as_p }}
             {{ form.media }}
             <input class="btn btn-outline-secondary" type="submit" value="予約" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
+        <div id="jquery"></div>
         </div>
     </div>
 {% endblock %}
@@ -58,4 +70,5 @@
   var events = JSON.parse('{{ events|safe }}');
 </script>
 <script type="text/javascript" src='{% static "carsharing_req/js/calendar.js" %}'></script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/booking-jquery.js" %}'></script>
 {% endblock %}

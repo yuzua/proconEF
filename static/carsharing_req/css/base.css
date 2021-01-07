@@ -1,3 +1,6 @@
+#phone-nav{
+    display: none;
+}
 .logo3 {
     width: 35pt;
     height: 35pt;
@@ -94,7 +97,7 @@
     color: #000;
 }
 
-.btn {
+#log-btn {
     height: 30pt;
     width: 75pt;
     font-size: 12pt;
@@ -105,8 +108,9 @@
     padding: auto;
 }
 
-.btn:hover {
+#log-btn:hover {
     background-color: #CDCDCD;
+    text-decoration: none;
 }
 
 a:hover {
@@ -127,13 +131,14 @@ a:hover {
     padding-bottom: 8px;
 } */
 
-footer h5 {
+/* フッター */
+/* footer h5 {
     font-size: 13pt;
-}
+} */
 
 footer a {
-    font-size: small;
     float: left;
+    color: #333;
 }
 
 #copy {
@@ -146,10 +151,6 @@ footer a {
     width: 250pt;
 }
 
-a {
-    color: #333;
-}
-
 a:hover {
     text-decoration: underline;
 }
@@ -160,4 +161,48 @@ a:hover {
     margin: 10pt 30pt 10pt 15pt;
     width: 100%;
     font-weight: bold;
+    clear: both;
+    display: inline-block;
+}
+
+.none {
+    text-decoration: none;
+}
+
+#wrapper {
+    width: 900pt;
+}
+
+@media screen and (max-width: 599px) {
+    #phone-nav{
+        display: block;
+        width: 100%;
+        position:fixed;
+        top:0;
+        left: 0;
+        z-index:100;
+    }
+    body {
+        background-color:#9c9c9a;
+    }
+    header {
+        display: none;
+    }
+    body, #wrapper{
+        width: 100%;
+    }
+    .logout {
+        font-size: 9pt;
+        font-weight: 100;
+    }
+    #log-btn{
+        height: 25pt;
+        width: 65pt;
+        margin: 7pt 0pt 3pt 0pt;
+        border-color: #CDCDCD;
+        float: left;
+        clear: none;
+        padding: 0;
+        /* margin: 0; */
+    }
 }

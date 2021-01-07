@@ -1,0 +1,87 @@
+fieldset {
+    border: none;
+    padding: 0;
+    margin:  0;
+    text-align: center;
+  }
+  
+.radio-inline__input {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+  
+.radio-inline__label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-right: 18px;
+    border-radius: 3px;
+    transition: all .2s;
+}
+  
+.radio-inline__input:checked + .radio-inline__label {
+    background: hsl(245, 9%, 28%);
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+}
+  
+.radio-inline__input:focus + .radio-inline__label {
+    outline-color: #4D90FE;
+    outline-offset: -2px;
+    outline-style: auto;
+    outline-width: 5px;
+}
+
+.btn-next{
+    font-size: 0.8rem;
+    color: #fff;
+    background-color: hsl(245, 9%, 28%);
+    padding: 0;
+    margin: 0;
+    border: 1;
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.4rem;
+}
+.outer{
+    text-align: center;
+}
+.inner{
+    display: inline-block;
+    text-align: center;
+}
+.table td, .table th{
+    vertical-align: middle;
+}
+#delete-btn{
+    float: right;
+}
+#delete-btn small:hover {
+    color: #fff;
+}
+#delete-box {
+    border: 2px solid;
+    border-color: hsl(245, 9%, 28%);
+    border-radius: 8px;
+}
+.btn-mycolor{
+    background-color: hsl(240, 4%, 22%);
+    color: #fff;
+}
+.btn-mycolor:hover{
+    opacity: 0.7;
+    color: #000;
+}
+.now{
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    background: #f4f4f4;
+    border-left: solid 6px hsl(240, 4%, 22%);
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.33);
+    width: 9%;
+    position:fixed;
+    opacity: 0.8;
+}
+.now p {
+    margin: 0; 
+    padding: 0;
+    font-weight: 500;
+}

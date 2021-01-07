@@ -3,13 +3,16 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/check.css" %}'>
+{% endblock %}
 
 {% block main_contents %}
     <h1>{{ title }}</h1>
 <div class="card">
 <table class="table">
     <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
-    <tr><td><img src="/media/{{car_obj.img}}" width="110" height="80" border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
+    <tr><td><img src="/media/{{car_obj.img}}" width="110" height="80" border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}人</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
         <td>
         {% if car_obj.babysheet == True %}
         <li>チャイルドシート</li>
