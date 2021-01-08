@@ -5,6 +5,7 @@
 
 {% block head %}
   <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+  <link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
@@ -20,8 +21,20 @@
 {% if flag == "car" %}
     <h5 class="card-header">車両{{ title }}</h5>
         <div class="card-body p-2">
-            <div class="m-2">
-                <img border="0" src="/media/{{data.img}}" width="200" alt="{{data.img}}">
+            <div class="m-0 clearfix">
+                <div class="m-2 float-left">
+                    <img border="0" src="/media/{{data.img}}" width="200" alt="{{data.img}}">
+                </div>
+                <div class="card" id="numberplate" style="top:40px;left:50px;">
+                    <div class="container clearfix" id="numberplate-top">
+                        <p class="numberplate-top-item">{{ data.license_plate_place }}</p>
+                        <p class="numberplate-top-item">{{ data.license_plate_type }}</p>
+                    </div>
+                    <div class="container clearfix" id="numberplate-bottom">
+                        <p class="numberplate-bottom-item1">{{ data.license_plate_how }}</p>
+                        <p class="numberplate-bottom-item2">{{ data.license_plate_num }}</p>
+                    </div>
+                </div>
             </div>
             <p>車種(メーカー)：{{data.category}}({{data.parent_category}})</p>
             <p>型番：{{data.model_id}}</p>
