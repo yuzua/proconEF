@@ -70,38 +70,66 @@ def pages(request, num, page):
             params['title'] = '会員登録詳細'
             params['json_data'] = json_data['会員登録詳細']
             params['next'] = [2,'検索・予約詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
         elif page == 2:
             params['title'] = '検索・予約詳細'
             params['json_data'] = json_data['検索・予約詳細']
             params['prev'] = [1,'会員登録詳細']
             params['next'] = [3,'解錠詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
         elif page == 3:
             params['title'] = '解錠詳細'
             params['json_data'] = json_data['解錠詳細']
             params['prev'] = [2,'検索・予約詳細']
             params['next'] = [4,'乗車詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
         elif page == 4:
             params['title'] = '乗車詳細'
             params['json_data'] = json_data['乗車詳細']
             params['prev'] = [3,'解錠詳細']
             params['next'] = [5,'返却詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
         elif page == 5:
             params['title'] = '返却詳細'
             params['json_data'] = json_data['返却詳細']
             params['prev'] = [4,'乗車詳細']
             params['next'] = [6,'精算詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
         elif page == 6:
             params['title'] = '精算詳細'
             params['json_data'] = json_data['精算詳細']
             params['prev'] = [5,'返却詳細']
-            return render(request, 'page/user_car_details.html', params)
+            return render(request, 'page/user_details.html', params)
     elif num == 2:
-        return render(request, 'page/user_parking.html')
+        path = "/Django/data/page/user_parking.json"
+        params['head_title'] = '駐車場利用の流れ'
+        with open(path, 'r') as f:
+            json_data = f.read()
+        json_data = ast.literal_eval(json_data)
+        if page == 0:
+            return render(request, 'page/user_parking.html')
+        elif page == 1:
+            params['title'] = '会員登録詳細'
+            params['json_data'] = json_data['会員登録詳細']
+            params['next'] = [2,'検索・予約詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 2:
+            params['title'] = '検索・予約詳細'
+            params['json_data'] = json_data['検索・予約詳細']
+            params['prev'] = [1,'会員登録詳細']
+            params['next'] = [3,'駐車詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 3:
+            params['title'] = '駐車詳細'
+            params['json_data'] = json_data['駐車詳細']
+            params['prev'] = [2,'検索・予約詳細']
+            params['next'] = [4,'精算詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 4:
+            params['title'] = '精算詳細'
+            params['json_data'] = json_data['精算詳細']
+            params['prev'] = [3,'駐車詳細']
+            return render(request, 'page/user_details.html', params)
     elif num == 3:
         return render(request, 'page/owner_car.html')
     elif num == 4:
