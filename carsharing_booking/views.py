@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from carsharing_req .models import CarsharUserModel, UsageModel
-from parking_req .models import ParkingUserModel
+from parking_req .models import ParkingUserModel, ParkingUsageModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
@@ -515,9 +515,17 @@ class ReservationList(TemplateView):
     def get(self, request):
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
-        print(d_now)
-        booking = BookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
-        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id'], end_day__gte=d_now).exclude(charge=-1).order_by('end_day', 'end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        # print(d_now)
+        usage = []
+        usage_list = list(UsageModel.objects.values('id'))
+        for item in usage_list:
+            usage.append(item['id'])
+        usage2 = []
+        usage_list2 = list(ParkingUsageModel.objects.values('id'))
+        for item in usage_list2:
+            usage2.append(item['id'])
+        booking = BookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).exclude(id__in=usage).order_by('end_day', 'end_time').values('id', 'user_id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
+        booking2 = ParkingBookingModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).exclude(id__in=usage2).order_by('end_day', 'end_time').values('id', 'user_id', 'parking_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge')
         for item in list(booking):
             print(item['car_id'])
             num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
