@@ -18,7 +18,7 @@
       </ul>
     {% endfor %}
     <table class="table">
-    <form action="{% url 'carsharing_req:create' %}" method="post" enctype="multipart/form-data" id="form">
+    <form action="{% url 'carsharing_req:create' %}" method="post" id="form">
         {% csrf_token %}
         <tr>
             <th>
@@ -59,6 +59,17 @@
         </tr>
     </table>
         {{ form.as_table }}
+        <label for="test">利用料金プラン:</label>
+        <ul id="test">
+            <li><label for="test_0"><input type="radio" name="plan" value="a" id="test_0" required="">
+            <div>定額500円コース<span>未利用に関わらず、月額500円頂戴します。</span></div></label></li>
+            <li><label for="test_1"><input type="radio" name="plan" value="b" id="test_1" required="">
+            <div>定額1,000円コース<span>未利用に関わらず、月額1,000円頂戴します。</span></div></label></li>
+            <li><label for="test_2"><input type="radio" name="plan" value="c" id="test_2" required="">
+            <div>定額2,000円コース<span>未利用に関わらず、月額2,000円頂戴します。</span></div></label></li>
+            <li><label for="test_3"><input type="radio" name="plan" value="d" id="test_3" required="">
+            <div>夜間お得コース<span>未利用に関わらず、月額500円頂戴します。</span></div></label></li>
+        </ul>
     <table class="table">
         <tr>
             <th>利用規約に同意します:</th>
@@ -78,4 +89,4 @@
     </table>
 </body>
 </html>
-<script type="text/javascript" src='{% static "carsharing_req/js/member-create-jquery.js" %}'></script>
+{% comment %} <script type="text/javascript" src='{% static "carsharing_req/js/member-create-jquery.js" %}'></script> {% endcomment %}

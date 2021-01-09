@@ -1,4 +1,4 @@
-$('#plan li').each(function(index) {
+$('#test li').each(function(index) {
     var index = $(this).index() + 1;
     var outer = $(this).html();
     var text = $(this).text();
