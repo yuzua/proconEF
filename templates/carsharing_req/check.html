@@ -19,7 +19,7 @@
 <table class="table">
     <tr><th><label>お名前(漢字):</label></th><td>{{first_name}} {{last_name}}　様</td></tr>
     <tr><th><label>お名前(ひらがな):</label></th><td>{{first_ja}} {{last_ja}}　さま</td></tr>
-    <tr><th><label>生年月日(西暦):</label></th><td>{{birthday}}</td></tr>
+    <tr><th><label>生年月日(西暦):</label></th><td>{{birthday_year}}年{{birthday_month}}月{{birthday_day}}日</td></tr>
     <tr><th><label>年齢:</label></th><td>{{age}}</td></tr>
     <tr><th><label>性別:</label></th><td>{% if gender == True %}男性{% else %}女性{% endif %}</td></tr>
     <tr><th><label>郵便番号:</label></th><td>〒{{zip01}}</td></tr>

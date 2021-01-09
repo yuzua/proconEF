@@ -303,6 +303,9 @@ class CreateView(TemplateView):
             self.params['security_code'] = security_code
             self.params['plan'] = plan
             self.params['charge'] = charge
+            self.params['birthday_year'] = request.POST['birthday_year']
+            self.params['birthday_month'] = request.POST['birthday_month']
+            self.params['birthday_day'] = request.POST['birthday_day']
             messages.warning(request, 'まだ登録は完了しておりません。<br>内容を確認後確定ボタンを押してください。')
             return render(request, 'carsharing_req/check.html', self.params)
         else:
