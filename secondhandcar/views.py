@@ -354,6 +354,7 @@ def test(request):
                 length = len(row)
                 for num in range(1,length):
                     print(row[num])
+                    # id のみ先にDBへ登録
             else:
                 print(length)
             count += 1
