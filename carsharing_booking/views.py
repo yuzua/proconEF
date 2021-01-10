@@ -89,6 +89,7 @@ def car(request):
 
     print(dict_car)
     params = {
+        'title': '車から検索',
         'car_obj': item_all,
         'form': CarCategory(),
         'parentcategory_list': list(ParentCategory.objects.all()),

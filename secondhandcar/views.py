@@ -341,3 +341,62 @@ def search(request, num=1):
             'POST': False
         }
     return render(request, 'secondhandcar/search.html', params)
+
+def test(request):
+    car_list = []
+    count = 0
+    with open('/Django/data/car_csv/car_value_data.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            print(row)
+            print('....')
+            if count == 0:
+                length = len(row)
+                for num in range(1,length):
+                    print(row[num])
+            else:
+                print(length)
+            count += 1
+            # for index in range(1,26):
+            #     Jan_list = []
+            #     Feb_list = []
+            #     Mar_list = []
+            #     Apr_list = []
+            #     May_list = []
+            #     Jun_list = []
+            #     Jul_list = []
+            #     Aug_list = []
+            #     Sep_list = []
+            #     Oct_list = []
+            #     Nov_list = []
+            #     Dec_list = []
+            #     # print(len(row))
+            #     # print(row[0][0:4])
+            #     dict_tmp = {}
+            #     dict_tmp[row[0][0:4]] = row[index]
+            #     # print(row[0][5:7] + '月')
+            #     item = row[0][5:7]
+            #     if 1 == int(item):
+            #         Jan_list.append(dict_tmp)
+            #     elif 2 == int(item):
+            #         Feb_list.append(dict_tmp)
+            #     elif 3 == int(item):
+            #         Mar_list.append(dict_tmp)
+            #     elif 4 == int(item):
+            #         Apr_list.append(dict_tmp)
+            #     elif 5 == int(item):
+            #         May_list.append(dict_tmp)
+            #     elif 6 == int(item):
+            #         Jun_list.append(dict_tmp)
+            #     elif 7 == int(item):
+            #         Jul_list.append(dict_tmp)
+            #     elif 8 == int(item):
+            #         Aug_list.append(dict_tmp)
+            #     elif 9 == int(item):
+            #         Sep_list.append(dict_tmp)
+            #     elif 10 == int(item):
+            #         Oct_list.append(dict_tmp)
+            #     elif 11 == int(item):
+            #         Nov_list.append(dict_tmp)
+            #     elif 12 == int(item):
+            #         Dec_list.append(dict_tmp)
