@@ -365,23 +365,35 @@ def search(request, num=1):
 
 
 def test(request):
-    path = "/Django/data/car_csv/car_value_result/"
+# def priceAImakeJson():
+    path = '/Django/data/car_csv/car_value_result/'
     files = os.listdir(path)
     files.pop(0)
     print(files)
+    add_list = []
     for csvfile in files:
-        makepriceJson(path, csvfile)
+        csvpath = path + csvfile
+        tmp_dict = makepriceJson(csvpath)
+        add_dict = {}
+        index = csvfile[3:5]
+        add_dict[int(index)] = tmp_dict
+        add_list.append(add_dict)
+        
 
-def makepriceJson(fdir, csv):
-    path = fdir + csv
-    print(path)
+    json_data = json.dumps(add_list, sort_keys=True, indent=4)
+    # print(json_data)
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/price/price.json"
+    os.remove(path)
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+
+def makepriceJson(path):
+    tmp_dict = {}
     with open(path) as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            print(row[0])
-            print(row[1])
-            tmp_dict = {}
             tmp_dict[row[0]] = row[1]
-            print(tmp_dict) 
-    
+    return tmp_dict
