@@ -96,6 +96,7 @@ def price(request):
     return render(request, 'secondhandcar/price.html', params)
 
 def importCSV(request):
+    # SecondHandCarAIModel作成
     with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
         for row in reader:
@@ -181,6 +182,7 @@ def importCSV(request):
                 record.box_76 = row[76]
                 record.save()
     
+    # SecondHandCarInfoModel作成
     count = -1
     with open('/Django/data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
@@ -200,6 +202,7 @@ def importCSV(request):
                 record.save()
             count += 1
     
+    # SecondHandCarPriceModel作成
     count = 0
     with open('/Django/data/car_csv/car_value_data.csv') as f:
         reader = csv.reader(f)
@@ -358,3 +361,27 @@ def search(request, num=1):
             'POST': False
         }
     return render(request, 'secondhandcar/search.html', params)
+
+
+
+def test(request):
+    path = "/Django/data/car_csv/car_value_result/"
+    files = os.listdir(path)
+    files.pop(0)
+    print(files)
+    for csvfile in files:
+        makepriceJson(path, csvfile)
+
+def makepriceJson(fdir, csv):
+    path = fdir + csv
+    print(path)
+    with open(path) as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            print(row[0])
+            print(row[1])
+            tmp_dict = {}
+            tmp_dict[row[0]] = row[1]
+            print(tmp_dict) 
+    
