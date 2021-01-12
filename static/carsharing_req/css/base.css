@@ -102,17 +102,31 @@
     width: 75pt;
     font-size: 12pt;
     margin: 3pt 10pt 3pt 10pt;
-    border-color: #CDCDCD;
+    /* border-color: #CDCDCD; */
     float: right;
     clear: both;
     padding: auto;
+    color: #000;
+    
+    background-color: rgb(255, 255, 255);
+    border-bottom: 5px solid rgb(201, 201, 201);
+    margin-right: 5pt;
+    margin-left: 5pt;
 }
 
 #log-btn:hover {
-    background-color: #CDCDCD;
-    text-decoration: none;
+    /* background-color: #CDCDCD;
+    text-decoration: none; */
+    margin-top: 3px;
+    color: #000;
+    background: rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(201, 201, 201);
 }
 
+#log-btn--shadow {
+    -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+}
 a:hover {
     color: #000;
     text-decoration: none;

@@ -1,6 +1,10 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "page/css/user_car.css" %}'>
+{% endblock %}
+
 {% block main_contents %}
 <!--wrapper-->
 <!-- 4 -->
@@ -8,7 +12,7 @@
   <!--メイン-->
   <div id ="main">
     <h4 style="font-size: 25px;text-align: center;">駐車場オーナー利用の流れ</h4>                     
-    <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
+    <!-- <div class="card" style="width: 650pt;height: 150pt;margin: auto;text-align: auto;margin-bottom: 5pt;border: 1px solid #000;">
       <p style="float: left;margin-left: 7px;"><img src='{% static "admin/img/login_google.png" %}' width="200" height="165"></p>
       <div class="card-body" style="margin-left: 230px;">
         <h5 class="card-title" style="font-size: 20px;">口座登録</h5>
@@ -66,7 +70,57 @@
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;">貸し出す駐車場を登録</a>
         <a href="#" class="btn btn-primary" style="border: 1px solid #000;">貸し出す日時を登録</a>
       </div>
-    </div>
+    </div> -->
+
+    <ul class="flow">
+      <li>
+        <span class="icon">STEP.01</span>
+        <dl>
+          <dt>口座登録</dt>
+          <dd>収益の送金先となる口座を登録！</dd>
+          <dd>
+            <a href="#" class="btn-open">詳細</a>
+            <a href="#" class="btn-open">口座登録に関するよくある質問</a>
+          </dd>
+        </dl>
+      </li>
+    
+      <li>
+        <span class="icon">STEP.02</span>
+        <dl>
+          <dt>駐車場情報</dt>
+          <dd>貸し出す駐車場の情報を登録！</dd>
+          <dd>
+            <a href="#" class="btn-open">詳細</a>
+            <a href="#" class="btn-open">駐車場情報に関するよくある質問</a>
+          </dd>
+        </dl>
+      </li>
+    
+      <li>
+        <span class="icon">STEP.03</span>
+        <dl>
+          <dt>日時登録</dt>
+          <dd>貸し出しできる日時を登録！登録した日時はいつでも確認していただけます！</dd>
+          <dd>
+            <a href="#" class="btn-open">詳細</a>
+            <a href="#" class="btn-open">日時登録に関するよくある質問</a>
+          </dd>
+        </dl>
+      </li>
+  
+      <li>
+        <span class="icon">STEP.04</span>
+        <dl>
+          <dt>振り込み</dt>
+          <dd>登録していただいた口座に収益をお振り込みいたします！</dd>
+          <dd>
+            <a href="#" class="btn-open">詳細</a>
+            <a href="#" class="btn-open">振り込みに関するよくある質問</a>
+          </dd>
+        </dl>
+      </li>
+    </ul>
   </div>
   <!--/メイン-->
 </div>
