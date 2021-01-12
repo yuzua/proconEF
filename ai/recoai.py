@@ -11,7 +11,7 @@ def RecommendAI(path):
     import json
     import os
     #アンケートデータ読み込み
-    result_path = '/Django/data/recommend/' + path
+    result_path = './data/recommend/' + path
     print(result_path)
     json_open = open(result_path, 'r')
     json_load = json.load(json_open)
@@ -21,7 +21,7 @@ def RecommendAI(path):
 
 
     #中古車スクレイピング用データ(数値変換済み)
-    data = pd.read_csv('/Django/data/car_csv/car_data.csv')
+    data = pd.read_csv('./data/car_csv/car_data.csv')
 
     #最終結果出力のための車を格納しておくリスト
     saishu = []
@@ -314,7 +314,7 @@ def RecommendAI(path):
     #結果をjsonに変換
     tmp = pd.DataFrame(tmp)
     print(path)
-    recopath = '/Django/data/recommend/reco_' + path
+    recopath = './data/recommend/reco_' + path
     print(recopath)
     path = path.replace('.json', '')
     print(path)
