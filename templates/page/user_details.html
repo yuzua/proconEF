@@ -1,0 +1,27 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_contents %}
+<h4 style="font-size: 25px;text-align: center;">{{head_title}}</h4>
+<h4 style="width: 402px;margin: auto;margin-bottom: 10pt;font-size: 20px;text-align: center;border: 1px solid #000;">{{title}}</h4>
+{% for item_list in json_data %}
+  <div class="mx-auto">
+    <div class="card border-dark mb-3 m-0">
+      <div class="card-header"><strong>{{item_list.title}}</strong></div>
+      <div class="card-body text-dark">
+        <p class="card-text p-4">{{item_list.text}}</p>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+  <div style="text-align: center;">
+  {% if prev != "" %}
+      <a href="{{prev.0}}" class="btn btn-primary" style="font-size: 20px;">&laquo; {{prev.1}}</a>
+  {% endif %}
+  {% if next != "" %}
+      <a href="{{next.0}}" class="btn btn-primary" style="font-size: 20px;">{{next.1}}&raquo; </a>
+  {% endif %}
+  </div>
+{% endblock %}

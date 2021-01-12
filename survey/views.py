@@ -9,7 +9,7 @@ import ast
 from django.contrib import messages
 import json
 import datetime
-from carsharing_req .models import UsageModel
+from carsharing_req .models import UsageModel, CarsharUserModel
 from carsharing_booking .models import BookingModel
 from ai import recoai
 #from .forms import QuestionnaireAnswerForm
@@ -318,12 +318,12 @@ def checkUsage(user_id):
     print(usage)
     if len(usage) == 0:
         print('first')
-        booking = BookingModel.objects.filter(user_id=user_id, start_day__gte=d_now).exclude(charge=-1).exclude(start_day=d_now, start_time__lte=t_now).values().order_by('start_day', 'start_time').last()
+        booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(charge=-1).exclude(end_day=d_now, end_time__gt=t_now).values().order_by('start_day', 'start_time').last()
     else:
         usage_list = []
         for booking_id in usage:
             usage_list.append(booking_id['booking_id'])
-            booking = BookingModel.objects.filter(user_id=user_id, start_day__gte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(charge=-1).exclude(start_day=d_now, start_time__lte=t_now).values().order_by('start_day', 'start_time').last()
+            booking = BookingModel.objects.filter(user_id=user_id, end_day__lte=d_now).exclude(id__in=usage_list).exclude(charge=-1).exclude(end_day=d_now, end_time__gt=t_now).values().order_by('start_day', 'start_time').last()
     print(booking)
     return booking
 
@@ -332,8 +332,21 @@ def saveUsage(request, booking):
     dt_now = datetime.datetime.now()
     d_now = dt_now.strftime('%Y-%m-%d')
     t_now = dt_now.strftime('%H:%M')
+    user = CarsharUserModel.objects.get(id=request.session['user_id'])
+    if user.charge > 0:
+        if user.charge <= booking['charge']:
+            charge = booking['charge'] - user.charge
+            user.charge = 0
+        else:
+            user.charge -= booking['charge']
+            charge = 0
+    else:
+        charge = booking['charge']
+    print(charge)
+    print(user.charge)
+    user.save()
     record = UsageModel(user_id=booking['user_id'], car_id=booking['car_id'], \
         booking_id=booking_id, start_day=booking['start_day'], start_time=booking['start_time'], \
-        end_day=d_now, end_time=t_now, charge=booking['charge'])
+        end_day=d_now, end_time=t_now, charge=charge)
     record.save()
     pass

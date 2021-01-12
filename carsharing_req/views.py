@@ -12,7 +12,7 @@ from parking_req .models import *
 from owners_req .models import *
 from carsharing_booking .models import BookingModel
 from parking_booking .models import ParkingBookingModel
-import json, datetime, calendar, hashlib
+import json, ast, datetime, calendar, hashlib
 from django.core.mail import EmailMessage
 
 # Create your views here.
@@ -50,15 +50,86 @@ def set_session(request):
 
 # 説明ページ(HTML)ルーティング
 def pages(request, num, page):
+    params = {
+        'head_title': '',
+        'title': '',
+        'json_data': '',
+        'next': '',
+        'prev': ''
+    }
     if num == 1:
+        path = "/Django/data/page/user_car.json"
+        params['head_title'] = 'カーシェアリング利用の流れ'
+        with open(path, 'r') as f:
+            json_data = f.read()
+        json_data = ast.literal_eval(json_data)
+        # print(json_data)
         if page == 0:
             return render(request, 'page/user_car.html')
         elif page == 1:
-            return render(request, 'page/user_car_1.html')
+            params['title'] = '会員登録詳細'
+            params['json_data'] = json_data['会員登録詳細']
+            params['next'] = [2,'検索・予約詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 2:
+            params['title'] = '検索・予約詳細'
+            params['json_data'] = json_data['検索・予約詳細']
+            params['prev'] = [1,'会員登録詳細']
+            params['next'] = [3,'解錠詳細']
+            return render(request, 'page/user_details.html', params)
         elif page == 3:
-            return render(request, 'page/user_car_3.html')
+            params['title'] = '解錠詳細'
+            params['json_data'] = json_data['解錠詳細']
+            params['prev'] = [2,'検索・予約詳細']
+            params['next'] = [4,'乗車詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 4:
+            params['title'] = '乗車詳細'
+            params['json_data'] = json_data['乗車詳細']
+            params['prev'] = [3,'解錠詳細']
+            params['next'] = [5,'返却詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 5:
+            params['title'] = '返却詳細'
+            params['json_data'] = json_data['返却詳細']
+            params['prev'] = [4,'乗車詳細']
+            params['next'] = [6,'精算詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 6:
+            params['title'] = '精算詳細'
+            params['json_data'] = json_data['精算詳細']
+            params['prev'] = [5,'返却詳細']
+            return render(request, 'page/user_details.html', params)
     elif num == 2:
-        return render(request, 'page/user_parking.html')
+        path = "/Django/data/page/user_parking.json"
+        params['head_title'] = '駐車場利用の流れ'
+        with open(path, 'r') as f:
+            json_data = f.read()
+        json_data = ast.literal_eval(json_data)
+        if page == 0:
+            return render(request, 'page/user_parking.html')
+        elif page == 1:
+            params['title'] = '会員登録詳細'
+            params['json_data'] = json_data['会員登録詳細']
+            params['next'] = [2,'検索・予約詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 2:
+            params['title'] = '検索・予約詳細'
+            params['json_data'] = json_data['検索・予約詳細']
+            params['prev'] = [1,'会員登録詳細']
+            params['next'] = [3,'駐車詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 3:
+            params['title'] = '駐車詳細'
+            params['json_data'] = json_data['駐車詳細']
+            params['prev'] = [2,'検索・予約詳細']
+            params['next'] = [4,'精算詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 4:
+            params['title'] = '精算詳細'
+            params['json_data'] = json_data['精算詳細']
+            params['prev'] = [3,'駐車詳細']
+            return render(request, 'page/user_details.html', params)
     elif num == 3:
         return render(request, 'page/owner_car.html')
     elif num == 4:
@@ -141,19 +212,21 @@ class CreateView(TemplateView):
     }
 
     def post(self, request):
-        form = CarsharUserCreateForm(request.POST, request.FILES)
-        form_name = CarsharUserNameForm(request.POST, request.FILES)
+        # form = CarsharUserCreateForm(request.POST, request.FILES)
+        # form_name = CarsharUserNameForm(request.POST, request.FILES)
+        form = CarsharUserCreateForm(request.POST)
+        form_name = CarsharUserNameForm(request.POST)
 
         if form.is_valid() and form_name.is_valid():
-            email = request.user.email
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
             first_ja = request.POST['first_ja']
             last_ja = request.POST['last_ja']
-            gender = 'gender' in request.POST
-            birthday_str = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
-            birthday = birthdaySet(birthday_str)
-            age = calcAge(birthday_str)
+            # gender = 'gender' in request.POST
+            gender = request.POST['gender']
+            birthday = birthdayCheck(request.POST['birthday_year'], request.POST['birthday_month'], request.POST['birthday_day'])
+            # birthday = birthdaySet(birthday_str)
+            age = calcAge(birthday)
 
             # 二十歳未満の利用を制限
             if age < 20:
@@ -175,8 +248,7 @@ class CreateView(TemplateView):
             credit_card_company = request.POST['credit_card_company']
             first_en = request.POST['first_en']
             last_en = request.POST['last_en']
-            SECRET_KEY = request.POST['credit_card_num']
-            credit_card_num = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+            credit_card_num = request.POST['credit_card_num']
             credit_card_num_check = request.POST['credit_card_num'][13:]
             valid_thru = request.POST['valid_thru']
 
@@ -199,10 +271,8 @@ class CreateView(TemplateView):
                 messages.error(self.request, 'クレジットカードの有効期限が切れています。')
                 return render(request, 'carsharing_req/create.html', self.params)
 
-            SECRET_KEY = request.POST['security_code']
-            security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+            security_code = request.POST['security_code']
             plan = request.POST['plan']
-            img = request.FILES['img']
             if plan == 'a':
                 charge = 500
             elif plan == 'b':
@@ -211,13 +281,33 @@ class CreateView(TemplateView):
                 charge = 2000
             else:
                 charge = 0
-            record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
-                gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
-                credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
-                credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
-                security_code=security_code, plan=plan, charge=charge, charge_flag=True, img=img)
-            record.save()
-            messages.success(request, '会員登録が完了しました。')
+
+            self.params['first_name'] = first_name
+            self.params['last_name'] = last_name
+            self.params['first_ja'] = first_ja
+            self.params['last_ja'] = last_ja
+            self.params['gender'] = gender
+            self.params['birthday'] = birthday
+            self.params['age'] = age
+            self.params['zip01'] = zip01
+            self.params['pref01'] = pref01
+            self.params['addr01'] = addr01
+            self.params['addr02'] = addr02
+            self.params['tel'] = tel
+            self.params['credit_card_company'] = credit_card_company
+            self.params['first_en'] = first_en
+            self.params['last_en'] = last_en
+            self.params['credit_card_num'] = credit_card_num
+            self.params['credit_card_num_check'] = credit_card_num_check
+            self.params['valid_thru'] = valid_thru
+            self.params['security_code'] = security_code
+            self.params['plan'] = plan
+            self.params['charge'] = charge
+            self.params['birthday_year'] = request.POST['birthday_year']
+            self.params['birthday_month'] = request.POST['birthday_month']
+            self.params['birthday_day'] = request.POST['birthday_day']
+            messages.warning(request, 'まだ登録は完了しておりません。<br>内容を確認後確定ボタンを押してください。')
+            return render(request, 'carsharing_req/check.html', self.params)
         else:
             self.params['form'] = form
             self.params['form_name'] = form_name
@@ -237,6 +327,49 @@ class CreateView(TemplateView):
             print('data　exist')
             return redirect(to='carsharing_req:index')
         return render(request, 'carsharing_req/create.html', self.params)
+
+def push(request):
+    if (request.method == 'POST'): 
+        email = request.user.email
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        first_ja = request.POST['first_ja']
+        last_ja = request.POST['last_ja']
+        if request.POST['gender'] == 'True':
+            gender = True
+        else:
+            gender = False
+        age = request.POST['age']
+        birthday = request.POST['birthday']
+        birthday = birthdaySet(birthday)
+        zip01 = request.POST['zip01']
+        pref01 = request.POST['pref01']
+        addr01 = request.POST['addr01']
+        addr02 = request.POST['addr02']
+        tel = request.POST['tel']
+        credit_card_company = request.POST['credit_card_company']
+        first_en = request.POST['first_en']
+        last_en = request.POST['last_en']
+        SECRET_KEY = request.POST['credit_card_num']
+        credit_card_num = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+        credit_card_num_check = request.POST['credit_card_num_check']
+        valid_thru = request.POST['valid_thru']
+        SECRET_KEY = request.POST['security_code']
+        security_code = hashlib.sha256(SECRET_KEY.encode()).hexdigest()
+        plan = request.POST['plan']
+        charge = request.POST['charge']
+        img = request.FILES['img']
+        record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
+            gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
+            credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
+            credit_card_num=credit_card_num, credit_card_num_check=credit_card_num_check, valid_thru=valid_thru, \
+            security_code=security_code, plan=plan, charge=charge, charge_flag=True, img=img)
+        record.save()
+        messages.success(request, '会員登録が完了しました。')
+    else:
+        messages.error(request, '不正なリクエストです。')
+    return redirect(to='/carsharing_req/')
+
 
 # -------------------------------------------------------------------------------------------------------
 # 年齢制限

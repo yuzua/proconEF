@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-from .models import SecondHandCarAIModel, SecondHandCarInfoModel
+from .models import SecondHandCarAIModel, SecondHandCarInfoModel, SecondHandCarPriceModel
 import json
 import csv
 import os
 import time
+import ast
 from ai import preprocessing, recoai
 # Create your views here.
 
@@ -95,6 +96,7 @@ def price(request):
     return render(request, 'secondhandcar/price.html', params)
 
 def importCSV(request):
+    # SecondHandCarAIModel作成
     with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
         for row in reader:
@@ -180,6 +182,7 @@ def importCSV(request):
                 record.box_76 = row[76]
                 record.save()
     
+    # SecondHandCarInfoModel作成
     count = -1
     with open('/Django/data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
@@ -197,6 +200,23 @@ def importCSV(request):
                 record.img2 = row[131]
                 record.img3 = row[132]
                 record.save()
+            count += 1
+    
+    # SecondHandCarPriceModel作成
+    count = 0
+    with open('/Django/data/car_csv/car_value_data.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if count == 0:
+                car_list = row
+                length = len(row)
+            else:
+                for num in range(1,length):
+                    record = SecondHandCarPriceModel()
+                    record.second_hand_car_id_id = car_list[num]
+                    record.day = row[0]
+                    record.price = row[num]
+                    record.save()
             count += 1
 
 
@@ -341,3 +361,39 @@ def search(request, num=1):
             'POST': False
         }
     return render(request, 'secondhandcar/search.html', params)
+
+
+
+def test(request):
+# def priceAImakeJson():
+    path = '/Django/data/car_csv/car_value_result/'
+    files = os.listdir(path)
+    files.pop(0)
+    print(files)
+    add_list = []
+    for csvfile in files:
+        csvpath = path + csvfile
+        tmp_dict = makepriceJson(csvpath)
+        add_dict = {}
+        index = csvfile[3:5]
+        add_dict[int(index)] = tmp_dict
+        add_list.append(add_dict)
+        
+
+    json_data = json.dumps(add_list, sort_keys=True, indent=4)
+    # print(json_data)
+    # ファイルを開く(上書きモード)
+    path = "/Django/data/price/price.json"
+    os.remove(path)
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+
+def makepriceJson(path):
+    tmp_dict = {}
+    with open(path) as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            tmp_dict[row[0]] = row[1]
+    return tmp_dict

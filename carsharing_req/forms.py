@@ -19,20 +19,12 @@ class CarsharUserCreateForm(forms.ModelForm):
         ('JCB', 'JCB')
     ]
     credit_card_company = forms.ChoiceField(choices=CREDIT_CARD_COMPANY_LIST, label='カード会社', widget=forms.RadioSelect)
-    PLAN_LIST = [
-        ('a', '定額500円コース'), 
-        ('b', '定額1000円コース'),
-        ('c', '定額2000円コース'),
-        ('d', '夜間お得コース')
-    ]
-    plan = forms.ChoiceField(choices=PLAN_LIST, label='利用プラン', widget=forms.RadioSelect)
 
 
     class Meta:
         model = CarsharUserModel
         fields = ['id', 'gender', 'zip01', 'pref01', 'addr01', 'addr02', 'tel', \
-            'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code', \
-            'plan', 'img']
+            'credit_card_company', 'first_en', 'last_en', 'credit_card_num', 'valid_thru', 'security_code']
         widgets = {
             'zip01': forms.NumberInput(attrs={'class': 'form-control', 'onKeyUp' : "AjaxZip3.zip2addr(this,'','pref01','addr01')"}),
             'pref01': forms.TextInput(attrs={'class': 'form-control'}),
@@ -46,7 +38,6 @@ class CarsharUserCreateForm(forms.ModelForm):
             'valid_thru': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'02/21'}),
             'security_code': forms.NumberInput(attrs={'class': 'form-control'}),
             'plan': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'img': forms.FileInput(attrs={'class': 'form-control-file'})
             'img': forms.FileInput(attrs={'class': 'form-control-file', 'required': 'True'})
         }
         labels={
