@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 django = "==2.2.3"
 django-allauth = "*"
+django-bootstrap-datepicker-plus = "*"
+openpyxl = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"
