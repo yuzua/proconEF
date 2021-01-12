@@ -253,7 +253,7 @@ def push(user_id, anser_dict, pattern):
 
 #jsonファイル作成
 def makeJsonFile(user_id):
-    path = '/Django/data/recommend/user_' + str(user_id) + '.json'
+    path = './data/recommend/user_' + str(user_id) + '.json'
     data_list = list(AnswerModel.objects.filter(user_id=user_id).values("answer").order_by("id"))
     print(data_list)
     survey_list = [
@@ -296,7 +296,7 @@ def makeJsonFile(user_id):
 # csv読み込み
 import csv
 def Lord_csv_file():
-    path = '/Django/data/car_csv/used_car_data.csv'
+    path = './data/car_csv/used_car_data.csv'
     count = -1
     with open(path) as f:
         for row in csv.reader(f):
