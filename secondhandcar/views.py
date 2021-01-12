@@ -273,10 +273,20 @@ def detail(request, num):
     car_obj1 = SecondHandCarAIModel.objects.get(id=num)
     car_obj2 = SecondHandCarInfoModel.objects.get(second_hand_car_id=num)
     params = {
-        'title': '中古車',
+        'title': '中古車詳細',
         'car_obj1': car_obj1,
         'car_obj2': car_obj2
     }
+    path = "./data/price/price.json"
+    with open(path, 'r') as f:
+        json_data = f.read()
+        json_object = json.loads(json_data)
+    car_name = {}
+    for price_data in json_object:
+        car_id = list(price_data.keys())
+        price_dict = list(price_data.values())
+        if car_id[0] == str(num):
+            params["price"] = json.dumps(price_dict[0])
     return render(request, 'secondhandcar/detail.html', params)
 
 
