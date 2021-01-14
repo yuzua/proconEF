@@ -413,7 +413,6 @@ def push(request):
             security_code=security_code, plan=plan, charge=charge, charge_flag=True, img=img)
         record.save()
         messages.success(request, '会員登録が完了しました。')
-        return redirect(to='/carsharing_req/carsharuserdata/')
     else:
         messages.error(request, '不正なリクエストです。')
     return redirect(to='/carsharing_req/')

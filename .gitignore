@@ -141,3 +141,6 @@ dmypy.json
 
 # h5
 /vgg16_transfer.h5
+
+# staticfiles
+/staticfiles
