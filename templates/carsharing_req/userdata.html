@@ -73,8 +73,15 @@
       </td>
     </tr>
     <tr>  
+      <th scope="col">免許証画像</th>
+      <td scope="row">
+        <img src="/media/{{data.img}}" width="500"　border="1" />
+      </td>
+    </tr>
+    <tr>  
       <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>
     </tr>
   </tbody>
 </table>
+<a href="{% url 'carsharing_req:first' %}" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">TOPへ戻る</a>
 {% endblock %}
