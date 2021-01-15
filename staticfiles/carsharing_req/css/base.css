@@ -1,0 +1,294 @@
+#phone-nav{
+    display: none;
+}
+.logo3 {
+    width: 35pt;
+    height: 35pt;
+}
+
+.logo4 {
+    width: 30pt;
+    height: 30pt;
+    text-align: center;
+    clear: none;
+}
+
+.nav-link {
+    color:#696969;
+    /* text-align: center;
+    float: left;
+    margin: 0px 15px 0px 15px; */
+}
+
+.login {
+    color: #333;
+}
+
+.container {
+    padding: 5pt;
+}
+
+.socialaccount_providers {
+    margin-right: 5pt; 
+    padding: 0px;
+}
+
+.w-100 {
+    padding: 5px;
+}
+
+.col-md-15 {
+    margin: 10pt;
+    padding: 8pt;
+    float: left;
+    text-align: center;
+    /* border: dotted;
+    border-color: #333;
+    border-width: 2pt; */
+    width: 20%;
+    padding: 20pt;
+}
+
+.header {
+    width: 100%;
+    background-color: #fff;
+    left:0;
+    line-height:1;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+}
+
+.navbar01 {
+    border-right: 1px solid #333;
+    width: 15%;
+    text-align: center;
+    padding-top: 8pt;
+    font-weight: bolder;
+    font-size: 12pt;
+}
+
+.navbar02 {
+    width: 15%;
+    text-align: center;
+    padding-top: 8pt;
+    font-weight: bolder;
+    font-size: 12pt;
+}
+
+.navbar01:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.navbar02:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.navbar03:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.logout {
+    height: 30pt;
+    width: 75pt;
+    font-size: 12pt;
+    margin: 3pt 10pt 3pt 10pt;
+    /* border-color: #CDCDCD; */
+    float: right;
+    clear: both;
+    /* 追加 */
+    padding: auto;
+    color: #333;
+    font-size: 11pt;
+    background-color: rgb(255, 255, 255);
+    border-bottom: 5px solid rgb(201, 201, 201);
+    margin-right: 5pt;
+    margin-left: 5pt;
+}
+
+.logout:hover {
+    /* background-color: #CDCDCD;
+    text-decoration: none; */
+    margin-top: 3px;
+    color: #000;
+    background: rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(201, 201, 201);
+}
+
+.logout--shadow {
+    -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+}
+a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.nav {
+    padding: 10pt 0pt 10pt 0pt;
+}
+
+.dropdown-item {
+    margin: 4pt 0 4pt 0;
+}
+
+/* footer h5 {
+    border-bottom: 3px solid grey;
+    padding-bottom: 8px;
+} */
+
+/* フッター */
+/* footer h5 {
+    font-size: 13pt;
+} */
+
+
+footer a {
+    float: left;
+    color: #333;
+}
+
+#copy {
+    text-align: center;
+    margin: 0;
+    font-size: small;
+}
+
+.dropdown-item-owner {
+    width: 250pt;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.replay00 {
+    clear: both;
+}
+
+.replay01 {
+    font-size: 12pt;
+    color: #777777;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5pt;
+    margin-right:50pt;
+    margin-left: 50pt;
+}
+
+.replay02 {
+    font-size: 12pt;
+    color: #777777;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5pt;
+    margin-right: 100pt;
+    margin-left: 100pt;
+}
+
+
+.none {
+    text-decoration: none;
+}
+
+#wrapper {
+    width: 900pt;
+}
+
+.simple_square_btn6 {
+	display: block;
+	position: relative;
+	/* width: 130px; */
+	padding: 0.8em;
+	text-align: center;
+	text-decoration: none;
+	color: rgb(83, 83, 83);
+	background: #fff;
+        border-radius: 10px;
+	border:1px solid rgb(83, 83, 83);
+	 -webkit-backface-visibility: hidden; 
+	-moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    float: right;
+    clear: both;
+    margin: 5pt;
+}
+.simple_square_btn6:hover {
+    color: rgb(83, 83, 83);
+	 cursor: pointer;
+	 text-decoration: none;
+	-webkit-animation: simple_square_btn6 0.5s both;
+	-moz-animation: simple_square_btn6 0.5s both;
+	        animation: simple_square_btn6 0.5s both;
+}
+@-webkit-keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@-moz-keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+
+/* 試し */
+
+  
+@media screen and (max-width: 599px) {
+    #phone-nav{
+        display: block;
+        width: 100%;
+        position:fixed;
+        top:0;
+        left: 0;
+        z-index:100;
+    }
+    body {
+        background-color:#9c9c9a;
+    }
+    header {
+        display: none;
+    }
+    body, #wrapper{
+        width: 100%;
+    }
+    .logout {
+        font-size: 9pt;
+        font-weight: 100;
+    }
+    #log-btn{
+        height: 25pt;
+        width: 65pt;
+        margin: 7pt 0pt 3pt 0pt;
+        border-color: #CDCDCD;
+        float: left;
+        clear: none;
+        padding: 0;
+        /* margin: 0; */
+    }
+}

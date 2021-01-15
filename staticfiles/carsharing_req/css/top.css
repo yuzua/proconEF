@@ -1,0 +1,87 @@
+.three {
+    width: 100%;
+    margin: 5pt;
+    clear: both;
+}
+
+.card {
+    width: 25%;
+    float: left;
+    height: 225pt;
+    margin: 5pt 42pt 5pt 42pt;
+}
+
+.flow {
+    color: #333;
+}
+
+.flow {
+    text-decoration: underline;
+}
+
+#btn1 {
+    width: 80pt;
+    float: right;
+    margin: 0 5pt 0 5pt;
+}
+
+.float-left {
+    background: linear-gradient(#fff,#f4f4f4);
+}
+
+/* 質問とお知らせ */
+.news {
+    float: left;
+    padding: 0.5em 1em;
+    margin: 5pt;
+    color: #696969;
+    background: white;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    width: 45%;
+}
+
+.visible, .invisible {
+    opacity: 0.3;
+    transition: opacity 2.0s ease;
+}
+.visible {
+    opacity: 1.0;
+}
+
+.d-block {
+    width: 75%;
+    height: 250pt;
+    margin: auto;
+}
+
+.carousel-item {
+    width: 100%;
+    background-color: #333;
+    margin-top: 60pt;
+}
+
+#youtube{
+    width: 900px;
+    height: 500px;
+    margin: 0 auto;
+}
+
+/* お問い合わせ */
+#under {
+    float: right;
+    width: 99%;
+    height: 250pt;
+    font-size: 10pt;
+    margin: 5pt;
+    color: #696969;
+    background: white;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    clear: both;
+}
+
+@media screen and (max-width: 599px) {
+    #youtube{
+        width: 400px;
+        height: 800px;
+    }
+}
