@@ -20,11 +20,6 @@
     margin: 0px 15px 0px 15px; */
 }
 
-.logout {
-    color: #333;
-    font-size: 11pt;
-}
-
 .login {
     color: #333;
 }
@@ -97,7 +92,7 @@
     color: #000;
 }
 
-#log-btn {
+.logout {
     height: 30pt;
     width: 75pt;
     font-size: 12pt;
@@ -105,16 +100,17 @@
     /* border-color: #CDCDCD; */
     float: right;
     clear: both;
+    /* 追加 */
     padding: auto;
-    color: #000;
-    
+    color: #333;
+    font-size: 11pt;
     background-color: rgb(255, 255, 255);
     border-bottom: 5px solid rgb(201, 201, 201);
     margin-right: 5pt;
     margin-left: 5pt;
 }
 
-#log-btn:hover {
+.logout:hover {
     /* background-color: #CDCDCD;
     text-decoration: none; */
     margin-top: 3px;
@@ -123,7 +119,7 @@
     border-bottom: 2px solid rgb(201, 201, 201);
 }
 
-#log-btn--shadow {
+.logout--shadow {
     -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
     box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
 }
@@ -150,6 +146,7 @@ a:hover {
     font-size: 13pt;
 } */
 
+
 footer a {
     float: left;
     color: #333;
@@ -169,15 +166,30 @@ a:hover {
     text-decoration: underline;
 }
 
-.replay01 {
-    font-size: 14pt;
-    color: #777777;
-    margin: 10pt 30pt 10pt 15pt;
-    width: 100%;
-    font-weight: bold;
+.replay00 {
     clear: both;
-    display: inline-block;
 }
+
+.replay01 {
+    font-size: 12pt;
+    color: #777777;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5pt;
+    margin-right:50pt;
+    margin-left: 50pt;
+}
+
+.replay02 {
+    font-size: 12pt;
+    color: #777777;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5pt;
+    margin-right: 100pt;
+    margin-left: 100pt;
+}
+
 
 .none {
     text-decoration: none;
@@ -187,6 +199,66 @@ a:hover {
     width: 900pt;
 }
 
+.simple_square_btn6 {
+	display: block;
+	position: relative;
+	/* width: 130px; */
+	padding: 0.8em;
+	text-align: center;
+	text-decoration: none;
+	color: rgb(83, 83, 83);
+	background: #fff;
+        border-radius: 10px;
+	border:1px solid rgb(83, 83, 83);
+	 -webkit-backface-visibility: hidden; 
+	-moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    float: right;
+    clear: both;
+    margin: 5pt;
+}
+.simple_square_btn6:hover {
+    color: rgb(83, 83, 83);
+	 cursor: pointer;
+	 text-decoration: none;
+	-webkit-animation: simple_square_btn6 0.5s both;
+	-moz-animation: simple_square_btn6 0.5s both;
+	        animation: simple_square_btn6 0.5s both;
+}
+@-webkit-keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@-moz-keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@keyframes simple_square_btn6 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+
+/* 試し */
+
+  
 @media screen and (max-width: 599px) {
     #phone-nav{
         display: block;

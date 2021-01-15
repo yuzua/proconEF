@@ -97,7 +97,7 @@ def price(request):
 
 def importCSV(request):
     # SecondHandCarAIModel作成
-    with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
+    with open('./data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
         for row in reader:
             # print(row)
@@ -184,7 +184,7 @@ def importCSV(request):
     
     # SecondHandCarInfoModel作成
     count = -1
-    with open('/Django/data/car_csv/used_car_data.csv') as f:
+    with open('./data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
         for row in reader:
             # print(row)
@@ -204,7 +204,7 @@ def importCSV(request):
     
     # SecondHandCarPriceModel作成
     count = 0
-    with open('/Django/data/car_csv/car_value_data.csv') as f:
+    with open('./data/car_csv/car_value_data.csv') as f:
         reader = csv.reader(f)
         for row in reader:
             if count == 0:
@@ -222,7 +222,7 @@ def importCSV(request):
 
 def exportCSV(request):
     # 月１処理とcsv作成
-    filename = '/Django/data/car_csv/reco_car_data.csv'
+    filename = './data/car_csv/reco_car_data.csv'
     second_hand_car = list(SecondHandCarAIModel.objects.all())
     second_hand_car_list = []
     index = ["carID","駆動方式","乗車定員","ドア枚数","エンジン型式","エンジン種類","エンジン区分","環境対策エンジン","総排気量(cc)","過給器","ホイールベース(mm)","車両重量(kg)","最低地上高(mm)","最小回転半径(m)","サスペンション形式前","サスペンション形式後","ブレーキ形式後","使用燃料","燃料タンク容量(L)","エアフィルター","2列目シート","アルミホイール","リアスポイラー","フロントフォグランプ","ETC","助手席エアバッグ","サイドエアバッグ","カーテンエアバッグ","頸部衝撃緩和ヘッドレスト","EBD付ABS","セキュリティアラーム","マニュアルモード","チップアップシート","ドアイージークローザー","レーンアシスト","車間距離自動制御システム","前席シートヒーター","床下ラゲージボックス","オーディオソース_DVD","ブレーキアシスト","駐車支援システム","防水加工","地上波デジタルテレビチューナー","ソナー","サイドモニター","その他ナビゲーション","インテリジェントAFS","運転席パワーシート","本革シート","AC電源","ステアリングヒーター","リアフォグランプ","レインセンサー","インテリジェントパーキングアシスト","エマージェンシーサービス","フロント両席パワーシート","オーディオソース_HDD","ニーエアバッグ","ヘッドライトウォッシャー","後退時連動式ドアミラー","VGS/VGRS","ABS","2列目ウォークスルー","3列目シート","電動バックドア","リアエンターテイメントシステム","電気式4WD","HDDナビゲーション","全長(mm)","全幅(mm)","全高(mm)","室内全長(mm)","室内全幅(mm)","室内全高(mm)","マニュアルエアコン","片側スライドドア","最高出力(ps)"]
@@ -249,17 +249,17 @@ def recommend_car(request):
             anser_dict[anser] = True
         json_data = json.dumps(anser_dict, sort_keys=True, indent=4)
         ut = int(time.time())
-        path = '/Django/data/recommend/user_' + str(ut) + '.json'
+        path = './data/recommend/user_' + str(ut) + '.json'
         with open(path, 'w') as f:
             f.write(json_data)
         # おすすめAI起動
         recoai.RecommendAI('user_' + str(ut) + '.json')
         # 作成されたjsonファイルをimport
-        data = importRecoJson('/Django/data/recommend/reco_user_' + str(ut) + '.json', str(ut))
+        data = importRecoJson('./data/recommend/reco_user_' + str(ut) + '.json', str(ut))
 
         secondhandcar_list = setSecondHandCarList(data)
         # ゲストデータを削除
-        os.remove('/Django/data/recommend/reco_user_' + str(ut) + '.json')
+        os.remove('./data/recommend/reco_user_' + str(ut) + '.json')
 
         params = {
             'secondhandcar_list': secondhandcar_list,
@@ -293,7 +293,7 @@ def recommend_car(request):
         return render(request, 'secondhandcar/gestquestionnaire.html', params)
     else:
         # 作成されたjsonデータを使用しておすすめを提案
-        data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+        data = importRecoJson('./data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
 
     secondhandcar_list = setSecondHandCarList(data)
 
@@ -366,7 +366,7 @@ def search(request, num=1):
 
 def test(request):
 # def priceAImakeJson():
-    path = '/Django/data/car_csv/car_value_result/'
+    path = './data/car_csv/car_value_result/'
     files = os.listdir(path)
     files.pop(0)
     print(files)
@@ -383,7 +383,7 @@ def test(request):
     json_data = json.dumps(add_list, sort_keys=True, indent=4)
     # print(json_data)
     # ファイルを開く(上書きモード)
-    path = "/Django/data/price/price.json"
+    path = "./data/price/price.json"
     os.remove(path)
     with open(path, 'w') as f:
         # jsonファイルの書き出し

@@ -58,7 +58,7 @@ def pages(request, num, page):
         'prev': ''
     }
     if num == 1:
-        path = "/Django/data/page/user_car.json"
+        path = "./data/page/user_car.json"
         params['head_title'] = 'カーシェアリング利用の流れ'
         with open(path, 'r') as f:
             json_data = f.read()
@@ -101,7 +101,7 @@ def pages(request, num, page):
             params['prev'] = [5,'返却詳細']
             return render(request, 'page/user_details.html', params)
     elif num == 2:
-        path = "/Django/data/page/user_parking.json"
+        path = "./data/page/user_parking.json"
         params['head_title'] = '駐車場利用の流れ'
         with open(path, 'r') as f:
             json_data = f.read()

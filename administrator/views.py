@@ -387,8 +387,8 @@ class DownloadData(TemplateView):
             'path_list': ''
         }
     def get(self, request):
-        DeleteUploadXlsx('/Django/data/car_data/')
-        DeleteUploadXlsx('/Django/data/parking_data/')
+        DeleteUploadXlsx('./data/car_data/')
+        DeleteUploadXlsx('./data/parking_data/')
         path_list = AllCarDownload()
         path_list[0] = path_list[0][8:]
         path_list[1] = path_list[1][8:]
@@ -437,7 +437,7 @@ class UploadData(TemplateView):
                 AllParkingUpload(xlsx_all_list)
             else:
                 AllCarUpload(xlsx_all_list)
-            DeleteUploadXlsx('/Django/media/xlsx/')
+            DeleteUploadXlsx('./media/xlsx/')
             messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
             messages.error(self.request, 'error')
@@ -480,7 +480,7 @@ def AllCarDownload():
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "/Django/data/car_data/" + dt_now + ".xlsx"
+    file_name = "./data/car_data/" + dt_now + ".xlsx"
     wb.save(file_name)
     path_list.append(file_name)
     return path_list
@@ -507,7 +507,7 @@ def AllParkingDownload(dt_now):
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "/Django/data/parking_data/p_" + dt_now + ".xlsx"
+    file_name = "./data/parking_data/p_" + dt_now + ".xlsx"
     wb.save(file_name)
     return file_name
 
@@ -517,7 +517,7 @@ def AllParentCategoryDownload(dt_now):
     json_data = json.dumps(p_c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "/Django/data/car_data/pc_" + dt_now + ".json"
+    path = "./data/car_data/pc_" + dt_now + ".json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -529,7 +529,7 @@ def AllCategoryDownload(dt_now):
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "/Django/data/car_data/c_" + dt_now + ".json"
+    path = "./data/car_data/c_" + dt_now + ".json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -578,7 +578,7 @@ def ImportXlsx(file_name):
             media_path = path['attach']
     
     # 取得したpathからファイルを開く
-    wb = openpyxl.load_workbook("/Django/media/" + media_path)
+    wb = openpyxl.load_workbook("./media/" + media_path)
     # シートの名前を取得
     sheet_name = wb.sheetnames[0]
     sheet = wb[sheet_name]

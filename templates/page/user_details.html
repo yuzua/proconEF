@@ -4,24 +4,162 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main_contents %}
-<h4 style="font-size: 25px;text-align: center;">{{head_title}}</h4>
-<h4 style="width: 402px;margin: auto;margin-bottom: 10pt;font-size: 20px;text-align: center;border: 1px solid #000;">{{title}}</h4>
+<h4 style="font-size: 25px;text-align: center;font-weight: bold;color: rgb(83, 83, 83);">{{head_title}}</h4>
+<h4 style="width: 402px;margin: auto;margin-bottom: 10pt;font-size: 20px;text-align: center;color: rgb(83, 83, 83);">{{title}}</h4>
 {% for item_list in json_data %}
-  <div class="mx-auto">
-    <div class="card border-dark mb-3 m-0">
-      <div class="card-header"><strong>{{item_list.title}}</strong></div>
-      <div class="card-body text-dark">
-        <p class="card-text p-4">{{item_list.text}}</p>
-      </div>
-    </div>
-  </div>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+  <ul class="flow">
+    <li>
+      <dl>
+        <dt class="icon"><strong>{{item_list.title}}</strong></dt>
+        <dd>{{item_list.text}}</dd>
+      </dl>
+    </li>
+  </ul>
+
+
+  <style>
+ul {
+  padding: 0;
+}
+li {
+  list-style-type: none;
+}
+dd {
+  margin-left: 0;
+}
+
+.flow > li {
+  position: relative;
+}
+.flow > li:not(:last-child) {
+  margin-bottom: 40px;
+}
+.flow > li dl {
+  width: 100%;
+  padding: 20px 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: 2px solid rgb(83, 83, 83);
+  border-radius: 10px;
+  position: relative;
+}
+.flow > li:not(:last-child) dl::before,
+.flow > li:not(:last-child) dl::after {
+  content: "";
+  border: solid transparent;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+.flow > li:not(:last-child) dl::before {
+  border-width: 22px;
+  border-top-color: rgb(83, 83, 83);
+}
+.flow > li:not(:last-child) dl::after {
+  border-width: 20px;
+  border-top-color: #fff;
+}
+.flow > li dl dt {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(83, 83, 83);
+  -ms-flex-preferred-size: 20%;
+  flex-basis: 20%;
+  margin-right: 2vw;
+  text-align: center;
+}
+.flow > li dl dt .icon {
+  font-size: 12px;
+  color: #fff;
+  background: rgb(107,144,219);
+  background: -moz-linear-gradient(left, rgba(107,144,219,1) 0%, rgba(102,213,233,1) 100%);
+  background: -webkit-linear-gradient(left, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
+  background: linear-gradient(to right, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b90db', endColorstr='#66d5e9',GradientType=1 );
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  display: block;
+  border-radius: 20px;
+  position: relative;
+  z-index: 100;
+}
+.bi {
+  margin: 2pt 420pt 2pt 420pt;
+}
+
+.simple_square_btn5 {
+	display: block;
+	position: relative;
+	/* width: 130px; */
+	padding: 0.8em;
+	text-align: center;
+	text-decoration: none;
+	color: rgb(83, 83, 83);
+	background: #fff;
+        border-radius: 30px;
+	border:1px solid rgb(83, 83, 83);
+	 -webkit-backface-visibility: hidden; 
+	-moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    margin: 5pt;
+    float: left;
+}
+.simple_square_btn5:hover {
+    color: rgb(83, 83, 83);
+	 cursor: pointer;
+	 text-decoration: none;
+	-webkit-animation: simple_square_btn5 0.5s both;
+	-moz-animation: simple_square_btn5 0.5s both;
+	        animation: simple_square_btn5 0.5s both;
+}
+@-webkit-keyframes simple_square_btn5 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@-moz-keyframes simple_square_btn5 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@keyframes simple_square_btn5 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+</style>
 {% endfor %}
-  <div style="text-align: center;">
+  <div style="text-align: center;float: right;">
   {% if prev != "" %}
-      <a href="{{prev.0}}" class="btn btn-primary" style="font-size: 20px;">&laquo; {{prev.1}}</a>
+      <a href="{{prev.0}}" class="simple_square_btn5" style="font-size: 18px;">&laquo; {{prev.1}}</a>
   {% endif %}
   {% if next != "" %}
-      <a href="{{next.0}}" class="btn btn-primary" style="font-size: 20px;">{{next.1}}&raquo; </a>
+      <a href="{{next.0}}" class="simple_square_btn5" style="font-size: 18px;">{{next.1}}&raquo; </a>
   {% endif %}
   </div>
 {% endblock %}

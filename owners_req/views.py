@@ -141,7 +141,7 @@ def checkmember(request):
 # ----------------------------------------------------------------------------------------------------------------
 def BankCodeCheck(num):
     bank_name = None
-    path = "/Django/data/bank/bank.json"
+    path = "./data/bank/bank.json"
     with open(path, 'r') as f:
         json_data = f.read()
     json_data = ast.literal_eval(json_data)['branchdata']
@@ -158,7 +158,7 @@ def BranchCodeCheck(index, num):
     branch_name = None
     print(index)
     if index == "0001" or index == "0005" or index == "0009":
-        path = "/Django/data/bank/" + index + ".json"
+        path = "./data/bank/" + index + ".json"
         print(num)
         with open(path, 'r') as f:
             json_data = f.read()
@@ -620,7 +620,7 @@ def AAA():
     json_data = json.dumps(add_list, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "/Django/data/bank/0001.json"
+    path = "./data/bank/0001.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
