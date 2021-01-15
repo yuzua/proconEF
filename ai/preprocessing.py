@@ -7,10 +7,10 @@ def Preprocessing():
     import os
 
     #中古車レコメンドAIデータ読み込み(DBから出力されたもの)
-    df = pd.read_csv('/Django/data/car_csv/reco_car_data.csv')
-    os.remove('/Django/data/car_csv/reco_car_data.csv')
-    if os.path.exists('/Django/data/car_csv/car_data.csv'):
-        os.remove('/Django/data/car_csv/car_data.csv')
+    df = pd.read_csv('./data/car_csv/reco_car_data.csv')
+    os.remove('./data/car_csv/reco_car_data.csv')
+    if os.path.exists('./data/car_csv/car_data.csv'):
+        os.remove('./data/car_csv/car_data.csv')
 
     df = pd.get_dummies(df, columns=['駆動方式','エンジン型式','エンジン種類','エンジン区分','サスペンション形式前','サスペンション形式後','ブレーキ形式後','使用燃料'])
     li = ['エアフィルター','アルミホイール','リアスポイラー','フロントフォグランプ','ETC','助手席エアバッグ','サイドエアバッグ','カーテンエアバッグ','頸部衝撃緩和ヘッドレスト','EBD付ABS','セキュリティアラーム','マニュアルモード','チップアップシート','ドアイージークローザー','レーンアシスト','車間距離自動制御システム','前席シートヒーター','床下ラゲージボックス','オーディオソース_DVD','ブレーキアシスト','駐車支援システム','防水加工','地上波デジタルテレビチューナー','ソナー','サイドモニター','その他ナビゲーション','インテリジェントAFS','運転席パワーシート','本革シート','AC電源','ステアリングヒーター','リアフォグランプ','レインセンサー','インテリジェントパーキングアシスト','エマージェンシーサービス','フロント両席パワーシート','オーディオソース_HDD','ニーエアバッグ','ヘッドライトウォッシャー','後退時連動式ドアミラー','VGS/VGRS','ABS','電動バックドア','リアエンターテイメントシステム','電気式4WD','HDDナビゲーション','マニュアルエアコン','片側スライドドア']
@@ -54,4 +54,4 @@ def Preprocessing():
         else:
             df['3列目シート'][i] = 0
 
-    df.to_csv('/Django/data/car_csv/car_data.csv',index=False)
+    df.to_csv('./data/car_csv/car_data.csv',index=False)

@@ -3,30 +3,46 @@
 
 {% block head %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+  <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
 {% endblock %}
     
-{% block title %}価格予測推移グラフ{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block main_contents %}
-<div class="custom-control custom-switch">
-  <input type="checkbox" class="custom-control-input" id="purius" value="purius" onchange="myfunc(this.value)" />
-  <label class="custom-control-label" for="purius"> プリウス(トヨタ) </label>
+{% for key, value in car_name.items %}
+<div class="custom-control custom-switch w-25 float-left">
+  <input type="checkbox" class="custom-control-input" id="{{key}}" value="{{key}}" onchange="myfunc(this.value)" />
+  <label class="custom-control-label" for="{{key}}"> {{value}} </label>
 </div>
-<div class="custom-control custom-switch">
-  <input type="checkbox" class="custom-control-input" id="minimini" value="minimini" onchange="myfunc(this.value)" />
-  <label class="custom-control-label" for="minimini">　ミニ(ミニ) </label>
+{% endfor %}
+<div class="container w-80" style="padding: 5px;">
+  <canvas id="myChart"></canvas>
 </div>
-  <div class="container w-80" style="padding: 5px;">
-    <canvas id="myChart"></canvas>
-  </div>
 <script>
-  var data = JSON.parse('{{ purius_json|safe }}');
-  var Purius = data;
-  var days = Object.keys(Purius);
-  var purius_prices = Object.values(Purius);
-  var data = JSON.parse('{{ minimini_json|safe }}');
-  var Minimini = data;
-  var minimini_prices = Object.values(Minimini);
+var car_name = {{ car_name|safe }};
+var id_0 = JSON.parse('{{ id_0|safe }}');
+var id_2 = JSON.parse('{{ id_2|safe }}');
+var id_3 = JSON.parse('{{ id_3|safe }}');
+var id_5 = JSON.parse('{{ id_5|safe }}');
+var id_9 = JSON.parse('{{ id_9|safe }}');
+var id_10 = JSON.parse('{{ id_10|safe }}');
+var id_11 = JSON.parse('{{ id_11|safe }}');
+var id_22 = JSON.parse('{{ id_22|safe }}');
+var id_23 = JSON.parse('{{ id_23|safe }}');
+var id_24 = JSON.parse('{{ id_24|safe }}');
+var id_27 = JSON.parse('{{ id_27|safe }}');
+var id_32 = JSON.parse('{{ id_32|safe }}');
+var id_35 = JSON.parse('{{ id_35|safe }}');
+var id_49 = JSON.parse('{{ id_49|safe }}');
+var id_50 = JSON.parse('{{ id_50|safe }}');
+var id_56 = JSON.parse('{{ id_56|safe }}');
+var id_57 = JSON.parse('{{ id_57|safe }}');
+var id_58 = JSON.parse('{{ id_58|safe }}');
+var id_59 = JSON.parse('{{ id_59|safe }}');
+var id_60 = JSON.parse('{{ id_60|safe }}');
+var id_61 = JSON.parse('{{ id_61|safe }}');
+var id_62 = JSON.parse('{{ id_62|safe }}');
+var id_63 = JSON.parse('{{ id_63|safe }}');
 </script>
 <script type="text/javascript" src='{% static "secondhandcar/js/graph.js" %}'></script>
 {% endblock %}

@@ -2,100 +2,42 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-from .models import SecondHandCarAIModel, SecondHandCarInfoModel
+from .models import SecondHandCarAIModel, SecondHandCarInfoModel, SecondHandCarPriceModel
 import json
 import csv
 import os
 import time
+import ast
 from ai import preprocessing, recoai
 # Create your views here.
 
 
 def price(request):
-    purius = {
-        "2018-01-01": 197.50772153703286,
-        "2018-02-01": 198.3735075655772,
-        "2018-03-01": 197.62041918786682,
-        "2018-04-01": 195.4252247313193,
-        "2018-05-01": 192.51269227496545,
-        "2018-06-01": 191.675709700336,
-        "2018-07-01": 189.83673273608207,
-        "2018-08-01": 184.10639726985875,
-        "2018-09-01": 186.42718996612572,
-        "2018-10-01": 187.64614565897395,
-        "2018-11-01": 188.93014878434968,
-        "2018-12-01": 198.6099954901022,
-        "2019-01-01": 197.69285425516185,
-        "2019-02-01": 198.51602678593534,
-        "2019-03-01": 197.89670967901367,
-        "2019-04-01": 196.08903984125516,
-        "2019-05-01": 192.85596447367732,
-        "2019-06-01": 191.97446150719398,
-        "2019-07-01": 190.1323541048777,
-        "2019-08-01": 184.5016444035261,
-        "2019-09-01": 186.66765129489627,
-        "2019-10-01": 187.68464853658608,
-        "2019-11-01": 189.11827554817046,
-        "2019-12-01": 198.6913102704601,
-        "2020-01-01": 197.7494995482293,
-        "2020-02-01": 198.58214219310483,
-        "2020-03-01": 197.95920413523086,
-        "2020-04-01": 196.15317582011792,
-        "2020-05-01": 192.91993393057805,
-        "2020-06-01": 192.03874847413343,
-        "2020-07-01": 190.1967779272429,
-        "2020-08-01": 184.56676933220345,
-        "2020-09-01": 186.73250647742043,
-        "2020-10-01": 187.7493875456069,
-        "2020-11-01": 189.18284229876218,
-        "2020-12-01": 198.75473966537518
-    }
-    minimini = {
-        "2018-01-01": 240.13165570938907,
-        "2018-02-01": 229.70751809188445,
-        "2018-03-01": 229.27128558773651,
-        "2018-04-01": 225.55571198737346,
-        "2018-05-01": 218.69309600502197,
-        "2018-06-01": 216.55965621223683,
-        "2018-07-01": 213.7428197482491,
-        "2018-08-01": 218.0727031818359,
-        "2018-09-01": 230.02489514194227,
-        "2018-10-01": 235.2364055298935,
-        "2018-11-01": 245.44470985586253,
-        "2018-12-01": 235.59938025382976,
-        "2019-01-01": 240.13875510660682,
-        "2019-02-01": 229.98085031385148,
-        "2019-03-01": 230.09903400787468,
-        "2019-04-01": 225.8233025205727,
-        "2019-05-01": 218.86055597491776,
-        "2019-06-01": 217.1405801595114,
-        "2019-07-01": 214.01869453933952,
-        "2019-08-01": 218.60525683436973,
-        "2019-09-01": 230.0873251343695,
-        "2019-10-01": 235.19491847981004,
-        "2019-11-01": 245.6769138154912,
-        "2019-12-01": 235.70834790001075,
-        "2020-01-01": 240.23895161117008,
-        "2020-02-01": 230.0878679967908,
-        "2020-03-01": 230.20562527707162,
-        "2020-04-01": 225.93220856604492,
-        "2020-05-01": 218.9730689190929,
-        "2020-06-01": 217.25399419099938,
-        "2020-07-01": 214.1337339284483,
-        "2020-08-01": 218.71790685025144,
-        "2020-09-01": 230.193992783386,
-        "2020-10-01": 235.2989250256617,
-        "2020-11-01": 245.77545910840684,
-        "2020-12-01": 235.81208693986758
-    }
     params = {
-        'purius_json': json.dumps(purius),
-        'minimini_json': json.dumps(minimini),
+        'title': "価格予測推移グラフ一覧"
     }
+
+    path = "./data/price/price.json"
+    with open(path, 'r') as f:
+        json_data = f.read()
+        json_object = json.loads(json_data)
+    car_name = {}
+    for price_data in json_object:
+        car_id = list(price_data.keys())
+        price_dict = list(price_data.values())
+        # print(car_id[0])
+        # print(price_dict[0])
+        params['id_'+str(car_id[0])] = json.dumps(price_dict[0])
+        car_data = SecondHandCarInfoModel.objects.get(second_hand_car_id_id=car_id[0])
+        car_name['id_'+str(car_id[0])] = car_data.category + '(' + car_data.parent_category + ')'
+    # print(car_name)
+    params['car_name'] = car_name
+        
     return render(request, 'secondhandcar/price.html', params)
 
 def importCSV(request):
-    with open('/Django/data/car_csv/secondhandcar-record.csv') as f:
+    # SecondHandCarAIModel作成
+    with open('./data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
         for row in reader:
             # print(row)
@@ -180,8 +122,9 @@ def importCSV(request):
                 record.box_76 = row[76]
                 record.save()
     
+    # SecondHandCarInfoModel作成
     count = -1
-    with open('/Django/data/car_csv/used_car_data.csv') as f:
+    with open('./data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
         for row in reader:
             # print(row)
@@ -198,11 +141,28 @@ def importCSV(request):
                 record.img3 = row[132]
                 record.save()
             count += 1
+    
+    # SecondHandCarPriceModel作成
+    count = 0
+    with open('./data/car_csv/car_value_data.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if count == 0:
+                car_list = row
+                length = len(row)
+            else:
+                for num in range(1,length):
+                    record = SecondHandCarPriceModel()
+                    record.second_hand_car_id_id = car_list[num]
+                    record.day = row[0]
+                    record.price = row[num]
+                    record.save()
+            count += 1
 
 
 def exportCSV(request):
     # 月１処理とcsv作成
-    filename = '/Django/data/car_csv/reco_car_data.csv'
+    filename = './data/car_csv/reco_car_data.csv'
     second_hand_car = list(SecondHandCarAIModel.objects.all())
     second_hand_car_list = []
     index = ["carID","駆動方式","乗車定員","ドア枚数","エンジン型式","エンジン種類","エンジン区分","環境対策エンジン","総排気量(cc)","過給器","ホイールベース(mm)","車両重量(kg)","最低地上高(mm)","最小回転半径(m)","サスペンション形式前","サスペンション形式後","ブレーキ形式後","使用燃料","燃料タンク容量(L)","エアフィルター","2列目シート","アルミホイール","リアスポイラー","フロントフォグランプ","ETC","助手席エアバッグ","サイドエアバッグ","カーテンエアバッグ","頸部衝撃緩和ヘッドレスト","EBD付ABS","セキュリティアラーム","マニュアルモード","チップアップシート","ドアイージークローザー","レーンアシスト","車間距離自動制御システム","前席シートヒーター","床下ラゲージボックス","オーディオソース_DVD","ブレーキアシスト","駐車支援システム","防水加工","地上波デジタルテレビチューナー","ソナー","サイドモニター","その他ナビゲーション","インテリジェントAFS","運転席パワーシート","本革シート","AC電源","ステアリングヒーター","リアフォグランプ","レインセンサー","インテリジェントパーキングアシスト","エマージェンシーサービス","フロント両席パワーシート","オーディオソース_HDD","ニーエアバッグ","ヘッドライトウォッシャー","後退時連動式ドアミラー","VGS/VGRS","ABS","2列目ウォークスルー","3列目シート","電動バックドア","リアエンターテイメントシステム","電気式4WD","HDDナビゲーション","全長(mm)","全幅(mm)","全高(mm)","室内全長(mm)","室内全幅(mm)","室内全高(mm)","マニュアルエアコン","片側スライドドア","最高出力(ps)"]
@@ -229,17 +189,17 @@ def recommend_car(request):
             anser_dict[anser] = True
         json_data = json.dumps(anser_dict, sort_keys=True, indent=4)
         ut = int(time.time())
-        path = '/Django/data/recommend/user_' + str(ut) + '.json'
+        path = './data/recommend/user_' + str(ut) + '.json'
         with open(path, 'w') as f:
             f.write(json_data)
         # おすすめAI起動
         recoai.RecommendAI('user_' + str(ut) + '.json')
         # 作成されたjsonファイルをimport
-        data = importRecoJson('/Django/data/recommend/reco_user_' + str(ut) + '.json', str(ut))
+        data = importRecoJson('./data/recommend/reco_user_' + str(ut) + '.json', str(ut))
 
         secondhandcar_list = setSecondHandCarList(data)
         # ゲストデータを削除
-        os.remove('/Django/data/recommend/reco_user_' + str(ut) + '.json')
+        os.remove('./data/recommend/reco_user_' + str(ut) + '.json')
 
         params = {
             'secondhandcar_list': secondhandcar_list,
@@ -273,7 +233,7 @@ def recommend_car(request):
         return render(request, 'secondhandcar/gestquestionnaire.html', params)
     else:
         # 作成されたjsonデータを使用しておすすめを提案
-        data = importRecoJson('/Django/data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
+        data = importRecoJson('./data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
 
     secondhandcar_list = setSecondHandCarList(data)
 
@@ -313,10 +273,20 @@ def detail(request, num):
     car_obj1 = SecondHandCarAIModel.objects.get(id=num)
     car_obj2 = SecondHandCarInfoModel.objects.get(second_hand_car_id=num)
     params = {
-        'title': '中古車',
+        'title': '中古車詳細',
         'car_obj1': car_obj1,
         'car_obj2': car_obj2
     }
+    path = "./data/price/price.json"
+    with open(path, 'r') as f:
+        json_data = f.read()
+        json_object = json.loads(json_data)
+    car_name = {}
+    for price_data in json_object:
+        car_id = list(price_data.keys())
+        price_dict = list(price_data.values())
+        if car_id[0] == str(num):
+            params["price"] = json.dumps(price_dict[0])
     return render(request, 'secondhandcar/detail.html', params)
 
 
@@ -341,3 +311,39 @@ def search(request, num=1):
             'POST': False
         }
     return render(request, 'secondhandcar/search.html', params)
+
+
+
+def test(request):
+# def priceAImakeJson():
+    path = './data/car_csv/car_value_result/'
+    files = os.listdir(path)
+    files.pop(0)
+    print(files)
+    add_list = []
+    for csvfile in files:
+        csvpath = path + csvfile
+        tmp_dict = makepriceJson(csvpath)
+        add_dict = {}
+        index = csvfile[3:5]
+        add_dict[int(index)] = tmp_dict
+        add_list.append(add_dict)
+        
+
+    json_data = json.dumps(add_list, sort_keys=True, indent=4)
+    # print(json_data)
+    # ファイルを開く(上書きモード)
+    path = "./data/price/price.json"
+    os.remove(path)
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+
+def makepriceJson(path):
+    tmp_dict = {}
+    with open(path) as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            tmp_dict[row[0]] = float(row[1])
+    return tmp_dict
