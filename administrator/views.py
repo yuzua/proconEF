@@ -421,6 +421,9 @@ class UploadData(TemplateView):
             elif file_name[0] == 'c':
                 AllCategoryUpload(json_data)
                 messages.success(self.request, '車種情報をDBへ格納しました。')
+            elif file_name[0] == 's':
+                AllSettingCarUpload(json_data)
+                messages.success(self.request, '車・駐車場設定をDBへ格納しました。')
         # .xlsxの場合
         elif result_xlsx:
             #ファイルの場合はPOSTとFILEの両方を渡す
@@ -460,6 +463,9 @@ def AllCarDownload():
     # 駐車場情報をExcelファイルで作成、ダウンロード
     parking_path = AllParkingDownload(dt_now)
     path_list.append(parking_path)
+    # 駐車場・車設定をExcelファイルで作成、ダウンロード
+    settings_path = AllSettingDownload(dt_now)
+    path_list.append(settings_path)
 
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
@@ -522,7 +528,6 @@ def AllParentCategoryDownload(dt_now):
         # jsonファイルの書き出し
         f.write(json_data)
     return path
-
 # ------------------------- DB上に追加保存された全車種名(カテゴリー)をjsonに書き出し ------------------------------ 
 def AllCategoryDownload(dt_now):
     c = list(Category.objects.values())
@@ -530,6 +535,17 @@ def AllCategoryDownload(dt_now):
 
     # ファイルを開く(上書きモード)
     path = "./data/car_data/c_" + dt_now + ".json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+    return path
+# ---------------------------- DB上に追加保存された車・駐車場設定をjsonに書き出し -------------------------------- 
+def AllSettingDownload(dt_now):
+    c = list(CarInfoParkingModel.objects.values())
+    json_data = json.dumps(c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "./data/car_data/s_" + dt_now + ".json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -566,6 +582,23 @@ def AllCategoryUpload(json_data):
         for data in json_data:
             record = Category(id=data['id'], parent_category_id=data['parent_category_id'], category=data['category'])
             record.save()
+
+def AllSettingCarUpload(json_data):
+    print(json_data)
+    flag = len(list(CarInfoParkingModel.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            record = CarInfoParkingModel.objects.get(id=data['id'])
+            record.car_id_id = data['car_id_id']
+            record.parking_id_id = data['parking_id_id']
+            record.user_id = data['user_id']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = CarInfoParkingModel(id=data['id'], car_id_id=data['car_id_id'], parking_id_id=data['parking_id_id'], user_id=data['user_id'])
+            record.save()
+
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
 def ImportXlsx(file_name):

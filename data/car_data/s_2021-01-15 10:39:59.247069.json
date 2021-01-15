@@ -1,0 +1,20 @@
+[
+    {
+        "car_id_id": 2,
+        "id": 1,
+        "parking_id_id": 1,
+        "user_id": 0
+    },
+    {
+        "car_id_id": 1,
+        "id": 2,
+        "parking_id_id": 1,
+        "user_id": 0
+    },
+    {
+        "car_id_id": 3,
+        "id": 3,
+        "parking_id_id": 1,
+        "user_id": 0
+    }
+]
