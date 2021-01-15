@@ -437,7 +437,7 @@ class UploadData(TemplateView):
                 AllParkingUpload(xlsx_all_list)
             else:
                 AllCarUpload(xlsx_all_list)
-            DeleteUploadXlsx('/Django/media/xlsx/')
+            DeleteUploadXlsx('./media/xlsx/')
             messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
             messages.error(self.request, 'error')
@@ -578,7 +578,7 @@ def ImportXlsx(file_name):
             media_path = path['attach']
     
     # 取得したpathからファイルを開く
-    wb = openpyxl.load_workbook("/Django/media/" + media_path)
+    wb = openpyxl.load_workbook("./media/" + media_path)
     # シートの名前を取得
     sheet_name = wb.sheetnames[0]
     sheet = wb[sheet_name]
