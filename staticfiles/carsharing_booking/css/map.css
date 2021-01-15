@@ -1,0 +1,87 @@
+div {
+    margin: 0pt;
+  }
+  #map_info {
+    padding: 0.5em 1em;
+    margin: 2em 10pt;
+    margin-bottom: 20pt;
+    color: #5d627b;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    opacity: 1;
+    width: 97%;
+  
+  }
+  #map_container {
+  
+    width: 90%;
+    padding: 4px;
+    margin: 0pt;
+  }
+  #map_canvas {   /* 高さ（と幅）を指定しないと地図は表示されない */
+    width: 100%;
+    height: 500px;
+    border: 1px solid black;
+    margin: 10pt; 
+  }
+  #url, #zoom {
+    display: none;  /* 非表示 */
+  }
+  /* 情報ウィンドウ（マーカーをクリックすると表示される領域）内 */
+  #map_content {
+    width: 250px;
+    height: 70px;
+  }
+
+.table td, .table th{
+  vertical-align: middle;
+}
+.hour-button-box {
+	width: 90%;
+	margin: 2em auto;
+	text-align: left;
+}
+.hour-button-box input[type='radio'] {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+.hour-button-box label {
+	position: relative;
+	display: inline-block;
+	margin-right: 30px;
+	padding-right: 10px;
+	padding-left: 35px;
+	cursor: pointer;
+}
+.hour-button-box label::before {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 24px;
+	height: 24px;
+	content: ' ';
+	border: 2px solid #5d627b;
+	border-radius: 4px;
+}
+.hour-button-box input[type='radio'] + label::before {
+	border-radius: 18px;
+}
+.hour-button-box input[type='radio']:checked + label {
+	padding-left: 10px;
+	color: #ffffff;
+}
+.hour-button-box input[type='radio']:checked + label::before {
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: #5d627b;
+}
+/* Transition */
+.hour-button-box label, .hour-button-box label::before {
+	-webkit-transition: 0.25s all ease;
+	        transition: 0.25s all ease;
+}

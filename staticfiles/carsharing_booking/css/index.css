@@ -1,0 +1,96 @@
+/* 地図から予約 */
+.card-park {
+    width: 100%;
+    float: left;
+}
+
+.card-header-park {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
+
+.park {
+    float: left;
+    width: 50%;
+}
+
+#park {
+    float: left;
+    padding: 50pt;
+}
+
+.card-text {
+    font-size: 13pt;
+}
+
+#parking {
+    float: right;
+    margin-top: 50pt;
+}
+
+.card-header-park {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
+
+/* 車両から予約 */
+.card-car {
+    width: 49%;
+    float: left;
+    margin-right: 5pt;
+}
+
+.car {
+    width: 100%;
+}
+
+#car {
+    padding: 50pt;
+}
+
+#carsharing {
+    float: right;
+    margin-top: 50pt;
+}
+
+.card-header-car {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
+
+/* 時間から予約 */
+.card-time {
+    width: 49%;
+    float: left;
+    margin-left: 5pt;
+}
+
+.time {
+    width: 100%;
+}
+
+#time {
+    padding: 50pt;
+}
+
+#timing {
+    float: right;
+    margin-top: 50pt;
+}
+
+.card-header-time {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
+
+.footer {
+    margin: 0 160pt;
+}
