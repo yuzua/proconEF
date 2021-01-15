@@ -95,3 +95,6 @@ class CarsharUserNameForm(forms.Form):
         if last_ja is None:
             raise forms.ValidationError("ひらがなで入力して下さい。")
         return last_ja
+
+class PhotoForm(forms.Form):
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file', 'required': 'True'}))

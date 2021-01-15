@@ -2,9 +2,14 @@
 {% load static %}
 
 {% block head %}
+<<<<<<< HEAD
 <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
 {% endblock %}
 
+=======
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+{% endblock %}
+>>>>>>> a83b6f48c8b7697d767adaeb3a0f8c2213e25f70
     
 {% block title %}{{title}}{% endblock %}
 
@@ -253,6 +258,19 @@
             </tbody>
         </table>
         </div>
+        {% if price is None %}
     </div>
+        {% else %}
+        <h4>価格推移予測グラフ</h4>
+        <div class="w-100 p-1">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+        {% endif %}
 </div>
+<script>
+    var car_name = '{{car_obj2.category}}';
+    var data = JSON.parse('{{ price|safe }}');
+</script>
+<script type="text/javascript" src='{% static "secondhandcar/js/detail-graph.js" %}'></script>
 {% endblock %}

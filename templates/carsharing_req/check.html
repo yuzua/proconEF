@@ -36,8 +36,7 @@
 </table>
 <form action="{% url 'carsharing_req:push' %}" method="post" enctype="multipart/form-data" id="form">
     {% csrf_token %}
-    <label for="id_img">免許証:</label>
-    <input type="file" name="img" class="form-control-file" required="True" accept="image/*" id="id_img">
+    {{ imageform }}
     <input type='hidden' name="first_name" value={{first_name}} />
     <input type='hidden' name="last_name" value={{last_name}} />
     <input type='hidden' name="first_ja" value={{first_ja}} />
@@ -59,5 +58,8 @@
     <input type='hidden' name="security_code" value={{security_code}} />
     <input type='hidden' name="plan" value={{plan}} />
     <input type='hidden' name="charge" value={{charge}} />
+    <input type='hidden' name="birthday_year" value={{birthday_year}} />
+    <input type='hidden' name="birthday_month" value={{birthday_month}} />
+    <input type='hidden' name="birthday_day" value={{birthday_day}} />
     <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
 </form>
