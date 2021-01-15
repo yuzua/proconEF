@@ -33,12 +33,7 @@ def test_ajax_app(request):
 
 
 def map(request):
-    if request.user.id == None:
-        add = '千葉県柏市末広町10-1'
-    else:
-        data = CarsharUserModel.objects.get(id=request.session['user_id'])
-        print(data.pref01+data.addr01+data.addr02)
-        add = data.pref01+data.addr01+data.addr02
+    add = setAdd(request)
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.filter(id__in=set_list)
     item = item_all.values("id", "address", "user_id", "lat", "lng")
@@ -49,12 +44,60 @@ def map(request):
     params = {
         'name': '自宅',
         'add': add,
-        'data_json': json.dumps(data)
+        'data_json': json.dumps(data),
+        'latlng': 'undefined'
     }
     if (request.method == 'POST'):
         params['add'] = request.POST['add']
         params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
+
+def geo(request):
+    params = {
+        'name': '自宅',
+        'add': '',
+        'data_json': '',
+        'latlng': 'undefined'
+    }
+    if (request.method == 'POST'):
+        if len(request.POST) == 4:
+            params['name'] = '現在地'
+            params['latlng'] = str(request.POST['latlng'])
+            params['lat'] = str(request.POST['lat'])
+            params['lng'] = str(request.POST['lng'])
+        elif len(request.POST) == 2:
+            if request.POST['error'] == '1':
+                msg = "位置情報の利用が許可されていません。"
+            elif request.POST['error'] == '2':
+                msg = "デバイスの位置が判定できませんでした。"
+            elif request.POST['error'] == '3':
+                msg = "タイムアウトが発生しました。"
+            messages.error(request, msg)
+            params['add'] = setAdd(request)
+            params['name'] = ''
+        else:
+            messages.error(request, '位置情報が正しく取得出来ませんでした。')
+            params['add'] = setAdd(request)
+            params['name'] = ''
+        set_list = CarInfoParkingModel.objects.values("parking_id")
+        item_all = ParkingUserModel.objects.filter(id__in=set_list)
+        item = item_all.values("id", "address", "user_id", "lat", "lng")
+        item_list = list(item.all())
+        data = {
+            'markerData': item_list,
+        }
+        params['data_json'] = json.dumps(data)
+    
+    return render(request, "carsharing_booking/map.html", params)
+
+def setAdd(request):
+    if request.user.id == None:
+        add = '〒277-0005 千葉県柏市柏１丁目１−１'
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
+    return add
 
 def car(request):
     max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()

@@ -17,6 +17,10 @@
                 <p class="card-text mt-3">利用したい場所を地図から選択して予約をします。</p>
                 <p class="card-text">近い場所から選んでね</p>
                 <a id="log-btn" class="btn" id="parking" href="map" role="button">予約する</a>
+                <form action="{% url 'carsharing_booking:geo' %}" method="post" id="myForm" name="myForm">
+                    {% csrf_token %}
+                    <input id="log-btn" class="btn" type="submit" value="現在地から予約する">
+                </form>
             </div>
         </div>
 </div>
@@ -42,4 +46,5 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src='{% static "carsharing_booking/js/geolocation-positioning.js" %}'></script>
 {% endblock %}

@@ -28,8 +28,16 @@
 </form>
 <script>
   const data = JSON.parse('{{ data_json|safe }}');
+{% if latlng == 'undefined' %}
 </script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/settingmap.js" %}'></script>
+{% else %}
+  const mylocation = '{{latlng}}';
+  const mylat = parseFloat('{{lat}}');
+  const mylng = parseFloat('{{lng}}');
+</script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/settinggeo.js" %}'></script>
+{% endif %}
 {% endblock %}
 
 
