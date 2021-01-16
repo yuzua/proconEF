@@ -42,18 +42,21 @@ def map(request):
         'markerData': item_list,
     }
     params = {
+        'title': '自宅付近で検索',
         'name': '自宅',
         'add': add,
         'data_json': json.dumps(data),
         'latlng': 'undefined'
     }
     if (request.method == 'POST'):
+        params['title'] = '検索地付近で検索'
         params['add'] = request.POST['add']
         params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
 
 def geo(request):
     params = {
+        'title': '現在地付近で検索',
         'name': '自宅',
         'add': '',
         'data_json': '',
