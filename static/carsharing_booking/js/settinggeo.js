@@ -77,7 +77,7 @@ function initMap(home) {
         var url = $("#url a").attr('href');
         var content;
         if (url) {
-          content = '<div id="map_content"><p><a href="' + url + '" target="_blank"> ' + title + '</a><br />' + home + '</p></div>';
+          content = '<div id="map_content"><span><a href="' + url + '" target="_blank"> ' + title + '</a><br />' + home + '</span></div>';
         }else {
           //urlが指定してなければ、リンクなしのタイトルと住所を表示
           content = '<div id="map_content"><p>' + title + '<br />' + home + '</p></div>';
