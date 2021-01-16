@@ -76,8 +76,10 @@ function initMap(home) {
         //urlが指定してあればリンクつきのタイトルと住所を表示（URLがない場合もあるため）
         var url = $("#url a").attr('href');
         var content;
+        var home = $("#address").text();
+        console.log(home);
         if (url) {
-          content = '<div id="map_content"><span><a href="' + url + '" target="_blank"> ' + title + '</a><br />' + home + '</span></div>';
+          content = '<div id="map_content"><span><a href="' + url + '" target="_blank">' + title + '</a><br /><p id="home">' + home + '</p></span></div>';
         }else {
           //urlが指定してなければ、リンクなしのタイトルと住所を表示
           content = '<div id="map_content"><p>' + title + '<br />' + home + '</p></div>';
@@ -129,5 +131,4 @@ function reverseGeocoder(mylocation){
         }
       }
     });
-    return 'end';
 };
