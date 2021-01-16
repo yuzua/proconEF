@@ -99,7 +99,7 @@
 </nav>
         <header class="mt-5 pt-5">
             <div class="header">
-                <p style="float: right; margin: 5pt 5pt 5pt 0pt;">
+                <p style="float: right; margin: 5pt 5pt 5pt 5pt;">
                     {% if user.is_authenticated %}
                         ようこそ{{ user.get_username }}
                     {% else %}
@@ -108,9 +108,9 @@
                         さん
                 </p>
             {% if user.is_authenticated %}
-            <a href="/accounts/logout/" class="simple_square_btn6">ログアウト</a>
+            <a href="/accounts/logout/" class="btn">ログアウト</a>
             {% else %}
-            <a href="/accounts/login/" class="simple_square_btn6">ログイン</a>
+            <a href="/accounts/login/" class="btn">ログイン</a>
             {% endif %}
             
           <ul class="nav">
