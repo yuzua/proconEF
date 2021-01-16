@@ -52,12 +52,16 @@
 .header {
     width: 100%;
     background-color: #fff;
+    opacity: 0.9;
     left:0;
     line-height:1;
     position:fixed;
     top:0;
     width:100%;
     z-index:100;
+    border-bottom: solid;
+    border-width: 1pt;
+    border-color: rgb(83,83,83);
 }
 
 .navbar01 {
@@ -218,9 +222,10 @@ a:hover {
     margin: 5pt;
 }
 .simple_square_btn6:hover {
-    color: rgb(83, 83, 83);
-	 cursor: pointer;
-	 text-decoration: none;
+    color: #fff;
+    background-color: rgb(130,130,130);
+    text-decoration: none;
+	 /* cursor: pointer;
 	-webkit-animation: simple_square_btn6 0.5s both;
 	-moz-animation: simple_square_btn6 0.5s both;
 	        animation: simple_square_btn6 0.5s both;
@@ -253,10 +258,36 @@ a:hover {
   100% {
     -webkit-transform: scale(1.1);
             transform: scale(1.1);
-  }
+  } */
 }
 
 /* 試し */
+
+/* .btn {
+    height: 30pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    clear: both;
+    float: right;
+    clear: both;
+    padding: 10pt;
+  } */
+
+  .btn {
+    height: 30pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    clear: both;
+    padding-top: 6pt;
+    padding-bottom: 5pt;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
 
   
 @media screen and (max-width: 599px) {
