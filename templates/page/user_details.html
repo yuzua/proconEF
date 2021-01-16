@@ -1,6 +1,10 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "page/css/user_details.css" %}'>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block main_contents %}
@@ -19,140 +23,6 @@
       </dl>
     </li>
   </ul>
-
-
-  <style>
-ul {
-  padding: 0;
-}
-li {
-  list-style-type: none;
-}
-dd {
-  margin-left: 0;
-}
-
-.flow > li {
-  position: relative;
-}
-.flow > li:not(:last-child) {
-  margin-bottom: 40px;
-}
-.flow > li dl {
-  width: 100%;
-  padding: 20px 30px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border: 2px solid rgb(83, 83, 83);
-  border-radius: 10px;
-  position: relative;
-}
-.flow > li:not(:last-child) dl::before,
-.flow > li:not(:last-child) dl::after {
-  content: "";
-  border: solid transparent;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-}
-.flow > li:not(:last-child) dl::before {
-  border-width: 22px;
-  border-top-color: rgb(83, 83, 83);
-}
-.flow > li:not(:last-child) dl::after {
-  border-width: 20px;
-  border-top-color: #fff;
-}
-.flow > li dl dt {
-  font-size: 20px;
-  font-weight: 600;
-  color: rgb(83, 83, 83);
-  -ms-flex-preferred-size: 20%;
-  flex-basis: 20%;
-  margin-right: 2vw;
-  text-align: center;
-}
-.flow > li dl dt .icon {
-  font-size: 12px;
-  color: #fff;
-  background: rgb(107,144,219);
-  background: -moz-linear-gradient(left, rgba(107,144,219,1) 0%, rgba(102,213,233,1) 100%);
-  background: -webkit-linear-gradient(left, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
-  background: linear-gradient(to right, rgba(107,144,219,1) 0%,rgba(102,213,233,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b90db', endColorstr='#66d5e9',GradientType=1 );
-  padding: 5px 10px;
-  margin-bottom: 10px;
-  display: block;
-  border-radius: 20px;
-  position: relative;
-  z-index: 100;
-}
-.bi {
-  margin: 2pt 420pt 2pt 420pt;
-}
-
-.simple_square_btn5 {
-	display: block;
-	position: relative;
-	/* width: 130px; */
-	padding: 0.8em;
-	text-align: center;
-	text-decoration: none;
-	color: rgb(83, 83, 83);
-	background: #fff;
-        border-radius: 30px;
-	border:1px solid rgb(83, 83, 83);
-	 -webkit-backface-visibility: hidden; 
-	-moz-backface-visibility: hidden;
-    backface-visibility: hidden;
-    margin: 5pt;
-    float: left;
-}
-.simple_square_btn5:hover {
-    color: rgb(83, 83, 83);
-	 cursor: pointer;
-	 text-decoration: none;
-	-webkit-animation: simple_square_btn5 0.5s both;
-	-moz-animation: simple_square_btn5 0.5s both;
-	        animation: simple_square_btn5 0.5s both;
-}
-@-webkit-keyframes simple_square_btn5 {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  100% {
-    -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-  }
-}
-@-moz-keyframes simple_square_btn5 {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  100% {
-    -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-  }
-}
-@keyframes simple_square_btn5 {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  100% {
-    -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-  }
-}
-</style>
 {% endfor %}
   <div style="text-align: center;float: right;">
   {% if prev != "" %}
