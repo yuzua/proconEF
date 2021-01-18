@@ -50,6 +50,131 @@
         <div class="hover-6"></div>
         <span class="font-6">MORE</span>
       </div>
+<ul class="flex cards">
+    <li>
+    <div class="flip-card4">
+        <div class="flip-card-inner4">
+            <div class="flip-card-front4">
+                <h4>Card 1</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+            </div>
+            <div class="flip-card-back4">
+                <h4>Card 1</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+                </p>
+            </div>
+    </div>
+    </li>
+  <li><h4>Card 2</h4>
+    <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+    </p></li>
+  <li><h4>Card 3</h4>
+    <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+    </p></li>
+  {% comment %} <li><h4>Card 4</h4>
+    <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+    </p></li>
+  <li><h4>Card 5</h4>
+    <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+    </p></li> {% endcomment %}
+  
+</ul>
+<style>
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards li {
+  border: 2px solid #490A3D;
+  border-radius:5px;
+  background-color: #BD1550;
+  color: #fff;
+  flex: 1 1 200px;
+  padding:0;
+}
+
+.cards h4 {
+  background-color: #490A3D;
+  margin: 0;
+  padding: 10px;
+}
+
+.cards p {
+  padding: 10px;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.flex li {
+  flex: 1 1 200px;
+  margin: 10px;
+}
+/*--------------------------------------
+  カード型_04
+--------------------------------------*/
+.flip-card4 {
+  background-color: transparent;
+  {% comment %} width: 300px;
+  height: 300px; {% endcomment %}
+  border: 0px solid #f1f1f1;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+.flip-card_name {
+  font-weight:bold;
+  font-size:2.0rem;
+}
+
+.flip-card-inner4 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  {% comment %} text-align: center; {% endcomment %}
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card4:hover .flip-card-inner4 {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front4, .flip-card-back4 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flip-card-front4 {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-card-back4 {
+  background-color: dodgerblue;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+/* 反転した時の囲み枠 */
+.cardbox1 {
+    padding: 2.0em 1em;
+    margin: 1em 2em;
+    font-weight: bold;
+    border: solid 3px #FFFFFF;
+}
+.cardbox1 p {
+    margin: 0; 
+    padding: 0;
+}
+</style>
       <style>
         .area-6 {
           position: relative;
@@ -199,7 +324,7 @@
                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/8GEanKJj9NM" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
-        <!-- <div class="clearfix">
+        <div class="clearfix">
           <div id ="left">
           <div data-trigger class="news">
               <h2>お知らせ</h2>
@@ -246,8 +371,8 @@
                 </dl>
             </div>
           </div>
-          </div> -->
-          <!-- <div data-trigger id ="under">
+          </div>
+          <div data-trigger id ="under">
             <h2>お問い合わせ</h2>
             <p class="under"> 
                 〇〇支店<br>
@@ -271,7 +396,7 @@
             </p>
         </div>
           </div>
-    </div> -->
+    </div>
 {% endblock %}
 
 {% block includejs %}
