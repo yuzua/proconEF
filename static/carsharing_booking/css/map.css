@@ -5,9 +5,9 @@ div {
     padding: 0.5em 1em;
     margin: 2em 10pt;
     margin-bottom: 20pt;
-    color: #5d627b;
+    color: rgb(83, 83, 83);
     background: white;
-    border-top: solid 5px #5d627b;
+    border-top: solid 5px rgb(83, 83, 83);
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     opacity: 1;
     width: 97%;
