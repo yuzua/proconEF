@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block active_login %}
+<title>{{ title }}</title>
+<h1>{{ title }}</h1>
+{% endblock %}
+
+{% block contents %}
+<p class="h5 mt-4">{{ message|safe }}</p>
+<div class="card">
+    <h2 class="card-header">{{ message|safe }}</h2>
+    <div class="card-body">
+        <p>銀行名：{{ data.bank_name }}</p>
+        <p>支店名：{{ data.branch_name }}</p>
+        <p>口座番号：{{ data.bank_account_number }}</p>
+    </div>
+    <div class="card-footer">
+        <form action="{% url 'owners_req:checkmember' %}" method="post" >
+            {% csrf_token %}
+            {% for key, value in data.items %}
+                <input type="hidden" name="{{key}}" value="{{value}}">
+            {% endfor %}
+                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+	<script type="text/javascript" src='{% static "owners_req/js/bank.js" %}'></script>
+{% endblock %}

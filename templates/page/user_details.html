@@ -1,0 +1,35 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "page/css/user_details.css" %}'>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_contents %}
+<h4 style="font-size: 25px;text-align: center;font-weight: bold;color: rgb(83, 83, 83);">{{head_title}}</h4>
+<h4 style="width: 402px;margin: auto;margin-bottom: 10pt;font-size: 20px;text-align: center;color: rgb(83, 83, 83);">{{title}}</h4>
+{% for item_list in json_data %}
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+</svg>
+  <ul class="flow">
+    <li>
+      <dl>
+        <dt class="icon"><strong>{{item_list.title}}</strong></dt>
+        <dd>{{item_list.text}}</dd>
+      </dl>
+    </li>
+  </ul>
+{% endfor %}
+  <div style="text-align: center;float: right;">
+  {% if prev != "" %}
+      <a href="{{prev.0}}" class="simple_square_btn5" style="font-size: 18px;">&laquo; {{prev.1}}</a>
+  {% endif %}
+  {% if next != "" %}
+      <a href="{{next.0}}" class="simple_square_btn5" style="font-size: 18px;">{{next.1}}&raquo; </a>
+  {% endif %}
+  </div>
+{% endblock %}

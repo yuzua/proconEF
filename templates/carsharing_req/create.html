@@ -1,21 +1,92 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href='{% static "carsharing_req/css/member-create.css" %}'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <title>{{ title }}</title>
 </head>
 <body class="container">
     <h1 class="display-4 text-primary">{{ title }}</h1>
+    {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers"> 
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
+      </ul>
+    {% endfor %}
     <table class="table">
-    <form action="{% url 'carsharing_req:create' %}" method="post">
+    <form action="{% url 'carsharing_req:create' %}" method="post" id="form">
         {% csrf_token %}
+        <tr>
+            <th>
+                <label for="id_name">お名前(漢字):</label>
+            </th>
+            <td>
+                氏{{form_name.first_name}}
+            </td>
+            <td>
+                名{{form_name.last_name}}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="id_name">お名前(ひらがな):</label>
+            </th>
+            <td>
+                し{{form_name.first_ja.errors}}{{form_name.first_ja}}
+            </td>
+            <td>
+                めい{{form_name.last_ja.errors}}{{form_name.last_ja}}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="id_birthday">生年月日(西暦):</label>
+            </th>
+            <td>
+                年{{form_name.birthday_year.errors}}{{form_name.birthday_year}}
+                {% comment %} <span id="birthday-year-error-message" style="display: none;">ERROR</span> {% endcomment %}
+            </td>
+            <td>
+                月{{form_name.birthday_month.errors}}{{form_name.birthday_month}}
+            </td>
+            <td>
+                日{{form_name.birthday_day.errors}}{{form_name.birthday_day}}
+            </td>
+        </tr>
+    </table>
         {{ form.as_table }}
-        <tr><th>
-            <input class="btn btn-primary my-2" type="submit" value="click">
-        </th></tr>
+        <label for="test">利用料金プラン:</label>
+        <ul id="test">
+            <li><label for="test_0"><input type="radio" name="plan" value="a" id="test_0" required="">
+            <div>定額500円コース<span>未利用に関わらず、月額500円頂戴します。</span></div></label></li>
+            <li><label for="test_1"><input type="radio" name="plan" value="b" id="test_1" required="">
+            <div>定額1,000円コース<span>未利用に関わらず、月額1,000円頂戴します。</span></div></label></li>
+            <li><label for="test_2"><input type="radio" name="plan" value="c" id="test_2" required="">
+            <div>定額2,000円コース<span>未利用に関わらず、月額2,000円頂戴します。</span></div></label></li>
+            <li><label for="test_3"><input type="radio" name="plan" value="d" id="test_3" required="">
+            <div>夜間お得コース<span>未利用に関わらず、月額500円頂戴します。</span></div></label></li>
+        </ul>
+    <table class="table">
+        <tr>
+            <th>利用規約に同意します:</th>
+            <td class="card">
+                <div class="card-body">
+                    貸渡約款
+                </div>
+            </td>
+            <td>
+                <input type="checkbox" required />
+            </td>
+        </tr>
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
     </form>
     </table>
 </body>
 </html>
+{% comment %} <script type="text/javascript" src='{% static "carsharing_req/js/member-create-jquery.js" %}'></script> {% endcomment %}

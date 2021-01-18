@@ -1,0 +1,22 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<form name="dataform" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <textarea class="form-control" name="output" cols="80" rows="15"></textarea>
+    <input class="btn btn-outline-secondary" type="submit" value="Upload File" name="submit" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+
+</form>
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src='{% static "admin/js/file-loader.js" %}'></script>
+{% endblock %}

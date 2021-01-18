@@ -1,0 +1,28 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+{% endblock %}
+
+    
+{% block title %}{{title}}{% endblock %}
+
+{% block main_contents %}
+{% for num in secondhandcar_list %}
+    <div class="card m-3">
+        <h3 class="card-header">{{num.category}}({{num.parent_category}})</h3>
+        <div class="card-body p-1">
+            <p>型番：{{num.model}}</p>
+            <p>発売期間：{{num.release_period}}</p>
+            <p>グレード：{{num.grade}}</p>
+            <a class="text-secondary" href="/secondhandcar/detail/{{num.second_hand_car_id.id}}">詳しく見る &raquo;</a>
+            <div>
+                <img border="0" src="{{num.img1}}" width="128" alt="{{num.img1}}">
+                {% comment %} <img border="0" src="{{num.img2}}" width="128" alt="{{num.img2}}">
+                <img border="0" src="{{num.img3}}" width="128" alt="{{num.img3}}"> {% endcomment %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

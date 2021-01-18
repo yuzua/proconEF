@@ -1,0 +1,24 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css">
+    <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js"></script>
+{% endblock %}
+
+{% block main_contents %}
+  <br>
+    <div id="calendar"></div>
+{% endblock %}
+
+{% block mapapi %}
+<script>
+  var events = JSON.parse('{{ events|safe }}');
+</script>
+<script type="text/javascript" src='{% static "carsharing_req/js/calendar.js" %}'></script>
+{% endblock %}

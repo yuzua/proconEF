@@ -1,0 +1,93 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "page/css/user_car.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+<!--wrapper-->
+<!-- 1 -->
+<div class="all" style="padding: 5px;">
+  <!--メイン-->
+  <div id="main" style="margin-top: 60pt;">
+    <h4 class="title">カーシェアリング利用の流れ</h4>  
+
+      <ul class="flow">
+        <li>
+          <span class="icon">STEP.01</span>
+          <dl>
+            <dt>会員登録</dt>
+            <dd>まずは会員登録！</dd>
+            <dd>
+              <a href="./1" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">会員登録に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.02</span>
+          <dl>
+            <dt>検索・予約</dt>
+            <dd>日時、場所、乗車人数、利用時間を限定し検索、そのまま予約もカンタン！</dd>
+            <dd>
+              <a href="#" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">検索・予約に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.03</span>
+          <dl>
+            <dt>解錠</dt>
+            <dd>共通鍵を使って解錠！</dd>
+            <dd>
+              <a href="./3" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">解錠に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+      
+        <li>
+          <span class="icon">STEP.04</span>
+          <dl>
+            <dt>乗車</dt>
+            <dd>本サービスと交通のルールを守って楽しく安全に運転してください！</dd>
+            <dd>
+              <a href="#" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">乗車に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+
+        <li>
+          <span class="icon">STEP.05</span>
+          <dl>
+            <dt>返却</dt>
+            <dd>車を出発したステーションに戻し、ドアを施錠してください！</dd>
+            <dd>
+              <a href="#" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">返却に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+
+        <li>
+          <span class="icon">STEP.06</span>
+          <dl>
+            <dt>精算</dt>
+            <dd>当月ご利用された分の料金を、ご指定いただいたクレジットカードでお支払いください！</dd>
+            <dd>
+              <a href="#" class="btn-open">詳細</a>
+              <a href="#" class="btn-open">精算に関するよくある質問</a>
+            </dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  <!--/メイン-->
+</div>
+<!--/wrapper-->
+{% endblock %}

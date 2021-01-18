@@ -1,31 +1,42 @@
-{% extends 'base.html' %}
+{% extends 'administrator/base.html' %}
+{% load static %}
 
 {% block title %}
 {{ title }}
 {% endblock %}
 
-{% block active_login %}
+{% block head %}
+<link rel="stylesheet" href='{% static "parking_req/css/parking.css" %}'>
+<script type="text/javascript" src='{% static "carsharing_booking/js/geocoder.js" %}'></script>
 {% endblock %}
 
-{% block contents %}
-<div class="container">
+
+{% block main_contents %}
     <h1>{{ title }}</h1>
-    <div class="card">
-        <div class="card-header"><p>{{ message|safe }}</p></div>
-        <div class="card-body">
-            <form action="{% url 'administrator:create' %}" method="post" class="form-group">
-                {% csrf_token %}
-                <table class="table">
-                    {{ form.as_table }}
-                    <!-- {% for item in form %}
-                        {{item.name}}{{item}}
-                    {% endfor %} -->
-                    <tr><th><td>
-                        <input class="btn btn-primary my-2" type="submit" value="click">
-                    </td></th></tr>
-                </table>
-            </form>
-        </div>
-    </div>
+<div id="map_info">
+    <p id="addressOutput" rows="3" cols="26"></p>
 </div>
+    <form action="{% url 'administrator:create' %}" method="post" >
+        <div class="card">
+        {% csrf_token %}
+        <input id="addressPush" type="hidden" name="address">
+        <h2 class="card-header">{{ message|safe }}</h2>
+        <div class="card-body">
+            {{ form.as_p }}
+        </div>
+        <div class="card-footer">
+            <input class="btn btn-outline-secondary" type="submit" value="登録" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </div>
+        </div> 
+    </form>   
+{% endblock %}
+
+{% block mapapi %}
+<script>
+//入力した緯度・経度を取得しjsへセット
+  var idoInput = '{{lat}}';
+  var keidoInput = '{{lng}}';
+</script>
+<script type="text/javascript" src='{% static "parking_req/js/parking-type.js" %}'></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk" async defer></script>
 {% endblock %}

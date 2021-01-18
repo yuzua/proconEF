@@ -2,6 +2,7 @@ from django import forms
 from django.core.mail import EmailMessage
 from .models import BookingModel
 import bootstrap_datepicker_plus as datetimepicker
+from owners_req .models import CarInfoModel, ParentCategory, Category
 
 class BookingCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwd):
@@ -50,3 +51,24 @@ class BookingCreateForm(forms.ModelForm):
             'end_day': '終了日',
             'end_time': '終了時刻',
         }
+
+
+class CarCategory(forms.ModelForm):
+    # 親カテゴリの選択欄がないと絞り込めないので、定義する。
+    parent_category = forms.ModelChoiceField(
+        label='メーカー',
+        queryset=ParentCategory.objects,
+        required=False
+    )
+
+    class Meta:
+        model = CarInfoModel
+        fields = ['parent_category', 'category']
+
+    field_order = ('parent_category', 'category')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'custom-select custom-select-lg mb-3'
+

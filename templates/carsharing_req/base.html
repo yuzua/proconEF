@@ -3,293 +3,284 @@
 
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <!-- jQuery読み込み -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <!-- BootstrapのCSS読み込み -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
-    <title>{% block title %}{% endblock %}</title>
-    {% block head %}{% endblock %}
-    <link rel="stylesheet" href='{% static "carsharing_req/css/base.css" %}'>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <!-- jQuery読み込み -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <!-- BootstrapのCSS読み込み -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{% block title %}{% endblock %}</title>
+        {% block head %}{% endblock %}
+        <link rel="stylesheet" href='{% static "carsharing_req/css/base.css" %}'>
     </head>
-  <body>
-      <!--ヘッダー-->
-      {% comment %} <header>
-          <ul class="nav">
-              <li class="navbar01">マイページ</li>
-              <li class="navbar02">カーシェアリング・駐車場利用</li>
-              <li class="navbar03">中古車情報</li>
-              <li class="navbar04">カーシェアリングオーナー</li>
-              <li class="navbar05">駐車場オーナー</li>
-          </ul>
-      </header> {% endcomment %}
-      <header>
-          <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="/"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mt-2">
-                {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      マイページ
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">個人登録情報確認</a>
-                      <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
-                      <a class="dropdown-item" href="#">利用明細</a>
-                    </div>
-                </li>
-                {% else %}
-                <li>
-                    <a class="nav-link" href="http://127.0.0.1:8000/accounts/signup/">新規会員登録</a>
-                </li>
-                {% endif %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      カーシェアリング・駐車場利用
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="/carsharing_booking/map">カーシェアリング検索</a>
-                      <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
-                      <a class="dropdown-item" href="#">カーシェアリング利用の流れ</a>
-                      <a class="dropdown-item" href="#">駐車場利用の流れ</a>
-                      <a class="dropdown-item" href="#">料金について</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        中古車情報
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">あなたへのおすすめ</a>
-                      <a class="dropdown-item" href="#">中古車検索</a>
-                      <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
-                    </div>
-                </li>
-                {% if request.session.owner_flag == True %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      カーシェアリングオーナー
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">貸し出し日時を登録する</a>
-                        <a class="dropdown-item" href="#">カーシェアリングオーナー利用の流れ</a>
-                    </div>
-                </li>
-                {% else %}
-                {% endif %}
-                {% if request.session.parking_flag == True %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      駐車場オーナー
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">貸し出し日時を登録する</a>
-                    <a class="dropdown-item" href="#">駐車場オーナー利用の流れ</a>   
-                    </div>
-                </li>
-                {% else %}
-                {% endif %}
-              </ul>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="phone-nav">
+    <a class="navbar-brand" href="/" style="color: #333;margin-left: 5pt;"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
+    <button class="navbar-toggler float-right mt-2" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+        {% if user.is_authenticated %}
+            <a class="nav-link" href="/accounts/logout/">
+                ログアウト
+            </a>
+        {% else %}
+            <a class="nav-link" href="/accounts/login/">
+                ログイン
+            </a>
+        {% endif %}
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                マイページ
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/carsharing_req/carsharuserdata">個人登録情報確認</a>
+            {% if request.session.system_flag >= 1 %}
+                <a class="dropdown-item" href="/owners_req/create">オーナー登録情報</a>
+            {% endif %}
+                <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
+                <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
+                <a class="dropdown-item" href="/carsharing_req/details">利用明細</a>
             </div>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="/accounts/signup/">
+                新規会員登録
+            </a>
+        </li>
+        {% endif %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                カーシェアリング利用
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/carsharing_booking/">カーシェアリング検索</a>
+                <a class="dropdown-item" href="/carsharing_req/pages/1/0">カーシェアリング利用の流れ</a>
+                <a class="dropdown-item" href="#">料金について</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                駐車場利用
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
+                <a class="dropdown-item" href="/carsharing_req/pages/2/0">駐車場利用の流れ</a>
+                <a class="dropdown-item" href="#">料金について</a>
+            </div>
+        </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                中古車購入
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/secondhandcar/recommend_car">あなたへのおすすめ</a>
+                <a class="dropdown-item" href="/secondhandcar/search">中古車検索</a>
+                <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
+            </div>
+        </li>
+        {% if request.session.system_flag >= 1 %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                オーナー
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        {% if request.session.system_flag >= 10 %}
+                <div class=""></div>
+                <a class="dropdown-item-owner" href="/owners_req/createDate">カーシェアリングオーナー<br>貸し出し日時を登録する</a>
+        {% endif %}
+                <a class="dropdown-item-owner" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
+        {% if request.session.system_flag >= 5 %}
+                <div class=""></div>
+                <a class="dropdown-item" href="/parking_req/loaning/">駐車場オーナー<br>貸し出し日時を登録する</a>
+        {% endif %}
+                <a class="dropdown-item" href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a> 
+            </div>
+        </li>
+        {% else %}
+        {% endif %}
+    </ul>
+    </div>
+</nav>
+        <header class="mt-5 pt-5">
+            <div class="header">
+                <span style="float: right; margin: 5pt 5pt 5pt 5pt;">
+                    {% if user.is_authenticated %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill　float-right" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                        ようこそ{{ user.get_username }}
+                    {% else %}
+                        ゲスト
+                    {% endif %}  
+                        さん
+                </span>
             {% if user.is_authenticated %}
-            <button class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="height: 30pt;width: 75pt;font-size: 10pt;margin: 20pt;background-color: #1E90FF;color: white;">
-                <a href="http://127.0.0.1:8000/accounts/logout/" class="logout">ログアウト</a>
-            </button>
+            <a href="/accounts/logout/" class="btn">ログアウト</a>
             {% else %}
-            <button class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="height: 30pt;width: 75pt;font-size: 10pt;margin: 20pt;background-color: #1E90FF;color: white;">
-                <a href="http://127.0.0.1:8000/accounts/login/" class="login">ログイン</a>
-            </button>
+            <a href="/accounts/login/" class="btn">ログイン</a>
             {% endif %}
-            <p style="float: right;">
-                {% if user.is_authenticated %}
-                    ようこそ{{ user.get_username }}
-                {% else %}
-                    ゲスト
-                {% endif %}  
-                    さん
-            </p>
             
-          </nav>
-      </header>
-      <!--/ヘッダー-->
-
-      <!--サイド-->
-      <!-- <div id ="side" style="margin: 0;width: 160px; float: right;"> -->
-        <!-- <div class="float-right clearfix" style="display:inline-block; background:#fcfcff; width: 150px;height: 280px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-          <img src='{% static "admin/img/logo02.jpg" %}' alt="Card image cap" style="width: 50pt;height:50pt;margin: 10pt 35pt 0pt 30pt;border: solid;border-color: #778899;border-width: 2pt;" class="card-img-top" >
-          <div class="card-body">
-              <h7 class="card-title" style="font-size: 15px;">アプリ<br>インストール</h7>
-              <p><a href="#" class="btn btn-primary" style="font-size: 15px;height: 30pt;width: 85pt;margin-top: 5pt;">Androidの方</a></p>
-              <p><a href="#" class="btn btn-primary" style="font-size: 15px;height: 30pt;width: 85pt;">iPhoneの方</a></p>
-          </div>
-      </div> -->
-      <!-- <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 150px;height: 140px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-        <p class="text-center" style="padding: auto;padding-top: 12pt;">
-            <a href="/carsharing_booking/list" style="font-size: 15px;">予約確認</a>
-        </p>
-        <p class="text-center" style="padding: auto;">
-            <a href="#" style="font-size: 15px;">予約変更</a>
-        </p>
-        <p class="text-center" style="padding: auto;">
-            <a href="#" style="font-size: 15px;">予約キャンセル</a>
-        </p>
-      </div>
-      <div class="float-right" style="clear: both; display:inline-block; background:#fcfcff; width: 150px;height: 70px; border:1px solid #3b5998; border-radius:10px; word-break:break-all;margin: 3px;margin-right: 3px;">
-        <p class="text-center" style="padding: auto;padding-top: 15pt;">
+          <ul class="nav">
+            <a class="navbar-brand" href="/" style="color: #333;margin-left: 5pt;"><img src='{% static "admin/img/logo03.png" %}' class="logo3">CarSharingService</a>
             {% if user.is_authenticated %}
-        <a href="http://127.0.0.1:8000/accounts/logout/">ログアウト</a>
+              <li class="navbar01">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    マイページ
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/carsharing_req/carsharuserdata">個人登録情報確認</a>
+                {% if request.session.system_flag >= 1 %}
+                    <a class="dropdown-item" href="/owners_req/create">オーナー登録情報確認</a>
+                {% endif %}
+                    <a class="dropdown-item" href="/carsharing_booking/list">予約確認</a>
+                    <a class="dropdown-item" href="/carsharing_req/calendar">カレンダー確認</a>
+                    <a class="dropdown-item" href="/carsharing_req/details">利用明細</a>
+                </div>
+            </li>
             {% else %}
-        <a href="http://127.0.0.1:8000/accounts/login/">ログイン</a>
+            <li class="navbar01">
+                <a class="nav-link" href="/accounts/signup/">新規会員登録</a>
+            </li>
             {% endif %}
-        </p>
-      </div>
-    </div> -->
-    <!--/サイド-->
+            <li class="navbar01" style="width: 18%;">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    カーシェアリング利用
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/carsharing_booking/">カーシェアリング検索</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/1/0">カーシェアリング利用の流れ</a>
+                    <a class="dropdown-item" href="#">料金について</a>
+                  </div>
+            </li>
+            <li class="navbar01">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    駐車場利用
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/parking_booking/map">駐車場検索</a>
+                    <a class="dropdown-item" href="/carsharing_req/pages/2/0">駐車場利用の流れ</a>
+                    <a class="dropdown-item" href="#">料金について</a>
+                  </div>
+            </li>
+              <li class="navbar01">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    中古車購入
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/secondhandcar/recommend_car">あなたへのおすすめ</a>
+                    <a class="dropdown-item" href="/secondhandcar/search">中古車検索</a>
+                    <a class="dropdown-item" href="/secondhandcar/">AI価格予測</a>
+                  </div>
+            </li>
+            {% if request.session.system_flag >= 1 %}
+              <li class="navbar02">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    オーナー
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {% if request.session.system_flag >= 10 %}
+                    <a class="dropdown-item small" href="/owners_req/createDate">カーシェアリングオーナー：貸し出し日時を登録する</a>
+                {% endif %}
+                    <a class="dropdown-item small" href="/carsharing_req/pages/3/0">カーシェアリングオーナー利用の流れ</a>
+                {% if request.session.system_flag >= 5 %}
+                    <a class="dropdown-item small" href="/parking_req/loaning/">駐車場オーナー：貸し出し日時を登録する</a>
+                {% endif %}
+                    <a class="dropdown-item small" href="/carsharing_req/pages/4/0">駐車場オーナー利用の流れ</a> 
+                </div>
+            </li>
+            {% else %}
+            {% endif %}
+          </ul>
+        </div>
+      </header>
+
+
+      
     <!--wrapper-->
-    <div id="wrapper" class="container w-80">
+    {% comment %} <div id="wrapper" class="container w-80"> {% endcomment %}
+    <div id="wrapper" class="container w-100">
     <!--メイン-->
     {% for message in messages %}
       <!-- <strong>Messages:</strong> -->
       <ul class="socialaccount_providers"> 
-      <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;">{{ message|safe }}</li>
       </ul>
     {% endfor %}
     {% block main_contents %}{% endblock %}
     <!--/メイン-->
-    </div>
     <div id="top_wrapper" class="w-100">
     {% block box %}{% endblock %}
     {% block top %}{% endblock %}
+    {% block extrajs %}{% endblock %}
+    </div>
     </div>
     <!--/wrapper-->
 
-
-      <!-- Footer -->
-      <footer class="page-footer font-small indigo">
-        <!-- Footer Links -->
-        <div class="container text-center text-md-left">
-            <!-- Grid row -->
-            <div class="row">
-                <!-- Grid column -->
-                <div class="col-md-15 mx-auto">
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">マイページ</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">個人登録情報確認</a>
-                        </li>
-                        <li>
-                            <a href="/carsharing_booking/list">予約確認</a>
-                        </li>
-                        <li>
-                            <a href="#!">利用明細</a>
-                        </li>
-                    </ul>
+        <footer class="footer">
+            <div class="replay w-100">
+                <ul style="list-style-type: none">
+                <li class="none">
+                {% if user.is_authenticated %}
+                <a href="/carsharing_booking/list" class="replay01">予約確認</a>
+                {% else %}
+                <a href="/accounts/signup/"  class="replay01">新規会員登録</a>
+                {% endif %}
+                </li>
+                <li class="none">
+                <a href="/carsharing_booking/map"  class="replay01">カーシェアリング検索</a>
+                </li>
+                <li class="none">
+                <a href="/parking_booking/map"  class="replay01">駐車場検索</a>
+                </li>
+                <li class="none">
+                <a href="#!"  class="replay01">中古車検索</a>
+                </li>
+                <div class="replay00">
+                <li class="none">
+                {% if request.session.system_flag >= 10 %}
+                <a href="/owners_req/createDate"  class="replay02">カーシェアオーナー日時登録</a>
+                {% elif request.session.system_flag >= 1 %}
+                <a href="/owners_req/createCar"  class="replay02" style="margin-left: 150pt;margin-right: 150pt;">車両追加</a>
+                {% else %}
+                <a href="/owners_req/create"  class="replay02">カーシェアオーナー新規登録</a>
+                {% endif %}
+                </li>
+                <li class="none">
+                {% if request.session.parking_flag == True %}
+                <a href="/parking_req/loaning/"  class="replay02">駐車場オーナー日時登録</a>
+                {% elif request.session.system_flag >= 1 %}
+                <a href="#!"  class="replay02" style="margin-left: 150pt;margin-right: 150pt;">駐車場追加</a>
+                {% else %}
+                <a href="#!"  class="replay02">駐車場オーナー新規登録</a>
+                {% endif %}
+                </li>
                 </div>
-                <!-- Grid column -->
-                <hr class="clearfix w-100 d-md-none">
-                <!-- Grid column -->
-                <div class="col-md-15 mx-auto">
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリング・駐車場利用</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">カーシェアリング利用の流れ</a>
-                        </li>
-                        <li>
-                            <a href="/carsharing_booking/map">カーシェアリング検索</a>
-                        </li>
-                        <li>
-                            <a href="#!">駐車場利用の流れ</a>
-                        </li>
-                        <li>
-                            <a href="/parking_booking/map">駐車場検索</a>
-                        </li>
-                        <li>
-                            <a href="#!">料金について</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Grid column -->
-                <hr class="clearfix w-100 d-md-none">
-                <!-- Grid column -->
-                <div class="col-md-15 mx-auto">
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">中古車情報</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">中古車検索</a>
-                        </li>
-                        <li>
-                            <a href="#!">カーシェアリング検索</a>
-                        </li>
-                        <li>
-                            <a href="#!">駐車場利用の流れ</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Grid column -->
-                <hr class="clearfix w-100 d-md-none">
-                <!-- Grid column -->
-                <div class="col-md-15 mx-auto">
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">カーシェアリングオーナー</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">カーシェアリングオーナー利用の流れ</a>
-                        </li>
-                        {% if request.session.owner_flag == True %}
-                        <li>
-                            <a href="#!">貸し出し日時を登録する</a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="#!">カーシェアリングオーナーになる</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <!-- Grid column -->
-                <hr class="clearfix w-100 d-md-none">
-                <!-- Grid column -->
-                <div class="col-md-15 mx-auto">
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">駐車場オーナー</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">駐車場オーナー利用の流れ</a>
-                        </li>
-                        {% if request.session.parking_flag == True %}
-                        <li>
-                            <a href="#!">貸し出し日時を登録する</a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="#!">駐車場オーナーになる</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <!-- Grid column -->
+                </ul>
             </div>
-            <!-- Grid row -->
+        <!-- Copyright -->
+        <div class="w-100"> 
+            <div class="footer-copyright text-center py-3">
+                <p style="padding: 5px; margin:0; clear: none;"><img src='{% static "admin/img/logo03.png" %}' class="logo4">株式会社▲▲▲<img src='{% static "admin/img/logo03.png" %}' class="logo4"></p>
+            </div>
+            <!-- Copyright -->
+            <span id="copy">
+                <p>&copy;<small>Copy Rights . 2020 CarSharingService . All Rights Reserved</small></p>
+            </span>
         </div>
-        <!-- Footer Links -->
-        <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">株式会社▲▲▲</div>
-        <!-- Copyright -->
-    </footer>
+    </footer>  
     <!-- Footer -->
   </body>
 </html>
 
+{% block includejs %}{% endblock %}
 {% block mapapi %}{% endblock %}

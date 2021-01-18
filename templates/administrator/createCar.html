@@ -1,11 +1,38 @@
-{% extends 'base.html' %}
-{% block contents %}
-<title>{{ title }}</title>
-<h1>{{ title }}</h1>
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+    <h1>{{ title }}</h1>
+    <div class="card m-5" id="numberplate">
+        <div class="container clearfix" id="numberplate-top">
+            <p class="numberplate-top-item">品川</p>
+            <p class="numberplate-top-item">567</p>
+        </div>
+        <div class="container clearfix" id="numberplate-bottom">
+            <p class="numberplate-bottom-item1">あ</p>
+            <p class="numberplate-bottom-item2">12-34</p>
+        </div>
+    </div>
     <form action="" method="POST">
-        {{ form.as_p }}
         {% csrf_token %}
-        <input class="btn btn-primary my-2" type="submit" value="駐車場登録画面へ">
+        {{ form.as_table }}
+        <div class="card m-5">
+            <div class="card-body">
+            {{ form2.as_p }}
+            </div>
+        </div>
+        {{ form.media }}
+        <tr><th></th><td>
+            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </td></tr>
     </form>
 {% endblock %}
 

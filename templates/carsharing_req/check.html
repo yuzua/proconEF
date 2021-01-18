@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <title>{{ title }}</title>
+</head>
+<body class="container">
+    <h1 class="display-4 text-primary">{{ title }}</h1>
+    {% for message in messages %}
+      <!-- <strong>Messages:</strong> -->
+      <ul class="socialaccount_providers"> 
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="list-style: none;margin-top: 5pt;">{{ message|safe }}</li>
+      </ul>
+    {% endfor %}
+<table class="table">
+    <tr><th><label>お名前(漢字):</label></th><td>{{first_name}} {{last_name}}　様</td></tr>
+    <tr><th><label>お名前(ひらがな):</label></th><td>{{first_ja}} {{last_ja}}　さま</td></tr>
+    <tr><th><label>生年月日(西暦):</label></th><td>{{birthday_year}}年{{birthday_month}}月{{birthday_day}}日</td></tr>
+    <tr><th><label>年齢:</label></th><td>{{age}}</td></tr>
+    <tr><th><label>性別:</label></th><td>{% if gender == True %}男性{% else %}女性{% endif %}</td></tr>
+    <tr><th><label>郵便番号:</label></th><td>〒{{zip01}}</td></tr>
+    <tr><th><label>住所:</label></th><td>{{pref01}}{{addr01}}{{addr02}}</td></tr>
+    <tr><th><label>電話番号:</label></th><td>{{tel}}</td></tr>
+    <tr><th><label>カード会社:</label></th><td>{{credit_card_company}}</td></tr>
+    <tr><th><label>カード名義:</label></th><td>{{first_en}} {{last_en}}</td></tr>
+    <tr><th><label>カード番号:</label></th><td>{{credit_card_num}}</td></tr>
+    <tr><th><label>カード期限:</label></th><td>{{valid_thru}}</td></tr>
+    <tr><th><label>セキュリティーコード:</label></th><td>{{security_code}}</td></tr>
+    <tr><th><label>ご利用プラン:</label></th><td>{% if plan == "a" %}定額500円コース{% elif plan == "b" %}定額1,000円コース{% elif plan == "c" %}定額2,000円コース{% elif plan == "d" %}夜間お得コース{% endif %}</td></tr>
+
+
+</table>
+<form action="{% url 'carsharing_req:push' %}" method="post" enctype="multipart/form-data" id="form">
+    {% csrf_token %}
+    {{ imageform }}
+    <input type='hidden' name="first_name" value={{first_name}} />
+    <input type='hidden' name="last_name" value={{last_name}} />
+    <input type='hidden' name="first_ja" value={{first_ja}} />
+    <input type='hidden' name="last_ja" value={{last_ja}} />
+    <input type='hidden' name="gender" value={{gender}} />
+    <input type='hidden' name="birthday" value={{birthday}} />
+    <input type='hidden' name="age" value={{age}} />
+    <input type='hidden' name="zip01" value={{zip01}} />
+    <input type='hidden' name="pref01" value={{pref01}} />
+    <input type='hidden' name="addr01" value={{addr01}} />
+    <input type='hidden' name="addr02" value={{addr02}} />
+    <input type='hidden' name="tel" value={{tel}} />
+    <input type='hidden' name="credit_card_company" value={{credit_card_company}} />
+    <input type='hidden' name="first_en" value={{first_en}} />
+    <input type='hidden' name="last_en" value={{last_en}} />
+    <input type='hidden' name="credit_card_num" value={{credit_card_num}} />
+    <input type='hidden' name="credit_card_num_check" value={{credit_card_num_check}} />
+    <input type='hidden' name="valid_thru" value={{valid_thru}} />
+    <input type='hidden' name="security_code" value={{security_code}} />
+    <input type='hidden' name="plan" value={{plan}} />
+    <input type='hidden' name="charge" value={{charge}} />
+    <input type='hidden' name="birthday_year" value={{birthday_year}} />
+    <input type='hidden' name="birthday_month" value={{birthday_month}} />
+    <input type='hidden' name="birthday_day" value={{birthday_day}} />
+    <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+</form>
