@@ -288,7 +288,40 @@ a:hover {
   .btn:hover {
     background-color: #CDCDCD;
   }
-
+  
+  .footercards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footercards li {
+    flex: 1 1 200px;
+    padding:0;
+    text-align: center;
+  }
+  
+  .footercards a {
+    font-size: 15px;
+    color: #777777;
+    background: linear-gradient(transparent 100%, #DDDDDD 100%);
+    text-decoration: none;
+  }
+  .footercards li :hover{
+    background: linear-gradient(transparent 50%, #DDDDDD 100%);
+    color: #000;
+  }
+  
+  .footerflex {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+  }
+  
+  .footerflex li {
+    flex: 1 1 200px;
+    margin: 10px;
+  }
   
 @media screen and (max-width: 599px) {
     #phone-nav{

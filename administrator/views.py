@@ -486,7 +486,8 @@ def AllCarDownload():
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "./data/car_data/" + dt_now + ".xlsx"
+    # file_name = "./data/car_data/" + dt_now + ".xlsx"
+    file_name = "./data/car_data/carinfo.xlsx"
     wb.save(file_name)
     path_list.append(file_name)
     return path_list
@@ -513,7 +514,8 @@ def AllParkingDownload(dt_now):
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "./data/parking_data/p_" + dt_now + ".xlsx"
+    # file_name = "./data/parking_data/p_" + dt_now + ".xlsx"
+    file_name = "./data/parking_data/parkinginfo.xlsx"
     wb.save(file_name)
     return file_name
 
@@ -523,7 +525,8 @@ def AllParentCategoryDownload(dt_now):
     json_data = json.dumps(p_c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/pc_" + dt_now + ".json"
+    # path = "./data/car_data/pc_" + dt_now + ".json"
+    path = "./data/car_data/parentcategory.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -534,7 +537,8 @@ def AllCategoryDownload(dt_now):
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/c_" + dt_now + ".json"
+    # path = "./data/car_data/c_" + dt_now + ".json"
+    path = "./data/car_data/category.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -545,7 +549,8 @@ def AllSettingDownload(dt_now):
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/s_" + dt_now + ".json"
+    # path = "./data/car_data/s_" + dt_now + ".json"
+    path = "./data/car_data/settingcarparking.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
