@@ -11,7 +11,7 @@
     <!-- BootstrapのCSS読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href='{% static "administrator/css/base.css" %}'>
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
     </head>
@@ -118,75 +118,6 @@
     <!--/wrapper-->
     <div class="footer-copyright text-center py-3">株式会社▲▲▲</div>
   </body>
-  <style>
-.logo3 {
-    width: 35pt;
-    height: 35pt;
-}
-
-.navbar-brand {
-  color: #333;
-  margin-left: 5pt;
-}
-
-.nav-link {
-    color:#696969;
-    width: 100%;
-}
-
-.header {
-    width: 100%;
-    background-color: #fff;
-    left:0;
-    line-height:1;
-    position:fixed;
-    top:0;
-    width:100%;
-    z-index:100;
-}
-
-.navbar01 {
-    border-right: 1px solid #333;
-    width: 18%;
-    text-align: center;
-    padding-top: 8pt;
-    font-weight: bolder;
-    font-size: 12pt;
-}
-
-.navbar01:hover {
-    background-color: #DCDCDC;
-    color: #000;
-}
-
-.btn {
-    height: 30pt;
-    width: 75pt;
-    font-size: 12pt;
-    margin: 3pt 10pt 3pt 10pt;
-    border-color: #CDCDCD;
-    float: right;
-    clear: both;
-    padding: auto;
-}
-
-.btn:hover {
-    background-color: #CDCDCD;
-}
-
-a:hover {
-    color: #000;
-    text-decoration: none;
-}
-
-.nav {
-    padding: 10pt 0pt 10pt 0pt;
-}
-
-.dropdown-item {
-    margin: 4pt 0 4pt 0;
-}
-  </style>
 </html>
 {% block extrajs %}{% endblock %}
 {% block mapapi %}{% endblock %}

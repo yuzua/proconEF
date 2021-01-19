@@ -79,6 +79,144 @@
     clear: both;
 }
 
+.cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .cards li {
+    border: 2px solid #490A3D;
+    border-radius:5px;
+    background-color: #BD1550;
+    color: #fff;
+    flex: 1 1 200px;
+    padding:0;
+  }
+  
+  .cards h4 {
+    background-color: #490A3D;
+    margin: 0;
+    padding: 10px;
+  }
+  
+  .cards p {
+    padding: 10px;
+  }
+  
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+  }
+  
+  .flex li {
+    flex: 1 1 200px;
+    margin: 10px;
+  }
+  /*--------------------------------------
+    カード型_04
+  --------------------------------------*/
+  .flip-card4 {
+    background-color: transparent;
+    /* width: 300px;
+    height: 300px; */
+    border: 0px solid #f1f1f1;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+  
+  .flip-card_name {
+    font-weight:bold;
+    font-size:2.0rem;
+  }
+  
+  .flip-card-inner4 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* text-align: center; */
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  .flip-card4:hover .flip-card-inner4 {
+    transform: rotateY(180deg);
+  }
+  
+  .flip-card-front4, .flip-card-back4 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  .flip-card-front4 {
+    background-color: #bbb;
+    color: black;
+  }
+  
+  .flip-card-back4 {
+    background-color: dodgerblue;
+    color: white;
+    transform: rotateY(180deg);
+  }
+  
+  /* 反転した時の囲み枠 */
+  .cardbox1 {
+      padding: 2.0em 1em;
+      margin: 1em 2em;
+      font-weight: bold;
+      border: solid 3px #FFFFFF;
+  }
+  .cardbox1 p {
+      margin: 0; 
+      padding: 0;
+  }
+
+          .area-6 {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            width: 250pt;
+            height: 200pt;
+            margin: 5pt 12pt 5pt 12pt;
+          }
+          .hover-6 {
+            display: inline-block;
+            width: 250pt;
+            height: 200pt;
+            /* background-image: url('{% static "admin/img/choce.jpg" %}'); */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            transition: all 0.2s ease-out;
+            cursor: pointer;
+          }
+          .font-6 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 250pt;
+            height: 200pt;
+            line-height: 200pt;
+            text-align: center;
+            font-size: 30pt;
+            font-weight: bold;
+            letter-spacing: 12px;
+            color: #fff;
+            opacity: 0;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+          }
+          .area-6:hover .font-6 {
+            opacity: 0.6;
+          }
+          .area-6:hover .hover-6 {
+            transform: scale(1.1);
+            filter: blur(2px);
+          }
+
 @media screen and (max-width: 599px) {
     #youtube{
         width: 400px;
