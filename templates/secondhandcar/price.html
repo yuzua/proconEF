@@ -18,6 +18,14 @@
 <div class="container w-80" style="padding: 5px;">
   <canvas id="myChart"></canvas>
 </div>
+
+<style>
+  .custom-control-input:checked~.custom-control-label::before {
+    border-color: rgb(83, 83, 83);
+    background-color: rgb(83, 83, 83);
+  }
+</style>
+
 <script>
 var car_name = {{ car_name|safe }};
 var id_0 = JSON.parse('{{ id_0|safe }}');
