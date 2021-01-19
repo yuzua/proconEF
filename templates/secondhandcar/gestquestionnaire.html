@@ -12,20 +12,21 @@
 {% block main_contents %}
     <h1>{{ title }}</h1>
     <form action="{% url 'secondhandcar:recommend_car' %}" method="post" >
-    <div class="samp">
+    <div class="">
         {% csrf_token %}
         <h2 class="title">{{ message|safe }}</h2>
+        <div class="">
             {% for item in data %}
-            <ul>
-            <li class="anc">
-                <lavel>
-                    <input type="checkbox" value="{{ item }}" class="box" id="temple"/>
-                    {{ item }}
-                </lavel>
-            </li>
-            </ul>
+            <label class="ECM_CheckboxInput">
+                <input class="ECM_CheckboxInput-Input" type="checkbox" name="checks[]" value="{{ item }}">
+                <span class="ECM_CheckboxInput-DummyInput"></span>
+                <span class="ECM_CheckboxInput-LabelText">{{ item }}</span>
+            </label>
             {% endfor %}
-            <input class="btn" type="submit" value="送信" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        </div>
+        <div class="">
+            <input class="btn" type="submit" value="送信" style="float: right;width: 80pt;height: 30pt;margin: 5pt;margin-right: 150pt;">
+        </div>
     </div>
 </form>    
 {% endblock %}
