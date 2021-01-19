@@ -1,0 +1,101 @@
+img {
+    width: 35pt;
+    height: 35pt;
+  }
+
+  html {
+    /* background-image: url('{% static "admin/img/carsharing.jpg" %}'); */
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    display: inline-block;
+    text-align: center;
+    margin: 100pt 400pt 0 400pt;
+    padding: 10pt 40pt 20pt 40pt;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+    padding: 20pt;
+  }
+
+  .socialaccount_providers {
+    padding: 0;
+  }
+
+  .btn {
+    height: 30pt;
+    width: 250pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    clear: both;
+    margin-top: 15pt;
+  }
+
+  .signup {
+    color: #696969;
+    text-decoration: none;
+  }
+
+  .signup:hover {
+    color: #000;
+  }
+
+  .but {
+    color: #696969;
+    text-decoration: none;
+    font-size: small;
+    margin: 2pt 2pt;
+  }
+
+  .but:hover {
+    color: #000;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+  #id_remember {
+    width: 100%;
+    clear: both;
+  }
+
+  #id_login {
+    width: 250pt;
+  }
+
+  #id_password {
+    width: 250pt;
+  }
+
+  .new {
+    clear: both;
+    font-size: small;
+    margin: 2pt 2pt;
+  }
+
+  .text {
+    margin: 2px;
+    float: left;
+    font-size: small;
+  }
+  .errorlist {
+    font-size: small;
+    color: red;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+@media screen and (max-width: 599px) {
+    .centerMiddle {
+      margin: 100pt 4pt 0 4pt;
+      padding: 10pt 4pt 20pt 4pt;
+    }
+}

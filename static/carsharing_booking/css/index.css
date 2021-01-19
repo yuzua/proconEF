@@ -91,6 +91,14 @@
     border-color: #696969;
 }
 
-.footer {
+/* .footer {
     margin: 0 160pt;
+} */
+@media screen and (max-width: 599px) {
+    .card-car, .card-time, .park{ 
+        width: 100%;
+    }
+    /* #park {
+        padding: 0pt;
+    } */
 }
