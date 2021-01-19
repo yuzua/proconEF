@@ -16,8 +16,9 @@ from ai import recoai
 
 # Create your views here.
 def index(request):
-    Lord_csv_file()
-    return HttpResponse('survey')
+    # Lord_csv_file()
+    # return HttpResponse('survey')
+    return render(request, 'survey/index.html')
 
 class Survey(TemplateView):
 

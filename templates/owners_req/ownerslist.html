@@ -1,4 +1,9 @@
 {% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+{% endblock %}
 
 {% block title %}
 {{ title }}
@@ -8,7 +13,7 @@
 {% endblock %}
 
 {% block main_contents %}
-{% block contents %}
+
 
 <h1 class="h3 mb-3 font-weight-normal" style="margin: 10pt;">{{ title }}</h1>
 <div class="card">
@@ -93,5 +98,5 @@
     {{obj.user_id}}
     <input class="btn btn-primary my-2" type="submit" value="Edit">
 </form> {% endcomment %} -->
-{% endblock %}
+
 {% endblock %}
