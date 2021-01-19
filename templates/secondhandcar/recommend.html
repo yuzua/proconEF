@@ -1,18 +1,13 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
-
-{% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
-{% endblock %}
-
     
 {% block title %}{{title}}{% endblock %}
 
 {% block main_contents %}
 {% for num in secondhandcar_list %}
-    <div class="card m-3">
-        <h3 class="card-header">{{num.category}}({{num.parent_category}})</h3>
-        <div class="card-body p-1">
+    <div class="m-3">
+        <h3>{{num.category}}({{num.parent_category}})</h3>
+        <div>
             <p>型番：{{num.model}}</p>
             <p>発売期間：{{num.release_period}}</p>
             <p>グレード：{{num.grade}}</p>
@@ -24,5 +19,13 @@
             </div>
         </div>
     </div>
+
+    <style>
+        h3 {
+            color: rgb(83, 83, 83);
+            border-bottom: solid;
+            border-color: rgb(83, 83, 83);
+        }
+    </style>
 {% endfor %}
 {% endblock %}
