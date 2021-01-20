@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+{% comment %} <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'> {% endcomment %}
 {% endblock %}
 
     
@@ -12,34 +12,24 @@
     <form action="{% url 'secondhandcar:search' %}" method="post" >
     {% csrf_token %}
     <div class="m-1 clearfix" style="border-top: solid 3px #000;border-bottom: solid 3px #000;">
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ホンダ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="日産" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="トヨタ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="スズキ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ＢＭＷ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ダイハツ" style="float:left;clear:none;"/>
+    {% for p_c in p_c_list %}
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="{{p_c}}" style="float:left;clear:none;"/>
+    {% endfor %}
     </div>
     </form>
 {% for car_obj in secondhandcar_info %}
-    {% comment %} <div class="card-deck m-3">
-        <h3 class="card-header">{{car_obj.category}}({{car_obj.parent_category}})</h3>
-        <div class="card-body p-1">
-            <p>型番：{{car_obj.model}}</p>
-            <p>発売期間：{{car_obj.release_period}}</p>
-            <p>グレード：{{car_obj.grade}}</p>
-            <div>
-                <img border="0" src="{{car_obj.img1}}" width="128" alt="{{car_obj.img1}}">
-                <img border="0" src="{{car_obj.img2}}" width="128" alt="{{car_obj.img2}}">
-                <img border="0" src="{{car_obj.img3}}" width="128" alt="{{car_obj.img3}}">
-            </div>
-        </div>
-    </div> {% endcomment %}
     <div class="card m-5">
         <h5 class="card-header card-title">{{car_obj.category}}({{car_obj.parent_category}})</h5>
-        <div>
-            <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
+        <div class="a-secondary">
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
+            </a>
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
+            </a>
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
+            </a>
         </div>
         <div class="card-body">
             <p class="card-text">型番：{{car_obj.model}}</p>
@@ -86,4 +76,17 @@
             {% endif %}
         </ul>
     {% endif %}
+<style>
+.a-secondary {
+    text-decoration: none;
+}
+.a-secondary :hover {
+    text-decoration: none;
+}
+@media screen and (max-width: 599px) {
+    img {
+        width: 100%;
+    }
+}
+</style>
 {% endblock %}
