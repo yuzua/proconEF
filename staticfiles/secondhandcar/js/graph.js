@@ -169,117 +169,117 @@ var flag = document.getElementById(value).checked;
 id_0 = {
   label: id_0_name,
   data: id_0_prices,
-  backgroundColor: "rgba(255,153,0,0.4)"
+  backgroundColor: "rgba(0,255,255,0.4)"
 }
 id_2 = {
   label: id_2_name,
   data: id_2_prices,
-  backgroundColor: "rgba(125,145,0,0.4)"
+  backgroundColor: "rgba(184,134,11,0.4)"
 }
 id_3 = {
   label: id_3_name,
   data: id_3_prices,
-  backgroundColor: "rgba(315,315,0,0.4)"
+  backgroundColor: "rgba(51,102,255,0.4)"
 }
 id_5 = {
   label: id_5_name,
   data: id_5_prices,
-  backgroundColor: "rgba(415,145,0,0.4)"
+  backgroundColor: "rgba(255,153,0,0.4)"
 }
 id_9 = {
   label: id_9_name,
   data: id_9_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(0,0,0,0.4)"
 }
 id_10 = {
   label: id_10_name,
   data: id_10_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(128,0,0,0.4)"
 }
 id_11 = {
   label: id_11_name,
   data: id_11_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(210,105,30,0.4)"
 }
 id_22 = {
   label: id_22_name,
   data: id_22_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(0,255,127,0.4)"
 }
 id_23 = {
   label: id_23_name,
   data: id_23_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(240,230,140,0.4)"
 }
 id_24 = {
   label: id_24_name,
   data: id_24_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(119,136,153,0.4)"
 }
 id_27 = {
   label: id_27_name,
   data: id_27_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(123,60,255,0.4)"
 }
 id_32 = {
   label: id_32_name,
   data: id_32_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(105,105,105,0.4)"
 }
 id_35 = {
   label: id_35_name,
   data: id_35_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(238,238,238,0.4)"
 }
 id_49 = {
   label: id_49_name,
   data: id_49_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(221,0,0,0.4)"
 }
 id_50 = {
   label: id_50_name,
   data: id_50_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(255,69,0,0.4)"
 }
 id_56 = {
   label: id_56_name,
   data: id_56_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(255,255,0,0.4)"
 }
 id_57 = {
   label: id_57_name,
   data: id_57_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(230,230,250,0.4)"
 }
 id_58 = {
   label: id_58_name,
   data: id_58_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(173,255,47,0.4)"
 }
 id_59 = {
   label: id_59_name,
   data: id_59_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(178,34,34,0.4)"
 }
 id_60 = {
   label: id_60_name,
   data: id_60_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(95,158,160,0.4)"
 }
 id_61 = {
   label: id_61_name,
   data: id_61_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(0,0,255,0.4)"
 }
 id_62 = {
   label: id_62_name,
   data: id_62_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(0,139,187,0.4)"
 }
 id_63 = {
   label: id_63_name,
   data: id_63_prices,
-  backgroundColor: "rgba(15,15,0,0.4)"
+  backgroundColor: "rgba(255,215,0,0.4)"
 }
 // 必要データ
 

@@ -293,21 +293,33 @@ def detail(request, num):
 def search(request, num=1):
     if (request.method == 'POST'):
         secondhandcar_info = list(SecondHandCarInfoModel.objects.filter(parent_category=request.POST['parent_category']).values())
+        parent_category_list = list(SecondHandCarInfoModel.objects.order_by('parent_category').distinct('parent_category').values('parent_category'))
+        p_c_list = []
+        for item in parent_category_list:
+            p_c_list.append(item['parent_category'])
+        p_c_list.sort()
         for index in secondhandcar_info:
             index['id'] = str(int(index['id']) - 1)    
         params = {
             'title': '中古車',
             'secondhandcar_info': secondhandcar_info,
+            'p_c_list': p_c_list,
             'POST': True
         }
     else:
         secondhandcar_info = list(SecondHandCarInfoModel.objects.values())
+        parent_category_list = list(SecondHandCarInfoModel.objects.order_by('parent_category').distinct('parent_category').values('parent_category'))
+        p_c_list = []
+        for item in parent_category_list:
+            p_c_list.append(item['parent_category'])
+        p_c_list.sort()
         for index in secondhandcar_info:
             index['id'] = str(int(index['id']) - 1)
         page = Paginator(secondhandcar_info, 5)
         params = {
             'title': '中古車',
             'secondhandcar_info': page.get_page(num),
+            'p_c_list': p_c_list,
             'POST': False
         }
     return render(request, 'secondhandcar/search.html', params)
