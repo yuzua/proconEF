@@ -18,8 +18,9 @@
     </div>
     </form>
 {% for car_obj in secondhandcar_info %}
-    <div class="card m-5">
-        <h5 class="card-header card-title">{{car_obj.category}}({{car_obj.parent_category}})</h5>
+    <div class="car_detail">
+        <h5 style="border-bottom: solid;border-color: rgb(83, 83, 83);padding-left: 20pt;">{{car_obj.category}}({{car_obj.parent_category}})</h5>
+        <div class="pic">
         <div class="a-secondary">
             <a href="/secondhandcar/detail/{{car_obj.id}}">
                 <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
