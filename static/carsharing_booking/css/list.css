@@ -86,6 +86,16 @@ fieldset {
     font-weight: 500;
 }
 
-.footer {
+/* .footer {
     margin: 0 160pt;
+} */
+.monthbtn {
+    clear: none;
+    height: 30pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    padding-top: 6pt;
+    padding-bottom: 5pt;
 }

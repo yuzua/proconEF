@@ -103,10 +103,13 @@ def setAdd(request):
     return add
 
 def car(request):
-    max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()
-    max_num = max_num.get('category') + 1
+    max_num = Category.objects.order_by('id').last()
+    max_num = int(max_num.id) + 1
+    # print(max_num)
     set_QuerySet_car = CarInfoParkingModel.objects.values("car_id")
+    # print(set_QuerySet_car)
     set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
+    # print(set_QuerySet_parking)
     addadd = {}
     for index in set_QuerySet_parking:
         address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
@@ -121,8 +124,10 @@ def car(request):
     for key in range(1, max_num):
         value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
         if not value :
+            # print(key)
             print('空')
         else:
+            # print(key)
             for num in range(1, len(value)+1):
                 if num == 1:
                     value[0]['address'] = addadd[value[0]['id']]
@@ -142,9 +147,10 @@ def car(request):
         'category_set': list(Category.objects.all().values()),
         'json_car': json.dumps(dict_car, ensure_ascii=False)
     }
+    # print(list(Category.objects.all().values()))
     return render(request, "carsharing_booking/car.html", params)
 
-    print(dict_car)
+    # print(dict_car)
     params = {
         'car_obj': item_all,
         'form': CarCategory(),

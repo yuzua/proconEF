@@ -3,7 +3,7 @@
 
 {% block head %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-  <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+  {% comment %} <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'> {% endcomment %}
 {% endblock %}
     
 {% block title %}{{title}}{% endblock %}
@@ -18,6 +18,14 @@
 <div class="container w-80" style="padding: 5px;">
   <canvas id="myChart"></canvas>
 </div>
+
+<style>
+  .custom-control-input:checked~.custom-control-label::before {
+    border-color: rgb(83, 83, 83);
+    background-color: rgb(83, 83, 83);
+  }
+</style>
+
 <script>
 var car_name = {{ car_name|safe }};
 var id_0 = JSON.parse('{{ id_0|safe }}');

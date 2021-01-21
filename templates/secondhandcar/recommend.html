@@ -1,28 +1,160 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
-
-{% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
-{% endblock %}
-
     
 {% block title %}{{title}}{% endblock %}
 
 {% block main_contents %}
 {% for num in secondhandcar_list %}
-    <div class="card m-3">
-        <h3 class="card-header">{{num.category}}({{num.parent_category}})</h3>
-        <div class="card-body p-1">
-            <p>型番：{{num.model}}</p>
-            <p>発売期間：{{num.release_period}}</p>
-            <p>グレード：{{num.grade}}</p>
-            <a class="text-secondary" href="/secondhandcar/detail/{{num.second_hand_car_id.id}}">詳しく見る &raquo;</a>
-            <div>
-                <img border="0" src="{{num.img1}}" width="128" alt="{{num.img1}}">
-                {% comment %} <img border="0" src="{{num.img2}}" width="128" alt="{{num.img2}}">
-                <img border="0" src="{{num.img3}}" width="128" alt="{{num.img3}}"> {% endcomment %}
+    <div class="m-3" id="open">
+        <h3>{{num.category}}({{num.parent_category}})</h3>
+        <div>
+            <img border="0" src="{{num.img1}}" alt="{{num.img1}}" class="pic">
+            {% comment %} <img border="0" src="{{num.img2}}" width="128" alt="{{num.img2}}">
+            <img border="0" src="{{num.img3}}" alt="{{num.img3}}"> {% endcomment %}
+            <div class="right"> 
+                <p>型番：{{num.model}}</p>
+                <p>発売期間：{{num.release_period}}</p>
+                <p>グレード：{{num.grade}}</p>
+                <a class="btn-open" href="/secondhandcar/detail/{{num.second_hand_car_id.id}}">詳しく見る &raquo;</a>
             </div>
         </div>
     </div>
+
+    <style>
+        h3 {
+            color: rgb(83, 83, 83);
+            border-bottom: solid;
+            border-color: rgb(83, 83, 83);
+        }
+
+        .pic {
+            width: 30%;
+            margin-left: 30pt;
+            margin-top: 0pt;
+        }
+
+        .right {
+            display: inline-block;
+            margin-left: 50pt;
+            padding: 30pt;
+        }
+
+        .btn-open {
+            display: inline-block;
+            text-align: center;
+            width: 120pt;
+            background-color: #FFF;
+            font-size: 16px;
+            line-height: 52px;
+            color:  rgb(83, 83, 83);
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid  rgb(83, 83, 83);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            padding: 3pt 10pt 3pt 10pt;
+            margin: 3pt 5pt 3pt 5pt;
+        }
+        
+        .btn-open:after{
+            width: 100%;
+            height: 0;
+            content:"";
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            background : rgb(83, 83, 83);
+            opacity: 0;
+            transform: translateX(-100%) translateY(-100%) rotate(360deg);
+            transition: .2s;
+            z-index: -1;
+        }
+        
+        .btn-open:hover{
+            color: #FFF;
+            text-decoration: none;
+        }
+        
+        .btn-open:hover:after{
+            height: 260%;
+            opacity: 1;
+        }
+        
+        .btn-open:active:after{
+            height: 300%;
+            opacity: 1;
+        }
+
+        @media screen and (max-width: 599px) {
+    #phone-nav{
+        display: block;
+        width: 100%;
+        position:fixed;
+        top:0;
+        left: 0;
+        z-index:100;
+    }
+    body {
+        background-color:#9c9c9a;
+    }
+    header {
+        display: none;
+    }
+    body, #wrapper{
+        width: 80%;
+    }
+    .logout {
+        font-size: 9pt;
+        font-weight: 100;
+    }
+    #log-btn{
+        height: 25pt;
+        width: 65pt;
+        margin: 7pt 0pt 3pt 0pt;
+        border-color: #CDCDCD;
+        float: left;
+        clear: none;
+        padding: 0;
+        /* margin: 0; */
+    }
+    .pic {
+            width: 80%;
+    }
+    .right {
+        text-align: left;
+    }
+    .btn-open:hover:after{
+        pointer-events: none; 
+    }
+    .btn-open:active:after{
+        pointer-events: none; 
+    }
+    .btn-open:after {
+        transform: translateX(100%) translateY(100%) rotate(0deg);
+    }
+    .btn-open:hover {
+        pointer-events: none;
+    }
+
+    #open {
+        margin-top: 100pt;
+    }
+    .container {
+        margin-top: 50pt;
+        width: 100%;
+    }
+    h3 {
+        font-size: 12pt;
+        padding-right: 3pt;
+        padding-left: 3pt;
+        text-align: center;
+    }
+    .right {
+        text-align: center;
+        float:left;
+    }
+}
+    </style>
 {% endfor %}
 {% endblock %}

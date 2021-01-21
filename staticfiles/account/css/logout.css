@@ -1,0 +1,51 @@
+img {
+    width: 35pt;
+    height: 35pt;
+  }
+
+  html {
+    background-image: url('{% static "admin/img/carsharing.jpg" %}');
+    background-color:rgba(255,255,255,0.8);
+    background-blend-mode:lighten;
+  }
+
+  .centerMiddle {
+    border: solid;
+    text-align: left;
+    display:inline-block;
+    border-width: 1pt;
+    width: 400pt;
+    margin: 150pt 350pt 0 350pt;
+    padding: 0.5em 1em;
+    color: #000;/*文字色*/
+    border: solid 2px #696969;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
+
+  .btn {
+    height: 30pt;
+    width: 90pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    clear: both;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+
+  /* h3 {
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+    border-width: 2pt;
+  } */
+
+@media screen and (max-width: 599px) {
+    .centerMiddle {
+        margin: 150pt 3pt 0 3pt;
+        width: 98%;
+    }
+}

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+{% comment %} <link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'> {% endcomment %}
 {% endblock %}
 
     
@@ -12,78 +12,225 @@
     <form action="{% url 'secondhandcar:search' %}" method="post" >
     {% csrf_token %}
     <div class="m-1 clearfix" style="border-top: solid 3px #000;border-bottom: solid 3px #000;">
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ホンダ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="日産" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="トヨタ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="スズキ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ＢＭＷ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ダイハツ" style="float:left;clear:none;"/>
+    {% for p_c in p_c_list %}
+        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="{{p_c}}" style="float:left;clear:none;"/>
+    {% endfor %}
     </div>
     </form>
 {% for car_obj in secondhandcar_info %}
-    {% comment %} <div class="card-deck m-3">
-        <h3 class="card-header">{{car_obj.category}}({{car_obj.parent_category}})</h3>
-        <div class="card-body p-1">
-            <p>型番：{{car_obj.model}}</p>
-            <p>発売期間：{{car_obj.release_period}}</p>
-            <p>グレード：{{car_obj.grade}}</p>
-            <div>
-                <img border="0" src="{{car_obj.img1}}" width="128" alt="{{car_obj.img1}}">
-                <img border="0" src="{{car_obj.img2}}" width="128" alt="{{car_obj.img2}}">
-                <img border="0" src="{{car_obj.img3}}" width="128" alt="{{car_obj.img3}}">
+    <div class="car_detail">
+        <h5 style="border-bottom: solid;border-color: rgb(83, 83, 83);padding-left: 20pt;">{{car_obj.category}}({{car_obj.parent_category}})</h5>
+        <div class="pic">
+        <div class="a-secondary">
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
+            </a>
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
+            </a>
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
+            </a>
+        </div>
+        <div class="listen">
+            <div class="p">
+                <p class="card-text">型番：{{car_obj.model}}</p>
+                <p class="card-text">発売期間：{{car_obj.release_period}}</p>
+                <p class="card-text">グレード：{{car_obj.grade}}</p>
             </div>
-        </div>
-    </div> {% endcomment %}
-    <div class="card m-5">
-        <h5 class="card-header card-title">{{car_obj.category}}({{car_obj.parent_category}})</h5>
-        <div>
-            <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
-        </div>
-        <div class="card-body">
-            <p class="card-text">型番：{{car_obj.model}}</p>
-            <p class="card-text">発売期間：{{car_obj.release_period}}</p>
-            <p class="card-text">グレード：{{car_obj.grade}}</p>
-            <a class="text-secondary" href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る &raquo;</a>
+            <a class="btn-open" href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る &raquo;</a>
         </div>
     </div>
 {% endfor %}
     {% if POST == False %}
-        <ul class="pagination justify-content-center">
+    <div class="pager">
+        <ul class="pagination">
             {% if secondhandcar_info.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}">&laquo; first</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}">&laquo; first</a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.previous_page_number }}">&laquo; prev</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.previous_page_number }}">&laquo; prev</a>
             </li>
             {% else %}
-            <li class="page-item">
-                <a class="page-link">&laquo; first</a>
+            <li class="pre">
+                <a>&laquo; first</a>
             </li>
-            <li class="page-item">
-                <a class="page-link">&laquo; prev</a>
+            <li class="pre">
+                <a>&laquo; prev</a>
             </li>
             {% endif %}
-            <li class="page-item">
-                <a class="page-link">{{ secondhandcar_info.number }}/{{ secondhandcar_info.paginator.num_pages }}</a>
+            <li class="active">
+                <span>{{ secondhandcar_info.number }}/{{ secondhandcar_info.paginator.num_pages }}</span>
             </li>
             {% if secondhandcar_info.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.next_page_number }}">next &raquo;</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.next_page_number }}">next &raquo;</a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.paginator.num_pages }}">last &raquo;</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.paginator.num_pages }}">last &raquo;</a>
             </li>
             {% else %}
-            <li class="page-item">
-                <a class="page-link">next &raquo;</a>
+            <li class="pre">
+                <a>next &raquo;</a>
             </li>
-            <li class="page-item">
-                <a class="page-link">last &raquo;</a>
+            <li class="pre">
+                <a>last &raquo;</a>
             </li>
             {% endif %}
         </ul>
+    </div>
+
+<style>
+.pager {
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.pager .pagination {
+  text-align: center;
+  margin: 30pt 300pt 30pt 300pt;
+}
+
+.pager .pagination li {
+  display: inline;
+  margin: 0 2px;
+  padding: 0;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  position: relative;
+  border-radius: 10px;
+}
+
+
+.pager .pagination li a{
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display:table;
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all  0.3s ease;
+  padding-top: 10pt;
+}
+
+.pager .pagination li a span{
+  display:table-cell;
+  vertical-align:middle;
+  padding-top: 10pt;
+}
+
+.pager .pagination li a:hover,
+.pager .pagination li a.active{
+  color: #fff;
+  background: rgb(83, 83, 83);
+}
+
+@media only screen and (max-width: 767px){
+  .pager .pagination li{
+    display: none;
+  }
+
+  .pager .pagination li.pre,
+  .pager .pagination li.next{
+    display: inline-block;
+    width: 40%;
+    height: 50px;
+    text-align: center;
+  }
+
+  .pager .pagination li.pre a,
+  .pager .pagination li.next a{
+    width: 100%;
+    text-align: center;
+  }
+
+  .pager .pagination li.pre span::after{
+    content: "　前の10件へ";
+  }
+
+  .pager .pagination li.next span::before{
+    content: "次の10件へ　";
+  }
+
+}
+
+            .btn-open {
+            display: inline-block;
+            text-align: center;
+            width: 120pt;
+            background-color: #FFF;
+            font-size: 16px;
+            line-height: 52px;
+            color:  rgb(83, 83, 83);
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid  rgb(83, 83, 83);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            padding: 3pt 10pt 3pt 10pt;
+            margin: 3pt 5pt 3pt 5pt;
+            margin-left: 150pt;
+        }
+        
+        .btn-open:after{
+            width: 100%;
+            height: 0;
+            content:"";
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            background : rgb(83, 83, 83);
+            opacity: 0;
+            transform: translateX(-100%) translateY(-100%) rotate(360deg);
+            transition: .2s;
+            z-index: -1;
+        }
+        
+        .btn-open:hover{
+            color: #FFF;
+            text-decoration: none;
+        }
+        
+        .btn-open:hover:after{
+            height: 260%;
+            opacity: 1;
+        }
+        
+        .btn-open:active:after{
+            height: 300%;
+            opacity: 1;
+        }
+
+        .car_detail {
+            margin-bottom: 50pt;
+        }
+        .p {
+            display: inline-block;
+            width: 300pt;
+        }
+        </style>
     {% endif %}
+<style>
+.a-secondary {
+    text-decoration: none;
+}
+.a-secondary :hover {
+    text-decoration: none;
+}
+@media screen and (max-width: 599px) {
+    img {
+        width: 100%;
+    }
+}
+</style>
 {% endblock %}

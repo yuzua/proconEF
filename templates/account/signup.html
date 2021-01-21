@@ -30,84 +30,11 @@
   <button class="btn" type="submit" >{% trans "Sign Up" %}</button>
 </form>
 </body>
+<link rel="stylesheet" href='{% static "account/css/signup.css" %}'>
 <style>
-  img {
-    width: 35pt;
-    height: 35pt;
-  }
-
-  html {
-    background-image: url('{% static "admin/img/carsharing.jpg" %}');
-    background-color:rgba(255,255,255,0.8);
-    background-blend-mode:lighten;
-  }
-
-  .centerMiddle {
-    display:inline-block;
-    text-align: center;
-    margin: 100pt 400pt 0 400pt;
-    padding: 10pt 40pt 20pt 40pt;
-    color: #000;/*文字色*/
-    border: solid 2px #696969;/*線*/
-    border-radius: 10px;/*角の丸み*/
-    padding: 20pt;
-  }
-
-  .btn {
-    height: 30pt;
-    width: 250pt;
-    font-size: 11pt;
-    margin: 5pt 10pt 5pt 10pt;
-    border-color: #696969;
-    clear: both;
-  }
-
-  .btn:hover {
-    background-color: #CDCDCD;
-  }
-
-  .login {
-    color: #696969;
-    text-decoration: none;
-  }
-
-  .login:hover {
-    color: #000;
-  }
-
-  /* h3 {
-    text-align: center;
-    border-bottom: solid;
-    border-color: #696969;
-    border-width: 2pt;
-  } */
-
-  #id_email {
-    width: 250pt;
-    margin: 5pt 5pt;
-  }
-
-  #id_password1 {
-    width: 250pt;
-    margin: 5pt 5pt;
-  }
-
-  #id_password2 {
-    width: 250pt;
-    margin: 5pt 5pt;
-  }
-
-  .already {
-    font-size: small;
-    margin: 5pt 5pt;
-  }
-  .errorlist {
-    font-size: small;
-    color: red;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+html {
+  background-image: url('{% static "admin/img/carsharing.jpg" %}');
+}
 </style>
 </html>
 
