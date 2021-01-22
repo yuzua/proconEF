@@ -89,18 +89,24 @@ def pages(request, num, page):
             params['title'] = '乗車詳細'
             params['json_data'] = json_data['乗車詳細']
             params['prev'] = [3,'解錠詳細']
-            params['next'] = [5,'返却詳細']
+            params['next'] = [5,'給油・洗車']
             return render(request, 'page/user_details.html', params)
         elif page == 5:
-            params['title'] = '返却詳細'
-            params['json_data'] = json_data['返却詳細']
+            params['title'] = '給油・洗車'
+            params['json_data'] = json_data['給油・洗車']
             params['prev'] = [4,'乗車詳細']
-            params['next'] = [6,'精算詳細']
+            params['next'] = [6,'返却詳細']
             return render(request, 'page/user_details.html', params)
         elif page == 6:
+            params['title'] = '返却詳細'
+            params['json_data'] = json_data['返却詳細']
+            params['prev'] = [5,'給油・洗車']
+            params['next'] = [7,'精算詳細']
+            return render(request, 'page/user_details.html', params)
+        elif page == 7:
             params['title'] = '精算詳細'
             params['json_data'] = json_data['精算詳細']
-            params['prev'] = [5,'返却詳細']
+            params['prev'] = [6,'返却詳細']
             return render(request, 'page/user_details.html', params)
     elif num == 2:
         path = "./data/page/user_parking.json"
@@ -135,7 +141,7 @@ def pages(request, num, page):
     elif num == 3:
         return render(request, 'page/owner_car.html')
     elif num == 4:
-        return render(request, 'page/owner_parking.html')
+        return render(request, 'page/price_list1.html')
     elif num == 0:
         pass
     else:
