@@ -216,10 +216,15 @@ def selectcar(request):
     for parkingid in data:
         parking_id_list.append(parkingid['parking_id_id'])
     parking_data = list(ParkingUserModel.objects.filter(id__in=parking_id_list).values('address'))
-    car_data = list(CarInfoModel.objects.filter(id__in=car_id_list).values())
+    car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
     for num in range(len(car_data)):
         car_data[num]['address'] = parking_data[num]['address']
-    return HttpResponse(car_data)
+    print(car_data)
+    params = {
+        'title': '車詳細検索',
+        'car_objs': car_data
+    }
+    return render(request, "carsharing_booking/selectcar.html", params)
 
 
 def history(request):
