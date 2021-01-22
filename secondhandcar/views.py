@@ -299,7 +299,8 @@ def search(request, num=1):
             p_c_list.append(item['parent_category'])
         p_c_list.sort()
         for index in secondhandcar_info:
-            index['id'] = str(int(index['id']) - 1)    
+            index['id'] = str(int(index['id']) - 1)
+        print(p_c_list)  
         params = {
             'title': '中古車',
             'secondhandcar_info': secondhandcar_info,
