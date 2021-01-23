@@ -9,6 +9,7 @@ from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm, CarCategory
 import json
 import datetime, locale
+import collections
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
@@ -210,25 +211,68 @@ def selectcardataset(mydict, user_id):
     else:
         at_mt = 'T'
     if mydict.get('option') != None:
+        option = True
         option_list = list(mydict['option'])
+        car_obj_list = []
+        countcheck = 0
         for value in option_list:
             if value == 'babysheet':
                 babysheet = True
+                tmp = list(CarInfoModel.objects.filter(babysheet=babysheet).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
             elif value == 'around_view_monitor':
                 around_view_monitor = True
+                tmp = list(CarInfoModel.objects.filter(around_view_monitor=around_view_monitor).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
             elif value == 'car_autonomous':
                 car_autonomous = True
+                tmp = list(CarInfoModel.objects.filter(car_autonomous=car_autonomous).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
             elif value == 'car_nav':
                 car_nav = True
+                tmp = list(CarInfoModel.objects.filter(car_nav=car_nav).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
             elif value == 'etc':
                 etc = True
+                tmp = list(CarInfoModel.objects.filter(etc=etc).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
             elif value == 'non_smoking':
                 non_smoking = True
+                tmp = list(CarInfoModel.objects.filter(non_smoking=non_smoking).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+        c = collections.Counter(car_obj_list)
+        car_obj_list = []
+        for tap in c.most_common():
+            if tap[1] == countcheck:
+                car_obj_list.append(tap[0])
+            else:
+                break
+        print(car_obj_list)
+    else:
+        option = False
     if mydict.get('category') != None:
         category = int(mydict['category'][0])
-        car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
+        else:
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
     else:
-        car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
+        else:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
     car_id_list = []
     for carid in car_obj:
         car_id_list.append(carid.get('id'))
@@ -243,13 +287,16 @@ def selectcardataset(mydict, user_id):
     for delete in exclude_car_list:
         car_id_list.remove(delete)
     data = list(CarInfoParkingModel.objects.filter(car_id__in=car_id_list).values())
+    print(data)
     parking_id_list = []
     for parkingid in data:
         parking_id_list.append(parkingid['parking_id_id'])
-    parking_data = list(ParkingUserModel.objects.filter(id__in=parking_id_list).values('address'))
+    print(parking_id_list)
     car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+    print(car_data)
     for num in range(len(car_data)):
-        car_data[num]['address'] = parking_data[num]['address']
+        recode = ParkingUserModel.objects.get(id=parking_id_list[num])
+        car_data[num]['address'] = recode.address
         car_data[num]['used_mileage']
     if user_id != 'ゲスト':
         favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
@@ -258,7 +305,7 @@ def selectcardataset(mydict, user_id):
             for favorite_id in favorite_id_list:
                 if favorite_id['favorite_car_id_id'] == check['id']:
                     check['favorite'] = True
-    print(car_data)
+    # print(car_data)
     return car_data
 
 

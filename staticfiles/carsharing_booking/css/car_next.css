@@ -20,11 +20,6 @@
     text-align: center;
     padding: .2rem;
 }
-.btn-y {
-    height: auto;
-    margin: 0;
-	float: none;
-}
 
 .hour-button-box {
 	width: 90%;
@@ -73,4 +68,16 @@
 .hour-button-box label, .hour-button-box label::before {
 	-webkit-transition: 0.25s all ease;
 	        transition: 0.25s all ease;
+}
+#star{
+    color: gold;
+    margin-right: 4px;
+}
+#star :hover{
+    color: gray;
+}
+#child-td7 a {
+    height: auto;
+    margin: 0;
+    float: none;
 }
