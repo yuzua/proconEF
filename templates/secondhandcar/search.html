@@ -10,7 +10,11 @@
 
 {% block main_contents %}
     <form action="{% url 'secondhandcar:search' %}" method="post" >
+<<<<<<< HEAD
         {% csrf_token %}
+=======
+    {% csrf_token %}
+>>>>>>> c5106028b8ec31ecbfd4212382e37dd2b63be2e8
             <div class="m-1 clearfix" id="scrollArea">
                 <div id="inner">
                     {% for p_c in p_c_list0 %}
@@ -88,5 +92,8 @@
         </ul>
     </div>
     {% endif %}
+<<<<<<< HEAD
     <script type="text/javascript" src='{% static "secondhandcar/js/search.js" %}'></script>
+=======
+>>>>>>> c5106028b8ec31ecbfd4212382e37dd2b63be2e8
 {% endblock %}

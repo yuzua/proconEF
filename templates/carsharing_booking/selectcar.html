@@ -1,0 +1,60 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/car_next.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+    <table class="table">
+        <tr style="border-top: solid;border-color: rgb(83, 83, 83);">
+            <th>車種(メーカー)</th>
+            <th>AT/MT</th>
+            <th>タイヤ</th>
+            <th>住所</th>
+        </tr>
+        <tr style="border-bottom: solid;border-color: rgb(83, 83, 83);">
+            <th>画像</th>
+            <th>乗車人数</th>
+            <th>型番</th>
+            <th>搭載機能</th>
+        </tr>
+    {% for car_obj in car_objs %}
+        <tr>
+            <td>{{car_obj.category__category}}({{car_obj.parent_category__parent_category}})</td>
+            <td>{{car_obj.at_mt}}車</td>
+            <td>{{car_obj.tire}}</td>
+            <td>{{car_obj.address}}</td>
+        </tr>
+        <tr style="border-bottom: dashed;border-color: #cdcdcd;">
+            <td>
+                <img src="/media/{{car_obj.img}}" width="130"　border="0" />
+            </td>
+            <td>{{car_obj.people}}人</td>
+            <td>{{car_obj.model_id}}</td>
+            <td>
+            {% if car_obj.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if car_obj.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if car_obj.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if car_obj.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if car_obj.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if car_obj.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+            </td>
+        </tr> 
+    {% endfor %}
+    </table>
+{% endblock %}

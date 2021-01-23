@@ -160,6 +160,73 @@ def car(request):
     }
     return render(request, "carsharing_booking/car.html", params)
 
+def selectcar(request):
+    people = (0, 100)
+    babysheet = False
+    around_view_monitor = False
+    car_autonomous = False
+    car_nav = False
+    etc = False
+    non_smoking = False
+    if (request.method == 'POST'):
+        mydict = dict(request.POST)
+        if mydict['people'][0] != '':
+            people = (int(mydict['people'][0]), int(mydict['people'][0]))
+        if mydict['at_mt'][0] == 'AT車':
+            at_mt = 'AT'
+        elif mydict['at_mt'][0] == 'MT車':
+            at_mt = 'MT'
+        else:
+            at_mt = 'T'
+        if mydict.get('option') != None:
+            option_list = list(mydict['option'])
+            for value in option_list:
+                if value == 'babysheet':
+                    babysheet = True
+                elif value == 'around_view_monitor':
+                    around_view_monitor = True
+                elif value == 'car_autonomous':
+                    car_autonomous = True
+                elif value == 'car_nav':
+                    car_nav = True
+                elif value == 'etc':
+                    etc = True
+                elif value == 'non_smoking':
+                    non_smoking = True
+        if mydict.get('category') != None:
+            category = int(mydict['category'][0])
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+        else:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+    car_id_list = []
+    for carid in car_obj:
+        car_id_list.append(carid.get('id'))
+    tmp = list(CarInfoParkingModel.objects.values('car_id'))
+    in_list = []
+    for carid in tmp:
+        in_list.append(carid.get('car_id'))
+    exclude_car = list(CarInfoModel.objects.exclude(id__in=in_list).values('id'))
+    exclude_car_list = []
+    for carid in exclude_car:
+        exclude_car_list.append(carid.get('id'))
+    for delete in exclude_car_list:
+        car_id_list.remove(delete)
+    data = list(CarInfoParkingModel.objects.filter(car_id__in=car_id_list).values())
+    parking_id_list = []
+    for parkingid in data:
+        parking_id_list.append(parkingid['parking_id_id'])
+    parking_data = list(ParkingUserModel.objects.filter(id__in=parking_id_list).values('address'))
+    car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+    for num in range(len(car_data)):
+        car_data[num]['address'] = parking_data[num]['address']
+    print(car_data)
+    params = {
+        'title': '車詳細検索',
+        'car_objs': car_data
+    }
+    return render(request, "carsharing_booking/selectcar.html", params)
+
+
 def history(request):
     booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
     for item in list(booking):

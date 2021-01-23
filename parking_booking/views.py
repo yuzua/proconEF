@@ -141,7 +141,7 @@ class ParkingBookingCreate(TemplateView):
             print('1day')
         else:
             print('days')
-            charge = int(d * 50000)
+            charge = int(d * 660)
             times = str(d) + '日 '
 
         if start_time < end_time:
@@ -162,7 +162,7 @@ class ParkingBookingCreate(TemplateView):
             messages.error(request, '15分以下は利用できません。')
             return render(request, 'parking_booking/booking.html', self.params)
         else:
-            charge += int(m / 15 * 330)
+            charge += int(m / 15 * 220)
             h = int(m / 60)
             m = int(m % 60)
             x = str(h) + '時間 ' + str(m) + '分'
