@@ -1,0 +1,110 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+  <script type="text/javascript" src='{% static "carsharing_booking/js/display-switch.js" %}'></script>
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{title}}</h1>
+{% for item in car_objs %}
+<div class="card m-3">
+    <div class="card-header">
+    <h4 class="m-0"><strong>{{item.category__category}}({{item.parent_category__parent_category}})</strong>
+    <a href="/carsharing_booking/favorite/favorites/{{item.car_id}}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-trash float-right" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+    </svg>
+    </a>
+    </h4>
+    </div>
+    <div class="card-body p-1" id="front{{item.count}}">
+        <div class="leftbox">
+            <div>
+                <img border="0" src="/media/{{item.img}}" width="350" alt="{{num.img1}}">
+            </div>
+        </div>
+        <div class="float-left p-3 rightbox">
+        <button class="button-icon" id="btn{{item.count}}" value="{{item.count}}" onclick="cal(value)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        </svg>
+        </button>
+        <br>
+        <ul class="list-group list-group-flush leftbox">
+            <li class="list-group-item">型番：{{item.model_id}}</li>
+            <li class="list-group-item">乗車人数：{{item.people}}人</li>
+            <li class="list-group-item">使用年数：{{item.used_years}}年</li>
+        </ul>
+        <ul class="list-group list-group-flush leftbox">
+            <li class="list-group-item">AT/MT：{{item.at_mt}}車</li>
+            <li class="list-group-item">タイヤ：{{item.tire}}</li>
+            <li class="list-group-item">総走行距離：{{item.used_mileage}}km</li>
+        </ul>
+        <ul class="list-group list-group-flush leftbox2">
+            <li class="list-group-item">搭載機能：</li>
+            <li class="list-group-item">
+            {% if item.babysheet == True %}
+            チャイルドシート・
+            {% endif %}
+            {% if item.car_nav == True %}
+            カーナビ・
+            {% endif %}
+            {% if item.etc == True %}
+            ETC・
+            {% endif %}
+            {% if item.car_autonomous == True %}
+            自動運動・
+            {% endif %}
+            {% if item.around_view_monitor == True %}
+            駐車アシスト・
+            {% endif %}
+            {% if item.non_smoking == True %}
+            禁煙
+            {% endif %}
+            </li>
+        </ul>
+        <a class="float-right text-secondary" href="../car/{{item.car_id}}">この車を予約する &raquo;</a>
+        </div>
+    </div>
+    <div class="card-body p-1 close" id="back{{item.count}}">
+        <div class="w-100 float-left p-3">
+        <button class="button-icon" id="btn{{item.count}}" value="{{item.count}}" onclick="cal(value)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle ml-1" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+        </svg>
+        </button>
+            <div id="map{{item.count}}" style="width:350;height:240pt"></div>
+            <p class="m-0">{{item.address}}</p>
+            <input type="hidden" id="lat{{item.count}}" value="{{item.lat}}"/>
+            <input type="hidden" id="lng{{item.count}}" value="{{item.lng}}"/>
+            <a class="float-right text-secondary" href="../booking/{{item.parking_id}}">この場所から予約する &raquo;</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+    var count = {{count}};
+    var latList = [];
+    var lngList = [];
+    for (let i = 1; i <= count; i++) {
+        var latElement = document.getElementById('lat'+i).value;
+        latList.push(latElement);
+        var lngElement = document.getElementById('lng'+i).value;
+        lngList.push(lngElement);
+    }
+    console.log(latList[4])
+</script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/history-map.js" %}'></script>
+{% endblock %}
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
+{% endblock %}
