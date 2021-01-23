@@ -7,14 +7,16 @@
 {% for num in secondhandcar_list %}
     <div class="m-3" id="open">
         <h3>{{num.category}}({{num.parent_category}})</h3>
-        <div>
+        <div class="big">
             <img border="0" src="{{num.img1}}" alt="{{num.img1}}" class="pic">
             {% comment %} <img border="0" src="{{num.img2}}" width="128" alt="{{num.img2}}">
             <img border="0" src="{{num.img3}}" alt="{{num.img3}}"> {% endcomment %}
             <div class="right"> 
-                <p>型番：{{num.model}}</p>
-                <p>発売期間：{{num.release_period}}</p>
-                <p>グレード：{{num.grade}}</p>
+                <div class="r">
+                    <p>型番：{{num.model}}</p>
+                    <p>発売期間：{{num.release_period}}</p>
+                    <p>グレード：{{num.grade}}</p>
+                </div>
                 <a class="btn-open" href="/secondhandcar/detail/{{num.second_hand_car_id.id}}">詳しく見る &raquo;</a>
             </div>
         </div>
@@ -25,18 +27,19 @@
             color: rgb(83, 83, 83);
             border-bottom: solid;
             border-color: rgb(83, 83, 83);
+            padding-left: 30pt;
         }
 
         .pic {
             width: 30%;
             margin-left: 30pt;
             margin-top: 0pt;
+            vertical-align: top;
         }
 
         .right {
             display: inline-block;
-            margin-left: 50pt;
-            padding: 30pt;
+            margin-left: 40pt;
         }
 
         .btn-open {
@@ -55,6 +58,7 @@
             z-index: 1;
             padding: 3pt 10pt 3pt 10pt;
             margin: 3pt 5pt 3pt 5pt;
+            margin-left: 200pt;
         }
         
         .btn-open:after{

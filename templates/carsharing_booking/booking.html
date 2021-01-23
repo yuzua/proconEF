@@ -31,7 +31,7 @@
         <th>搭載機能</th>
     </tr>
 {% for car_obj in car_objs %}
-    <tr style="border-bottom: dashed;border-color: #cdcdcd;">
+    <tr style="border-bottom: solid;border-color: #cdcdcd;border-width: 1pt;">
         <td>
             <input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required>
             <td>
