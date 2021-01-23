@@ -222,7 +222,8 @@ def selectcar(request):
     print(car_data)
     params = {
         'title': '車詳細検索',
-        'car_objs': car_data
+        'car_objs': car_data,
+        'flag': len(car_data)
     }
     return render(request, "carsharing_booking/selectcar.html", params)
 
