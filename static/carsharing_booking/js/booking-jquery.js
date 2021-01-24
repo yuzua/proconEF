@@ -22,36 +22,57 @@ $('#form').ready(function(){
             var answerdate = Math.floor(answertime/60/24);
             var charge = 0;
             var times = '';
+            var comment = false;
 
             if (answerdate <= 0){
 
             }else{
-                charge = answerdate * 20000;
+                charge = chargeDay(status, answerdate);
                 times = answerdate.toString() + '日 ';
                 answertime -= 1440 * answerdate;
             }
             if(start_time < end_time){
-                charge += answertime / 15 * 225;
                 var result_h = Math.floor(answertime / 60);
                 if (result_h >= 24){
                     result_h -= 24;
                 }
+                console.log(result_h);
                 var result_m = answertime % 60;
                 var x = result_h.toString() + '時間 ' + result_m.toString() + '分';
+                let [remainder_h, charge_h] = chargeHour(status, result_h);
+                console.log(remainder_h);
+                console.log(charge_h);
+                result_m += remainder_h;
+                var charge_m = chargeMinute(status, result_m);
+                charge += (charge_h + charge_m);
                 times += x;
+            }else if(start_time >= end_time && answerdate <= 0 && start_day >= end_day){
+                console.log('終了時刻が開始時刻よりも前です。');
+                comment = true;
+                var result_h = -1;
             }else{
-                charge += answertime / 15 * 225;
+                //charge += answertime / 15 * 225;
                 var result_h = Math.floor(answertime / 60);
                 if (result_h >= 24){
                     result_h -= 24;
                 }
                 var result_m = answertime % 60;
                 var x = result_h.toString() + '時間 ' + result_m.toString() + '分';
+                let [remainder_h, charge_h] = chargeHour(status, result_h);
+                console.log(remainder_h);
+                console.log(charge_h);
+                result_m += remainder_h;
+                var charge_m = chargeMinute(status, result_m);
+                charge += (charge_h + charge_m);
                 times += x;
             }
             if (answerdate <= 0 && result_h <= 0 && answertime <= 15){
-                console.log('15分未満は利用できません')
-                $('#jquery').html('<p>15分未満は利用できません</p>');
+                console.log('15分未満は利用できません');
+                if (comment == true){
+                    $('#jquery').html('<p>終了時刻が開始時刻よりも前です。</p>');
+                }else{
+                    $('#jquery').html('<p>15分未満は利用できません</p>');
+                }
             }else{
                 charge = changeYen(Math.floor(charge));
                 function changeYen(num){
@@ -91,36 +112,57 @@ $('#form').ready(function(){
             var answerdate = Math.floor(answertime/60/24);
             var charge = 0;
             var times = '';
+            var comment = false;
 
             if (answerdate <= 0){
 
             }else{
-                charge = answerdate * 20000;
+                charge = chargeDay(status, answerdate);
                 times = answerdate.toString() + '日 ';
                 answertime -= 1440 * answerdate;
             }
             if(start_time < end_time){
-                charge += answertime / 15 * 225;
                 var result_h = Math.floor(answertime / 60);
                 if (result_h >= 24){
                     result_h -= 24;
                 }
+                console.log(result_h);
                 var result_m = answertime % 60;
                 var x = result_h.toString() + '時間 ' + result_m.toString() + '分';
+                let [remainder_h, charge_h] = chargeHour(status, result_h);
+                console.log(remainder_h);
+                console.log(charge_h);
+                result_m += remainder_h;
+                var charge_m = chargeMinute(status, result_m);
+                charge += (charge_h + charge_m);
                 times += x;
+            }else if(start_time >= end_time && answerdate <= 0 && start_day >= end_day){
+                console.log('終了時刻が開始時刻よりも前です。');
+                comment = true;
+                var result_h = -1;
             }else{
-                charge += answertime / 15 * 225;
+                //charge += answertime / 15 * 225;
                 var result_h = Math.floor(answertime / 60);
                 if (result_h >= 24){
                     result_h -= 24;
                 }
                 var result_m = answertime % 60;
                 var x = result_h.toString() + '時間 ' + result_m.toString() + '分';
+                let [remainder_h, charge_h] = chargeHour(status, result_h);
+                console.log(remainder_h);
+                console.log(charge_h);
+                result_m += remainder_h;
+                var charge_m = chargeMinute(status, result_m);
+                charge += (charge_h + charge_m);
                 times += x;
             }
             if (answerdate <= 0 && result_h <= 0 && answertime <= 15){
-                console.log('15分未満は利用できません')
-                $('#jquery').html('<p>15分未満は利用できません</p>');
+                console.log('15分未満は利用できません');
+                if (comment == true){
+                    $('#jquery').html('<p>終了時刻が開始時刻よりも前です。</p>');
+                }else{
+                    $('#jquery').html('<p>15分未満は利用できません</p>');
+                }
             }else{
                 charge = changeYen(Math.floor(charge));
                 function changeYen(num){
@@ -210,3 +252,126 @@ function getStringFromDate(date) {
 	return format_str;
 };
 
+function chargeDay(my_plan, daycount) {
+    var charge = 0;
+    while (daycount > 0) {
+      if(daycount == 1){
+          console.log(daycount);
+          daycount -= 1;
+          console.log(daycount);
+          if(my_plan == "a"){
+             charge += 8880;
+          }else if(my_plan == "b"){
+              charge += 8280;
+          }else if(my_plan == "c"){
+              charge += 7180;
+          }else if(my_plan == "guest"){
+              charge += 8880;
+          }
+      }else if(daycount == 2){
+          daycount -= 2;
+          if(my_plan == "a"){
+             charge += 14280;
+          }else if(my_plan == "b"){
+              charge += 13380;
+          }else if(my_plan == "c"){
+              charge += 11480;
+          }else if(my_plan == "guest"){
+              charge += 14280;
+          }
+      }else if(daycount == 3){
+          daycount -= 3;
+          if(my_plan == "a"){
+             charge += 20380;
+          }else if(my_plan == "b"){
+              charge += 19080;
+          }else if(my_plan == "c"){
+              charge += 16380;
+          }else if(my_plan == "guest"){
+              charge += 20380;
+          }
+      }else{
+          daycount -= 3;
+          if(my_plan == "a"){
+             charge += 20380;
+          }else if(my_plan == "b"){
+              charge += 19080;
+          }else if(my_plan == "c"){
+              charge += 16380;
+          }else if(my_plan == "guest"){
+              charge += 20380;
+          }
+      }
+    }
+    console.log(charge);
+    return charge;
+};
+
+function chargeHour(my_plan, hourcount) {
+    var charge = 0;
+    while (hourcount >= 6) {
+      if(hourcount == 6){
+          hourcount -= 6;
+          if(my_plan == "a"){
+             charge += 4580;
+          }else if(my_plan == "b"){
+              charge += 4280;
+          }else if(my_plan == "c"){
+              charge += 3680;
+          }else if(my_plan == "guest"){
+              charge += 4580;
+          }
+          break;
+      }else if(hourcount == 12){
+          hourcount -= 12;
+          if(my_plan == "a"){
+             charge += 6780;
+          }else if(my_plan == "b"){
+              charge += 6380;
+          }else if(my_plan == "c"){
+              charge += 5480;
+          }else if(my_plan == "guest"){
+              charge += 6780;
+          }
+          break;
+      }else if(hourcount >= 12){
+          hourcount -= 12;
+          if(my_plan == "a"){
+             charge += 6780;
+          }else if(my_plan == "b"){
+              charge += 6380;
+          }else if(my_plan == "c"){
+              charge += 5480;
+          }else if(my_plan == "guest"){
+              charge += 6780;
+          }
+      }else{
+          hourcount -= 6;
+          if(my_plan == "a"){
+             charge += 4580;
+          }else if(my_plan == "b"){
+              charge += 4280;
+          }else if(my_plan == "c"){
+              charge += 3680;
+          }else if(my_plan == "guest"){
+              charge += 4580;
+          }
+      }
+    }
+    remainder = hourcount*60;
+    return [remainder, charge];
+};
+
+function chargeMinute(my_plan, minutecount) {
+    var charge = 0;
+    if(my_plan == "a"){
+        charge += (minutecount / 15 * 225);
+    }else if(my_plan == "b"){
+        charge += (minutecount / 15 * 210);
+    }else if(my_plan == "c"){
+        charge += (minutecount / 15 * 180);
+    }else if(my_plan == "guest"){
+        charge += (minutecount / 15 * 225);
+    }
+    return charge;
+};

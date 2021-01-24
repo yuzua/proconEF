@@ -287,25 +287,20 @@ def selectcardataset(mydict, user_id):
     for delete in exclude_car_list:
         car_id_list.remove(delete)
     data = list(CarInfoParkingModel.objects.filter(car_id__in=car_id_list).values())
-    print(data)
     parking_id_list = []
     for parkingid in data:
         parking_id_list.append(parkingid['parking_id_id'])
-    print(parking_id_list)
     car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
-    print(car_data)
     for num in range(len(car_data)):
         recode = ParkingUserModel.objects.get(id=parking_id_list[num])
         car_data[num]['address'] = recode.address
         car_data[num]['used_mileage']
     if user_id != 'ゲスト':
         favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
-        print(favorite_id_list)
         for check in car_data:
             for favorite_id in favorite_id_list:
                 if favorite_id['favorite_car_id_id'] == check['id']:
                     check['favorite'] = True
-    # print(car_data)
     return car_data
 
 
@@ -440,12 +435,26 @@ def booking_car(request, num):
 def booking(request, num):
     request.session['select'] = "map"
     request.session['obj_id'] = num
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        guest = True
+    else:
+        print(request.user)
+        guest = False
+    
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    
     params = {
         'form': BookingCreateForm(),
         'message': '予約入力',
         'car_objs': '',
         'car_id': '',
         'num': request.session['obj_id'],
+        'status': my_plan
     }
     num = request.session['obj_id']
     address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
@@ -577,7 +586,20 @@ def checkBooking(request):
     print(booking_list)
 
     # charge = request.POST['charge']
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        guest = True
+    else:
+        print(request.user)
+        guest = False
     
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    print(my_plan)
+
     time = end - start
     d = int(time.days)
     m = int(time.seconds / 60)
@@ -590,15 +612,134 @@ def checkBooking(request):
         print('1day')
     else:
         print('days')
-        charge = int(d * 20000)
+        daycount = d
+        while daycount >= 0:
+            if daycount == 1:
+                daycount -= 1
+                if my_plan == 'a':
+                    charge += 8880
+                elif my_plan == 'b':
+                    charge += 8280
+                elif my_plan == 'c':
+                    charge += 7180
+                elif my_plan == 'guest':
+                    charge += 8880
+                break
+            elif daycount == 2:
+                daycount -= 2
+                if my_plan == 'a':
+                    charge += 14280
+                elif my_plan == 'b':
+                    charge += 13380
+                elif my_plan == 'c':
+                    charge += 11480
+                elif my_plan == 'guest':
+                    charge += 14280
+                break
+            elif daycount == 3:
+                daycount -= 3
+                if my_plan == 'a':
+                    charge += 20380
+                elif my_plan == 'b':
+                    charge += 19080
+                elif my_plan == 'c':
+                    charge += 16380
+                elif my_plan == 'guest':
+                    charge += 20380
+                break
+            else:
+                daycount -= 3
+                if my_plan == 'a':
+                    charge += 20380
+                elif my_plan == 'b':
+                    charge += 19080
+                elif my_plan == 'c':
+                    charge += 16380
+                elif my_plan == 'guest':
+                    charge += 20380
+
         times = str(d) + '日 '
 
     if start_time < end_time:
         print('tule')
-        charge += int(m / 15 * 225)
+        # charge += int(m / 15 * 225)
         h = int(m / 60)
+        hourcount = h
+        while hourcount >= 6:
+            if hourcount == 6:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+            elif hourcount == 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+            elif hourcount >= 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+            else:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+        minutecount = hourcount*60
         m = int(m % 60)
+        minutecount += m
+        if my_plan == 'a':
+            charge += int(minutecount / 15 * 225)
+        elif my_plan == 'b':
+            charge += int(minutecount / 15 * 210)
+        elif my_plan == 'c':
+            charge += int(minutecount / 15 * 180)
+        elif my_plan == 'guest':
+            charge += int(minutecount / 15 * 225)
         x = str(h) + '時間 ' + str(m) + '分'
+        if d <= 0:
+            if my_plan == 'a':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
+            elif my_plan == 'b':
+                if h <= 12 and charge > 6380:
+                    charge = 6380
+                elif h <= 6 and charge > 4280:
+                    charge = 4280
+            elif my_plan == 'c':
+                if h <= 12 and charge > 5480:
+                    charge = 5480
+                elif h <= 6 and charge > 3680:
+                    charge = 3680
+            elif my_plan == 'guest':
+                print('g')
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
         times += x
     elif start_time >= end_time and d < 0:
         print('false')
@@ -608,10 +749,85 @@ def checkBooking(request):
         elif request.session['select'] == 'car':
             return render(request, "carsharing_booking/car_next.html", params)
     else:
-        charge += int(m / 15 * 225)
         h = int(m / 60)
+        hourcount = h
+        while hourcount > 6:
+            if hourcount == 6:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+                break
+            elif hourcount == 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+                break
+            elif hourcount >= 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+                break
+            else:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+        minutecount = hourcount*60
         m = int(m % 60)
+        minutecount += m
+        if my_plan == 'a':
+            charge += int(minutecount / 15 * 225)
+        elif my_plan == 'b':
+            charge += int(minutecount / 15 * 210)
+        elif my_plan == 'c':
+            charge += int(minutecount / 15 * 180)
+        elif my_plan == 'guest':
+            charge += int(minutecount / 15 * 225)
         x = str(h) + '時間 ' + str(m) + '分'
+        if d <= 0:
+            if my_plan == 'a':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
+            elif my_plan == 'b':
+                if h <= 12 and charge > 6380:
+                    charge = 6380
+                elif h <= 6 and charge > 4280:
+                    charge = 4280
+            elif my_plan == 'c':
+                if h <= 12 and charge > 5480:
+                    charge = 5480
+                elif h <= 6 and charge > 3680:
+                    charge = 3680
+            elif my_plan == 'guest':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
         times += x
     if d == 0 and m <= 15 and h == 0:
         messages.error(request, '15分未満は利用できません。')
