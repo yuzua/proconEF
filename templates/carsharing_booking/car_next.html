@@ -83,7 +83,8 @@
 
 {% block mapapi %}
 <script>
-  var events = JSON.parse('{{ events|safe }}');
+    var status = "{{status}}";
+    var events = JSON.parse('{{ events|safe }}');
 </script>
 <script type="text/javascript" src='{% static "carsharing_req/js/calendar.js" %}'></script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/booking-jquery.js" %}'></script>

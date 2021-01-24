@@ -361,4 +361,8 @@ a:hover {
         height: 70px;
         margin-bottom: 10px;
     }
+
+    .btn {
+        float: right;
+    }
 }
