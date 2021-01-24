@@ -22,6 +22,9 @@
     top:0;
     width:100%;
     z-index:100;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+    border-width: 1pt;
 }
 
 .navbar01 {
@@ -64,4 +67,9 @@ a:hover {
 
 .dropdown-item {
     margin: 4pt 0 4pt 0;
+}
+
+.who {
+    float: right;
+    margin: 5pt 5pt 5pt 0pt;   
 }
