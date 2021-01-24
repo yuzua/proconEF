@@ -163,10 +163,8 @@ def car(request):
 
 def selectcar(request):
     if str(request.user) == "AnonymousUser":
-        print('ゲスト')
         user_id = 'ゲスト'
     else:
-        print(request.user)
         user_id = request.session['user_id']
     if (request.method == 'POST'):
         mydict = dict(request.POST)
@@ -182,8 +180,6 @@ def selectcar(request):
                 for favorite_id in favorite_id_list:
                     if favorite_id['favorite_car_id_id'] == check['id']:
                         check['favorite'] = True
-
-        print(car_data)
 
     params = {
         'title': '車詳細検索',
@@ -294,13 +290,14 @@ def selectcardataset(mydict, user_id):
     for num in range(len(car_data)):
         recode = ParkingUserModel.objects.get(id=parking_id_list[num])
         car_data[num]['address'] = recode.address
-        car_data[num]['used_mileage']
+        car_data[num]['used_mileage'] = "{:,}".format(car_data[num]['used_mileage'])
     if user_id != 'ゲスト':
         favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
         for check in car_data:
             for favorite_id in favorite_id_list:
                 if favorite_id['favorite_car_id_id'] == check['id']:
                     check['favorite'] = True
+    print(car_data)
     return car_data
 
 
