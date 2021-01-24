@@ -1,0 +1,16 @@
+h1 {
+    font-size: 25pt;
+}
+
+h2 {
+    font-size: 20pt;
+    margin-top: 30pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+}
+
+.tr {
+    border-top: solid;
+    border-bottom: solid;
+
+}

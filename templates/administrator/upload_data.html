@@ -7,12 +7,12 @@
 
 
 {% block main_contents %}
-<h1>{{ title }}</h1>
+<h1 style="font-size: 25pt;">{{ title }}</h1>
 <form name="dataform" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <textarea class="form-control" name="output" cols="80" rows="15"></textarea>
-    <input class="btn btn-outline-secondary" type="submit" value="Upload File" name="submit" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+    <input class="btn" type="submit" value="Upload File" name="submit" style="text-align: center;padding: auto;">
 
 </form>
 {% endblock %}
