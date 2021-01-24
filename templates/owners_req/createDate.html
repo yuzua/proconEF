@@ -1,6 +1,10 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "owners_req/css/createDate.css" %}'>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 
@@ -9,9 +13,9 @@
     <form action="{% url 'owners_req:createDate' %}" method="post" >
         {% csrf_token %}
         <table class="table">
-        <thead class="thead-light">
-            <tr>
-            <th scope="col">選択</th>
+        <thead>
+            <tr class="tr">
+            <th scope="col" class="col1">選択</th>
             <th scope="col">車種</th>
             <th scope="col">駐車場</th>
             </tr>
@@ -19,21 +23,21 @@
         {% for item in car_info %}
         <tbody>
             <tr>
-            <td><input type="radio" name="car_id" value="{{item.car_id}}" required></td>
+            <td><input type="radio" name="car_id" value="{{item.car_id}}" required class="col1"></td>
             <th scope="row">{{item.category}}</th>
             <td>{{item.address}}</td>
             </tr>
         </tbody>
         {% endfor %}
         </table>
-<div class="card">
-        <h2 class="card-header">{{ message|safe }}</h2>
-        <div class="card-body">
+<div>
+        <h2>{{ message|safe }}</h2>
+        <div>
             {{ form.as_p }}
             {{ form.media }}
         </div>
-        <div class="card-footer">
-            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        <div>
+            <input class="btn" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </div>
     </form>
 </div>

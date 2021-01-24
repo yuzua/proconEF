@@ -5,8 +5,48 @@
 
 {% block main_contents %}
 <h5>クイック車種検索</h5>
-<form>
+<form action="{% url 'carsharing_booking:selectcar' %}" method="post" >
+    {% csrf_token %}
+    <div class="w-25 p-2 float-left">
     {{ form.as_table }}
+    </div>
+    <div class="w-75 float-right card">
+        <h6 class="card-header">詳細検索</h6>
+        <div class="card-body p-0">
+            <div class="w-25 p-2 float-left">
+                <label for="id_people">乗車人数:</label>
+                <input type="number" name="people" class="form-control">
+            </div>
+            <div class="w-25 p-2 float-left">
+                <label for="id_at_mt">AT車・MT車</label>
+                    <select class="form-control" name="at_mt" id="at_mt">
+                        <option></option>
+                        <option>AT車</option>
+                        <option>MT車</option>
+                    </select>
+            </div>
+            
+            <div class="w-50 p-2 float-right m-0 form-check form-check-inline">
+            <div class="w-100">
+                <input class="form-check-input" type="checkbox" name="option" id="babysheet" value='babysheet'>
+                <label class="form-check-label" for="babysheet">チャイルドシート</label><br>
+                <input class="form-check-input" type="checkbox" name="option" id="around_view_monitor" value="around_view_monitor">
+                <label class="form-check-label" for="around_view_monitor">駐車アシスト</label><br>
+                <input class="form-check-input" type="checkbox" name="option" id="car_autonomous" value="car_autonomous">
+                <label class="form-check-label" for="car_autonomous">自動運転</label>
+            </div>
+            <div class="w-100">
+                <input class="form-check-input" type="checkbox" name="option" id="car_nav" value="car_nav">
+                <label class="form-check-label" for="car_nav">カーナビ</label><br>
+                <input class="form-check-input" type="checkbox" name="option" id="etc" value="etc">
+                <label class="form-check-label" for="etc">ETC</label><br>
+                <input class="form-check-input" type="checkbox" name="option" id="non_smoking" value="non_smoking">
+                <label class="form-check-label" for="non_smoking">禁煙車両</label>
+            </div>
+            </div>
+            <input class="btn float-right" type="submit" value="詳細検索">
+        </div>
+    </div>
 </form>
 
 <table class="table">
@@ -42,6 +82,10 @@
     };
 
     ;;
+</script>
+<script>
+    target1 = document.getElementById("id_category");
+    target1.innerHTML = '';
 </script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/car-booking.js" %}'></script>
 {% endblock %}

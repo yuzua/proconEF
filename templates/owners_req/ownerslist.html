@@ -16,9 +16,9 @@
 
 
 <h1 class="h3 mb-3 font-weight-normal" style="margin: 10pt;">{{ title }}</h1>
-<div class="card">
-    <h5 class="card-header">{{ message|safe }}</h5>
-    <div class="card-body">
+<div>
+    <h5 style="border-bottom: solid;border-color: rgb(83, 83, 83);padding-left: 20pt;padding-bottom: 10pt;font-size: large;font-weight: bold;margin-top: 20pt;">{{ message|safe }}</h5>
+    <div>
         {% for obj in data %}
         <table class="table" style="width: 90%;margin: 30pt;">
             {% comment %} <tr><th>ID</th><td>{{obj.user_id}}</td></tr> {% endcomment %}
@@ -29,14 +29,14 @@
             {% comment %} <tr><td><a href="{% url 'owners_req:edit' obj.user_id %}">変更</a></td><td><a href="{% url 'parking_req:delete' obj.id %}">削除</a></td></tr>   {% endcomment %}
         </table>
     </div>
-    <div class="card-footer">
+    <div>
         <tr>
             <td>
                 <form action="{% url 'owners_req:ownerslist' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="obj.id" value="{{obj.id}}">
                     <input type="hidden" name="command" value="delete">
-                    <input class="btn btn-outline-secondary" type="submit" value="削除" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+                    <input class="btn" type="submit" value="削除" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
                 </form>
             </td>
             <td>
@@ -44,7 +44,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="obj.id" value="{{obj.id}}">
                     <input type="hidden" name="command" value="edit">
-                    <input class="btn btn-outline-secondary" type="submit" value="変更" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+                    <input class="btn" type="submit" value="変更" style="width: 80pt;height: 30pt;margin: 5pt;clear: none;">
                 </form>
             </td>
         </tr>

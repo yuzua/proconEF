@@ -36,7 +36,7 @@ function success(pos) {
 }
   
 function error(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
+    // console.warn(`ERROR(${err.code}): ${err.message}`);
     var ele = document.createElement('input');
       // データを設定
     ele.setAttribute('type', 'hidden');

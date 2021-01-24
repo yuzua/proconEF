@@ -1,5 +1,6 @@
 from django.db import models
 from carsharing_booking .models import BookingModel
+from owners_req .models import CarInfoModel
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.core.validators import FileExtensionValidator
@@ -123,3 +124,10 @@ class Photo(models.Model):
             base64_img = base64.b64encode(img.read()).decode()
 
             return 'data:' + img.file.content_type + ';base64,' + base64_img
+
+
+class UserFavoriteCarModel(models.Model):
+    user_id = models.IntegerField(default=0, verbose_name='ユーザID')
+    favorite_car_id = models.ForeignKey(CarInfoModel, on_delete=models.CASCADE, verbose_name='お気に入り車両ID')
+    def __str__(self):
+        return '<user_id=' +str(self.user_id) + str(self.favorite_car_id) + '>'

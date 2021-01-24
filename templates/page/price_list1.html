@@ -1,0 +1,73 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block main_contents %}
+
+<h2><span>料金表</span></h2>
+<p class="float-r">（税込）</p>
+
+<table bgcolor="#D7EEFF" border="1" cellspacing="0" cellpadding="0" class="pack mb30" width="1250">
+    <tbody>
+      <tr class="sp_pc_tr">
+        <th class="top col2" colspan="2"></th>
+        <th class="top">ライトプラン(月額500円)</th>
+        <th class="top">スタンダードプラン(月額1,000円)</th>
+        <th class="top">プレミアムプラン(月額2,000円)</th>
+      </tr>
+      <tr>
+        <th class="sub-top col2" colspan="2">時間料金</th>
+        <td class="light packplan">225円/15分</td>
+        <td class="standard packplan hidden">210円/15分</td>
+        <td class="premium packplan hidden">180円/15分</td>
+      </tr>
+      <tr>
+        <th class="sub-top" rowspan="6">最大時間料金</th>
+        <th class="sub-top">6時間まで</th>
+        <td class="light packplan">4,580円</td>
+        <td class="standard packplan hidden">4,280円</td>
+        <td class="premium packplan hidden">3,680円</td>
+      </tr>
+      <tr>
+        <th class="sub-top">12時間まで</th>
+        <td class="light packplan">6,780円</td>
+        <td class="standard packplan hidden">6,380円</td>
+        <td class="premium packplan hidden">5,480円</td>
+      </tr>
+      <tr>
+        <th class="sub-top">24時間まで</th>
+        <td class="light packplan">8,880円</td>
+        <td class="standard packplan hidden">8,280円</td>
+        <td class="premium packplan hidden">7,180円</td>
+      </tr>
+      <tr>
+        <th class="sub-top">36時間まで</th>
+        <td class="light packplan">12,180円</td>
+        <td class="standard packplan hidden">11,380円</td>
+        <td class="premium packplan hidden">9,780円</td>
+      </tr>
+      <tr>
+        <th class="sub-top">48時間まで</th>
+        <td class="light packplan">14,280円</td>
+        <td class="standard packplan hidden">13,380円</td>
+        <td class="premium packplan hidden">11,480円</td>
+      </tr>
+      <tr>
+        <th class="sub-top">72時間まで</th>
+        <td class="light packplan">20,380円</td>
+        <td class="standard packplan hidden">19,080円</td>
+        <td class="premium packplan hidden">16,380円</td>
+      </tr>
+    </tbody>
+  </table>
+    <p> ※返却前に20L以上の給油をしていただきますと30分の料金割引をいたします。<a href="#">詳細はこちら</a><br>
+        ※返却前に水洗い洗車をしていただきますと30分の料金割引をいたします。<a href="#">詳細はこちら</a><br>
+        ※上記の両方をしていただきますと1時間の料金割引をいたします。<a href="#">詳細はこちら</a>
+    </p>
+  
+
+
+
+{% endblock %}
