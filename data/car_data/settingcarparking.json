@@ -1,12 +1,12 @@
 [
     {
-        "car_id_id": 1,
+        "car_id_id": 2,
         "id": 1,
         "parking_id_id": 1,
         "user_id": 0
     },
     {
-        "car_id_id": 2,
+        "car_id_id": 1,
         "id": 2,
         "parking_id_id": 1,
         "user_id": 0
@@ -21,10 +21,6 @@
         "car_id_id": 4,
         "id": 4,
         "parking_id_id": 2,
-<<<<<<< HEAD
         "user_id": 0
-=======
-        "user_id": 1
->>>>>>> f654fa5d898c84d254ad135ab98a86b70029bb49
     }
 ]
