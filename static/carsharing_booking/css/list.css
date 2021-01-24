@@ -2,7 +2,7 @@ fieldset {
     border: none;
     padding: 0;
     margin:  0;
-    text-align: center;
+    text-align: right;
   }
   
 .radio-inline__input {
@@ -25,7 +25,7 @@ fieldset {
 }
   
 .radio-inline__input:focus + .radio-inline__label {
-    outline-color: #4D90FE;
+    outline-color: hsl(245, 9%, 28%);
     outline-offset: -2px;
     outline-style: auto;
     outline-width: 5px;
@@ -67,8 +67,7 @@ fieldset {
     color: #fff;
 }
 .btn-mycolor:hover{
-    opacity: 0.7;
-    color: #000;
+    color: #fff;
 }
 .now{
     padding: 0.5em 1em;
@@ -99,3 +98,15 @@ fieldset {
     padding-top: 6pt;
     padding-bottom: 5pt;
 }
+
+h1 {
+    margin-bottom: 20pt;
+    margin-top: 20pt;
+    font-size: 25pt;
+}
+
+.hyo {
+    border-top: solid;
+    border-bottom: solid;
+    background-color: #fff;
+} 

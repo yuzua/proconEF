@@ -5,7 +5,7 @@
 
 
 {% block main_contents %}
-    <h1>{{ title }}</h1>
+    <h1 style="font-size: 25pt;">{{ title }}</h1>
 
 <table class="table">
   <tbody>
@@ -85,7 +85,7 @@
       <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>
     </tr>
   </tbody>
-  <a href="{% url 'carsharing_req:first' %}" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt; clear:both;">TOPへ戻る</a>
+  <a href="{% url 'carsharing_req:first' %}" class="btn" style="float: right;width: 80pt;height: 30pt;margin: 5pt; clear:both;">TOPへ戻る</a>
 
 </table>
 {% comment %} <style>

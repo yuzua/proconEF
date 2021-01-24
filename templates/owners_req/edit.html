@@ -2,7 +2,7 @@
 
 {% block active_login %}
 <title>{{ title }}</title>
-<h1>{{ title }}</h1>
+<h1 style="font-size: 25pt;">{{ title }}</h1>
 {% endblock %}
 
 {% block contents %}
@@ -14,7 +14,7 @@
 		<input type="hidden" name="p_id" value="{{id}}">
 		{{ form.as_table }}
 			<tr><th><td>
-		<input class="btn" type="submit" value="変更">
+		<input class="btn" type="submit" value="変更" style="height: 30pt;width: 90pt;font-size: 11pt;margin: 3pt 10pt 3pt 10pt;border-color: #696969;float: right;clear: both;">
 			</td></th></tr>
 		</table>
 </form>
