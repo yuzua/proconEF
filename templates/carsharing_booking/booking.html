@@ -33,17 +33,17 @@
 {% for car_obj in car_objs %}
     <tr style="border-bottom: solid;border-color: #cdcdcd;border-width: 1pt;">
         <td>
-            <input type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required>
+            <input id="car_{{car_obj.id}}" type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required>
             <td>
-                <img src="/media/{{car_obj.img}}" width="110"　border="0" />
+                <label for="car_{{car_obj.id}}"><img src="/media/{{car_obj.img}}" width="110"　border="0" /></label>
             </td>
         </td>
-        <td>{{car_obj.parent_category}}</td>
-        <td>{{car_obj.category}}</td>
-        <td>{{car_obj.model_id}}</td>
-        <td>{{car_obj.people}}人</td>
-        <td>{{car_obj.tire}}</td>
-        <td>{{car_obj.at_mt}}車</td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.parent_category}}</label></td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.category}}</label></td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.model_id}}</label></td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.people}}人</label></td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.tire}}</label></td>
+        <td><label for="car_{{car_obj.id}}">{{car_obj.at_mt}}車</label></td>
         <td>
         {% if car_obj.babysheet == True %}
         <li>チャイルドシート</li>
@@ -64,7 +64,7 @@
         <li>禁煙</li>
         {% endif %}
         </td>
-    </tr> 
+    </tr>
 {% endfor %}
 </table>
 </div>
@@ -92,6 +92,7 @@
 
 {% block mapapi %}
 <script>
+    var status = "{{status}}";
     var all_events = JSON.parse('{{ events|safe }}');
 </script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/map-calendar.js" %}'></script>
