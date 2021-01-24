@@ -7,7 +7,7 @@
 
 
 {% block main_contents %}
-<h1>{{ title }}</h1>
+<h1 style="font-size: 25pt;">{{ title }}</h1>
 {% for path in path_list %}
     <a href="{{path}}" download onclick="javascript: downloadFile('{{path}}', '{{path}}'); return false;">{{path}}</a>
         <hr>
