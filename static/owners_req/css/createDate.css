@@ -1,0 +1,22 @@
+h1 {
+    font-size: 25pt;
+}
+
+.tr {
+    border-top: solid;
+    border-bottom: solid;
+}
+
+h2 {
+    margin-top: 40pt;
+    font-size: 20pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+    padding-bottom: 10pt;
+}
+
+@media (max-width: 670px){
+    .col1 {
+        width: 25pt;
+    }
+}
