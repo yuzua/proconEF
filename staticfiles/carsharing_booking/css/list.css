@@ -99,3 +99,58 @@ fieldset {
     padding-top: 6pt;
     padding-bottom: 5pt;
 }
+
+.open{
+    display: block;
+}
+.close{
+    display: none;
+}
+.button-icon {
+	width: auto;
+	padding:0;
+	margin:0;
+	background:none;
+	border:0;
+	font-size:0;
+	line-height:0;
+ 	overflow:visible;
+	cursor:pointer;
+    float: right;
+}
+
+.list-group-item {
+    border: 0px;
+    padding: 2pt;
+}
+.leftbox{
+    float: left;
+    width: 40%;
+    padding: 5px;
+}
+.leftbox2{
+    float: left;
+    width: 100%;
+    padding: 5px;
+}
+.rightbox{
+    width: 60%;
+    float: right;
+}
+@media screen and (max-width: 599px) {
+    .leftbox{
+        float: left;
+        width: 100%;
+        padding: 1px;
+    }
+    .leftbox2 {
+        padding: 1px;
+    }
+    .rightbox{
+        width: 100%;
+        float: none;
+    }
+    .list-group-item {
+        padding: 0;
+    }
+}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from carsharing_req .models import CarsharUserModel, UsageModel
+from carsharing_req .models import CarsharUserModel, UsageModel, UserFavoriteCarModel
 from parking_req .models import ParkingUserModel, ParkingUsageModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
@@ -9,6 +9,7 @@ from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm, CarCategory
 import json
 import datetime, locale
+import collections
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
@@ -161,6 +162,39 @@ def car(request):
     return render(request, "carsharing_booking/car.html", params)
 
 def selectcar(request):
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        user_id = 'ゲスト'
+    else:
+        print(request.user)
+        user_id = request.session['user_id']
+    if (request.method == 'POST'):
+        mydict = dict(request.POST)
+        car_data = selectcardataset(mydict, user_id)
+        request.session['select'] = car_data
+    else:
+        car_data = request.session['select']
+        if user_id != 'ゲスト':
+            favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
+            print(favorite_id_list)
+            for check in car_data:
+                check['favorite'] = None
+                for favorite_id in favorite_id_list:
+                    if favorite_id['favorite_car_id_id'] == check['id']:
+                        check['favorite'] = True
+
+        print(car_data)
+
+    params = {
+        'title': '車詳細検索',
+        'car_objs': car_data,
+        'guest': user_id,
+        'flag': len(car_data)
+    }
+    return render(request, "carsharing_booking/selectcar.html", params)
+
+def selectcardataset(mydict, user_id):
+    print(user_id)
     people = (0, 100)
     babysheet = False
     around_view_monitor = False
@@ -168,36 +202,77 @@ def selectcar(request):
     car_nav = False
     etc = False
     non_smoking = False
-    if (request.method == 'POST'):
-        mydict = dict(request.POST)
-        if mydict['people'][0] != '':
-            people = (int(mydict['people'][0]), int(mydict['people'][0]))
-        if mydict['at_mt'][0] == 'AT車':
-            at_mt = 'AT'
-        elif mydict['at_mt'][0] == 'MT車':
-            at_mt = 'MT'
+    if mydict['people'][0] != '':
+        people = (int(mydict['people'][0]), int(mydict['people'][0]))
+    if mydict['at_mt'][0] == 'AT車':
+        at_mt = 'AT'
+    elif mydict['at_mt'][0] == 'MT車':
+        at_mt = 'MT'
+    else:
+        at_mt = 'T'
+    if mydict.get('option') != None:
+        option = True
+        option_list = list(mydict['option'])
+        car_obj_list = []
+        countcheck = 0
+        for value in option_list:
+            if value == 'babysheet':
+                babysheet = True
+                tmp = list(CarInfoModel.objects.filter(babysheet=babysheet).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'around_view_monitor':
+                around_view_monitor = True
+                tmp = list(CarInfoModel.objects.filter(around_view_monitor=around_view_monitor).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'car_autonomous':
+                car_autonomous = True
+                tmp = list(CarInfoModel.objects.filter(car_autonomous=car_autonomous).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'car_nav':
+                car_nav = True
+                tmp = list(CarInfoModel.objects.filter(car_nav=car_nav).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'etc':
+                etc = True
+                tmp = list(CarInfoModel.objects.filter(etc=etc).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'non_smoking':
+                non_smoking = True
+                tmp = list(CarInfoModel.objects.filter(non_smoking=non_smoking).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+        c = collections.Counter(car_obj_list)
+        car_obj_list = []
+        for tap in c.most_common():
+            if tap[1] == countcheck:
+                car_obj_list.append(tap[0])
+            else:
+                break
+        print(car_obj_list)
+    else:
+        option = False
+    if mydict.get('category') != None:
+        category = int(mydict['category'][0])
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
         else:
-            at_mt = 'T'
-        if mydict.get('option') != None:
-            option_list = list(mydict['option'])
-            for value in option_list:
-                if value == 'babysheet':
-                    babysheet = True
-                elif value == 'around_view_monitor':
-                    around_view_monitor = True
-                elif value == 'car_autonomous':
-                    car_autonomous = True
-                elif value == 'car_nav':
-                    car_nav = True
-                elif value == 'etc':
-                    etc = True
-                elif value == 'non_smoking':
-                    non_smoking = True
-        if mydict.get('category') != None:
-            category = int(mydict['category'][0])
-            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
+    else:
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
         else:
-            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(babysheet=babysheet,around_view_monitor=around_view_monitor,car_nav=car_nav,car_autonomous=car_autonomous,etc=etc,non_smoking=non_smoking).values('id'))
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
     car_id_list = []
     for carid in car_obj:
         car_id_list.append(carid.get('id'))
@@ -212,20 +287,26 @@ def selectcar(request):
     for delete in exclude_car_list:
         car_id_list.remove(delete)
     data = list(CarInfoParkingModel.objects.filter(car_id__in=car_id_list).values())
+    print(data)
     parking_id_list = []
     for parkingid in data:
         parking_id_list.append(parkingid['parking_id_id'])
-    parking_data = list(ParkingUserModel.objects.filter(id__in=parking_id_list).values('address'))
+    print(parking_id_list)
     car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
-    for num in range(len(car_data)):
-        car_data[num]['address'] = parking_data[num]['address']
     print(car_data)
-    params = {
-        'title': '車詳細検索',
-        'car_objs': car_data,
-        'flag': len(car_data)
-    }
-    return render(request, "carsharing_booking/selectcar.html", params)
+    for num in range(len(car_data)):
+        recode = ParkingUserModel.objects.get(id=parking_id_list[num])
+        car_data[num]['address'] = recode.address
+        car_data[num]['used_mileage']
+    if user_id != 'ゲスト':
+        favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
+        print(favorite_id_list)
+        for check in car_data:
+            for favorite_id in favorite_id_list:
+                if favorite_id['favorite_car_id_id'] == check['id']:
+                    check['favorite'] = True
+    # print(car_data)
+    return car_data
 
 
 def history(request):
@@ -264,10 +345,50 @@ def history(request):
     return render(request, "carsharing_booking/history.html", params)
 
 
+def favoritelist(request):
+    if str(request.user) == "AnonymousUser":
+        messages.error(request, 'ログインしてください。')
+        return redirect(to='carsharing_req:index')
+    else:
+        user_id = request.session['user_id']
+    favorite_car_dict = list(UserFavoriteCarModel.objects.filter(user_id=user_id).values('favorite_car_id'))
+    favorite_car_list = []
+    for favorite_car_id in favorite_car_dict:
+        favorite_car_list.append(favorite_car_id['favorite_car_id'])
+    print(favorite_car_list)
+    car_objs = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=favorite_car_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+    count = 1
+    for car_obj in car_objs:
+        car_obj['count'] = count
+        car_obj['car_id'] = car_obj['id']
+        setid = CarInfoParkingModel.objects.get(car_id=int(car_obj['id']))
+        car_obj['id'] = setid.id
+        parikng = ParkingUserModel.objects.get(id=setid.parking_id_id)
+        car_obj['parking_id'] = parikng.id
+        car_obj['lat'] = parikng.lat
+        car_obj['lng'] = parikng.lng
+        car_obj['address'] = parikng.address
+        count += 1
+    print(car_objs)
+    params = {
+        'title': 'お気に入り',
+        'car_objs': car_objs,
+        'count': len(car_objs)
+    }
+    return render(request, "carsharing_booking/favoritelist.html", params)
+
+
 def booking_car(request, num):
     request.session['select'] = "car"
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        user_id = 'ゲスト'
+    else:
+        print(request.user)
+        user_id = request.session['user_id']
     params = {
         'title': '予約',
+        'guest': user_id,
         'events': '',
         'car_id': num,
         'form': BookingCreateForm(),
@@ -296,6 +417,15 @@ def booking_car(request, num):
     request.session['events'] = json.dumps(events)
     params['events'] = request.session['events']
     car_obj = CarInfoModel.objects.filter(id=num)
+    params['favorite'] = False
+    if user_id != 'ゲスト':
+        favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id, favorite_car_id_id=num).values('favorite_car_id_id'))
+        if len(favorite_id_list) != 0:
+            request.session['favorite'] = True
+        else:
+            request.session['favorite'] = False
+    else:
+        request.session['favorite'] = False
     request.session['car_objs'] = car_obj
     # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
     # request.session['parking_id'] = parking_id[0]['parking_id']
@@ -303,6 +433,7 @@ def booking_car(request, num):
     parking_id = CarInfoParkingModel.objects.filter(id=num).values("parking_id")
     request.session['address'] = ParkingUserModel.objects.get(id=parking_id[0]["parking_id"]).address
     params['address'] = request.session['address']
+    params['favorite'] = request.session['favorite']
     return render(request, "carsharing_booking/car_next.html", params)
 
 
@@ -378,6 +509,13 @@ def checkBooking(request):
 
     }
     # error時の入力保存しredirect
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        user_id = 'ゲスト'
+    else:
+        print(request.user)
+        user_id = request.session['user_id']
+
     if request.session['select'] == 'map':
         address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
         params['address'] = address[0]['address']
@@ -385,6 +523,8 @@ def checkBooking(request):
         params['car_id'] = request.session['obj_id']
         params['address'] = request.session['address']
         params['car_data'] = CarInfoModel.objects.get(id=request.session['obj_id'])
+        params['favorite'] = request.session['favorite']
+        params['guest'] = user_id
     params['events'] = request.session['events']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
@@ -518,6 +658,7 @@ def push(request):
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
+        del request.session['favorite']
         messages.success(request, '予約が完了しました。<br>ご登録されているメールアドレスに予約完了メールを送信致しました。ご確認下さい。')
         #mail送信メソッドの呼び出し
         success_booking_mail(request, charge, start_day, start_time, end_day, end_time)
@@ -544,6 +685,25 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
+
+def favorite(request, flag, num):
+    first = len(list(UserFavoriteCarModel.objects.filter(user_id=request.session['user_id'], favorite_car_id_id=num)))
+    if first == 0:
+        record = UserFavoriteCarModel(user_id=request.session['user_id'], favorite_car_id_id=num)
+        print('record_save')
+        record.save()
+        messages.success(request, 'お気に入りに追加しました。')
+    else:
+        record = UserFavoriteCarModel.objects.filter(user_id=request.session['user_id'], favorite_car_id_id=num)
+        print('recode_delete')
+        record.delete()
+        messages.success(request, 'お気に入りから削除しました。')
+    if flag == 'serect':
+        return redirect(to='carsharing_booking:selectcar')
+    elif flag == 'bookingcar':
+        return redirect(to='carsharing_booking:booking_car', num=num)
+    elif flag == 'favorites':
+        return redirect(to='carsharing_booking:favoritelist')
 
 def reservation(request):
     booking = BookingModel.objects.filter(user_id=request.session['user_id']).values('id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge').last()

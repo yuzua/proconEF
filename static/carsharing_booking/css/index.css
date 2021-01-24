@@ -90,6 +90,40 @@
     border-bottom: solid;
     border-color: #696969;
 }
+/* お気に入りから予約 */
+.card-favorite {
+    width: 100%;
+    float: left;
+}
+
+.card-header-favorite {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
+
+.favorite {
+    float: left;
+    width: 50%;
+}
+
+#favorite {
+    float: left;
+    padding: 50pt;
+}
+
+#favorite {
+    float: right;
+    margin-top: 50pt;
+}
+
+.card-header-favorite {
+    margin: 10pt;
+    text-align: center;
+    border-bottom: solid;
+    border-color: #696969;
+}
 
 /* .footer {
     margin: 0 160pt;
