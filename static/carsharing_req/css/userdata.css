@@ -1,0 +1,34 @@
+h1 {
+    font-size: 25pt;
+}
+
+.btn {
+    float: right;
+    width: 80pt;
+    height: 30pt;
+    margin: 5pt;
+    clear: both;
+}
+
+img {
+    width: 500px;
+}
+
+@media (max-width: 670px){
+    h1 {
+        font-size: 15pt;
+        margin-left: 5pt;
+    }
+
+    .btn {
+        float: left;
+    }
+
+    th,td {
+        display: block;
+    }
+
+    img {
+        width: 100%;
+    }
+}
