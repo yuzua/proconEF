@@ -127,8 +127,18 @@
     img {
         width: 100%;
     }
+    .pager .pagination {
+        margin: 0px;
+    }
+    .p {
+        margin-left: 1pt;
+    }
+    .btn-open{
+        padding: 0pt;
+        margin-left: 190pt;
+        width: 90pt;
+    }
 }
-
 
 #scrollArea {
     width: 100%;

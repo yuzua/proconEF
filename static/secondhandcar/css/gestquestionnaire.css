@@ -71,3 +71,22 @@ h1 {
     font-size: 18px;
     color: rgb(83, 83, 83);
   }
+  #guest_btn{
+    float: right;
+    width: 80pt;
+    height: 30pt;
+    margin: 5pt;
+    margin-right: 150pt;
+}
+
+@media screen and (max-width: 599px) {
+    #guest_btn{
+        margin-right: 0pt;
+    }
+    .ECM_CheckboxInput {
+        margin: 0pt 0pt 6pt 0pt;
+    }
+    .title {
+        font-size: 12px;
+    }
+}

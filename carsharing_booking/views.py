@@ -163,10 +163,8 @@ def car(request):
 
 def selectcar(request):
     if str(request.user) == "AnonymousUser":
-        print('ゲスト')
         user_id = 'ゲスト'
     else:
-        print(request.user)
         user_id = request.session['user_id']
     if (request.method == 'POST'):
         mydict = dict(request.POST)
@@ -182,8 +180,6 @@ def selectcar(request):
                 for favorite_id in favorite_id_list:
                     if favorite_id['favorite_car_id_id'] == check['id']:
                         check['favorite'] = True
-
-        print(car_data)
 
     params = {
         'title': '車詳細検索',
@@ -294,13 +290,14 @@ def selectcardataset(mydict, user_id):
     for num in range(len(car_data)):
         recode = ParkingUserModel.objects.get(id=parking_id_list[num])
         car_data[num]['address'] = recode.address
-        car_data[num]['used_mileage']
+        car_data[num]['used_mileage'] = "{:,}".format(car_data[num]['used_mileage'])
     if user_id != 'ゲスト':
         favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
         for check in car_data:
             for favorite_id in favorite_id_list:
                 if favorite_id['favorite_car_id_id'] == check['id']:
                     check['favorite'] = True
+    print(car_data)
     return car_data
 
 
@@ -376,18 +373,26 @@ def favoritelist(request):
 def booking_car(request, num):
     request.session['select'] = "car"
     if str(request.user) == "AnonymousUser":
-        print('ゲスト')
         user_id = 'ゲスト'
+        guest = True
     else:
-        print(request.user)
         user_id = request.session['user_id']
+        guest = False
+
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    
     params = {
         'title': '予約',
         'guest': user_id,
         'events': '',
         'car_id': num,
         'form': BookingCreateForm(),
-        'car_data': CarInfoModel.objects.get(id=num)
+        'car_data': CarInfoModel.objects.get(id=num),
+        'status': my_plan
     }
     events = []
     # カーシェアリング予約
@@ -413,7 +418,8 @@ def booking_car(request, num):
     params['events'] = request.session['events']
     car_obj = CarInfoModel.objects.filter(id=num)
     params['favorite'] = False
-    if user_id != 'ゲスト':
+    if guest == False:
+    # if user_id != 'ゲスト':
         favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id, favorite_car_id_id=num).values('favorite_car_id_id'))
         if len(favorite_id_list) != 0:
             request.session['favorite'] = True
