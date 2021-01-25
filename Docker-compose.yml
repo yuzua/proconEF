@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    expose: 
+      - 8000
+    volumes:
+      - '.:/Django'
+    tty: True
+    stdin_open: True
+    depends_on:
+        - db
+    links: 
+        - db
+    
+  db:
+    image: postgres:11
+    environment:
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+
+  nginx:
+        build: ./nginx
+        volumes:
+            - ./staticfiles:/usr/src/app/staticfiles
+        ports:
+            - 1337:80
+        depends_on:
+            - app
