@@ -2,26 +2,27 @@
 {% load static %}
 
 {% block head %}
+<link rel="stylesheet" href='{% static "page/css/price_list1.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
 
-<h2><span>料金表</span></h2>
+<h1><span>料金表</span></h1>
 <p class="float-r">（税込）</p>
 
-<table bgcolor="#D7EEFF" border="1" cellspacing="0" cellpadding="0" class="pack mb30" width="1250">
+<table class="table table-sm">
     <tbody>
-      <tr class="sp_pc_tr">
-        <th class="top col2" colspan="2"></th>
+      <tr class="tr">
+        <th class="col2" colspan="2"></th>
         <th class="top">ライトプラン(月額500円)</th>
         <th class="top">スタンダードプラン(月額1,000円)</th>
         <th class="top">プレミアムプラン(月額2,000円)</th>
       </tr>
       <tr>
-        <th class="sub-top col2" colspan="2">時間料金</th>
-        <td class="light packplan">225円/15分</td>
-        <td class="standard packplan hidden">210円/15分</td>
-        <td class="premium packplan hidden">180円/15分</td>
+        <th class="col2" colspan="2">時間料金</th>
+        <td>225円/15分</td>
+        <td>210円/15分</td>
+        <td>180円/15分</td>
       </tr>
       <tr>
         <th class="sub-top" rowspan="6">最大時間料金</th>

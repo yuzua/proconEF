@@ -347,11 +347,11 @@ a:hover {
     }
     #log-btn{
         height: 25pt;
-        width: 65pt;
+        width: 100%;
         margin: 7pt 0pt 3pt 0pt;
         border-color: #CDCDCD;
         float: left;
-        clear: none;
+        display: block;
         padding: 0;
         /* margin: 0; */
     }

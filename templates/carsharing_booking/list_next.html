@@ -4,74 +4,86 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+  <!-- <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'> -->
   <link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
-<div class="card m-5">
-    <h5 class="card-header">{{ title }}</h5>
-        <div class="card-body p-2">
-            <p>開始日：{{booking.start_day}}</p>
-            <p>開始時刻：{{booking.start_time}}</p>
-            <p>終了日：{{booking.end_day}}</p>
-            <p>終了時刻：{{booking.end_time}}</p>
-            <p>料金：{{booking.charge}}円</p>
+<div class="m-5">
+    <h1>{{ title }}</h1>
+        <div class="p-2">
+            <div class="start">
+                <p>開始日：{{booking.start_day}}</p>
+                <p>開始時刻：{{booking.start_time}}</p>
+            </div>
+            <div class="finish">
+                <p>終了日：{{booking.end_day}}</p>
+                <p>終了時刻：{{booking.end_time}}</p>
+                <p>料金：{{booking.charge}}円</p>
+            </div>
         </div>
 {% if flag == "car" %}
-    <h5 class="card-header">車両{{ title }}</h5>
-        <div class="card-body p-2">
-            <div class="m-0 clearfix">
-                <div class="m-2 float-left">
-                    <img border="0" src="/media/{{data.img}}" width="200" alt="{{data.img}}">
-                </div>
-                <div class="card" id="numberplate" style="top:40px;left:50px;">
+    <h1>車両{{ title }}</h1>
+        <div class="p-2">
+            <div class="pic m-0"> 
+                <img border="0" src="/media/{{data.img}}" width="200" alt="{{data.img}}">
+                <div class="card" id="numberplate">
                     <div class="container clearfix" id="numberplate-top">
                         <p class="numberplate-top-item">{{ data.license_plate_place }}</p>
                         <p class="numberplate-top-item">{{ data.license_plate_type }}</p>
                     </div>
-                    <div class="container clearfix" id="numberplate-bottom">
+                    <div class="container" id="numberplate-bottom">
                         <p class="numberplate-bottom-item1">{{ data.license_plate_how }}</p>
                         <p class="numberplate-bottom-item2">{{ data.license_plate_num }}</p>
                     </div>
                 </div>
             </div>
-            <p>車種(メーカー)：{{data.category}}({{data.parent_category}})</p>
-            <p>型番：{{data.model_id}}</p>
-            <p>乗車人数：{{data.people}}人</p>
-            <p>変速システム：{{data.at_mt}}車</p>
-            <p>搭載機能：</p>
-            {% if data.babysheet == True %}
-            <li>チャイルドシート</li>
-            {% endif %}
-            {% if data.car_nav == True %}
-            <li>カーナビ</li>
-            {% endif %}
-            {% if data.etc == True %}
-            <li>ETC</li>
-            {% endif %}
-            {% if data.car_autonomous == True %}
-            <li>自動運動</li>
-            {% endif %}
-            {% if data.around_view_monitor == True %}
-            <li>駐車アシスト</li>
-            {% endif %}
-            {% if data.non_smoking == True %}
-            <li>禁煙</li>
-            {% endif %}
+            <div class="detail">
+                <div class="car">
+                    <p>車種(メーカー)：{{data.category}}({{data.parent_category}})</p>
+                    <p>型番：{{data.model_id}}</p>
+                    <p>乗車人数：{{data.people}}人</p>
+                    <p>変速システム：{{data.at_mt}}車</p>
+                    <p>搭載機能：</p>
+                </div>
+                <div class="cars">
+                    {% if data.babysheet == True %}
+                    <li>チャイルドシート</li>
+                    {% endif %}
+                    {% if data.car_nav == True %}
+                    <li>カーナビ</li>
+                    {% endif %}
+                    {% if data.etc == True %}
+                    <li>ETC</li>
+                    {% endif %}
+                    {% if data.car_autonomous == True %}
+                    <li>自動運動</li>
+                    {% endif %}
+                    {% if data.around_view_monitor == True %}
+                    <li>駐車アシスト</li>
+                    {% endif %}
+                    {% if data.non_smoking == True %}
+                    <li>禁煙</li>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 {% endif %}
-    <h5 class="card-header">駐車場{{ title }}</h5>
+    <h1>駐車場{{ title }}</h1>
         <div class="card-body p-2">
-            <div id="map" style="width:720px; height:400px"></div>
-            <p>住所：{{data2.address}}</p>
-            <p>駐車場タイプ：{{data2.parking_type}}</p>
-            <p>土地タイプ：{{data2.ground_type}}</p>
-            <p>横幅：{{data2.width}}m</p>
-            <p>奥行き：{{data2.length}}m</p>
-            {% if data2.height != 0 %}
-            <p>高さ：{{data2.height}}m</p>
-            {% endif %}
+            <div id="map" style="width:100%; height:400px"></div>
+            <div class="br1">
+                <p>住所：{{data2.address}}</p>
+                <p>駐車場タイプ：{{data2.parking_type}}</p>
+                <p>土地タイプ：{{data2.ground_type}}</p>
+            </div>
+            <div class="br2">
+                <p>横幅：{{data2.width}}m</p>
+                <p>奥行き：{{data2.length}}m</p>
+                {% if data2.height != 0 %}
+                <p>高さ：{{data2.height}}m</p>
+                {% endif %}
+            </div>
         </div>
 </div>
 {% if title == "予約詳細" %}

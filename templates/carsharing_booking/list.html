@@ -36,7 +36,7 @@
 {% endif %}
 <div id="div1">
 <h1>カーシェア{{title}}</h1>
-<table class="table table-sm">
+<table class="table table-sm pc">
   <thead>
     <tr class="hyo">
       <th scope="col">画像</th>
@@ -69,6 +69,48 @@
 {% endfor %}
   </tbody>
 </table>
+
+<table class="table table-sm sp">
+  <thead>
+    <tr class="hyo">
+      <th scope="col">画像</th>
+      {% for item in data %}
+      <td class="outer"><img src="/media/{{item.img}}" class="inner" style="height: 50pt;"></td>
+      {% csrf_token %}
+      <input type="hidden" name="flag" value="car">
+      {% endfor %}
+      <th scope="col">日時</th>
+      {% for item in data %}
+      <td>{{item.start_day}} {{item.start_time}} ~ {{item.end_day}} {{item.end_time}}</td>
+      {% csrf_token %}
+      <input type="hidden" name="booking" value="{{item.id}}">
+      {% endfor %}
+      <th scope="col">車種</th>
+      {% for item in data %}
+      <td>{{item.category}}</td>
+      {% csrf_token %}
+      <input type="hidden" name="car" value="{{item.car_id}}">
+      {% endfor %}
+      <th scope="col">住所</th>
+      {% for item in data %}
+      <td>{{item.address}}</td>
+      {% csrf_token %}
+      <input type="hidden" name="parking" value="{{item.parking_id}}">
+      {% endfor %}
+      <th scope="col">料金</th>
+      {% for item in data %}
+      <td>{{item.charge}}円</td>
+      {% csrf_token %}
+      {% endfor %}
+      <th scope="col">詳細</th>
+      {% for item in data %}
+      {% csrf_token %}
+      <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
+      {% endfor %}
+    </tr>
+  </thead>
+</table>
+
 </div>
 <div id="div2">
 <h1>駐車場{{title}}</h1>

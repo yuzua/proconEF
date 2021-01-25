@@ -1,0 +1,20 @@
+h1 {
+    font-size: 25pt;
+}
+
+.tr {
+    border-top: solid;
+    border-bottom: solid;
+}
+
+td {
+    text-align: center;
+}
+
+.top {
+    text-align: center;
+}
+
+a {
+    color: rgb(83, 83, 83);
+}
