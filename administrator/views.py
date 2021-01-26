@@ -6,7 +6,7 @@ from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
-from .models import MediaModel, StationModel
+from .models import MediaModel, StationModel, StationParkingModel
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
@@ -101,6 +101,10 @@ def checkparking(request):
         record = ParkingUserModel(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
             parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height, count=count)
         record.save()
+        parking_obj = ParkingUserModel.objects.get(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height)
+        ParkingSetStationArea(parking_obj.id, lat, lng)
+        
         #セッションデータ削除
         del request.session['user_lat']
         del request.session['user_lng']
@@ -116,6 +120,21 @@ def checkparking(request):
         messages.error(request, '不正なリクエストです。')
     return redirect(to='administrator:index')
 
+def ParkingSetStationArea(parking_id, lat, lng):
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    numdict = {}
+    for index in item_list:
+        w = float(index['lat']) - float(lat)
+        h = float(index['lng']) - float(lng)
+        if w < 0:
+            w = -w
+        if h < 0:
+            h = -h
+        num = w + h
+        numdict[index['id']] = num
+    min_k = min(numdict, key=numdict.get)
+    record = StationParkingModel(parking_id_id=parking_id, station_id_id=min_k)
+    record.save()
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
@@ -390,10 +409,8 @@ class DownloadData(TemplateView):
         DeleteUploadXlsx('./data/car_data/')
         DeleteUploadXlsx('./data/parking_data/')
         path_list = AllCarDownload()
-        path_list[0] = path_list[0][8:]
-        path_list[1] = path_list[1][8:]
-        path_list[2] = path_list[2][8:]
-        path_list[3] = path_list[3][8:]
+        for index, item in enumerate(path_list):
+            path_list[index] = item[7:]
         self.params['path_list'] = path_list
         return render(request, 'administrator/download_data.html', self.params)
 
@@ -458,17 +475,20 @@ def AllCarDownload():
     path_list = []
 
     # メーカー情報(親カテゴリー)をjsonでダウンロード
-    pc_path = AllParentCategoryDownload(dt_now)
+    pc_path = AllParentCategoryDownload()
     path_list.append(pc_path)
     # 車種情報(子カテゴリー)をjsonでダウンロード
-    c_path = AllCategoryDownload(dt_now)
+    c_path = AllCategoryDownload()
     path_list.append(c_path)
     # 駐車場情報をExcelファイルで作成、ダウンロード
-    parking_path = AllParkingDownload(dt_now)
+    parking_path = AllParkingDownload()
     path_list.append(parking_path)
     # 駐車場・車設定をExcelファイルで作成、ダウンロード
-    settings_path = AllSettingDownload(dt_now)
+    settings_path = AllSettingDownload()
     path_list.append(settings_path)
+    # 駐車場・ステーションエリア設定をExcelファイルで作成、ダウンロード
+    station_path = AllStationAreaDownload()
+    path_list.append(station_path)
 
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
@@ -489,14 +509,13 @@ def AllCarDownload():
         sheet.append(row)
 
     # xlsx型式で保存
-    # file_name = "./data/car_data/" + dt_now + ".xlsx"
     file_name = "./data/car_data/carinfo.xlsx"
     wb.save(file_name)
     path_list.append(file_name)
     return path_list
 
 # ------------------------ DB上に追加保存された全駐車場のデータをxlsxに書き出し ------------------------ 
-def AllParkingDownload(dt_now):
+def AllParkingDownload():
 
     data = [
         ["駐車場ID","ユーザID","住所","緯度","経度","登録日","駐車場タイプ","土地タイプ","横幅","奥行き","高さ","収容台数","管理者","制限台数フラグ"]
@@ -517,55 +536,50 @@ def AllParkingDownload(dt_now):
         sheet.append(row)
 
     # xlsx型式で保存
-    # file_name = "./data/parking_data/p_" + dt_now + ".xlsx"
     file_name = "./data/parking_data/parkinginfo.xlsx"
     wb.save(file_name)
     return file_name
 
 # ---------------------- DB上に追加保存された全メーカー名(親カテゴリー)をjsonに書き出し ------------------------ 
-def AllParentCategoryDownload(dt_now):
+def AllParentCategoryDownload():
     p_c = list(ParentCategory.objects.values())
     json_data = json.dumps(p_c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    # path = "./data/car_data/pc_" + dt_now + ".json"
     path = "./data/car_data/parentcategory.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
     return path
 # ------------------------- DB上に追加保存された全車種名(カテゴリー)をjsonに書き出し ------------------------------ 
-def AllCategoryDownload(dt_now):
+def AllCategoryDownload():
     c = list(Category.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    # path = "./data/car_data/c_" + dt_now + ".json"
     path = "./data/car_data/category.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
     return path
 # ---------------------------- DB上に追加保存された車・駐車場設定をjsonに書き出し -------------------------------- 
-def AllSettingDownload(dt_now):
+def AllSettingDownload():
     c = list(CarInfoParkingModel.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    # path = "./data/car_data/s_" + dt_now + ".json"
     path = "./data/car_data/settingcarparking.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
     return path
-# ---------------------------- DB上に追加保存された車・駐車場設定をjsonに書き出し -------------------------------- 
-def AllStationAreaDownload(dt_now):
+# --------------------- DB上に追加保存された駐車場・ステーションエリア設定をjsonに書き出し -------------------------- 
+def AllStationAreaDownload():
     c = list(StationModel.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    # path = "./data/car_data/s_" + dt_now + ".json"
-    path = "./data/car_data/stationarea.json"
+    path = "./data/parking_data/stationarea.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -635,7 +649,38 @@ def AllStationAreaUpload(json_data):
         for data in json_data:
             record = StationModel(id=data['id'], address=data['address'], lat=data['lat'], lng=data['lng'])
             record.save()
+        # 近いステーションを設定
+        ParkingsSetStationArea()
 
+# 駐車場の緯度経度から最寄りのステーションを設定(全件)
+def ParkingsSetStationArea():
+    result_list = {}
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    item_list2 = list(ParkingUserModel.objects.values("id", "address", "lat", "lng"))
+    for index2 in item_list2:
+        lat = index2['lat']
+        lng = index2['lng']
+        numdict = {}
+        for index in item_list:
+            w = float(index['lat']) - float(lat)
+            h = float(index['lng']) - float(lng)
+            if w < 0:
+                w = -w
+            if h < 0:
+                h = -h
+            num = w + h
+            numdict[index['id']] = num
+        min_k = min(numdict, key=numdict.get)
+        min_v = min(numdict.values())
+        result_list[index2['id']] = min_k
+    print(result_list)
+    record_list = []
+    for parking_id, station_id in result_list.items():
+        print(parking_id)
+        print(station_id)
+        record = StationParkingModel(parking_id_id=parking_id, station_id_id=station_id)
+        record_list.append(record)
+    StationParkingModel.objects.bulk_create(record_list)
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
 def ImportXlsx(file_name):
@@ -762,6 +807,7 @@ def AllParkingUpload(all_list):
             record.lat = parking_list[3]
             record.lng = parking_list[4]
             record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            # record.day = parking_list[5]
             record.parking_type = parking_list[6]
             record.ground_type = parking_list[7]
             record.width = int(parking_list[8])
@@ -794,7 +840,7 @@ def StationArea(request):
         index = int(items['id']) - 1
         items['color'] = haishayosoku_dict['kategori'].get(str(index))
         items['many'] = haishayosoku_dict['kazu'].get(str(index))
-    print(item_list)
+
     data = {
         'markerData': item_list,
         'markerData2': item_list2
@@ -819,4 +865,3 @@ def openJSON(path):
         json_object = json.loads(json_data)
 
     return json_object
-        

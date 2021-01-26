@@ -117,12 +117,12 @@ function initMap() {
             // 過剰
             var circle_color = '#ff0000';
             var msg = '<p style="color:#ff0000;">車両台数が過剰です</p>'
-            var link = '<a href="./settinginfo">配車を変更する</a>'
+            var link = '<a href="./settinginfo" class="btn smbtn">配車を変更する</a>'
         }else if (markerData[i]['color'] == 1){
             // 不足
             var circle_color = '#005FFF';
             var msg = '<p style="color:#005FFF;">車両台数が不足しています!!</p>'
-            var link = '<a href="./settinginfo">車両を配置する</a>'
+            var link = '<a href="./settinginfo" class="btn smbtn">車両を配置する</a>'
         }else{
             // 適正
             var circle_color = '#00CC99';
@@ -220,6 +220,21 @@ for (var i = 0; i < markerData2.length; i++) {
 </script>
 <script type="text/javascript" src='{% static "carsharing_booking/js/settinggeo.js" %}'></script>
 {% endif %}
+<style>
+.smbtn {
+    font-size: 1pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #CDCDCD;
+    float: right;
+    clear: both;
+    height: 20%;
+    
+}
+
+.smbtn:hover {
+    background-color: #CDCDCD;
+}
+</style>
 {% endblock %}
 
 
