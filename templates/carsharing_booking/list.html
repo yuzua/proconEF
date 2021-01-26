@@ -101,7 +101,7 @@
 </div>
 <div id="div2">
 <h1>駐車場{{title}}</h1>
-<table class="table table table-sm">
+<table class="table table table-sm pc">
   <thead>
     <tr class="hyo">
       <th scope="col">開始時間</th>
@@ -129,5 +129,29 @@
 {% endfor %}
   </tbody>
 </table>
+
+<table class="table table table-sm sp">
+  <thead>
+    {% for item in data2 %}
+      <form method="post" >
+    {% csrf_token %}
+      <tr class="hyo">
+        <th scope="col">日時</th>
+        <td>{{item.start_day}}{{item.start_time}} ~ {{item.end_day}}{{item.end_time}}</td>
+        <th scope="col">住所</th>
+        <td >{{item.address}}</td>
+        <th scope="col">料金</th>
+        <td >{{item.charge}}円</td>
+        <th scope="col">詳細</th>
+        <input type="hidden" name="flag" value="parking">
+        <input type="hidden" name="booking" value="{{item.id}}">
+        <input type="hidden" name="parking" value="{{item.parking_id}}">
+        <th class="outer"><input type="submit" class="btn-next inner" value="詳しく見る"></th>
+      </tr>
+    </form>
+  </thead>
+{% endfor %}
+</table>
+
 </div>
 {% endblock %}
