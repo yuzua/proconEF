@@ -783,6 +783,7 @@ def DeleteUploadXlsx(target_dir):
 def StationArea(request):
     add = '〒277-0005 千葉県柏市柏１丁目１−１'
     item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    item_list2 = list(ParkingUserModel.objects.values("id", "address", "lat", "lng"))
 
     path = "./data/haishayosoku/result.json"
     haishayosoku_dict = openJSON(path)
@@ -796,6 +797,7 @@ def StationArea(request):
     print(item_list)
     data = {
         'markerData': item_list,
+        'markerData2': item_list2
     }
     params = {
         'title': 'エリア',
