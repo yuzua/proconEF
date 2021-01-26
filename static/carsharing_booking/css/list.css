@@ -147,7 +147,20 @@ h1 {
     width: 60%;
     float: right;
 }
+
+/* .pc { 
+    display: block !important; 
+} */
+
+.sp {
+     display: none !important; 
+}
+
 @media screen and (max-width: 599px) {
+    h1 {
+        font-size: 20pt;
+    }
+
     .leftbox{
         float: left;
         width: 100%;
@@ -163,4 +176,26 @@ h1 {
     .list-group-item {
         padding: 0;
     }
+    .radio-inline__label {
+        float: left;
+    }
+
+    .pc {
+         display: none !important; 
+    }
+
+    .sp {
+         display: block !important; 
+    }
+
+    th,td {
+        display: block;
+    }
+
+    .hyo {
+        border-top: none;
+        border-bottom: none;
+        background-color: #fff;
+    } 
+    
 }
