@@ -3,14 +3,14 @@
 
 {% block active_login %}
 <title>{{ title }}</title>
-<h1>{{ title }}</h1>
+<h1 style="font-size: 25pt;">{{ title }}</h1>
 {% endblock %}
 
 {% block contents %}
-<p class="h5 mt-4">{{ message|safe }}</p>
-<div class="card">
-    <h2 class="card-header">{{ message|safe }}</h2>
-    <div class="card-body">
+<!-- <p class="h5 mt-4">{{ message|safe }}</p> -->
+<div>
+    <h2>{{ message|safe }}</h2>
+    <div>
         <p>住所：{{ data.address }}</p>
         <p>駐車場タイプ：{{ data.parking_type }}</p>
         <p>土地タイプ：{{ data.ground_type }}</p>
@@ -18,14 +18,37 @@
         <p>奥行き：{{ data.length }}m</p>
         <p>高さ：{{ data.height }}m</p>
     </div>
-    <div class="card-footer">
+    <div>
         <form action="{% url 'parking_req:checkparking' %}" method="post" >
             {% csrf_token %}
             {% for key, value in data.items %}
                 <input type="hidden" name="{{key}}" value="{{value}}">
             {% endfor %}
-                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+                <input class="btn" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
     </div>
 </div>
+<style>
+    .btn {
+    height: 30pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    clear: both;
+    padding-top: 6pt;
+    padding-bottom: 5pt;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+
+  h2 {
+    font-size: 20pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+    margin-top: 20pt;
+  }
+</style>
 {% endblock %}

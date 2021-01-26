@@ -18,3 +18,16 @@ td {
 a {
     color: rgb(83, 83, 83);
 }
+
+.sp { 
+    display: none !important; 
+}
+
+@media (max-width: 690px){
+    .pc { display: none !important; }
+    .sp { display: block !important; }
+
+    th,td {
+        font-size: 13pt;
+    }
+}

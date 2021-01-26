@@ -78,7 +78,7 @@ function initMap() {
      infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
          content: '<div class="sample">' + markerData[i]['address'] + '<form action="{% url 'parking_booking:test' %}" method="post">\
          {% csrf_token %}<input type="hidden" name="name_parking_id" value=' + markerData[i]['id'] + '>\
-         <input class="btn btn-outline-secondary btn-lg btn-block m-0" type="submit" value="ここを予約"></form></div>' // 吹き出しに表示する内容
+         <input class="btn btn-lg btn-block m-0" type="submit" value="ここを予約"></form></div>' // 吹き出しに表示する内容
        });
  
      markerEvent(i); // マーカーにクリックイベントを追加

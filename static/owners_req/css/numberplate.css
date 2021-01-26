@@ -104,9 +104,14 @@ img {
   h1 {
       font-size: 20pt;
       width: 100%;
+      clear: both;
   }
 
   .start, .finish, img, .card, .car, .cars, .br1, .br2 {
       width: 100%;
+  }
+
+  img {
+      width: 200%;
   }
 }
