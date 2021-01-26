@@ -38,10 +38,12 @@
 
 {% block top %}
 <div id ="main">
-      <div class="area-6">
+    <div id="a-favoritelist" class="area-6">
+    <a href="/carsharing_booking/favoritelist">
         <div class="hover-6"></div>
-        <span class="font-6">MORE</span>
-      </div>
+        <span class="font-6">お気に入り</span>
+    </a>
+    </div>
       <div class="area-6">
         <div class="hover-6"></div>
         <span class="font-6">MORE</span>
@@ -51,6 +53,11 @@
         <span class="font-6">MORE</span>
       </div>
 <style>
+/* 移動 */
+#a-favoritelist {
+    border-radius: 15pt;
+}
+/* 移動 */
 .hover-6 {
     background-image: url('{% static "admin/img/choce.jpg" %}');
 }

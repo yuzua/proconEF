@@ -6,7 +6,7 @@ from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
-from .models import MediaModel
+from .models import MediaModel, StationModel
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
@@ -415,15 +415,18 @@ class UploadData(TemplateView):
         # .jsonの場合
         if result_json:
             json_data = json.loads(request.POST['output'])
-            if file_name[0] == 'p':
+            if file_name == 'parentcategory.json':
                 AllParentCategoryUpload(json_data)
                 messages.success(self.request, 'メーカー情報をDBへ格納しました。')
-            elif file_name[0] == 'c':
+            elif file_name == 'category.json':
                 AllCategoryUpload(json_data)
                 messages.success(self.request, '車種情報をDBへ格納しました。')
-            elif file_name[0] == 's':
+            elif file_name == 'settingcarparking.json':
                 AllSettingCarUpload(json_data)
                 messages.success(self.request, '車・駐車場設定をDBへ格納しました。')
+            elif file_name == 'stationarea.json':
+                AllStationAreaUpload(json_data)
+                messages.success(self.request, 'ステーションエリア情報をDBへ格納しました。')
         # .xlsxの場合
         elif result_xlsx:
             #ファイルの場合はPOSTとFILEの両方を渡す
@@ -555,6 +558,18 @@ def AllSettingDownload(dt_now):
         # jsonファイルの書き出し
         f.write(json_data)
     return path
+# ---------------------------- DB上に追加保存された車・駐車場設定をjsonに書き出し -------------------------------- 
+def AllStationAreaDownload(dt_now):
+    c = list(StationModel.objects.values())
+    json_data = json.dumps(c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    # path = "./data/car_data/s_" + dt_now + ".json"
+    path = "./data/car_data/stationarea.json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+    return path
 # --------------------------------------------------------------------------------------------------------- 
 
 
@@ -602,6 +617,23 @@ def AllSettingCarUpload(json_data):
     else:
         for data in json_data:
             record = CarInfoParkingModel(id=data['id'], car_id_id=data['car_id_id'], parking_id_id=data['parking_id_id'], user_id=data['user_id'])
+            record.save()
+
+def AllStationAreaUpload(json_data):
+    print(json_data)
+    flag = len(list(StationModel.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            print(data)
+            record = StationModel.objects.get(id=data['id'])
+            record.address = data['address']
+            record.lat = data['lat']
+            record.lng = data['lng']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = StationModel(id=data['id'], address=data['address'], lat=data['lat'], lng=data['lng'])
             record.save()
 
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
@@ -746,3 +778,43 @@ def AllParkingUpload(all_list):
 def DeleteUploadXlsx(target_dir):
     shutil.rmtree(target_dir)
     os.mkdir(target_dir)
+
+
+def StationArea(request):
+    add = '〒277-0005 千葉県柏市柏１丁目１−１'
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+
+    path = "./data/haishayosoku/result.json"
+    haishayosoku_dict = openJSON(path)
+    # print(haishayosoku_dict['ID'])
+    # print(haishayosoku_dict['kategori'])
+    # print(haishayosoku_dict['kazu'])
+    for items in item_list:
+        index = int(items['id']) - 1
+        items['color'] = haishayosoku_dict['kategori'].get(str(index))
+        items['many'] = haishayosoku_dict['kazu'].get(str(index))
+    print(item_list)
+    data = {
+        'markerData': item_list,
+    }
+    params = {
+        'title': 'エリア',
+        'name': '自宅',
+        'add': add,
+        'data_json': json.dumps(data),
+        'latlng': 'undefined'
+    }
+    if (request.method == 'POST'):
+        params['title'] = '検索地付近で検索'
+        params['add'] = request.POST['add']
+        params['name'] = '検索'
+    return render(request, "administrator/stationarea.html", params)
+
+def openJSON(path):
+    with open(path, 'r') as f:
+        # jsonファイルの読み込み
+        json_data = f.read()
+        json_object = json.loads(json_data)
+
+    return json_object
+        
