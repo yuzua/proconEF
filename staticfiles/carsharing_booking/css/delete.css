@@ -1,0 +1,33 @@
+.detail {
+    padding: 2px;
+    margin: 0;
+    float: left;
+    width: 25%;
+}
+
+.details {
+    padding: 2px;
+    margin: 0;
+    float: left;
+    width: 50%;
+}
+
+#map {
+    width: 400px;
+    height: 250px;
+}
+
+@media (max-width: 690px){
+    h2 {
+        font-size: 20pt;
+    }
+  
+    .detail, .details{
+        width: 100%;
+        display: inline;
+    }
+  
+    #map {
+        width: 100%;
+    }
+  }

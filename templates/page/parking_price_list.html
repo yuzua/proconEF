@@ -1,0 +1,35 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block main_contents %}
+
+<h2><span>料金表</span></h2>
+<p class="float-r">（税込）</p>
+
+<table bgcolor="#D7EEFF" border="1" cellspacing="0" cellpadding="0" class="pack mb30" width="1250">
+    <tbody>
+      <tr class="sp_pc_tr">
+        <th class="top col2" colspan="2"></th>
+        <th class="top">駐車場のみ利用</th>
+        <th class="top">カーシェアと併用して利用</th>
+      </tr>
+      <tr>
+        <th class="sub-top col2" colspan="2">時間料金</th>
+        <td class="paronly">220円/1時間</td>
+        <td class="carandpar hidden">200円/1時間</td>
+      </tr>
+      <tr>
+        <th class="sub-top" colspan="2">最大時間料金</th>
+        <td class="light packplan">660円/24時間</td>
+        <td class="standard packplan hidden">600円/24時間</td>
+      </tr>
+    </tbody>
+  </table>
+<br>
+  <h3><span>上記について</span></h3>
+  <p> ・カーシェアリングと併用して本サービスから駐車場を利用されますと、駐車場の1時間あたりの金額が20円、24時間あたりの金額が60円お安くなります。<br></p>
+
+{% endblock %}
