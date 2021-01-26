@@ -14,6 +14,7 @@ urlpatterns = [
     path('createCar', CreateCarAdminView.as_view(), name='createCar'),
     path('checkcar', views.checkcar, name='checkcar'),
     path('settinginfo', SettingAdminInfo.as_view(), name='settinginfo'),
+    path('stationarea', views.StationArea, name='stationarea'),
     path('download_data', DownloadData.as_view(), name='download_data'),
     path('upload_data', UploadData.as_view(), name='upload_data'),
 ]

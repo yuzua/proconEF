@@ -1,0 +1,200 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_booking/css/map.css" %}'>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_contents %}
+<div id="map_info">
+  <span id="venue">
+  {% if name == '現在地' %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill float-left mt-1 mr-1" viewBox="0 0 16 16">
+    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+  </svg>
+  {% elif name == '自宅' %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill float-left mt-1 mr-1" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 3.293l6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+    <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+  </svg>
+  {% elif name == '検索' %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search float-left mt-1 mr-1" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+  </svg>
+  {% endif %}
+  <p>{{ name }}<p>
+  </span>
+  <p id="address">{{ add }}</p>
+  <span id="url"><a href="/carsharing_req/carsharuserdata" target="_blank"></a></span>
+  <p id="zoom"></p>
+</div>
+<div id="map_container">
+  <div id="map_canvas"></div>
+</div>
+<form action="{% url 'administrator:stationarea' %}" method="post">  
+<div class="input-group mb-4 my-3">
+  {% csrf_token %}
+  <input type="text" class="form-control" placeholder="検索" aria-label="Recipient's username" aria-describedby="basic-addon2" name="add" size="20" maxlength="20">
+  <div class="input-group-append">
+    <div class="my-0">
+    <input type="submit" value="click" class="input-group-text" id="basic-addon2">
+  </div>
+  </div>
+</div>
+</form>
+<script>
+  const data = JSON.parse('{{ data_json|safe }}');
+{% if latlng == 'undefined' %}
+</script>
+{% comment %} <script type="text/javascript" src='{% static "carsharing_booking/js/settingmap.js" %}'></script> {% endcomment %}
+<script>
+var markers = [];
+var circles = [];
+var infoWindows = [];
+var markerData = data.markerData;
+console.log(markerData);
+function initMap() {
+  jQuery(function($){
+    var map, map_center;
+    //初期のズーム レベル（指定がなければ 16）
+    var zoom = 12;
+    //マーカーのタイトル
+    var title = $('#venue').text();
+ 
+    //マップ生成のオプション
+    //center は Geolocation から取得して後で設定
+    var opts = {
+      zoom: zoom,
+      mapTypeId: "roadmap",  //初期マップ タイプ  
+      scaleControl: true
+    };
+ 
+    //マップのインスタンスを生成
+    map = new google.maps.Map(document.getElementById("map_canvas"), opts);
+ 
+    //ジオコーディングのインスタンスの生成
+    var geocoder = new google.maps.Geocoder();
+ 
+    var address = $('#address').text();
+    var my_reg = /〒\s?\d{3}(-|ー)\d{4}/;
+    //郵便番号を含めるとおかしくなる場合があったので、郵便番号は削除
+    address = address.replace(my_reg, '');
+ 
+    //geocoder.geocode() にアドレスを渡して、コールバック関数を記述して処理
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status === 'OK' && results[0]) {
+        //results[0].geometry.location に緯度・経度のオブジェクトが入っている
+        map_center = results[0].geometry.location;
+        //地図の中心位置を設定
+        map.setCenter(map_center);
+        //マーカーのインスタンスを生成
+        var marker = new google.maps.Marker({
+          //マーカーを配置する Map オブジェクトを指定
+          map: map,
+          //マーカーの初期の場所を示す LatLng を指定  
+          position: map_center,  
+          //マーカーをアニメーションで表示
+          animation: google.maps.Animation.DROP,  
+          title: title,
+        });
+
+  // マーカー毎の処理
+ for (var i = 0; i < markerData.length; i++) {
+        if (markerData[i]['color'] == 0){
+            // 過剰
+            var circle_color = '#ff0000';
+            var msg = '<p style="color:#ff0000;">車両台数が過剰です</p>'
+            var link = '<a href="./settinginfo">配車を変更する</a>'
+        }else if (markerData[i]['color'] == 1){
+            // 不足
+            var circle_color = '#005FFF';
+            var msg = '<p style="color:#005FFF;">車両台数が不足しています!!</p>'
+            var link = '<a href="./settinginfo">車両を配置する</a>'
+        }else{
+            // 適正
+            var circle_color = '#00CC99';
+            var msg = '<p style="color:#00CC99;">車両台数は適正です</p>'
+            var link = ''
+        }
+        markerLatLngs = new google.maps.LatLng({lat: Number(markerData[i]['lat']), lng: Number(markerData[i]['lng'])}); // 緯度経度のデータ作成        
+        markers[i] = new google.maps.Marker({ // マーカーの追加
+            position: markerLatLngs, // マーカーを立てる位置を指定
+            map: map, // マーカーを立てる地図を指定
+            icon: {
+                fillColor: "#FFF",                //塗り潰し色
+                fillOpacity: 0.8,                    //塗り潰し透過率
+                path: google.maps.SymbolPath.CIRCLE, //円を指定
+                scale: 1.5,                           //円のサイズ
+                strokeColor: "#FFF",              //枠の色
+                strokeWeight: 1.0                    //枠の透過率
+            }
+        });
+        circles[i] = new google.maps.Circle({
+            center: markerLatLngs,       // 中心点(google.maps.LatLng)
+            fillColor: circle_color,   // 塗りつぶし色
+            fillOpacity: 0.5,       // 塗りつぶし透過度（0: 透明 ⇔ 1:不透明）
+            map: map,             // 表示させる地図（google.maps.Map）
+            radius: 3000,          // 半径（ｍ）
+            strokeColor: circle_color, // 外周色
+            strokeOpacity: 1,       // 外周透過度（0: 透明 ⇔ 1:不透明）
+            strokeWeight: 1         // 外周太さ（ピクセル）
+        });
+
+        infoWindows[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+          content: '<div class="sample"><h6>エリア' + markerData[i]['id'] + '</h6>' + markerData[i]['address'] + msg + link + '</div>' // 吹き出しに表示する内容
+        });
+ 
+     markerEvent(i); // マーカーにクリックイベントを追加
+ }
+        // マーカーにクリックイベントを追加
+        function markerEvent(i) {
+            markers[i].addListener('click', function() { // マーカーをクリックしたとき
+            infoWindows[i].open(map, markers[i]); // 吹き出しの表示
+        });
+        }
+
+        //情報ウィンドウに表示するコンテンツを作成
+        //urlが指定してあればリンクつきのタイトルと住所を表示（URLがない場合もあるため）
+        var url = $("#url a").attr('href');
+        var content;
+        if (url) {
+          content = '<div id="map_content"><p><a href="' + url + '" target="_blank"> ' + title + '</a><br />' + address + '</p></div>';
+        }else {
+          //urlが指定してなければ、リンクなしのタイトルと住所を表示
+          content = '<div id="map_content"><p>' + title + '<br />' + address + '</p></div>';
+        }
+ 
+        //情報ウィンドウのインスタンスを生成
+        var infowindow = new google.maps.InfoWindow({
+          content: content,
+        });
+ 
+        //marker をクリックすると情報ウィンドウを表示(リスナーの登録）
+        google.maps.event.addListener(marker, 'click', function() {
+          //第2引数にマーカーを指定して紐付け
+          infowindow.open(map, marker);
+        });
+      } else {
+        alert("住所から位置の取得ができませんでした。: " + status);
+      }
+    });
+  }); 
+}
+
+</script>
+{% else %}
+  const mylocation = '{{latlng}}';
+  const mylat = parseFloat('{{lat}}');
+  const mylng = parseFloat('{{lng}}');
+</script>
+<script type="text/javascript" src='{% static "carsharing_booking/js/settinggeo.js" %}'></script>
+{% endif %}
+{% endblock %}
+
+
+{% block mapapi %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8qh0jtaDs4HXKs6HAqRxvqx2xhylSSGk&callback=initMap" async defer></script>
+<!-- YOUR_API_KEYの部分は取得した APIキーで置き換えます -->
+{% endblock %}
