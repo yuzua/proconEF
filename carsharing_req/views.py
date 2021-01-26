@@ -141,9 +141,12 @@ def pages(request, num, page):
     elif num == 3:
         return render(request, 'page/owner_car.html')
     elif num == 4:
-        return render(request, 'page/price_list1.html')
-    elif num == 0:
-        pass
+        return render(request, 'page/owner_parking.html')
+    elif num == 5:
+        if page == 0:
+            return render(request, 'page/car_price_list.html')
+        else:
+            return render(request, 'page/parking_price_list.html')
     else:
         return redirect(to='carsharing_req:index')
 
