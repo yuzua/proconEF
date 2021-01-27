@@ -115,10 +115,10 @@ def checkparking(request):
         else:
             print('none')
             messages.success(request, '駐車場登録が完了しました。')
-            return redirect(to='/administrator/admin_main')
+            return redirect(to='/administrator/')
     else:
         messages.error(request, '不正なリクエストです。')
-    return redirect(to='administrator:index')
+    return redirect(to='administrator:admin_main')
 
 def ParkingSetStationArea(parking_id, lat, lng):
     item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
@@ -214,7 +214,7 @@ def edit(request):
         if (parking.is_valid()):
             parking.save()
             messages.success(request, '駐車場情報を修正しました。')
-            return redirect(to='/administrator/admin_main')
+            return redirect(to='/administrator/')
         else:
             params['form'] = AdminParkingForm(request.POST, instance= obj)        
         
@@ -225,7 +225,7 @@ def delete(request, num):
     if (request.method == 'POST'):
         parking.delete()
         messages.success(request, '駐車場情報を削除しました。')
-        return redirect(to='/administrator/admin_main')
+        return redirect(to='/administrator/')
 
     return render(request, 'administrator/delete.html')
 
@@ -326,10 +326,10 @@ def checkcar(request):
         record.save()
         messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
         request.session['info_flag'] = True
-        # return redirect(to='administrator:index')
+        # return redirect(to='administrator:admin_main')
     else:
         messages.error(request, '不正なリクエストです。')
-    return redirect(to='administrator:index')
+    return redirect(to='administrator:admin_main')
 
 # ----------------------------------------------------------------------------------------------------------
 def judgmentTF(string):
@@ -396,7 +396,41 @@ class SettingAdminInfo(TemplateView):
             print('safe')
         print(nowint)
         messages.success(self.request, '登録完了しました')
-        return redirect(to='/administrator/admin_main')
+        return redirect(to='/administrator/')
+
+
+def DeleteSetting(request, num):
+    if (request.method == 'POST'):
+        print(request.POST)
+        pass
+    else:
+        station_list = list(StationParkingModel.objects.filter(station_id_id=num).values("parking_id_id"))
+        all_parking_list = []
+        for parking_id in station_list:
+            all_parking_list.append(parking_id['parking_id_id'])
+        # print(all_parking_list)
+        item_list = list(CarInfoParkingModel.objects.filter(parking_id__in=all_parking_list).values())
+        parking_list = []
+        car_list = []
+        for index in item_list:
+            parking_list.append(index['parking_id_id'])
+            car_list.append(index['car_id_id'])
+        parking_obj = list(ParkingUserModel.objects.filter(id__in=parking_list).values())
+        car_obj = list(CarInfoModel.objects.filter(id__in=car_list).select_related('parent_category__parent_category').select_related('category__category').values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+        for index, item in enumerate(item_list):
+            parking_obj[index]['parking_id'] = parking_obj[index]['id']
+            parking_obj[index]['id'] = item['id']
+            car_obj[index]['car_id'] = car_obj[index]['id']
+            car_obj[index]['id'] = item['id']
+            car_obj[index].update(parking_obj[index])
+
+    params = {
+        'title': '配車設定解除',
+        'data': car_obj,
+        'area': int(num)
+    }
+    return render(request, "administrator/deletesetting.html", params)
+
 
 # データのダウンロード
 class DownloadData(TemplateView):
@@ -629,9 +663,12 @@ def AllSettingCarUpload(json_data):
             record.save()
     # 初回のみ
     else:
+        record_list = []
         for data in json_data:
             record = CarInfoParkingModel(id=data['id'], car_id_id=data['car_id_id'], parking_id_id=data['parking_id_id'], user_id=data['user_id'])
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoParkingModel.objects.bulk_create(record_list)
 
 def AllStationAreaUpload(json_data):
     print(json_data)
@@ -747,6 +784,7 @@ def AllCarUpload(all_list):
             record.key_flag = car_list[23]
             record.save()
     else:
+        record_list = []
         for car_list in all_list:
             record = CarInfoModel()
             record.user_id = int(car_list[1])
@@ -772,7 +810,9 @@ def AllCarUpload(all_list):
             record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
             record.img = car_list[22]
             record.key_flag = car_list[23]
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoModel.objects.bulk_create(record_list)
 
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
 
@@ -800,6 +840,7 @@ def AllParkingUpload(all_list):
             record.countflag = parking_list[13]
             record.save()
     else:
+        record_list = []
         for parking_list in all_list:
             record = ParkingUserModel()
             record.user_id = int(parking_list[1])
@@ -816,7 +857,9 @@ def AllParkingUpload(all_list):
             record.count = int(parking_list[11])
             record.admin = parking_list[12]
             record.countflag = parking_list[13]
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoModel.objects.bulk_create(record_list)
 
 # --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
 
