@@ -9,4 +9,3 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /Django
 COPY . .
-RUN pipenv install --system
