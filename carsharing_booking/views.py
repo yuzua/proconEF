@@ -880,6 +880,7 @@ def push(request):
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
+        request.session['favorite'] = "none"
         del request.session['favorite']
         messages.success(request, '予約が完了しました。<br>ご登録されているメールアドレスに予約完了メールを送信致しました。ご確認下さい。')
         #mail送信メソッドの呼び出し

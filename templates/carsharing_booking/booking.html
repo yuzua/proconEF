@@ -15,11 +15,90 @@
 <div id="map_info">
     {{address}}
 </div>
-<div>
-<form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
+<div>  
+<table class="table sp">
+    {% for car_obj in car_objs %}
+        <form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
     {% csrf_token %}
-<table class="table">
-    <tr style="border-top: solid;border-bottom: solid;border-color: rgb(83, 83, 83);">
+    <tr class="tr1">
+        <th>予約</th>
+    </tr>
+    <tr class="tr2">
+        <td><input id="car_{{car_obj.id}}" type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required></td>
+    </tr>
+    <tr class="tr1">
+        <th>画像</th>
+    </tr>
+    <tr class="tr2">
+        <label for="car_{{car_obj.id}}"><td><img src="/media/{{car_obj.img}}" width="110"　border="0" /></td></label>
+    </tr>
+    <tr class="tr1">
+        <th>メーカー</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.parent_category}}</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>車種</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.category}}</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>型番</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.model_id}}</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>乗車人数</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.people}}人</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>タイヤ</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.tire}}</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>AT/MT</th>
+    </tr>
+    <tr class="tr2">
+        <td><label for="car_{{car_obj.id}}">{{car_obj.at_mt}}車</label></td>
+    </tr>
+    <tr class="tr1">
+        <th>搭載機能</th>
+    </tr>
+    <tr class="tr2">
+        <td>
+            {% if car_obj.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if car_obj.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if car_obj.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if car_obj.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if car_obj.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if car_obj.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+        </td>
+    </form>
+    </tr>
+    {% endfor %}
+</table>
+
+<table class="table pc">
+    <tr class="tr1">
         <th>予約</th>
         <th>画像</th>
         <th>メーカー</th>
@@ -31,7 +110,7 @@
         <th>搭載機能</th>
     </tr>
 {% for car_obj in car_objs %}
-    <tr style="border-bottom: solid;border-color: #cdcdcd;border-width: 1pt;">
+    <tr class="tr2">
         <td>
             <input id="car_{{car_obj.id}}" type="radio" name="car_id" value="{{car_obj.id}}" onchange="selectNum()" required>
             <td>
@@ -67,11 +146,12 @@
     </tr>
 {% endfor %}
 </table>
+
 </div>
 <br>
 <div class="clearfix">
-    <div class="w-50 float-left p-5" id="calendar"></div>
-    <div id="form" class="w-50 float-left p-5">
+    <div class="float-left p-5" id="calendar"></div>
+    <div id="form" class="float-left p-5">
         <div id="hour-box" class="hour-button-box">
             <input name="hour" type="radio" value="1" id="rb_1" />
             <label for="rb_1">1時間</label>
