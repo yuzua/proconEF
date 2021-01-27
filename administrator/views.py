@@ -398,11 +398,67 @@ class SettingAdminInfo(TemplateView):
         messages.success(self.request, '登録完了しました')
         return redirect(to='/administrator/')
 
+def CreateSetting(request, num):
+    params = {
+        'title':'駐車場、車両情報登録データ(選択エリア)',
+        'message': '駐車場、車両情報登録データ',
+        'car_data': '',
+        'parking_data': '',
+        'area': num
+    }
+    if (request.method == 'POST'):
+        user_id = int(request.POST['user_id'])
+        car_id = CarInfoModel.objects.get(id=request.POST['car_id'])
+        parking_id = ParkingUserModel.objects.get(id=request.POST['parking_id'])
+        record = CarInfoParkingModel(user_id=user_id, car_id=car_id, parking_id=parking_id)
+        record.save()
+        print(request.POST['parking_id'])
+        nowint = CarInfoParkingModel.objects.filter(parking_id=request.POST['parking_id']).count()
+        maxint = ParkingUserModel.objects.filter(id=request.POST['parking_id']).values_list("count", flat=True)
+        if nowint == maxint[0]:
+            print('out')
+            countflag = False
+            ParkingUserModel.objects.filter(id=request.POST['parking_id']).update(countflag = countflag)
+        else:
+            print('safe')
+        print(nowint)
+        messages.success(request, '登録完了しました')
+        return redirect(to='/administrator/')
+    else:
+        station_list = list(StationParkingModel.objects.filter(station_id_id=num).values("parking_id_id"))
+        all_parking_list = []
+        for parking_id in station_list:
+            all_parking_list.append(parking_id['parking_id_id'])
+
+        exclude_car= []
+        exclude_parking = []
+        if str(request.user) == "AnonymousUser":
+            print('ゲスト')
+            messages.error(request, 'ログインしてください。')
+            return redirect(to='/carsharing_req/index')
+        else:
+            set_list = CarInfoParkingModel.objects.filter(user_id=0).values("car_id", "parking_id")
+            for obj in set_list.values("car_id"):
+                for index in obj.values():
+                    exclude_car.append(index)
+            for obj in set_list.values("parking_id"):
+                for index in obj.values():
+                    exclude_parking.append(index)
+            car_list = CarInfoModel.objects.filter(user_id=0).exclude(id__in=exclude_car)
+            parking_list = ParkingUserModel.objects.filter(user_id=0, countflag=True).filter(id__in=all_parking_list)
+            print(parking_list)
+            params['car_data'] = car_list
+            params['parking_data'] = parking_list
+        return render(request, 'administrator/settinginfo.html', params)
+
 
 def DeleteSetting(request, num):
     if (request.method == 'POST'):
-        print(request.POST)
-        pass
+        print(request.POST['settinginfo'])
+        record = CarInfoParkingModel.objects.get(id=request.POST['settinginfo'])
+        record.delete()
+        messages.success(request, '設置を解除しました。')
+        return redirect(to='administrator:stationarea')
     else:
         station_list = list(StationParkingModel.objects.filter(station_id_id=num).values("parking_id_id"))
         all_parking_list = []

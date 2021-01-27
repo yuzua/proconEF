@@ -197,5 +197,10 @@ h1 {
         border-bottom: none;
         background-color: #fff;
     } 
+
+    .now {
+        width: 100%;
+        position: static;
+    }
     
 }

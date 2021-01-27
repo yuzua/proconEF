@@ -122,7 +122,7 @@ function initMap() {
             // 不足
             var circle_color = '#005FFF';
             var msg = '<p style="color:#005FFF;">車両台数が不足しています!!</p>'
-            var link = '<a href="../settinginfo" class="btn smbtn">車両を配置する</a>'
+            var link = '<a href="../createsetting/' + markerData[i]['id'] +'" class="btn smbtn">車両を配置する</a>'
         }else{
             // 適正
             var circle_color = '#00CC99';
