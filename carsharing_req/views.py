@@ -158,6 +158,9 @@ class CarsharUserInfo(TemplateView):
             'message': 'Not found your data.<br>Please send your profile.',
             'form': CarsharUserCreateForm(),
             'link': 'other',
+            'gender': '男性',
+            'age': '50代',
+            'address': '柏市',
         }
     
     def get(self, request):
@@ -166,27 +169,44 @@ class CarsharUserInfo(TemplateView):
         else:
             print(request.user)
             user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            myinfo_list = SetMyInfo(user_data)
+            print(myinfo_list)
+            self.params['gender'] = myinfo_list[0]
+            self.params['age'] = myinfo_list[1]
+            self.params['address'] = myinfo_list[2]
             if user_data.charge_flag == False:
-                if user_data.plan == 'a':
-                    user_data.charge = 500
-                elif user_data.plan == 'b':
-                    user_data.charge = 1000
-                elif user_data.plan == 'c':
-                    user_data.charge = 2000
-                else:
-                    user_data.charge = 0
-            user_data.charge_flag = True
-            user_data.save()
+                InitializeCharge(user_data)
         return render(request, 'carsharing_req/top.html', self.params)
-    
-    # def post(self, request):
-    #     msg = 'Your name is <b>' + request.POST['name'] + \
-    #         '(' + request.POST['age'] + \
-    #         ')</b><br>Your mail address is <b>' + request.POST['email'] + \
-    #         '</b><br>Thank you send to me!'
-    #     self.params['message'] = msg
-    #     self.params['form'] = CarsharUserCreateForm(request.POST)
-    #     return render(request, 'carsharing_req/index.html', self.params)
+
+def SetMyInfo(user_data):
+    myinfo_list = []
+    if user_data.gender == True:
+        myinfo_list.append('男性')
+    else:
+        myinfo_list.append('女性')
+    myinfo_list.append(str(user_data.age)[-2] + '0代')
+    address = user_data.addr01
+    count = address.count('市')
+    if count == 1:
+        i = address.find('市')
+        myinfo_list.append(address[:i]+'市')
+    elif count > 1:
+        i = address.rfind('市')
+        myinfo_list.append(address[:i]+'市')
+    return myinfo_list
+
+def InitializeCharge(user_data):
+    if user_data.plan == 'a':
+        user_data.charge = 500
+    elif user_data.plan == 'b':
+        user_data.charge = 1000
+    elif user_data.plan == 'c':
+        user_data.charge = 2000
+    else:
+        user_data.charge = 0
+    print('チャージ完了')
+    user_data.charge_flag = True
+    user_data.save()
 
 def carsharuserdata(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])

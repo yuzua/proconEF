@@ -15,7 +15,7 @@
 {% if title == "駐車場、車両情報登録データ" %}
 <form action="{% url 'administrator:settinginfo' %}" method="post">
 {% else %}
-<form action="/administrator/createsetting/{{area}}" method="post">>
+<form action="/administrator/createsetting/{{area}}" method="post">
 {% endif %}
     <div>
     <input type="hidden" name="user_id" value='0'>
