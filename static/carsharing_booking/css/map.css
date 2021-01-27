@@ -85,3 +85,56 @@ div {
 	-webkit-transition: 0.25s all ease;
 	        transition: 0.25s all ease;
 }
+
+.sp { 
+  display: none !important; 
+}
+
+.tr1 {
+  border-top: solid;
+  border-bottom: solid;
+  border-color: rgb(83, 83, 83);
+}
+
+.tr2 {
+  border-bottom: solid;
+  border-color: #cdcdcd;
+  border-width: 1pt;
+}
+
+#calendar {
+  width: 50%;
+}
+
+#form {
+  width: 50%;
+}
+
+@media (max-width: 690px){
+  #map_info {
+    width: 90%;
+    font-size: 11pt;
+  }
+
+  .pc { 
+    display: none !important; 
+  }
+
+  .sp { 
+    display: block !important; 
+  } 
+
+  table {
+    width: 100%;
+  }
+
+  #calendar {
+    width: 100%;
+    display: block;
+  }
+
+  #form {
+    width: 100%;
+    display: block;
+  }
+}

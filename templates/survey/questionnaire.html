@@ -1,6 +1,10 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "survey/css/questionnaire.css" %}'>
+{% endblock %}
+
 {% block title %}
 {{ title }}
 {% endblock %}
@@ -8,25 +12,25 @@
 {% block main_contents %}
     <h1>{{ title }}</h1>
     <form action="{% url 'survey:questionnaire' %}" method="post" >
-    <div class="card">
+    <div>
         <div class="w-5">
-            <p>事故に合いませんでした。：<input type="checkbox" required /></p>
-            <p>借りた場所に返しました。：<input type="checkbox" required /></p>
+            <p><input type="checkbox" required />：事故に合いませんでした。</p>
+            <p><input type="checkbox" required />：借りた場所に返しました。</p>
         </div>
     </div>
-    <div class="card">
+    <div>
         {% csrf_token %}
-        <h2 class="card-header">{{ message|safe }}</h2>
-        <div class="card-body">
+        <h2>{{ message|safe }}</h2>
+        <div>
             {% for item in data %}
-            <div>
+            <div class="all">
             <input type="checkbox" name="checks[]" value="{{ item }}">
             <lavel>{{ item }}</lavel>
             </div>
             {% endfor %}
         </div>
-        <div class="card-footer">
-            <input class="btn btn-outline-secondary" type="submit" value="送信" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+        <div>
+            <input class="btn" type="submit" value="送信" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </div>
     </div>
 </form>    
