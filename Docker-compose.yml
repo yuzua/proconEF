@@ -3,16 +3,11 @@ version: '3'
 services:
   app:
     build: .
+    command: bash -c "pipenv install --system && python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
     expose: 
       - 8000
-    volumes:
-      - '.:/Django'
     tty: True
     stdin_open: True
-    depends_on:
-        - db
-    links: 
-        - db
     
   db:
     image: postgres:11
@@ -20,10 +15,10 @@ services:
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
 
   nginx:
-        build: ./nginx
-        volumes:
-            - ./staticfiles:/usr/src/app/staticfiles
+        build:
+          context: .
+          dockerfile: ./nginx/Dockerfile
         ports:
-            - 1337:80
+            - 80:80
         depends_on:
             - app
