@@ -1,0 +1,28 @@
+h1 {
+    font-size: 25pt;
+}
+
+h2 {
+    font-size: 20pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+}
+
+p {
+    font-size: 13pt;
+}
+
+.all {
+    font-size: 13pt;
+    margin-bottom: 5pt;
+}
+
+@media (max-width: 690px){
+    h1 {
+        font-size: 20pt;
+    }
+
+    h2 {
+        font-size: 15pt;
+    }
+}

@@ -39,8 +39,8 @@
 
 h1 {
     font-size: 25pt;
-    border-bottom: solid;
-    border-color: rgb(83, 83, 83);
+    /* border-bottom: solid;
+    border-color: rgb(83, 83, 83); */
 }
 
 .finish {
@@ -57,12 +57,6 @@ img {
     width: 50%;
     float: left;
     margin-right: 0pt;
-}
-
-.card {
-    width: 50%;
-    float: left;
-    display: block;
 }
 
 .detail {
@@ -99,6 +93,30 @@ img {
     float: left;
     display: block;
 }
+
+.btn {
+    height: 30pt;
+    font-size: 11pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #696969;
+    float: right;
+    clear: both;
+    padding-top: 6pt;
+    padding-bottom: 5pt;
+  }
+
+  .btn:hover {
+    background-color: #CDCDCD;
+  }
+  
+  .x {
+      clear: both;
+  }
+
+  .row {
+      border-bottom: solid;
+      border-color: rgb(83, 83, 83);
+  }
 
 @media (max-width: 670px){
   h1 {
