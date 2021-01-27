@@ -122,23 +122,6 @@
 .img {
     vertical-align: top;
 }
-        
-@media screen and (max-width: 599px) {
-    img {
-        width: 100%;
-    }
-    .pager .pagination {
-        margin: 0px;
-    }
-    .p {
-        margin-left: 1pt;
-    }
-    .btn-open{
-        padding: 0pt;
-        margin-left: 190pt;
-        width: 90pt;
-    }
-}
 
 #scrollArea {
     width: 100%;
@@ -187,3 +170,35 @@
       font-size: large;
       font-weight: bold;
   }
+        
+@media screen and (max-width: 690px) {
+    img {
+        width: 100%;
+    }
+    .pager .pagination {
+        margin: 0px;
+    }
+    .p {
+        margin-left: 1pt;
+    }
+    .btn-open{
+        padding: 0pt;
+        margin-left: 190pt;
+        width: 90pt;
+    }
+
+    .btn-ex {
+        width: 100pt;
+        height: 50pt;
+        display: inline-block;
+        margin-top: 10pt;
+        margin-bottom: 10pt;
+        border-radius: 10px;
+        font-size: small;
+        font-weight: bold;
+    }
+
+    #inner {
+        width: 2080pt;
+    }
+}

@@ -408,7 +408,7 @@ def push(request):
         params['birthday_day'] = request.POST['birthday_day']
         params['imageform'] = PhotoForm()
         
-        
+        # 現ver
         # image = request.FILES['image']
         # print(image)
         # photo = Photo(image=image)
