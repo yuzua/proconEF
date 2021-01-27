@@ -39,6 +39,7 @@ def importCSV(request):
     # SecondHandCarAIModel作成
     with open('./data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             # print(row)
             if row[0] != 'carID':
@@ -120,12 +121,15 @@ def importCSV(request):
                 record.box_74 = row[74]
                 record.box_75 = row[75]
                 record.box_76 = row[76]
-                record.save()
+                record_list.append(record)
+                # record.save()
+        SecondHandCarAIModel.objects.bulk_create(record_list)
     
     # SecondHandCarInfoModel作成
     count = -1
     with open('./data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             # print(row)
             if count != -1:
@@ -139,13 +143,16 @@ def importCSV(request):
                 record.img1 = row[130]
                 record.img2 = row[131]
                 record.img3 = row[132]
-                record.save()
+                record_list.append(record)
+                #record.save()
             count += 1
+        SecondHandCarInfoModel.objects.bulk_create(record_list)
     
     # SecondHandCarPriceModel作成
     count = 0
     with open('./data/car_csv/car_value_data.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             if count == 0:
                 car_list = row
@@ -156,8 +163,10 @@ def importCSV(request):
                     record.second_hand_car_id_id = car_list[num]
                     record.day = row[0]
                     record.price = row[num]
-                    record.save()
+                    record_list.append(record)
+                    # record.save()
             count += 1
+        SecondHandCarPriceModel.objects.bulk_create(record_list)
 
 
 def exportCSV(request):
