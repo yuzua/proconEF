@@ -1,0 +1,75 @@
+.logo3 {
+    width: 35pt;
+    height: 35pt;
+}
+
+.navbar-brand {
+  color: #333;
+  margin-left: 5pt;
+}
+
+.nav-link {
+    color:#696969;
+    width: 100%;
+}
+
+.header {
+    width: 100%;
+    background-color: #fff;
+    left:0;
+    line-height:1;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+    border-width: 1pt;
+}
+
+.navbar01 {
+    border-right: 1px solid #333;
+    width: 18%;
+    text-align: center;
+    padding-top: 8pt;
+    font-weight: bolder;
+    font-size: 12pt;
+}
+
+.navbar01:hover {
+    background-color: #DCDCDC;
+    color: #000;
+}
+
+.btn {
+    height: 30pt;
+    width: 75pt;
+    font-size: 12pt;
+    margin: 3pt 10pt 3pt 10pt;
+    border-color: #CDCDCD;
+    float: right;
+    clear: both;
+    padding: auto;
+}
+
+.btn:hover {
+    background-color: #CDCDCD;
+}
+
+a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.nav {
+    padding: 10pt 0pt 10pt 0pt;
+}
+
+.dropdown-item {
+    margin: 4pt 0 4pt 0;
+}
+
+.who {
+    float: right;
+    margin: 5pt 5pt 5pt 0pt;   
+}

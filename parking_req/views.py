@@ -104,6 +104,9 @@ def checkparking(request):
             set_flag = CarsharUserModel.objects.get(id=request.session['user_id'])
             set_flag.system_flag += 4
             set_flag.save()
+        parking_obj = ParkingUserModel.objects.get(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height)
+        ParkingSetStationArea(parking_obj.id, lat, lng)
         #セッションデータ削除
         del request.session['user_lat']
         del request.session['user_lng']
@@ -119,6 +122,21 @@ def checkparking(request):
         messages.error(request, '不正なリクエストです。')
     return redirect(to='/carsharing_req/index')
 
+def ParkingSetStationArea(parking_id, lat, lng):
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    numdict = {}
+    for index in item_list:
+        w = float(index['lat']) - float(lat)
+        h = float(index['lng']) - float(lng)
+        if w < 0:
+            w = -w
+        if h < 0:
+            h = -h
+        num = w + h
+        numdict[index['id']] = num
+    min_k = min(numdict, key=numdict.get)
+    record = StationParkingModel(parking_id_id=parking_id, station_id_id=min_k)
+    record.save()
 
 def edit(request):
     if (request.method == 'POST'):

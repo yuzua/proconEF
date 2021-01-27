@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href='{% static "carsharing_req/css/footer.css" %}'>
+<link rel="stylesheet" href='{% static "secondhandcar/css/search.css" %}'>
 {% endblock %}
 
     
@@ -10,80 +10,83 @@
 
 {% block main_contents %}
     <form action="{% url 'secondhandcar:search' %}" method="post" >
-    {% csrf_token %}
-    <div class="m-1 clearfix" style="border-top: solid 3px #000;border-bottom: solid 3px #000;">
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ホンダ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="日産" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="トヨタ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="スズキ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ＢＭＷ" style="float:left;clear:none;"/>
-        <input type="submit" class="btn btn-dark m-1" name="parent_category" value="ダイハツ" style="float:left;clear:none;"/>
-    </div>
-    </form>
-{% for car_obj in secondhandcar_info %}
-    {% comment %} <div class="card-deck m-3">
-        <h3 class="card-header">{{car_obj.category}}({{car_obj.parent_category}})</h3>
-        <div class="card-body p-1">
-            <p>型番：{{car_obj.model}}</p>
-            <p>発売期間：{{car_obj.release_period}}</p>
-            <p>グレード：{{car_obj.grade}}</p>
-            <div>
-                <img border="0" src="{{car_obj.img1}}" width="128" alt="{{car_obj.img1}}">
-                <img border="0" src="{{car_obj.img2}}" width="128" alt="{{car_obj.img2}}">
-                <img border="0" src="{{car_obj.img3}}" width="128" alt="{{car_obj.img3}}">
+        {% csrf_token %}
+            <div class="m-1 clearfix" id="scrollArea">
+                <div id="inner">
+                    {% for p_c in p_c_list0 %}
+                        <div class="side">
+                            <input type="submit" class="btn-ex" name="parent_category" value="{{p_c}}" style="float:left;clear:none;"/>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </div> {% endcomment %}
-    <div class="card m-5">
-        <h5 class="card-header card-title">{{car_obj.category}}({{car_obj.parent_category}})</h5>
-        <div>
-            <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
-            <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
-        </div>
-        <div class="card-body">
-            <p class="card-text">型番：{{car_obj.model}}</p>
-            <p class="card-text">発売期間：{{car_obj.release_period}}</p>
-            <p class="card-text">グレード：{{car_obj.grade}}</p>
-            <a class="text-secondary" href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る &raquo;</a>
+    </form>
+    <div id="btn">
+        <button type="button" id="left">&laquo;</button>
+        <button type="button" id="right">&raquo;</button>
+    </div>
+
+{% for car_obj in secondhandcar_info %}
+    <div class="car_detail">
+        <h5 style="border-bottom: solid;border-color: rgb(83, 83, 83);padding-left: 20pt;">{{car_obj.category}}({{car_obj.parent_category}})</h5>
+        <div class="pic">
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img1}}" class="img" style="height: 191pt;">
+            </a>
+            <!-- <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img2}}" class="img" style="height: 191pt;">
+            </a>
+            <a href="/secondhandcar/detail/{{car_obj.id}}">
+                <img src="{{car_obj.img3}}" class="img" style="height: 191pt;">
+            </a> -->
+        <div class="listen">
+            <div class="p">
+                <p class="card-text">型番：{{car_obj.model}}</p>
+                <p class="card-text">発売期間：{{car_obj.release_period}}</p>
+                <p class="card-text">グレード：{{car_obj.grade}}</p>
+            </div>
+            <a class="btn-open" href="/secondhandcar/detail/{{car_obj.id}}">詳しく見る &raquo;</a>
         </div>
     </div>
 {% endfor %}
     {% if POST == False %}
-        <ul class="pagination justify-content-center">
+    <div class="pager">
+        <ul class="pagination">
             {% if secondhandcar_info.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}">&laquo; first</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}" class="next">&laquo; first</a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.previous_page_number }}">&laquo; prev</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.previous_page_number }}" class="next">&laquo; prev</a>
             </li>
             {% else %}
-            <li class="page-item">
-                <a class="page-link">&laquo; first</a>
+            <li class="pre">
+                <a>&laquo; first</a>
             </li>
-            <li class="page-item">
-                <a class="page-link">&laquo; prev</a>
+            <li class="pre">
+                <a>&laquo; prev</a>
             </li>
             {% endif %}
-            <li class="page-item">
-                <a class="page-link">{{ secondhandcar_info.number }}/{{ secondhandcar_info.paginator.num_pages }}</a>
+            <li class="active">
+                <span>{{ secondhandcar_info.number }}/{{ secondhandcar_info.paginator.num_pages }}</span>
             </li>
             {% if secondhandcar_info.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.next_page_number }}">next &raquo;</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.next_page_number }}" class="next">next &raquo;</a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.paginator.num_pages }}">last &raquo;</a>
+            <li class="pre">
+                <a href="{% url 'secondhandcar:search' %}{{ secondhandcar_info.paginator.num_pages }}" class="next">last &raquo;</a>
             </li>
             {% else %}
-            <li class="page-item">
-                <a class="page-link">next &raquo;</a>
+            <li class="pre">
+                <a>next &raquo;</a>
             </li>
-            <li class="page-item">
-                <a class="page-link">last &raquo;</a>
+            <li class="pre">
+                <a>last &raquo;</a>
             </li>
             {% endif %}
         </ul>
+    </div>
     {% endif %}
+    <script type="text/javascript" src='{% static "secondhandcar/js/search.js" %}'></script>
 {% endblock %}

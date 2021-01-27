@@ -38,6 +38,12 @@
 
 {% block top %}
 <div id ="main">
+    <div id="a-favoritelist" class="area-6">
+    <a href="/carsharing_booking/favoritelist">
+        <div class="hover-6"></div>
+        <span class="font-6">お気に入り</span>
+    </a>
+    </div>
       <div class="area-6">
         <div class="hover-6"></div>
         <span class="font-6">MORE</span>
@@ -46,54 +52,80 @@
         <div class="hover-6"></div>
         <span class="font-6">MORE</span>
       </div>
-      <div class="area-6">
-        <div class="hover-6"></div>
-        <span class="font-6">MORE</span>
-      </div>
-      <style>
-        .area-6 {
-          position: relative;
-          display: inline-block;
-          overflow: hidden;
-          width: 250pt;
-          height: 200pt;
-          margin: 5pt 12pt 5pt 12pt;
-        }
-        .hover-6 {
-          display: inline-block;
-          width: 250pt;
-          height: 200pt;
-          background-image: url('{% static "admin/img/choce.jpg" %}');
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: cover;
-          transition: all 0.2s ease-out;
-          cursor: pointer;
-        }
-        .font-6 {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 250pt;
-          height: 200pt;
-          line-height: 200pt;
-          text-align: center;
-          font-size: 30pt;
-          font-weight: bold;
-          letter-spacing: 12px;
-          color: #fff;
-          opacity: 0;
-          cursor: pointer;
-          transition: all 0.3s ease-out;
-        }
-        .area-6:hover .font-6 {
-          opacity: 0.6;
-        }
-        .area-6:hover .hover-6 {
-          transform: scale(1.1);
-          filter: blur(2px);
-        }
-      </style>
+<style>
+/* 移動 */
+#a-favoritelist {
+    border-radius: 15pt;
+}
+/* 移動 */
+.hover-6 {
+    background-image: url('{% static "admin/img/choce.jpg" %}');
+}
+</style>
+<div class="w-100 clearfix">
+<ul class="flex cards">
+    <li class="card">
+    <div class="flip-card4">
+        <div class="flip-card-inner4">
+            <div class="flip-card-front4">
+                <h4>20代に人気な車</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+            </div>
+            <div class="flip-card-back4">
+                <h4>プリウス</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+                </p>
+            </div>
+        </div>
+    </div>
+    </li>
+    <li class="card">
+    <div class="flip-card4">
+        <div class="flip-card-inner4">
+            <div class="flip-card-front4">
+                <h4>男性に人気な車</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+            </div>
+            <div class="flip-card-back4">
+                <h4>プリウス</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+                </p>
+            </div>
+        </div>
+    </div>
+    </li>
+  　<li class="card">
+    <div class="flip-card4">
+        <div class="flip-card-inner4">
+            <div class="flip-card-front4">
+                <h4>松戸市民に人気な車</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+            </div>
+            <div class="flip-card-back4">
+                <h4>プリウス</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+                </p>
+            </div>
+        </div>    
+    </div>
+    </li>
+    <li class="card">
+    <div class="flip-card4">
+        <div class="flip-card-inner4">
+            <div class="flip-card-front4">
+                <h4>週間ランキング 1位</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+            </div>
+            <div class="flip-card-back4">
+                <h4>プリウス</h4>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
+                </p>
+            </div>
+        </div>
+    </div>
+    </li>
+</ul>
+</div>
             <!-- <div class="three">
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
@@ -247,7 +279,7 @@
             </div>
           </div>
           </div>
-          <!-- <div data-trigger id ="under">
+          <div data-trigger id ="under">
             <h2>お問い合わせ</h2>
             <p class="under"> 
                 〇〇支店<br>
@@ -271,7 +303,7 @@
             </p>
         </div>
           </div>
-    </div> -->
+    </div>
 {% endblock %}
 
 {% block includejs %}

@@ -1,0 +1,88 @@
+{% extends 'carsharing_req/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href='{% static "carsharing_booking/css/car_next.css" %}'>
+{% endblock %}
+
+{% block main_contents %}
+{% if flag == 0 %}
+    <h3>NOTFOUND</h3>
+{% else %}
+    <table class="table select-tb">
+        <tr style="border-top: solid;border-color: rgb(83, 83, 83);">
+            <th>車種(メーカー)</th>
+            <th>使用年数</th>
+            <th>タイヤ</th>
+            <th colspan="2">住所</th>
+            <th rowspan="2" style="border-bottom: solid;border-color: rgb(83, 83, 83); text-align: start;">搭載機能</th>
+            <th>{% if guest != 'ゲスト' %}お気に入り{% endif %}</th>
+        </tr>
+        <tr style="border-bottom: solid;border-color: rgb(83, 83, 83);">
+            <th>画像</th>
+            <th>乗車人数</th>
+            <th>型番</th>
+            <th>AT/MT</th>
+            <th>走行距離</th>
+            <th>予約する</th>
+        </tr>
+    {% for car_obj in car_objs %}
+        <tr>
+            <td>{{car_obj.category__category}}({{car_obj.parent_category__parent_category}})</td>
+            <td>{{car_obj.used_years}}年</td>
+            <td>{{car_obj.tire}}</td>
+            <td colspan="2">{{car_obj.address}}</td>
+            <td rowspan="2" style="border-bottom: 1pt solid;border-color: #cdcdcd; text-align: start;">
+            {% if car_obj.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if car_obj.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if car_obj.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if car_obj.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if car_obj.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if car_obj.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+            </td>
+            <td>
+            {% if guest != 'ゲスト' %}
+                <a id="star" href="/carsharing_booking/favorite/serect/{{car_obj.id}}">
+            {% if car_obj.favorite == True %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star-fill mt-3" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+            {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star  mt-3" viewBox="0 0 16 16">
+                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                </svg>
+            {% endif %}
+                </a>
+            {% endif %}
+            </td>
+        </tr>
+        <tr style="border-bottom: 1pt solid;border-color: #cdcdcd;">
+            <td>
+                <img src="/media/{{car_obj.img}}" width="90"　border="0" />
+            </td>
+            <td>{{car_obj.people}}人</td>
+            <td>{{car_obj.model_id}}</td>
+            <td>{{car_obj.at_mt}}車</td>
+            <td>{{car_obj.used_mileage}}km</td>
+            <td id="child-td7" scope="row">
+                <a class="btn btn-y" href="/carsharing_booking/car/{{car_obj.id}}">予約する</a>
+            </td>
+        </tr> 
+    {% endfor %}
+    </table>
+{% endif %}
+{% endblock %}

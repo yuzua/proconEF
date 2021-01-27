@@ -2,9 +2,9 @@
     padding: 0.5em 1em;
     margin: 2em 10pt;
     margin-bottom: 20pt;
-    color: #5d627b;
+    color: rgb(83, 83, 83);
     background: white;
-    border-top: solid 5px #5d627b;
+    border-top: solid 5px rgb(83, 83, 83);
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     opacity: 1;
     width: 97%;
@@ -13,6 +13,12 @@
 
 .table td, .table th{
     vertical-align: middle;
+}
+
+.select-tb td, .select-tb th {
+    border-top: 0px solid #dee2e6;
+    text-align: center;
+    padding: .2rem;
 }
 
 .hour-button-box {
@@ -62,4 +68,16 @@
 .hour-button-box label, .hour-button-box label::before {
 	-webkit-transition: 0.25s all ease;
 	        transition: 0.25s all ease;
+}
+#star{
+    color: gold;
+    margin-right: 4px;
+}
+#star :hover{
+    color: gray;
+}
+#child-td7 a {
+    height: auto;
+    margin: 0;
+    float: none;
 }

@@ -7,9 +7,20 @@
 #map_info {
     padding: 0.5em 1em;
     margin-bottom: 20pt;
-    color: #5d627b;
+    color: rgb(83, 83, 83);
     background: white;
-    border-top: solid 5px #5d627b;
+    border-top: solid 5px rgb(83, 83, 83);
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     width: 100%;
+  }
+
+  h1 {
+      font-size: 25pt;
+  }
+
+  h2 {
+      font-size: 20pt;
+      margin-top: 20pt;
+      border-bottom: solid;
+      border-color: rgb(83, 83, 83);
   }

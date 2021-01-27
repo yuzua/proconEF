@@ -2,7 +2,7 @@
 
 {% block active_login %}
 <title>{{ title }}</title>
-<h1>{{ title }}</h1>
+<h1 style="font-size: 25pt;margin-top: 20pt">{{ title }}</h1>
 {% endblock %}
 
 {% block contents %}
@@ -19,7 +19,7 @@
     <form action="{% url 'owners_req:delete' id %}" method="post">
         {% csrf_token %}
         <tr><th></th><td>
-            <input type="submit" value="削除" class="btn btn-primary mt-2">
+            <input type="submit" value="削除" class="btn mt-2" style="height: 30pt;width: 90pt;font-size: 11pt;margin: 3pt 10pt 3pt 10pt;border-color: #696969;float: right;clear: both;>
         </td></tr>    
     </form>    
     </table>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from carsharing_req .models import CarsharUserModel, UsageModel
+from carsharing_req .models import CarsharUserModel, UsageModel, UserFavoriteCarModel
 from parking_req .models import ParkingUserModel, ParkingUsageModel
 from owners_req .models import ParentCategory, Category, CarInfoParkingModel, CarInfoModel
 from carsharing_booking .models import BookingModel
@@ -9,6 +9,7 @@ from parking_booking .models import ParkingBookingModel
 from .forms import BookingCreateForm, CarCategory
 import json
 import datetime, locale
+import collections
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
@@ -33,12 +34,7 @@ def test_ajax_app(request):
 
 
 def map(request):
-    if request.user.id == None:
-        add = '千葉県柏市末広町10-1'
-    else:
-        data = CarsharUserModel.objects.get(id=request.session['user_id'])
-        print(data.pref01+data.addr01+data.addr02)
-        add = data.pref01+data.addr01+data.addr02
+    add = setAdd(request)
     set_list = CarInfoParkingModel.objects.values("parking_id")
     item_all = ParkingUserModel.objects.filter(id__in=set_list)
     item = item_all.values("id", "address", "user_id", "lat", "lng")
@@ -47,20 +43,74 @@ def map(request):
         'markerData': item_list,
     }
     params = {
+        'title': '自宅付近で検索',
         'name': '自宅',
         'add': add,
-        'data_json': json.dumps(data)
+        'data_json': json.dumps(data),
+        'latlng': 'undefined'
     }
     if (request.method == 'POST'):
+        params['title'] = '検索地付近で検索'
         params['add'] = request.POST['add']
         params['name'] = '検索'
     return render(request, "carsharing_booking/map.html", params)
 
+def geo(request):
+    params = {
+        'title': '現在地付近で検索',
+        'name': '自宅',
+        'add': '',
+        'data_json': '',
+        'latlng': 'undefined'
+    }
+    if (request.method == 'POST'):
+        if len(request.POST) == 4:
+            params['name'] = '現在地'
+            params['latlng'] = str(request.POST['latlng'])
+            params['lat'] = str(request.POST['lat'])
+            params['lng'] = str(request.POST['lng'])
+        elif len(request.POST) == 2:
+            if request.POST['error'] == '1':
+                msg = "位置情報の利用が許可されていません。"
+            elif request.POST['error'] == '2':
+                msg = "デバイスの位置が判定できませんでした。"
+            elif request.POST['error'] == '3':
+                msg = "タイムアウトが発生しました。"
+            messages.error(request, msg)
+            params['add'] = setAdd(request)
+            params['name'] = ''
+        else:
+            messages.error(request, '位置情報が正しく取得出来ませんでした。')
+            params['add'] = setAdd(request)
+            params['name'] = ''
+        set_list = CarInfoParkingModel.objects.values("parking_id")
+        item_all = ParkingUserModel.objects.filter(id__in=set_list)
+        item = item_all.values("id", "address", "user_id", "lat", "lng")
+        item_list = list(item.all())
+        data = {
+            'markerData': item_list,
+        }
+        params['data_json'] = json.dumps(data)
+    
+    return render(request, "carsharing_booking/map.html", params)
+
+def setAdd(request):
+    if request.user.id == None:
+        add = '〒277-0005 千葉県柏市柏１丁目１−１'
+    else:
+        data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        print(data.pref01+data.addr01+data.addr02)
+        add = data.pref01+data.addr01+data.addr02
+    return add
+
 def car(request):
-    max_num = CarInfoModel.objects.values('category').order_by('parent_category', 'category').last()
-    max_num = max_num.get('category') + 1
+    max_num = Category.objects.order_by('id').last()
+    max_num = int(max_num.id) + 1
+    # print(max_num)
     set_QuerySet_car = CarInfoParkingModel.objects.values("car_id")
+    # print(set_QuerySet_car)
     set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
+    # print(set_QuerySet_parking)
     addadd = {}
     for index in set_QuerySet_parking:
         address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
@@ -75,8 +125,10 @@ def car(request):
     for key in range(1, max_num):
         value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
         if not value :
+            # print(key)
             print('空')
         else:
+            # print(key)
             for num in range(1, len(value)+1):
                 if num == 1:
                     value[0]['address'] = addadd[value[0]['id']]
@@ -96,9 +148,10 @@ def car(request):
         'category_set': list(Category.objects.all().values()),
         'json_car': json.dumps(dict_car, ensure_ascii=False)
     }
+    # print(list(Category.objects.all().values()))
     return render(request, "carsharing_booking/car.html", params)
 
-    print(dict_car)
+    # print(dict_car)
     params = {
         'car_obj': item_all,
         'form': CarCategory(),
@@ -107,6 +160,146 @@ def car(request):
         'json_car': json.dumps(dict_car, ensure_ascii=False)
     }
     return render(request, "carsharing_booking/car.html", params)
+
+def selectcar(request):
+    if str(request.user) == "AnonymousUser":
+        user_id = 'ゲスト'
+    else:
+        user_id = request.session['user_id']
+    if (request.method == 'POST'):
+        mydict = dict(request.POST)
+        car_data = selectcardataset(mydict, user_id)
+        request.session['select'] = car_data
+    else:
+        car_data = request.session['select']
+        if user_id != 'ゲスト':
+            favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
+            print(favorite_id_list)
+            for check in car_data:
+                check['favorite'] = None
+                for favorite_id in favorite_id_list:
+                    if favorite_id['favorite_car_id_id'] == check['id']:
+                        check['favorite'] = True
+
+    params = {
+        'title': '車詳細検索',
+        'car_objs': car_data,
+        'guest': user_id,
+        'flag': len(car_data)
+    }
+    return render(request, "carsharing_booking/selectcar.html", params)
+
+def selectcardataset(mydict, user_id):
+    print(user_id)
+    people = (0, 100)
+    babysheet = False
+    around_view_monitor = False
+    car_autonomous = False
+    car_nav = False
+    etc = False
+    non_smoking = False
+    if mydict['people'][0] != '':
+        people = (int(mydict['people'][0]), int(mydict['people'][0]))
+    if mydict['at_mt'][0] == 'AT車':
+        at_mt = 'AT'
+    elif mydict['at_mt'][0] == 'MT車':
+        at_mt = 'MT'
+    else:
+        at_mt = 'T'
+    if mydict.get('option') != None:
+        option = True
+        option_list = list(mydict['option'])
+        car_obj_list = []
+        countcheck = 0
+        for value in option_list:
+            if value == 'babysheet':
+                babysheet = True
+                tmp = list(CarInfoModel.objects.filter(babysheet=babysheet).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'around_view_monitor':
+                around_view_monitor = True
+                tmp = list(CarInfoModel.objects.filter(around_view_monitor=around_view_monitor).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'car_autonomous':
+                car_autonomous = True
+                tmp = list(CarInfoModel.objects.filter(car_autonomous=car_autonomous).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'car_nav':
+                car_nav = True
+                tmp = list(CarInfoModel.objects.filter(car_nav=car_nav).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'etc':
+                etc = True
+                tmp = list(CarInfoModel.objects.filter(etc=etc).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+            elif value == 'non_smoking':
+                non_smoking = True
+                tmp = list(CarInfoModel.objects.filter(non_smoking=non_smoking).values('id'))
+                for tmp_id in tmp:
+                    car_obj_list.append(tmp_id['id'])
+                countcheck += 1
+        c = collections.Counter(car_obj_list)
+        car_obj_list = []
+        for tap in c.most_common():
+            if tap[1] == countcheck:
+                car_obj_list.append(tap[0])
+            else:
+                break
+        print(car_obj_list)
+    else:
+        option = False
+    if mydict.get('category') != None:
+        category = int(mydict['category'][0])
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
+        else:
+            car_obj = list(CarInfoModel.objects.filter(category_id=category).filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
+    else:
+        if option == False:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).values('id'))
+        else:
+            car_obj = list(CarInfoModel.objects.filter(people__range=people).filter(at_mt__contains=at_mt).filter(id__in=car_obj_list).values('id'))
+    car_id_list = []
+    for carid in car_obj:
+        car_id_list.append(carid.get('id'))
+    tmp = list(CarInfoParkingModel.objects.values('car_id'))
+    in_list = []
+    for carid in tmp:
+        in_list.append(carid.get('car_id'))
+    exclude_car = list(CarInfoModel.objects.exclude(id__in=in_list).values('id'))
+    exclude_car_list = []
+    for carid in exclude_car:
+        exclude_car_list.append(carid.get('id'))
+    for delete in exclude_car_list:
+        car_id_list.remove(delete)
+    data = list(CarInfoParkingModel.objects.filter(car_id__in=car_id_list).values())
+    parking_id_list = []
+    for parkingid in data:
+        parking_id_list.append(parkingid['parking_id_id'])
+    car_data = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=car_id_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+    for num in range(len(car_data)):
+        recode = ParkingUserModel.objects.get(id=parking_id_list[num])
+        car_data[num]['address'] = recode.address
+        car_data[num]['used_mileage'] = "{:,}".format(car_data[num]['used_mileage'])
+    if user_id != 'ゲスト':
+        favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id).order_by('favorite_car_id_id').values('favorite_car_id_id'))
+        for check in car_data:
+            for favorite_id in favorite_id_list:
+                if favorite_id['favorite_car_id_id'] == check['id']:
+                    check['favorite'] = True
+    print(car_data)
+    return car_data
+
 
 def history(request):
     booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
@@ -144,14 +337,62 @@ def history(request):
     return render(request, "carsharing_booking/history.html", params)
 
 
+def favoritelist(request):
+    if str(request.user) == "AnonymousUser":
+        messages.error(request, 'ログインしてください。')
+        return redirect(to='carsharing_req:index')
+    else:
+        user_id = request.session['user_id']
+    favorite_car_dict = list(UserFavoriteCarModel.objects.filter(user_id=user_id).values('favorite_car_id'))
+    favorite_car_list = []
+    for favorite_car_id in favorite_car_dict:
+        favorite_car_list.append(favorite_car_id['favorite_car_id'])
+    print(favorite_car_list)
+    car_objs = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(id__in=favorite_car_list).values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+    count = 1
+    for car_obj in car_objs:
+        car_obj['count'] = count
+        car_obj['car_id'] = car_obj['id']
+        setid = CarInfoParkingModel.objects.get(car_id=int(car_obj['id']))
+        car_obj['id'] = setid.id
+        parikng = ParkingUserModel.objects.get(id=setid.parking_id_id)
+        car_obj['parking_id'] = parikng.id
+        car_obj['lat'] = parikng.lat
+        car_obj['lng'] = parikng.lng
+        car_obj['address'] = parikng.address
+        count += 1
+    print(car_objs)
+    params = {
+        'title': 'お気に入り',
+        'car_objs': car_objs,
+        'count': len(car_objs)
+    }
+    return render(request, "carsharing_booking/favoritelist.html", params)
+
+
 def booking_car(request, num):
     request.session['select'] = "car"
+    if str(request.user) == "AnonymousUser":
+        user_id = 'ゲスト'
+        guest = True
+    else:
+        user_id = request.session['user_id']
+        guest = False
+
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    
     params = {
         'title': '予約',
+        'guest': user_id,
         'events': '',
         'car_id': num,
         'form': BookingCreateForm(),
-        'car_data': CarInfoModel.objects.get(id=num)
+        'car_data': CarInfoModel.objects.get(id=num),
+        'status': my_plan
     }
     events = []
     # カーシェアリング予約
@@ -176,6 +417,16 @@ def booking_car(request, num):
     request.session['events'] = json.dumps(events)
     params['events'] = request.session['events']
     car_obj = CarInfoModel.objects.filter(id=num)
+    params['favorite'] = False
+    if guest == False:
+    # if user_id != 'ゲスト':
+        favorite_id_list = list(UserFavoriteCarModel.objects.filter(user_id=user_id, favorite_car_id_id=num).values('favorite_car_id_id'))
+        if len(favorite_id_list) != 0:
+            request.session['favorite'] = True
+        else:
+            request.session['favorite'] = False
+    else:
+        request.session['favorite'] = False
     request.session['car_objs'] = car_obj
     # parking_id = CarInfoParkingModel.objects.filter(car_id=num).values('parking_id')
     # request.session['parking_id'] = parking_id[0]['parking_id']
@@ -183,18 +434,33 @@ def booking_car(request, num):
     parking_id = CarInfoParkingModel.objects.filter(id=num).values("parking_id")
     request.session['address'] = ParkingUserModel.objects.get(id=parking_id[0]["parking_id"]).address
     params['address'] = request.session['address']
+    params['favorite'] = request.session['favorite']
     return render(request, "carsharing_booking/car_next.html", params)
 
 
 def booking(request, num):
     request.session['select'] = "map"
     request.session['obj_id'] = num
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        guest = True
+    else:
+        print(request.user)
+        guest = False
+    
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    
     params = {
         'form': BookingCreateForm(),
         'message': '予約入力',
         'car_objs': '',
         'car_id': '',
         'num': request.session['obj_id'],
+        'status': my_plan
     }
     num = request.session['obj_id']
     address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
@@ -258,6 +524,13 @@ def checkBooking(request):
 
     }
     # error時の入力保存しredirect
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        user_id = 'ゲスト'
+    else:
+        print(request.user)
+        user_id = request.session['user_id']
+
     if request.session['select'] == 'map':
         address = ParkingUserModel.objects.filter(id=request.session['obj_id']).values('address')
         params['address'] = address[0]['address']
@@ -265,6 +538,8 @@ def checkBooking(request):
         params['car_id'] = request.session['obj_id']
         params['address'] = request.session['address']
         params['car_data'] = CarInfoModel.objects.get(id=request.session['obj_id'])
+        params['favorite'] = request.session['favorite']
+        params['guest'] = user_id
     params['events'] = request.session['events']
     obj = BookingModel()
     c_b = BookingCreateForm(request.POST, instance=obj)
@@ -317,7 +592,20 @@ def checkBooking(request):
     print(booking_list)
 
     # charge = request.POST['charge']
+    if str(request.user) == "AnonymousUser":
+        print('ゲスト')
+        guest = True
+    else:
+        print(request.user)
+        guest = False
     
+    if guest == False:
+        user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+        my_plan = user_data.plan
+    else:
+        my_plan = 'guest'
+    print(my_plan)
+
     time = end - start
     d = int(time.days)
     m = int(time.seconds / 60)
@@ -330,15 +618,134 @@ def checkBooking(request):
         print('1day')
     else:
         print('days')
-        charge = int(d * 20000)
+        daycount = d
+        while daycount >= 0:
+            if daycount == 1:
+                daycount -= 1
+                if my_plan == 'a':
+                    charge += 8880
+                elif my_plan == 'b':
+                    charge += 8280
+                elif my_plan == 'c':
+                    charge += 7180
+                elif my_plan == 'guest':
+                    charge += 8880
+                break
+            elif daycount == 2:
+                daycount -= 2
+                if my_plan == 'a':
+                    charge += 14280
+                elif my_plan == 'b':
+                    charge += 13380
+                elif my_plan == 'c':
+                    charge += 11480
+                elif my_plan == 'guest':
+                    charge += 14280
+                break
+            elif daycount == 3:
+                daycount -= 3
+                if my_plan == 'a':
+                    charge += 20380
+                elif my_plan == 'b':
+                    charge += 19080
+                elif my_plan == 'c':
+                    charge += 16380
+                elif my_plan == 'guest':
+                    charge += 20380
+                break
+            else:
+                daycount -= 3
+                if my_plan == 'a':
+                    charge += 20380
+                elif my_plan == 'b':
+                    charge += 19080
+                elif my_plan == 'c':
+                    charge += 16380
+                elif my_plan == 'guest':
+                    charge += 20380
+
         times = str(d) + '日 '
 
     if start_time < end_time:
         print('tule')
-        charge += int(m / 15 * 225)
+        # charge += int(m / 15 * 225)
         h = int(m / 60)
+        hourcount = h
+        while hourcount >= 6:
+            if hourcount == 6:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+            elif hourcount == 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+            elif hourcount >= 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+            else:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+        minutecount = hourcount*60
         m = int(m % 60)
+        minutecount += m
+        if my_plan == 'a':
+            charge += int(minutecount / 15 * 225)
+        elif my_plan == 'b':
+            charge += int(minutecount / 15 * 210)
+        elif my_plan == 'c':
+            charge += int(minutecount / 15 * 180)
+        elif my_plan == 'guest':
+            charge += int(minutecount / 15 * 225)
         x = str(h) + '時間 ' + str(m) + '分'
+        if d <= 0:
+            if my_plan == 'a':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
+            elif my_plan == 'b':
+                if h <= 12 and charge > 6380:
+                    charge = 6380
+                elif h <= 6 and charge > 4280:
+                    charge = 4280
+            elif my_plan == 'c':
+                if h <= 12 and charge > 5480:
+                    charge = 5480
+                elif h <= 6 and charge > 3680:
+                    charge = 3680
+            elif my_plan == 'guest':
+                print('g')
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
         times += x
     elif start_time >= end_time and d < 0:
         print('false')
@@ -348,10 +755,85 @@ def checkBooking(request):
         elif request.session['select'] == 'car':
             return render(request, "carsharing_booking/car_next.html", params)
     else:
-        charge += int(m / 15 * 225)
         h = int(m / 60)
+        hourcount = h
+        while hourcount > 6:
+            if hourcount == 6:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+                break
+            elif hourcount == 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+                break
+            elif hourcount >= 12:
+                hourcount -= 12
+                if my_plan == 'a':
+                    charge += 6780
+                elif my_plan == 'b':
+                    charge += 6380
+                elif my_plan == 'c':
+                    charge += 5480
+                elif my_plan == 'guest':
+                    charge += 6780
+                break
+            else:
+                hourcount -= 6
+                if my_plan == 'a':
+                    charge += 4580
+                elif my_plan == 'b':
+                    charge += 4280
+                elif my_plan == 'c':
+                    charge += 3680
+                elif my_plan == 'guest':
+                    charge += 4580
+        minutecount = hourcount*60
         m = int(m % 60)
+        minutecount += m
+        if my_plan == 'a':
+            charge += int(minutecount / 15 * 225)
+        elif my_plan == 'b':
+            charge += int(minutecount / 15 * 210)
+        elif my_plan == 'c':
+            charge += int(minutecount / 15 * 180)
+        elif my_plan == 'guest':
+            charge += int(minutecount / 15 * 225)
         x = str(h) + '時間 ' + str(m) + '分'
+        if d <= 0:
+            if my_plan == 'a':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
+            elif my_plan == 'b':
+                if h <= 12 and charge > 6380:
+                    charge = 6380
+                elif h <= 6 and charge > 4280:
+                    charge = 4280
+            elif my_plan == 'c':
+                if h <= 12 and charge > 5480:
+                    charge = 5480
+                elif h <= 6 and charge > 3680:
+                    charge = 3680
+            elif my_plan == 'guest':
+                if h <= 12 and charge > 6780:
+                    charge = 6780
+                elif h <= 6 and charge > 4580:
+                    charge = 4580
         times += x
     if d == 0 and m <= 15 and h == 0:
         messages.error(request, '15分未満は利用できません。')
@@ -398,6 +880,7 @@ def push(request):
         del request.session['car_objs']
         del request.session['obj_id']
         del request.session['select']
+        del request.session['favorite']
         messages.success(request, '予約が完了しました。<br>ご登録されているメールアドレスに予約完了メールを送信致しました。ご確認下さい。')
         #mail送信メソッドの呼び出し
         success_booking_mail(request, charge, start_day, start_time, end_day, end_time)
@@ -424,6 +907,25 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
     from_email = 'admin@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
+
+def favorite(request, flag, num):
+    first = len(list(UserFavoriteCarModel.objects.filter(user_id=request.session['user_id'], favorite_car_id_id=num)))
+    if first == 0:
+        record = UserFavoriteCarModel(user_id=request.session['user_id'], favorite_car_id_id=num)
+        print('record_save')
+        record.save()
+        messages.success(request, 'お気に入りに追加しました。')
+    else:
+        record = UserFavoriteCarModel.objects.filter(user_id=request.session['user_id'], favorite_car_id_id=num)
+        print('recode_delete')
+        record.delete()
+        messages.success(request, 'お気に入りから削除しました。')
+    if flag == 'serect':
+        return redirect(to='carsharing_booking:selectcar')
+    elif flag == 'bookingcar':
+        return redirect(to='carsharing_booking:booking_car', num=num)
+    elif flag == 'favorites':
+        return redirect(to='carsharing_booking:favoritelist')
 
 def reservation(request):
     booking = BookingModel.objects.filter(user_id=request.session['user_id']).values('id', 'car_id', 'start_day', 'start_time', 'end_day', 'end_time', 'charge').last()

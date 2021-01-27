@@ -4,17 +4,21 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
+  <!-- <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'> -->
+  <link rel="stylesheet" href='{% static "carsharing_booking/css/delete.css" %}'>
 {% endblock %}
 
 {% block main_contents %}
-<div class="m-2 clearfix" id="delete-box">
-    <h5 class="card-header m-0">{{ title }}</h5>
+<div class="m-2 clearfix" id="delete-box" style="border: none;">
+    <h2 class="m-0" style="border-bottom: solid;border-color: rgb(83, 83, 83);">{{ title }}</h2>
 {% if flag == "car" %}
-        <div class="p-2 m-0 float-left w-25">
+        <!-- <div class="detail">
+        </div> -->
 {% else %}
-        <div class="p-2 m-0 float-left w-50">
+        <!-- <div class="details">
+        </div> -->
 {% endif %}
+        <div class="detail">            
             <h6 class="pb-4"><strong>予約情報</strong></h6>
             <p>開始日：{{booking.start_day}}</p>
             <p>開始時刻：{{booking.start_time}}</p>
@@ -22,9 +26,9 @@
             <p>終了時刻：{{booking.end_time}}</p>
             <p>料金：{{booking.charge}}円</p>
         </div>
-        <div class="p-2 m-0 float-left w-50">
+        <div class="details">
             <h6 class="pb-4"><strong>駐車場情報</strong></h6>
-            <div id="map" style="width:400px; height:250px"></div>
+            <div id="map"></div>
             <p>住所：{{parking_obj.address}}</p>
             <p>駐車場タイプ：{{parking_obj.parking_type}}</p>
             <p>土地タイプ：{{parking_obj.ground_type}}</p>
@@ -35,7 +39,7 @@
             {% endif %}
         </div>
 {% if flag == "car" %}
-        <div class="p-2 m-0 float-left w-25">
+        <div class="detail">
             <h6><strong>車両情報</strong></h6>
             <div class="m-2">
                 <img border="0" src="/media/{{car_obj.img}}" width="200" alt="{{car_obj.img}}">
@@ -71,14 +75,14 @@
         {% csrf_token %}
         <input type="hidden" name="flag" value="{{flag}}">
         <input type="hidden" name="id" value="{{booking.id}}">
-        <input class="btn btn-outline-danger" type="submit" value="キャンセル確定" style="float: right;">
+        <input class="btn" type="submit" value="キャンセル確定" style="float: right;color: red;">
     </form>
 {% else %}
     <form action="{% url 'carsharing_booking:delete' %}" method="post" >
         {% csrf_token %}
         <input type="hidden" name="flag" value="{{flag}}">
         <input type="hidden" name="id" value="{{booking.id}}">
-        <input class="btn btn-outline-danger" type="submit" value="キャンセル確定" style="float: right;">
+        <input class="btn" type="submit" value="キャンセル確定" style="float: right;">
     </form>
 {% endif %}
 <script>

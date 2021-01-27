@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "parent_category": "\u65e5\u7523"
+    },
+    {
+        "id": 2,
+        "parent_category": "\u30c8\u30e8\u30bf"
+    },
+    {
+        "id": 3,
+        "parent_category": "\u30b9\u30ba\u30ad"
+    },
+    {
+        "id": 4,
+        "parent_category": "\u30db\u30f3\u30c0"
+    },
+    {
+        "id": 5,
+        "parent_category": "\u30de\u30c4\u30c0"
+    },
+    {
+        "id": 6,
+        "parent_category": "\u30b9\u30d0\u30eb"
+    },
+    {
+        "id": 7,
+        "parent_category": "\u30a2\u30a6\u30c7\u30a3"
+    },
+    {
+        "id": 8,
+        "parent_category": "BMW"
+    },
+    {
+        "id": 9,
+        "parent_category": "\u30dd\u30eb\u30b7\u30a7"
+    },
+    {
+        "id": 10,
+        "parent_category": "\u30e1\u30eb\u30bb\u30c7\u30b9\u30fb\u30d9\u30f3\u30c4"
+    },
+    {
+        "id": 11,
+        "parent_category": "\u30d5\u30a9\u30eb\u30af\u30b9\u30ef\u30fc\u30b2\u30f3"
+    }
+]

@@ -18,3 +18,12 @@ function displayswitch() {
   window.onload = function() {
     displayswitch();
   };
+
+function cal(value) {
+  var element = document.getElementById( "front"+value );
+  element.classList.toggle( "close" ) ;
+  element.classList.add( "open" );
+  var element = document.getElementById( "back"+value );
+  element.classList.toggle( "close" ) ;
+  element.classList.add( "open" );
+}

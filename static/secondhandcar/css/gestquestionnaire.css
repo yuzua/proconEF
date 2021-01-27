@@ -1,0 +1,92 @@
+h1 {
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(83, 83, 83);
+}
+
+.title {
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(83, 83, 83);
+    padding-bottom: 10pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+}
+
+
+.ECM_CheckboxInput {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 150pt;
+    margin-left: 150pt;
+  }
+  
+  .ECM_CheckboxInput-Input {
+    margin: 0;
+    width: 0;
+    opacity: 0;
+  }
+  
+  .ECM_CheckboxInput:hover > .ECM_CheckboxInput-DummyInput {
+    background: #DDDDDD !important;
+    border: solid 2px #333333;
+  }
+  
+  .ECM_CheckboxInput-Input:focus + .ECM_CheckboxInput-DummyInput {
+    background: #DDDDDD !important;
+    border: solid 2px #333333;  
+  }
+  .ECM_CheckboxInput-Input:checked + .ECM_CheckboxInput-DummyInput {
+    border: solid 2px #333333;
+    background: #FFFFFF;
+  }
+  .ECM_CheckboxInput-Input:checked + .ECM_CheckboxInput-DummyInput::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hlY2siPjxwb2x5bGluZSBwb2ludHM9IjIwIDYgOSAxNyA0IDEyIj48L3BvbHlsaW5lPjwvc3ZnPg==") no-repeat center;
+    background-size: contain;
+  }
+  .ECM_CheckboxInput-DummyInput {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: solid 2px #888888;
+    background: #FFFFFF;
+    border-radius: 4px;
+  }
+  .ECM_CheckboxInput-LabelText {
+    margin-left: 12px;
+    display: block;
+    font-size: 18px;
+    color: rgb(83, 83, 83);
+  }
+  #guest_btn{
+    float: right;
+    width: 80pt;
+    height: 30pt;
+    margin: 5pt;
+    margin-right: 150pt;
+}
+
+@media screen and (max-width: 599px) {
+    #guest_btn{
+        margin-right: 0pt;
+    }
+    .ECM_CheckboxInput {
+        margin: 0pt 0pt 6pt 0pt;
+    }
+    .title {
+        font-size: 12px;
+    }
+}

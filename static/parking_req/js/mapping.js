@@ -44,6 +44,6 @@ function initMap() {
         .done( function(data) {
           alert(data);
           $("#id_div_ajax_response").text(data);
-          $("#id_div_ajax_response").html("<a href='/parking_req/create' class='btn btn-primary'>create</a>");
+          $("#id_div_ajax_response").html("<a href='/parking_req/create' class='btn'>create</a>");
         })
       });

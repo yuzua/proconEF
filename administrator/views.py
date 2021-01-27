@@ -6,7 +6,7 @@ from django .shortcuts import redirect
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
-from .models import MediaModel
+from .models import MediaModel, StationModel, StationParkingModel
 from owners_req .models import HostUserModel, CarInfoModel, ParentCategory, Category, CarInfoParkingModel
 from owners_req .forms import CarInfoForm, CarOptionForm, CarInfoParkingForm, CarsharingDateForm
 from django.contrib import messages
@@ -101,6 +101,10 @@ def checkparking(request):
         record = ParkingUserModel(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
             parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height, count=count)
         record.save()
+        parking_obj = ParkingUserModel.objects.get(user_id=user_id, address=address, lat=lat, lng=lng, day=day, \
+            parking_type=parking_type, ground_type=ground_type, width=width, length=length, height=height)
+        ParkingSetStationArea(parking_obj.id, lat, lng)
+        
         #セッションデータ削除
         del request.session['user_lat']
         del request.session['user_lng']
@@ -111,11 +115,26 @@ def checkparking(request):
         else:
             print('none')
             messages.success(request, '駐車場登録が完了しました。')
-            return redirect(to='/administrator/admin_main')
+            return redirect(to='/administrator/')
     else:
         messages.error(request, '不正なリクエストです。')
-    return redirect(to='administrator:index')
+    return redirect(to='administrator:admin_main')
 
+def ParkingSetStationArea(parking_id, lat, lng):
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    numdict = {}
+    for index in item_list:
+        w = float(index['lat']) - float(lat)
+        h = float(index['lng']) - float(lng)
+        if w < 0:
+            w = -w
+        if h < 0:
+            h = -h
+        num = w + h
+        numdict[index['id']] = num
+    min_k = min(numdict, key=numdict.get)
+    record = StationParkingModel(parking_id_id=parking_id, station_id_id=min_k)
+    record.save()
 
 def admin_main(request):
     s_p = ParkingUserModel.objects.filter(user_id=0)
@@ -195,7 +214,7 @@ def edit(request):
         if (parking.is_valid()):
             parking.save()
             messages.success(request, '駐車場情報を修正しました。')
-            return redirect(to='/administrator/admin_main')
+            return redirect(to='/administrator/')
         else:
             params['form'] = AdminParkingForm(request.POST, instance= obj)        
         
@@ -206,7 +225,7 @@ def delete(request, num):
     if (request.method == 'POST'):
         parking.delete()
         messages.success(request, '駐車場情報を削除しました。')
-        return redirect(to='/administrator/admin_main')
+        return redirect(to='/administrator/')
 
     return render(request, 'administrator/delete.html')
 
@@ -307,10 +326,10 @@ def checkcar(request):
         record.save()
         messages.success(request, '車両の登録が完了しました。引き続き駐車場情報を追加してください。')
         request.session['info_flag'] = True
-        # return redirect(to='administrator:index')
+        # return redirect(to='administrator:admin_main')
     else:
         messages.error(request, '不正なリクエストです。')
-    return redirect(to='administrator:index')
+    return redirect(to='administrator:admin_main')
 
 # ----------------------------------------------------------------------------------------------------------
 def judgmentTF(string):
@@ -377,7 +396,41 @@ class SettingAdminInfo(TemplateView):
             print('safe')
         print(nowint)
         messages.success(self.request, '登録完了しました')
-        return redirect(to='/administrator/admin_main')
+        return redirect(to='/administrator/')
+
+
+def DeleteSetting(request, num):
+    if (request.method == 'POST'):
+        print(request.POST)
+        pass
+    else:
+        station_list = list(StationParkingModel.objects.filter(station_id_id=num).values("parking_id_id"))
+        all_parking_list = []
+        for parking_id in station_list:
+            all_parking_list.append(parking_id['parking_id_id'])
+        # print(all_parking_list)
+        item_list = list(CarInfoParkingModel.objects.filter(parking_id__in=all_parking_list).values())
+        parking_list = []
+        car_list = []
+        for index in item_list:
+            parking_list.append(index['parking_id_id'])
+            car_list.append(index['car_id_id'])
+        parking_obj = list(ParkingUserModel.objects.filter(id__in=parking_list).values())
+        car_obj = list(CarInfoModel.objects.filter(id__in=car_list).select_related('parent_category__parent_category').select_related('category__category').values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+        for index, item in enumerate(item_list):
+            parking_obj[index]['parking_id'] = parking_obj[index]['id']
+            parking_obj[index]['id'] = item['id']
+            car_obj[index]['car_id'] = car_obj[index]['id']
+            car_obj[index]['id'] = item['id']
+            car_obj[index].update(parking_obj[index])
+
+    params = {
+        'title': '配車設定解除',
+        'data': car_obj,
+        'area': int(num)
+    }
+    return render(request, "administrator/deletesetting.html", params)
+
 
 # データのダウンロード
 class DownloadData(TemplateView):
@@ -390,10 +443,8 @@ class DownloadData(TemplateView):
         DeleteUploadXlsx('./data/car_data/')
         DeleteUploadXlsx('./data/parking_data/')
         path_list = AllCarDownload()
-        path_list[0] = path_list[0][8:]
-        path_list[1] = path_list[1][8:]
-        path_list[2] = path_list[2][8:]
-        path_list[3] = path_list[3][8:]
+        for index, item in enumerate(path_list):
+            path_list[index] = item[7:]
         self.params['path_list'] = path_list
         return render(request, 'administrator/download_data.html', self.params)
 
@@ -415,15 +466,18 @@ class UploadData(TemplateView):
         # .jsonの場合
         if result_json:
             json_data = json.loads(request.POST['output'])
-            if file_name[0] == 'p':
+            if file_name == 'parentcategory.json':
                 AllParentCategoryUpload(json_data)
                 messages.success(self.request, 'メーカー情報をDBへ格納しました。')
-            elif file_name[0] == 'c':
+            elif file_name == 'category.json':
                 AllCategoryUpload(json_data)
                 messages.success(self.request, '車種情報をDBへ格納しました。')
-            elif file_name[0] == 's':
+            elif file_name == 'settingcarparking.json':
                 AllSettingCarUpload(json_data)
                 messages.success(self.request, '車・駐車場設定をDBへ格納しました。')
+            elif file_name == 'stationarea.json':
+                AllStationAreaUpload(json_data)
+                messages.success(self.request, 'ステーションエリア情報をDBへ格納しました。')
         # .xlsxの場合
         elif result_xlsx:
             #ファイルの場合はPOSTとFILEの両方を渡す
@@ -455,17 +509,20 @@ def AllCarDownload():
     path_list = []
 
     # メーカー情報(親カテゴリー)をjsonでダウンロード
-    pc_path = AllParentCategoryDownload(dt_now)
+    pc_path = AllParentCategoryDownload()
     path_list.append(pc_path)
     # 車種情報(子カテゴリー)をjsonでダウンロード
-    c_path = AllCategoryDownload(dt_now)
+    c_path = AllCategoryDownload()
     path_list.append(c_path)
     # 駐車場情報をExcelファイルで作成、ダウンロード
-    parking_path = AllParkingDownload(dt_now)
+    parking_path = AllParkingDownload()
     path_list.append(parking_path)
     # 駐車場・車設定をExcelファイルで作成、ダウンロード
-    settings_path = AllSettingDownload(dt_now)
+    settings_path = AllSettingDownload()
     path_list.append(settings_path)
+    # 駐車場・ステーションエリア設定をExcelファイルで作成、ダウンロード
+    station_path = AllStationAreaDownload()
+    path_list.append(station_path)
 
     data = [
         ["車両ID","ユーザID","登録日","メーカー","車種","ナンバープレート-運輸支局-","ナンバープレート-車両種類-","ナンバープレート-使用用途-","ナンバープレート-指定番号-","型番","乗車人数","タイヤ","AT-MT","チャイルドシート","カーナビ","ETC","アラウンドビューモニター","自動運転","禁煙車","走行距離(km)","使用年数(年)","車検予定日","img","鍵工事"]
@@ -486,13 +543,13 @@ def AllCarDownload():
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "./data/car_data/" + dt_now + ".xlsx"
+    file_name = "./data/car_data/carinfo.xlsx"
     wb.save(file_name)
     path_list.append(file_name)
     return path_list
 
 # ------------------------ DB上に追加保存された全駐車場のデータをxlsxに書き出し ------------------------ 
-def AllParkingDownload(dt_now):
+def AllParkingDownload():
 
     data = [
         ["駐車場ID","ユーザID","住所","緯度","経度","登録日","駐車場タイプ","土地タイプ","横幅","奥行き","高さ","収容台数","管理者","制限台数フラグ"]
@@ -513,39 +570,50 @@ def AllParkingDownload(dt_now):
         sheet.append(row)
 
     # xlsx型式で保存
-    file_name = "./data/parking_data/p_" + dt_now + ".xlsx"
+    file_name = "./data/parking_data/parkinginfo.xlsx"
     wb.save(file_name)
     return file_name
 
 # ---------------------- DB上に追加保存された全メーカー名(親カテゴリー)をjsonに書き出し ------------------------ 
-def AllParentCategoryDownload(dt_now):
+def AllParentCategoryDownload():
     p_c = list(ParentCategory.objects.values())
     json_data = json.dumps(p_c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/pc_" + dt_now + ".json"
+    path = "./data/car_data/parentcategory.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
     return path
 # ------------------------- DB上に追加保存された全車種名(カテゴリー)をjsonに書き出し ------------------------------ 
-def AllCategoryDownload(dt_now):
+def AllCategoryDownload():
     c = list(Category.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/c_" + dt_now + ".json"
+    path = "./data/car_data/category.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
     return path
 # ---------------------------- DB上に追加保存された車・駐車場設定をjsonに書き出し -------------------------------- 
-def AllSettingDownload(dt_now):
+def AllSettingDownload():
     c = list(CarInfoParkingModel.objects.values())
     json_data = json.dumps(c, sort_keys=True, indent=4)
 
     # ファイルを開く(上書きモード)
-    path = "./data/car_data/s_" + dt_now + ".json"
+    path = "./data/car_data/settingcarparking.json"
+    with open(path, 'w') as f:
+        # jsonファイルの書き出し
+        f.write(json_data)
+    return path
+# --------------------- DB上に追加保存された駐車場・ステーションエリア設定をjsonに書き出し -------------------------- 
+def AllStationAreaDownload():
+    c = list(StationModel.objects.values())
+    json_data = json.dumps(c, sort_keys=True, indent=4)
+
+    # ファイルを開く(上書きモード)
+    path = "./data/parking_data/stationarea.json"
     with open(path, 'w') as f:
         # jsonファイルの書き出し
         f.write(json_data)
@@ -595,10 +663,61 @@ def AllSettingCarUpload(json_data):
             record.save()
     # 初回のみ
     else:
+        record_list = []
         for data in json_data:
             record = CarInfoParkingModel(id=data['id'], car_id_id=data['car_id_id'], parking_id_id=data['parking_id_id'], user_id=data['user_id'])
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoParkingModel.objects.bulk_create(record_list)
 
+def AllStationAreaUpload(json_data):
+    print(json_data)
+    flag = len(list(StationModel.objects.all()))
+    if flag != 0:
+        for data in json_data:
+            print(data)
+            record = StationModel.objects.get(id=data['id'])
+            record.address = data['address']
+            record.lat = data['lat']
+            record.lng = data['lng']
+            record.save()
+    # 初回のみ
+    else:
+        for data in json_data:
+            record = StationModel(id=data['id'], address=data['address'], lat=data['lat'], lng=data['lng'])
+            record.save()
+        # 近いステーションを設定
+        ParkingsSetStationArea()
+
+# 駐車場の緯度経度から最寄りのステーションを設定(全件)
+def ParkingsSetStationArea():
+    result_list = {}
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    item_list2 = list(ParkingUserModel.objects.values("id", "address", "lat", "lng"))
+    for index2 in item_list2:
+        lat = index2['lat']
+        lng = index2['lng']
+        numdict = {}
+        for index in item_list:
+            w = float(index['lat']) - float(lat)
+            h = float(index['lng']) - float(lng)
+            if w < 0:
+                w = -w
+            if h < 0:
+                h = -h
+            num = w + h
+            numdict[index['id']] = num
+        min_k = min(numdict, key=numdict.get)
+        min_v = min(numdict.values())
+        result_list[index2['id']] = min_k
+    print(result_list)
+    record_list = []
+    for parking_id, station_id in result_list.items():
+        print(parking_id)
+        print(station_id)
+        record = StationParkingModel(parking_id_id=parking_id, station_id_id=station_id)
+        record_list.append(record)
+    StationParkingModel.objects.bulk_create(record_list)
 # --------------------------------- 読み込んだjsonファイルをDBへ格納 ---------------------------------- 
 # ----------------------------- 読み込んだxlsxファイルの情報をを配列へ格納 ------------------------------
 def ImportXlsx(file_name):
@@ -665,6 +784,7 @@ def AllCarUpload(all_list):
             record.key_flag = car_list[23]
             record.save()
     else:
+        record_list = []
         for car_list in all_list:
             record = CarInfoModel()
             record.user_id = int(car_list[1])
@@ -690,7 +810,9 @@ def AllCarUpload(all_list):
             record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
             record.img = car_list[22]
             record.key_flag = car_list[23]
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoModel.objects.bulk_create(record_list)
 
 # ---------------------------------------- 車情報をDBへ保存 -----------------------------------------
 
@@ -718,6 +840,7 @@ def AllParkingUpload(all_list):
             record.countflag = parking_list[13]
             record.save()
     else:
+        record_list = []
         for parking_list in all_list:
             record = ParkingUserModel()
             record.user_id = int(parking_list[1])
@@ -725,6 +848,7 @@ def AllParkingUpload(all_list):
             record.lat = parking_list[3]
             record.lng = parking_list[4]
             record.day = datetime.datetime.strptime(parking_list[5], '%Y-%m-%d')
+            # record.day = parking_list[5]
             record.parking_type = parking_list[6]
             record.ground_type = parking_list[7]
             record.width = int(parking_list[8])
@@ -733,7 +857,9 @@ def AllParkingUpload(all_list):
             record.count = int(parking_list[11])
             record.admin = parking_list[12]
             record.countflag = parking_list[13]
-            record.save()
+            record_list.append(record)
+            # record.save()
+        CarInfoModel.objects.bulk_create(record_list)
 
 # --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
 
@@ -741,3 +867,44 @@ def AllParkingUpload(all_list):
 def DeleteUploadXlsx(target_dir):
     shutil.rmtree(target_dir)
     os.mkdir(target_dir)
+
+
+def StationArea(request):
+    add = '〒277-0005 千葉県柏市柏１丁目１−１'
+    item_list = list(StationModel.objects.values("id", "address", "lat", "lng"))
+    item_list2 = list(ParkingUserModel.objects.values("id", "address", "lat", "lng"))
+
+    path = "./data/haishayosoku/result.json"
+    haishayosoku_dict = openJSON(path)
+    # print(haishayosoku_dict['ID'])
+    # print(haishayosoku_dict['kategori'])
+    # print(haishayosoku_dict['kazu'])
+    for items in item_list:
+        index = int(items['id']) - 1
+        items['color'] = haishayosoku_dict['kategori'].get(str(index))
+        items['many'] = haishayosoku_dict['kazu'].get(str(index))
+
+    data = {
+        'markerData': item_list,
+        'markerData2': item_list2
+    }
+    params = {
+        'title': 'エリア',
+        'name': '自宅',
+        'add': add,
+        'data_json': json.dumps(data),
+        'latlng': 'undefined'
+    }
+    if (request.method == 'POST'):
+        params['title'] = '検索地付近で検索'
+        params['add'] = request.POST['add']
+        params['name'] = '検索'
+    return render(request, "administrator/stationarea.html", params)
+
+def openJSON(path):
+    with open(path, 'r') as f:
+        # jsonファイルの読み込み
+        json_data = f.read()
+        json_object = json.loads(json_data)
+
+    return json_object

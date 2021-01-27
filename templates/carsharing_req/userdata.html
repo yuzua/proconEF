@@ -1,6 +1,10 @@
 {% extends 'carsharing_req/base.html' %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href='{% static "carsharing_req/css/userdata.css" %}'>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 
@@ -44,6 +48,9 @@
       <th scope="col">住所</th><td scope="row">{{data.addr01}}{{data.addr02}}</td>
     </tr>
     <tr>  
+      <th scope="col">電話番号</th><td scope="row">{{data.tel}}</td>
+    </tr>
+    <tr>  
       <th scope="col">カード会社</th><td scope="row">{{data.credit_card_company}}</td>
     </tr>
     <tr>
@@ -75,21 +82,19 @@
     <tr>  
       <th scope="col">免許証画像</th>
       <td scope="row">
-        <img src="/media/{{data.img}}" width="500"　border="1" />
+        <img src="/media/{{data.img}}"/>
       </td>
     </tr>
     <tr>  
       <th scope="col">アカウント名</th><td scope="row">{{data2.username}}</td>
     </tr>
   </tbody>
+  <a href="{% url 'carsharing_req:first' %}" class="btn">TOPへ戻る</a>
+
 </table>
-<<<<<<< HEAD
-<style>
+{% comment %} <style>
   .footer {
     margin: 0 160pt;
     }
-</style>
-=======
-<a href="{% url 'carsharing_req:first' %}" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">TOPへ戻る</a>
->>>>>>> a83b6f48c8b7697d767adaeb3a0f8c2213e25f70
+</style> {% endcomment %}
 {% endblock %}

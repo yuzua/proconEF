@@ -1,3 +1,43 @@
 .table td, .table th{
     vertical-align: middle;
 }
+
+.tr {
+    border-top: solid;
+    border-bottom: solid;
+}
+
+h1 {
+    font-size: 25pt;
+}
+
+h2 {
+    font-size: 20pt;
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+}
+
+.sp { 
+    display: none !important; 
+}
+
+@media (max-width: 690px){
+    h1 {
+        font-size: 20pt;
+    }
+
+    .pc {
+         display: none !important; 
+    }
+
+    .sp {
+         display: block !important; 
+    }
+    table {
+        width: 300%;
+    }
+
+    img {
+        width: 100%;
+    }
+}
