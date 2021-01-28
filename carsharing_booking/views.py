@@ -108,34 +108,48 @@ def car(request):
     max_num = int(max_num.id) + 1
     # print(max_num)
     set_QuerySet_car = CarInfoParkingModel.objects.values("car_id")
-    # print(set_QuerySet_car)
-    set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
-    # print(set_QuerySet_parking)
-    addadd = {}
-    for index in set_QuerySet_parking:
-        address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
-        address = address[0]['address']
-        index = index['car_id']
-        addadd.setdefault(index, address)
-    # print(addadd)
-
     item_all = CarInfoModel.objects.filter(id__in=set_QuerySet_car).order_by('parent_category', 'category')
+    # print(set_QuerySet_car)
+    # set_QuerySet_parking = CarInfoParkingModel.objects.values("parking_id", "car_id")
+    # print(set_QuerySet_parking)
+    # addadd = {}
+    # for index in set_QuerySet_parking:
+    #     address = list(ParkingUserModel.objects.filter(id=index['parking_id']).values("address"))
+    #     address = address[0]['address']
+    #     index = index['car_id']
+    #     addadd.setdefault(index, address)
+    # print(addadd)
     # print(item_all.values('category'))
     dict_car = {}
     for key in range(1, max_num):
         value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
         if not value :
-            # print(key)
+            print(key)
             print('空')
         else:
-            # print(key)
+            print('key')
+            print(key)
+            print('len')
+            print(len(value))
             for num in range(1, len(value)+1):
+                print('num')
+                print(num)
+                print(value)
                 if num == 1:
-                    value[0]['address'] = addadd[value[0]['id']]
                     print(value[0])
-                else:
-                    print(num)
-                    value[num-1]['address'] = addadd[value[num-1]['id']]
+                    parking = CarInfoParkingModel.objects.get(car_id_id=int(value[0]['id']))
+                    address = ParkingUserModel.objects.get(id=parking.parking_id_id)
+                    value[0]['address'] = address.address
+                elif num <= len(value):
+                    print(value[num-1])
+                    parking = CarInfoParkingModel.objects.get(car_id_id=int(value[num-1]['id']))
+                    address = ParkingUserModel.objects.get(id=parking.parking_id_id)
+                    value[num-1]['address'] = address.address
+                # if num == 1:
+                #     value[0]['address'] = addadd[value[0]['id']]
+                #     print(value[0])
+                # else:
+                #     value[num-1]['address'] = addadd[value[num-1]['id']]
         dict_car.setdefault(key, value)
         # print(key, value)
 
@@ -302,7 +316,12 @@ def selectcardataset(mydict, user_id):
 
 
 def history(request):
-    booking = UsageModel.objects.filter(user_id=request.session['user_id']).exclude(charge=-1).order_by('-end_day', '-end_time').values()
+    if str(request.user) == "AnonymousUser":
+        messages.error(request, 'ログインしてください。')
+        return redirect(to='carsharing_req:index')
+    else:
+        user_id = request.session['user_id']
+    booking = UsageModel.objects.filter(user_id=user_id).exclude(charge=-1).order_by('-end_day', '-end_time').values()
     for item in list(booking):
         num = CarInfoModel.objects.filter(id=item['car_id']).values("category")
         category = Category.objects.get(id=num[0]['category'])

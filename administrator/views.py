@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django .shortcuts import redirect
+from accounts .models import CustomUser
 from parking_req .models import ParkingUserModel
 from carsharing_req .models import CarsharUserModel
 from .forms import AdminParkingForm, UploadFileForm
@@ -16,6 +17,7 @@ import json
 import openpyxl
 import re
 import os, shutil
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
@@ -469,24 +471,56 @@ def DeleteSetting(request, num):
         parking_list = []
         car_list = []
         for index in item_list:
-            parking_list.append(index['parking_id_id'])
-            car_list.append(index['car_id_id'])
-        parking_obj = list(ParkingUserModel.objects.filter(id__in=parking_list).values())
-        car_obj = list(CarInfoModel.objects.filter(id__in=car_list).select_related('parent_category__parent_category').select_related('category__category').values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
-        for index, item in enumerate(item_list):
-            parking_obj[index]['parking_id'] = parking_obj[index]['id']
-            parking_obj[index]['id'] = item['id']
-            car_obj[index]['car_id'] = car_obj[index]['id']
-            car_obj[index]['id'] = item['id']
-            car_obj[index].update(parking_obj[index])
+            car_data = CarInfoModel.objects.get(id=index['car_id_id'])
+            index['parent_category__parent_category'] = car_data.parent_category
+            index['category__category'] = car_data.category
+            index['img'] = car_data.img
+            index['model_id'] = car_data.model_id
+            parking_data = ParkingUserModel.objects.get(id=index['parking_id_id'])
+            index['address'] = parking_data.address
+            index['parking_type'] = parking_data.parking_type
+            print(index)
+            # parking_list.append(index['parking_id_id'])
+            # car_list.append(index['car_id_id'])
+        # parking_obj = list(ParkingUserModel.objects.filter(id__in=parking_list).values())
+        # print(parking_obj)
+        # print(item_list)
+        # car_obj = list(CarInfoModel.objects.filter(id__in=car_list).select_related('parent_category__parent_category').select_related('category__category').values('id', 'user_id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'tire', 'at_mt', 'babysheet', 'car_nav', 'etc', 'around_view_monitor', 'car_autonomous', 'non_smoking', 'used_mileage', 'used_years', 'img'))
+        # for index, item in enumerate(item_list):
+        #     for parking_item in parking_obj:
+        #         if item['parking_id_id'] == parking_item['id']:
+        #             parking_item['parking_id'] = parking_item['id']
+        #             parking_item['id'] = item['id']
+        # for index, item in enumerate(item_list):
+        #     for car_item in car_obj:
+        #         if item['car_id_id'] == car_item['id']:
+        #             car_item['car_id'] = car_item['id']
+        #             car_item['id'] = item['id']
+            # parking_obj[index]['parking_id'] = parking_obj[index]['id']
+            # parking_obj[index]['id'] = item['id']
+            # car_obj[index]['car_id'] = car_obj[index]['id']
+            # car_obj[index]['id'] = item['id']
 
     params = {
         'title': '配車設定解除',
-        'data': car_obj,
+        'data': item_list,
         'area': int(num)
     }
     return render(request, "administrator/deletesetting.html", params)
 
+
+def superuser(request):
+    superuser = CustomUser.objects.values()
+    print(superuser)
+    record = CustomUser()
+    record.id = 2
+    record.username = "admin2"
+    record.is_superuser = True
+    record.is_staff = True
+    record.is_active = True
+    record.password = make_password("adminpass","WD2kFWBW5ya6")
+    record.save()
+    return redirect(to='/admin')
 
 # データのダウンロード
 class DownloadData(TemplateView):
@@ -813,38 +847,74 @@ def AllCarUpload(all_list):
     all_list.pop(0)
     flag = len(list(CarInfoModel.objects.all()))
     if flag != 0:
+        record_list = []
         for car_list in all_list:
-            record = CarInfoModel.objects.get(id=car_list[0])
-            record.user_id = int(car_list[1])
-            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
-            record.parent_category_id = int(car_list[3])
-            record.category_id = int(car_list[4])
-            record.license_plate_place = car_list[5]
-            record.license_plate_type = car_list[6]
-            record.license_plate_how = car_list[7]
-            record.license_plate_num = car_list[8]
-            record.model_id = car_list[9]
-            record.people = int(car_list[10])
-            record.tire = car_list[11]
-            record.at_mt = car_list[12]
-            record.babysheet = car_list[13]
-            record.car_nav = car_list[14]
-            record.etc = car_list[15]
-            record.around_view_monitor = car_list[16]
-            record.car_autonomous = car_list[17]
-            record.non_smoking = car_list[18]
-            record.used_mileage = car_list[19]
-            record.used_years = int(car_list[20])
-            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
-            record.img = car_list[22]
-            record.key_flag = car_list[23]
-            record.save()
+            print(int(car_list[0]))
+            if int(car_list[0]) > flag:
+                record = CarInfoModel()
+                record.id = int(car_list[0])
+                record.user_id = int(car_list[1])
+                # record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+                record.day = car_list[2]
+                record.parent_category_id = int(car_list[3])
+                record.category_id = int(car_list[4])
+                record.license_plate_place = car_list[5]
+                record.license_plate_type = car_list[6]
+                record.license_plate_how = car_list[7]
+                record.license_plate_num = car_list[8]
+                record.model_id = car_list[9]
+                record.people = int(car_list[10])
+                record.tire = car_list[11]
+                record.at_mt = car_list[12]
+                record.babysheet = car_list[13]
+                record.car_nav = car_list[14]
+                record.etc = car_list[15]
+                record.around_view_monitor = car_list[16]
+                record.car_autonomous = car_list[17]
+                record.non_smoking = car_list[18]
+                record.used_mileage = car_list[19]
+                record.used_years = int(car_list[20])
+                # record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+                record.vehicle_inspection_day = car_list[21]
+                record.img = car_list[22]
+                record.key_flag = car_list[23]
+                record_list.append(record)
+                # record.save()
+        CarInfoModel.objects.bulk_create(record_list)
+        print(record_list)
+            # else:
+            #     record = CarInfoModel.objects.get(id=car_list[0])
+            #     record.user_id = int(car_list[1])
+            #     record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            #     record.parent_category_id = int(car_list[3])
+            #     record.category_id = int(car_list[4])
+            #     record.license_plate_place = car_list[5]
+            #     record.license_plate_type = car_list[6]
+            #     record.license_plate_how = car_list[7]
+            #     record.license_plate_num = car_list[8]
+            #     record.model_id = car_list[9]
+            #     record.people = int(car_list[10])
+            #     record.tire = car_list[11]
+            #     record.at_mt = car_list[12]
+            #     record.babysheet = car_list[13]
+            #     record.car_nav = car_list[14]
+            #     record.etc = car_list[15]
+            #     record.around_view_monitor = car_list[16]
+            #     record.car_autonomous = car_list[17]
+            #     record.non_smoking = car_list[18]
+            #     record.used_mileage = car_list[19]
+            #     record.used_years = int(car_list[20])
+            #     record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            #     record.img = car_list[22]
+            #     record.key_flag = car_list[23]
+                # record.save()
     else:
         record_list = []
         for car_list in all_list:
             record = CarInfoModel()
             record.user_id = int(car_list[1])
-            record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            #record.day = datetime.datetime.strptime(car_list[2], '%Y-%m-%d')
+            record.day = car_list[2]
             record.parent_category_id = int(car_list[3])
             record.category_id = int(car_list[4])
             record.license_plate_place = car_list[5]
@@ -863,7 +933,8 @@ def AllCarUpload(all_list):
             record.non_smoking = car_list[18]
             record.used_mileage = car_list[19]
             record.used_years = int(car_list[20])
-            record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            #record.vehicle_inspection_day = datetime.datetime.strptime(car_list[21], '%Y-%m-%d')
+            record.vehicle_inspection_day = car_list[21]
             record.img = car_list[22]
             record.key_flag = car_list[23]
             record_list.append(record)
@@ -915,7 +986,7 @@ def AllParkingUpload(all_list):
             record.countflag = parking_list[13]
             record_list.append(record)
             # record.save()
-        CarInfoModel.objects.bulk_create(record_list)
+        ParkingUserModel.objects.bulk_create(record_list)
 
 # --------------------------------------- 駐車場情報をDBへ保存 ---------------------------------------
 
@@ -964,3 +1035,15 @@ def openJSON(path):
         json_object = json.loads(json_data)
 
     return json_object
+
+
+
+def mobile(request):
+    set_list = CarInfoParkingModel.objects.values("parking_id")
+    item_all = ParkingUserModel.objects.filter(id__in=set_list)
+    item = item_all.values("id", "address", "user_id", "lat", "lng")
+    item_list = list(item.all())
+    data = {
+        'markerData': item_list,
+    }
+    return HttpResponse(json.dumps(data))
