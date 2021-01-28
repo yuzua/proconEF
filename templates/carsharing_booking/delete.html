@@ -82,7 +82,7 @@
         {% csrf_token %}
         <input type="hidden" name="flag" value="{{flag}}">
         <input type="hidden" name="id" value="{{booking.id}}">
-        <input class="btn" type="submit" value="キャンセル確定" style="float: right;">
+        <input class="btn" type="submit" value="キャンセル確定" style="float: right;color: red;">
     </form>
 {% endif %}
 <script>

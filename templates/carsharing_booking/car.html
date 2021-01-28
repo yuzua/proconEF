@@ -67,21 +67,6 @@
 </thead>
     <tbody id="parent-div"></tbody>
 </table>
-{% for item in car_obj %}
-<table>
-    <tr>
-        <th>{{item.id}}</th>
-    </tr>
-    <tr>
-        <td>{{item.category}}</td>
-        <td>{{item.parent_category}}</td>
-    </tr>
-</table>
-    <!-- {{item.id}}
-    {{item.category}}
-    {{item.parent_category}}
-    {{item.address}} -->
-{% endfor %}
 <script>
     var jsonData = JSON.parse('{{ json_car|safe }}');
 

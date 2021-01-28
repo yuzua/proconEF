@@ -123,13 +123,16 @@ def car(request):
     # print(item_all.values('category'))
     dict_car = {}
     for key in range(1, max_num):
+        print(key)
         value = list(CarInfoModel.objects.select_related('parent_category__parent_category').select_related('category__category').filter(category=key).values('id', 'parent_category__parent_category', 'category__category', 'model_id', 'people', 'used_years'))
         if not value :
             # print(key)
             print('空')
         else:
+            print(value)
             # print(key)
             for num in range(1, len(value)+1):
+                print(num)
                 if num == 1:
                     value[0]['address'] = addadd[value[0]['id']]
                     print(value[0])
