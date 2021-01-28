@@ -128,7 +128,6 @@ def car(request):
             print(key)
             print('空')
         else:
-<<<<<<< HEAD
             print('key')
             print(key)
             print('len')
@@ -137,12 +136,6 @@ def car(request):
                 print('num')
                 print(num)
                 print(value)
-=======
-            print(value)
-            # print(key)
-            for num in range(1, len(value)+1):
-                print(num)
->>>>>>> d1b561b4304232a7501df15f5acd4cdc623ebc01
                 if num == 1:
                     print(value[0])
                     parking = CarInfoParkingModel.objects.get(car_id_id=int(value[0]['id']))

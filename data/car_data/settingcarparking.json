@@ -250,5 +250,17 @@
         "id": 42,
         "parking_id_id": 2,
         "user_id": 0
+    },
+    {
+        "car_id_id": 27,
+        "id": 43,
+        "parking_id_id": 7,
+        "user_id": 0
+    },
+    {
+        "car_id_id": 31,
+        "id": 44,
+        "parking_id_id": 7,
+        "user_id": 0
     }
 ]
