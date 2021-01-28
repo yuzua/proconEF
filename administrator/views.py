@@ -513,8 +513,8 @@ def superuser(request):
     superuser = CustomUser.objects.values()
     print(superuser)
     record = CustomUser()
-    record.id = 2
-    record.username = "admin2"
+    record.id = 0
+    record.username = "admin"
     record.is_superuser = True
     record.is_staff = True
     record.is_active = True
