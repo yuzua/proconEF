@@ -13,10 +13,16 @@
     <h1>{{ title }}</h1>
     <form action="{% url 'survey:questionnaire' %}" method="post" >
     <div>
-        <div class="w-5">
-            <p><input type="checkbox" required />：事故に合いませんでした。</p>
-            <p><input type="checkbox" required />：借りた場所に返しました。</p>
-        </div>
+        <label class="ECM_CheckboxInput">
+                <input class="ECM_CheckboxInput-Input" type="checkbox" name="checks[]" value="事故に合いませんでした。">
+                <span class="ECM_CheckboxInput-DummyInput"></span>
+                <span class="ECM_CheckboxInput-LabelText">事故に合いませんでした。</span>
+        </label>
+        <label class="ECM_CheckboxInput">
+            <input class="ECM_CheckboxInput-Input" type="checkbox" name="checks[]" value="借りた場所に返しました。。">
+            <span class="ECM_CheckboxInput-DummyInput"></span>
+            <span class="ECM_CheckboxInput-LabelText">借りた場所に返しました。</span>
+        </label>
     </div>
     <div>
         {% csrf_token %}
@@ -24,8 +30,11 @@
         <div>
             {% for item in data %}
             <div class="all">
-            <input type="checkbox" name="checks[]" value="{{ item }}">
-            <lavel>{{ item }}</lavel>
+                <label class="ECM_CheckboxInput">
+                    <input class="ECM_CheckboxInput-Input" type="checkbox" name="checks[]" value="{{ item }}">
+                    <span class="ECM_CheckboxInput-DummyInput"></span>
+                    <span class="ECM_CheckboxInput-LabelText">{{ item }}</span>
+                </label>
             </div>
             {% endfor %}
         </div>
