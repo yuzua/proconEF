@@ -76,9 +76,27 @@
     </div>
     {% if user.is_authenticated %}
     <div class="area-6 four" id="a-favoritelist">
-        <a href="/carsharing_booking/list">
+        <a href="/carsharing_req/carsharuserdata/">
+            <div class="hover-6"></div>
+            <span class="font-6">個人情報</span>
+        </a>
+    </div>
+    <div class="area-6 eight" id="a-favoritelist">
+        <a href="/carsharing_booking/favoritelist/">
+            <div class="hover-6"></div>
+            <span class="font-6">お気に入り</span>
+        </a>
+    </div>
+    <div class="area-6 nine" id="a-favoritelist">
+        <a href="/carsharing_booking/list/">
             <div class="hover-6"></div>
             <span class="font-6">予約一覧</span>
+        </a>
+    </div>
+    <div class="area-6 ten" id="a-favoritelist">
+        <a href="/carsharing_req/details/">
+            <div class="hover-6"></div>
+            <span class="font-6">利用履歴</span>
         </a>
     </div>
     {% else %}
@@ -138,7 +156,10 @@
 }
 
 .five {
-    background-image: url('{% static "admin/img/car02.jpg" %}');
+    //background-image: url('{% static "admin/img/car02.jpg" %}');
+    background-image: url('{% static "admin/img/car_recommend.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .six {
@@ -146,21 +167,38 @@
 }
 
 .seven {
-    background-image: url('{% static "admin/img/car03.png" %}');
+    //background-image: url('{% static "admin/img/car03.png" %}');
+    background-image: url('{% static "admin/img/ai_graph.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .eight {
-    background-image: url('{% static "admin/img/car03.png" %}');
+    background-image: url('{% static "admin/img/car_favorite.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.nine {
+    background-image: url('{% static "admin/img/yoyaku.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.ten {
+    background-image: url('{% static "admin/img/rireki.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 </style>
-<!-- <div class="w-100 clearfix">
+<div class="w-100 clearfix">
 <ul class="flex cards">
     <li class="card">
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>20代に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{age}}に人気な車</h4>
+                <p>{{age}}に最も人気な車は？？...</p>
+                <p>答えは裏面に！！</P>
+                <p>マウスを乗せて見てみよう</P>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
@@ -174,8 +212,8 @@
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>男性に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{gender}}に人気な車</h4>
+                <p>{{gender}}に最も人気な車は？？...</p>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
@@ -189,13 +227,12 @@
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>松戸市民に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{address}}民に人気な車</h4>
+                <p>{{address}}に最も人気な車は？？...</p>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
-                </p>
+                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
             </div>
         </div>    
     </div>
@@ -205,7 +242,7 @@
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
                 <h4>週間ランキング 1位</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <p>今、最も人気のある車は？？...</p>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
@@ -216,7 +253,7 @@
     </div>
     </li>
 </ul>
-</div> -->
+</div> 
             <!-- <div class="three">
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
