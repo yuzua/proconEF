@@ -53,6 +53,9 @@
     height: 250pt;
     float: left;
     margin: auto;
+    border-bottom: solid;
+    border-color: #cdcdcd;
+    border-width: 2pt;
 }
 
 .en {
