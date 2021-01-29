@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
@@ -167,6 +167,7 @@ def importCSV(request):
                     # record.save()
             count += 1
         SecondHandCarPriceModel.objects.bulk_create(record_list)
+    return redirect(to='secondhandcar:search')
 
 
 def exportCSV(request):

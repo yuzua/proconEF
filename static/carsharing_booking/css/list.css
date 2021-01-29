@@ -190,12 +190,14 @@ h1 {
 
     th,td {
         display: block;
+        width: 100%;
     }
 
     .hyo {
         border-top: none;
         border-bottom: none;
         background-color: #fff;
+        width: 100%;
     } 
 
     .now {

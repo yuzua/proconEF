@@ -17,6 +17,8 @@ urlpatterns = [
     path('createsetting/<int:num>', views.CreateSetting, name='createsetting'),
     path('deletesetting/<int:num>', views.DeleteSetting, name='deletesetting'),
     path('stationarea/', views.StationArea, name='stationarea'),
+    path('superuser/', views.superuser, name='superuser'),
     path('download_data/', DownloadData.as_view(), name='download_data'),
     path('upload_data/', UploadData.as_view(), name='upload_data'),
+    path('mobile/', views.mobile, name='mobile'),
 ]

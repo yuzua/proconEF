@@ -168,6 +168,11 @@
     opacity: 1;
   }
 
-  /* .footer {
-    margin: 0 160pt;
-  } */
+  @media (max-width: 690px){
+    .btn-open {
+      height: 40pt;
+      width: 100pt;
+      font-size: small;
+      padding: 0pt 20pt 3pt 20pt;
+    }
+  }

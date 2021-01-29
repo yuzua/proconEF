@@ -24,7 +24,7 @@
 <div class="card-footer">    
 <form action="{% url 'administrator:delete' id %}" method="post">
     {% csrf_token %}
-    <input type="submit" value="削除" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">   
+    <input type="submit" value="削除" class="btn" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">   
 </form>
 </div>        
 {% endblock %}
