@@ -218,40 +218,44 @@ def recommend_car(request):
         return render(request, 'secondhandcar/recommend.html', params)
 
     # 会員か非会員か判定
-    if str(request.user) == "AnonymousUser":
-        # 非会員は先にアンケートに回答
-        survey_list = [
-            '乗り心地がいい',
-            '荷室の使いやすさ',
-            '燃費の良さ',
-            '排気量の少なさ',
-            '車内空間が広い',
-            '静かに走る',
-            '馬力がある',
-            '乗車定員が多い',
-            '小回りが利く',
-            '乗車しやすい',
-            '安全性能が高い',
-            '走行性能が高い',
-            '車両サイズが小さい'
-        ]
-        params = {
-            'data': survey_list,
-            'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
-            'title': "アンケートにお答え下さい"
-        }
-        return render(request, 'secondhandcar/gestquestionnaire.html', params)
-    else:
-        # 作成されたjsonデータを使用しておすすめを提案
-        data = importRecoJson('./data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
-
-    secondhandcar_list = setSecondHandCarList(data)
-
+    # 非会員は先にアンケートに回答
+    survey_list = [
+        '乗り心地がいい',
+        '荷室の使いやすさ',
+        '燃費の良さ',
+        '排気量の少なさ',
+        '車内空間が広い',
+        '静かに走る',
+        '馬力がある',
+        '乗車定員が多い',
+        '小回りが利く',
+        '乗車しやすい',
+        '安全性能が高い',
+        '走行性能が高い',
+        '車両サイズが小さい'
+    ]
     params = {
-        'secondhandcar_list': secondhandcar_list,
-        'title': 'あなたへのおすすめ'
+        'data': survey_list,
+        'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
+        'title': "アンケートにお答え下さい"
     }
-    return render(request, 'secondhandcar/recommend.html', params)
+
+    if str(request.user) != "AnonymousUser":
+        myfile = './data/recommend/reco_user_' + str(request.session['user_id']) + '.json'
+        if(os.path.exists(myfile)):
+            # 作成されたjsonデータを使用しておすすめを提案
+            data = importRecoJson(myfile, str(request.session['user_id']))
+            secondhandcar_list = setSecondHandCarList(data)
+
+            params = {
+                'secondhandcar_list': secondhandcar_list,
+                'title': 'あなたへのおすすめ'
+            }
+            return render(request, 'secondhandcar/recommend.html', params)
+        else:
+            return render(request, 'secondhandcar/gestquestionnaire.html', params)
+    else:
+        return render(request, 'secondhandcar/gestquestionnaire.html', params)
 
 
 
