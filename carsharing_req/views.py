@@ -397,74 +397,74 @@ def push(request):
         plan = request.POST['plan']
         charge = request.POST['charge']
 
-        imageform = PhotoForm(request.POST, request.FILES)
-        print(imageform)
+        # imageform = PhotoForm(request.POST, request.FILES)
+        # print(imageform)
 
         # heroku使用
-        # img = request.FILES['image']
-        # params['first_name'] = first_name
-        # params['last_name'] = last_name
-        # params['first_ja'] = first_ja
-        # params['last_ja'] = last_ja
-        # params['gender'] = gender
-        # params['birthday'] = request.POST['birthday']
-        # params['age'] = age
-        # params['zip01'] = zip01
-        # params['pref01'] = pref01
-        # params['addr01'] = addr01
-        # params['addr02'] = addr02
-        # params['tel'] = tel
-        # params['credit_card_company'] = credit_card_company
-        # params['first_en'] = first_en
-        # params['last_en'] = last_en
-        # params['credit_card_num'] = request.POST['credit_card_num']
-        # params['credit_card_num_check'] = credit_card_num_check
-        # params['valid_thru'] = valid_thru
-        # params['security_code'] = request.POST['security_code']
-        # params['plan'] = plan
-        # params['charge'] = charge
-        # params['birthday_year'] = request.POST['birthday_year']
-        # params['birthday_month'] = request.POST['birthday_month']
-        # params['birthday_day'] = request.POST['birthday_day']
-        # params['imageform'] = PhotoForm()
+        img = request.FILES['image']
+        params['first_name'] = first_name
+        params['last_name'] = last_name
+        params['first_ja'] = first_ja
+        params['last_ja'] = last_ja
+        params['gender'] = gender
+        params['birthday'] = request.POST['birthday']
+        params['age'] = age
+        params['zip01'] = zip01
+        params['pref01'] = pref01
+        params['addr01'] = addr01
+        params['addr02'] = addr02
+        params['tel'] = tel
+        params['credit_card_company'] = credit_card_company
+        params['first_en'] = first_en
+        params['last_en'] = last_en
+        params['credit_card_num'] = request.POST['credit_card_num']
+        params['credit_card_num_check'] = credit_card_num_check
+        params['valid_thru'] = valid_thru
+        params['security_code'] = request.POST['security_code']
+        params['plan'] = plan
+        params['charge'] = charge
+        params['birthday_year'] = request.POST['birthday_year']
+        params['birthday_month'] = request.POST['birthday_month']
+        params['birthday_day'] = request.POST['birthday_day']
+        params['imageform'] = PhotoForm()
         
         # 現ver
-        image = request.FILES['image']
-        print(image)
-        photo = Photo(image=image)
-        predicted, percentage = photo.predict()
-        print(predicted)
-        print(str(percentage) + '%')
-        if predicted == '免許証写真' and int(percentage) >= 80:
-            img = request.FILES['image']
-        else:
-            params['first_name'] = first_name
-            params['last_name'] = last_name
-            params['first_ja'] = first_ja
-            params['last_ja'] = last_ja
-            params['gender'] = gender
-            params['birthday'] = request.POST['birthday']
-            params['age'] = age
-            params['zip01'] = zip01
-            params['pref01'] = pref01
-            params['addr01'] = addr01
-            params['addr02'] = addr02
-            params['tel'] = tel
-            params['credit_card_company'] = credit_card_company
-            params['first_en'] = first_en
-            params['last_en'] = last_en
-            params['credit_card_num'] = request.POST['credit_card_num']
-            params['credit_card_num_check'] = credit_card_num_check
-            params['valid_thru'] = valid_thru
-            params['security_code'] = request.POST['security_code']
-            params['plan'] = plan
-            params['charge'] = charge
-            params['birthday_year'] = request.POST['birthday_year']
-            params['birthday_month'] = request.POST['birthday_month']
-            params['birthday_day'] = request.POST['birthday_day']
-            params['imageform'] = PhotoForm()
-            messages.error(request, '免許証と判定されませんでした。<br>横向きの写真をアップロードしてください。')
-            return render(request, 'carsharing_req/check.html', params)
+        # image = request.FILES['image']
+        # print(image)
+        # photo = Photo(image=image)
+        # predicted, percentage = photo.predict()
+        # print(predicted)
+        # print(str(percentage) + '%')
+        # if predicted == '免許証写真' and int(percentage) >= 80:
+        #     img = request.FILES['image']
+        # else:
+        #     params['first_name'] = first_name
+        #     params['last_name'] = last_name
+        #     params['first_ja'] = first_ja
+        #     params['last_ja'] = last_ja
+        #     params['gender'] = gender
+        #     params['birthday'] = request.POST['birthday']
+        #     params['age'] = age
+        #     params['zip01'] = zip01
+        #     params['pref01'] = pref01
+        #     params['addr01'] = addr01
+        #     params['addr02'] = addr02
+        #     params['tel'] = tel
+        #     params['credit_card_company'] = credit_card_company
+        #     params['first_en'] = first_en
+        #     params['last_en'] = last_en
+        #     params['credit_card_num'] = request.POST['credit_card_num']
+        #     params['credit_card_num_check'] = credit_card_num_check
+        #     params['valid_thru'] = valid_thru
+        #     params['security_code'] = request.POST['security_code']
+        #     params['plan'] = plan
+        #     params['charge'] = charge
+        #     params['birthday_year'] = request.POST['birthday_year']
+        #     params['birthday_month'] = request.POST['birthday_month']
+        #     params['birthday_day'] = request.POST['birthday_day']
+        #     params['imageform'] = PhotoForm()
+        #     messages.error(request, '免許証と判定されませんでした。<br>横向きの写真をアップロードしてください。')
+        #     return render(request, 'carsharing_req/check.html', params)
         record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
             gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
             credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \
