@@ -21,14 +21,14 @@
     <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_table }}
-        <div class="card m-5">
-            <div class="card-body">
+        <div class="m-5">
+            <div>
             {{ form2.as_p }}
             </div>
         </div>
         {{ form.media }}
         <tr><th></th><td>
-            <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+            <input class="btn" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </td></tr>
     </form>
 {% endblock %}

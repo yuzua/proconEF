@@ -1,0 +1,41 @@
+{% extends 'administrator/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "administrator/css/settinginfo.css" %}'>
+{% endblock %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block main_contents %}
+<h1>{{ title }}</h1>
+<div>
+<form action="/administrator/deletesetting/{{area}}" method="post">
+    <div>
+    <input type="hidden" name="user_id" value='0'>
+    {% csrf_token %}
+    <table class="table">
+        <tr class="tr">
+            <th>選択</th><th>画像</th><th>車種(メーカー)</th><th>型番</th><th>住所</th><th>駐車場タイプ</th>
+        </tr>
+    {% for obj in data %}
+        <tr>
+            <td><input type="radio" name="settinginfo" value="{{obj.id}}"></td>
+            <td><img src="/media/{{obj.img}}" width="110" height="80" border="0" /></td>
+            <td>{{obj.category__category}}({{obj.parent_category__parent_category}})</td>
+            <td>{{obj.model_id}}</td>
+            <td>{{obj.address}}</td>
+            <td>{{obj.parking_type}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+    <div>
+        <input class="btn" type="submit" value="解除">
+    </div>    
+</form>
+</div>
+{% endblock %}
+

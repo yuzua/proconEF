@@ -1,0 +1,47 @@
+h1 {
+    font-size: 25pt;
+}
+
+h4 {
+    border-bottom: solid;
+    border-color: rgb(83, 83, 83);
+}
+
+.p-2 {
+    width: 25%;
+}
+
+.tab {
+    width: 75%;
+}
+
+.tr {
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.check {
+    width: 50%;
+}
+
+@media (max-width: 670px){
+    h1 {
+        font-size: 20pt;
+    }
+
+    .p-2 {
+        width: 100%;
+    }
+
+    h4 {
+        width: 100%;
+    }
+
+    .tab {
+        width: 100%;
+    }
+
+    .check {
+        width: 100%;
+    }
+}

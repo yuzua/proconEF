@@ -12,22 +12,25 @@
 {% block main_contents %}
 <h1>{{ title }}</h1>
 <div>
-<h2>{{ message|safe }}</h2>
+{% if title == "駐車場、車両情報登録データ" %}
 <form action="{% url 'administrator:settinginfo' %}" method="post">
+{% else %}
+<form action="/administrator/createsetting/{{area}}" method="post">
+{% endif %}
     <div>
     <input type="hidden" name="user_id" value='0'>
     {% csrf_token %}
     <table class="table">
-        <tr class="tr"><th>車両ID</th><th>ユーザID</th><th>登録日</th><th>車種</th><th>選択</th></tr>
+        <tr class="tr"><th>車両ID</th><th>画像</th><th>登録日</th><th>車種</th><th>選択</th></tr>
     {% for obj in car_data %}
-        <tr><td>{{obj.id}}</td><td>{{obj.user_id}}</td><td>{{obj.day}}</td><td>{{obj.category}}</td><td><input type="radio" name="car_id" value="{{obj.id}}"></td></tr>
+        <tr><td>{{obj.id}}</td><td><img src="/media/{{obj.img}}" height="80" border="0" /></td><td>{{obj.day}}</td><td>{{obj.category}}({{obj.parent_category}})</td><td><input type="radio" name="car_id" value="{{obj.id}}"></td></tr>
     {% endfor %}        
     </table>
 
     <table class="table">
-        <tr class="tr"><th>駐車場ID</th><th>ユーザID</th><th>住所</th><th>登録日</th><th>駐車場タイプ</th><th>選択</th></tr>
+        <tr class="tr"><th>駐車場ID</th><th>住所</th><th>登録日</th><th>駐車場タイプ</th><th>選択</th></tr>
     {% for obj in parking_data %}
-        <tr><td>{{obj.id}}</td><td>{{obj.user_id}}</td><td>{{obj.address}}</td><td>{{obj.day}}</td><td>{{obj.parking_type}}</td><td><input type="radio" name="parking_id" value="{{obj.id}}"></td></tr>
+        <tr><td>{{obj.id}}</td><td>{{obj.address}}</td><td>{{obj.day}}</td><td>{{obj.parking_type}}</td><td><input type="radio" name="parking_id" value="{{obj.id}}"></td></tr>
     {% endfor %}
     </table>
     </div>

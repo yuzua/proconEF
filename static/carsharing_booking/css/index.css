@@ -132,7 +132,8 @@
     .card-car, .card-time, .park{ 
         width: 100%;
     }
-    /* #park {
-        padding: 0pt;
-    } */
+
+    .favorite {
+        width: 100%;
+    }
 }

@@ -54,10 +54,10 @@
               <a class="nav-link" href="{% url 'administrator:createCar' %}">カーシェアリング車追加</a>
           </li>
           <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
-              <a class="nav-link" href="#">駐車場追加</a>
+              <a class="nav-link" href="{% url 'administrator:createparking' %}">駐車場追加</a>
           </li>
           <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
-              <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">配車管理</a>
+              <a class="nav-link" href="{% url 'administrator:stationarea' %}">配車管理</a>
           </li>
             <li class="navbar01" style="border-right: 1px solid #333;width: 15%;text-align: center">
               <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">アンケート結果</a>

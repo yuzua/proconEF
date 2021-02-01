@@ -141,9 +141,12 @@ def pages(request, num, page):
     elif num == 3:
         return render(request, 'page/owner_car.html')
     elif num == 4:
-        return render(request, 'page/price_list1.html')
-    elif num == 0:
-        pass
+        return render(request, 'page/owner_parking.html')
+    elif num == 5:
+        if page == 0:
+            return render(request, 'page/car_price_list.html')
+        else:
+            return render(request, 'page/parking_price_list.html')
     else:
         return redirect(to='carsharing_req:index')
 
@@ -155,6 +158,9 @@ class CarsharUserInfo(TemplateView):
             'message': 'Not found your data.<br>Please send your profile.',
             'form': CarsharUserCreateForm(),
             'link': 'other',
+            'gender': '男性',
+            'age': '50代',
+            'address': '柏市',
         }
     
     def get(self, request):
@@ -163,27 +169,44 @@ class CarsharUserInfo(TemplateView):
         else:
             print(request.user)
             user_data = CarsharUserModel.objects.get(id=request.session['user_id'])
+            myinfo_list = SetMyInfo(user_data)
+            print(myinfo_list)
+            self.params['gender'] = myinfo_list[0]
+            self.params['age'] = myinfo_list[1]
+            self.params['address'] = myinfo_list[2]
             if user_data.charge_flag == False:
-                if user_data.plan == 'a':
-                    user_data.charge = 500
-                elif user_data.plan == 'b':
-                    user_data.charge = 1000
-                elif user_data.plan == 'c':
-                    user_data.charge = 2000
-                else:
-                    user_data.charge = 0
-            user_data.charge_flag = True
-            user_data.save()
+                InitializeCharge(user_data)
         return render(request, 'carsharing_req/top.html', self.params)
-    
-    # def post(self, request):
-    #     msg = 'Your name is <b>' + request.POST['name'] + \
-    #         '(' + request.POST['age'] + \
-    #         ')</b><br>Your mail address is <b>' + request.POST['email'] + \
-    #         '</b><br>Thank you send to me!'
-    #     self.params['message'] = msg
-    #     self.params['form'] = CarsharUserCreateForm(request.POST)
-    #     return render(request, 'carsharing_req/index.html', self.params)
+
+def SetMyInfo(user_data):
+    myinfo_list = []
+    if user_data.gender == True:
+        myinfo_list.append('男性')
+    else:
+        myinfo_list.append('女性')
+    myinfo_list.append(str(user_data.age)[-2] + '0代')
+    address = user_data.addr01
+    count = address.count('市')
+    if count == 1:
+        i = address.find('市')
+        myinfo_list.append(address[:i]+'市')
+    elif count > 1:
+        i = address.rfind('市')
+        myinfo_list.append(address[:i]+'市')
+    return myinfo_list
+
+def InitializeCharge(user_data):
+    if user_data.plan == 'a':
+        user_data.charge = 500
+    elif user_data.plan == 'b':
+        user_data.charge = 1000
+    elif user_data.plan == 'c':
+        user_data.charge = 2000
+    else:
+        user_data.charge = 0
+    print('チャージ完了')
+    user_data.charge_flag = True
+    user_data.save()
 
 def carsharuserdata(request):
     data = CarsharUserModel.objects.get(id=request.session['user_id'])
@@ -376,42 +399,72 @@ def push(request):
 
         # imageform = PhotoForm(request.POST, request.FILES)
         # print(imageform)
-        image = request.FILES['image']
-        print(image)
-        photo = Photo(image=image)
-        predicted, percentage = photo.predict()
-        print(predicted)
-        print(str(percentage) + '%')
-        if predicted == '免許証写真' and int(percentage) >= 80:
-            img = request.FILES['image']
-        else:
-            params['first_name'] = first_name
-            params['last_name'] = last_name
-            params['first_ja'] = first_ja
-            params['last_ja'] = last_ja
-            params['gender'] = gender
-            params['birthday'] = request.POST['birthday']
-            params['age'] = age
-            params['zip01'] = zip01
-            params['pref01'] = pref01
-            params['addr01'] = addr01
-            params['addr02'] = addr02
-            params['tel'] = tel
-            params['credit_card_company'] = credit_card_company
-            params['first_en'] = first_en
-            params['last_en'] = last_en
-            params['credit_card_num'] = request.POST['credit_card_num']
-            params['credit_card_num_check'] = credit_card_num_check
-            params['valid_thru'] = valid_thru
-            params['security_code'] = request.POST['security_code']
-            params['plan'] = plan
-            params['charge'] = charge
-            params['birthday_year'] = request.POST['birthday_year']
-            params['birthday_month'] = request.POST['birthday_month']
-            params['birthday_day'] = request.POST['birthday_day']
-            params['imageform'] = PhotoForm()
-            messages.error(request, '免許証と判定されませんでした。<br>横向きの写真をアップロードしてください。')
-            return render(request, 'carsharing_req/check.html', params)
+
+        # heroku使用
+        img = request.FILES['image']
+        params['first_name'] = first_name
+        params['last_name'] = last_name
+        params['first_ja'] = first_ja
+        params['last_ja'] = last_ja
+        params['gender'] = gender
+        params['birthday'] = request.POST['birthday']
+        params['age'] = age
+        params['zip01'] = zip01
+        params['pref01'] = pref01
+        params['addr01'] = addr01
+        params['addr02'] = addr02
+        params['tel'] = tel
+        params['credit_card_company'] = credit_card_company
+        params['first_en'] = first_en
+        params['last_en'] = last_en
+        params['credit_card_num'] = request.POST['credit_card_num']
+        params['credit_card_num_check'] = credit_card_num_check
+        params['valid_thru'] = valid_thru
+        params['security_code'] = request.POST['security_code']
+        params['plan'] = plan
+        params['charge'] = charge
+        params['birthday_year'] = request.POST['birthday_year']
+        params['birthday_month'] = request.POST['birthday_month']
+        params['birthday_day'] = request.POST['birthday_day']
+        params['imageform'] = PhotoForm()
+        
+        # 現ver
+        # image = request.FILES['image']
+        # print(image)
+        # photo = Photo(image=image)
+        # predicted, percentage = photo.predict()
+        # print(predicted)
+        # print(str(percentage) + '%')
+        # if predicted == '免許証写真' and int(percentage) >= 80:
+        #     img = request.FILES['image']
+        # else:
+        #     params['first_name'] = first_name
+        #     params['last_name'] = last_name
+        #     params['first_ja'] = first_ja
+        #     params['last_ja'] = last_ja
+        #     params['gender'] = gender
+        #     params['birthday'] = request.POST['birthday']
+        #     params['age'] = age
+        #     params['zip01'] = zip01
+        #     params['pref01'] = pref01
+        #     params['addr01'] = addr01
+        #     params['addr02'] = addr02
+        #     params['tel'] = tel
+        #     params['credit_card_company'] = credit_card_company
+        #     params['first_en'] = first_en
+        #     params['last_en'] = last_en
+        #     params['credit_card_num'] = request.POST['credit_card_num']
+        #     params['credit_card_num_check'] = credit_card_num_check
+        #     params['valid_thru'] = valid_thru
+        #     params['security_code'] = request.POST['security_code']
+        #     params['plan'] = plan
+        #     params['charge'] = charge
+        #     params['birthday_year'] = request.POST['birthday_year']
+        #     params['birthday_month'] = request.POST['birthday_month']
+        #     params['birthday_day'] = request.POST['birthday_day']
+        #     params['imageform'] = PhotoForm()
+        #     messages.error(request, '免許証と判定されませんでした。<br>横向きの写真をアップロードしてください。')
+        #     return render(request, 'carsharing_req/check.html', params)
         record = CarsharUserModel(email=email, first_name=first_name, last_name=last_name, first_ja=first_ja, last_ja=last_ja, \
             gender=gender, age=age, birthday=birthday, zip01=zip01, pref01=pref01, addr01=addr01, addr02=addr02, tel=tel, \
             credit_card_company=credit_card_company, first_en=first_en, last_en=last_en, \

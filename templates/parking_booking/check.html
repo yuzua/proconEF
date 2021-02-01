@@ -6,23 +6,34 @@
 
 {% block main_contents %}
     <h1>{{ title }}</h1>
-<div class="card">
-    <h2 class="card-header">{{ message|safe }}</h2>
-    <div class="card-body">
+<div>
+    <h2>{{ message|safe }}</h2>
+    <div>
         <p>開始予定日時：{{data.start_day}} {{data.start_time}}</p>
         <p>終了予定日時：{{data.end_day}} {{data.end_time}}</p>
         <p>利用予定時間：{{times}}</p>
         <p>支払い予定料金：{{kingaku}}円</p>
     </div>
-    <div class="card-footer">
+    <div>
         <form action="{% url 'parking_booking:push' %}" method="post" >
             {% csrf_token %}
             {% for key, value in data.items %}
                 <input type="hidden" name="{{key}}" value="{{value}}">
             {% endfor %}
-                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+                <input class="btn" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
     </div>
-</div>
+</div><style>
+    h1 {
+        font-size: 25pt;
+    }
+
+    h2 {
+        font-size: 20pt;
+        margin-top: 20pt;
+        border-bottom: solid;
+        border-color: rgb(83, 83, 83);
+    }
+</style>
 
 {% endblock %}

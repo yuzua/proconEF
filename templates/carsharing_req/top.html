@@ -16,13 +16,37 @@
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active">
-        <a href="#"><img class="d-block" src='{% static "admin/img/money01.jpg" %}' alt="First slide"></a>
+            <div class="en">
+                <img class="d-block" src='{% static "admin/img/top2.jpg" %}' alt="First slide">
+                <div class="check">
+                    <p>現在地から近隣のステーションを検索出来る</p>
+                    <p>メーカーや乗車人数などから検索出来る</p>
+                    <p>駐車場と一緒に予約すると割引される</p>
+                </div>
+                <a href="/carsharing_booking/" class="btn-open" style="padding: 10pt 15pt 10pt 15pt;">カーシェア検索</a>
+            </div>
         </div>
         <div class="carousel-item">
-        <img class="d-block" src='{% static "admin/img/money01.jpg" %}'  alt="Second slide">
+            <div class="en">
+                <img class="d-block" src='{% static "admin/img/top.jpg" %}'  alt="Second slide">
+                <div class="check">
+                    <p>気になるお値段</p>
+                    <p>お客様にあったプランを選択出来る</p>
+                    <p>返却前の給油、洗車で割引される</p>
+                </div>
+                <a href="/carsharing_req/pages/5/0" class="btn-open">料金</a>
+            </div>
         </div>
         <div class="carousel-item">
-        <img class="d-block" src= '{% static "admin/img/money01.jpg" %}'alt="Third slide">
+            <div class="en">
+                <img class="d-block" src= '{% static "admin/img/top3.jpg" %}'alt="Third slide">
+                <div class="check">
+                    <p>多くのメーカーを見られる</p>
+                    <p>カーシェアで試乗出来る</p>
+                    <p>安心で安全な車をリーズナブルい提供出来る</p>
+                </div>
+                <a href="/secondhandcar/search" class="btn-open">中古車検索</a>
+            </div>
         </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -38,21 +62,131 @@
 
 {% block top %}
 <div id ="main">
-      <div class="area-6">
-        <div class="hover-6"></div>
-        <span class="font-6">MORE</span>
-      </div>
-      <div class="area-6">
-        <div class="hover-6"></div>
-        <span class="font-6">MORE</span>
-      </div>
-      <div class="area-6">
-        <div class="hover-6"></div>
-        <span class="font-6">MORE</span>
-      </div>
+    <div class="area-6 two" id="a-favoritelist">
+        <a href="/carsharing_booking/">
+            <div class="hover-6"></div>
+            <span class="font-6">車予約</span>
+        </a>
+    </div>
+    <div class="area-6 three" id="a-favoritelist">
+        <a href="/parking_booking/map">
+            <div class="hover-6"></div>
+            <span class="font-6">駐車場予約</span>
+        </a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="area-6 four" id="a-favoritelist">
+        <a href="/carsharing_req/carsharuserdata/">
+            <div class="hover-6"></div>
+            <span class="font-6">個人情報</span>
+        </a>
+    </div>
+    <div class="area-6 eight" id="a-favoritelist">
+        <a href="/carsharing_booking/favoritelist/">
+            <div class="hover-6"></div>
+            <span class="font-6">お気に入り</span>
+        </a>
+    </div>
+    <div class="area-6 nine" id="a-favoritelist">
+        <a href="/carsharing_booking/list/">
+            <div class="hover-6"></div>
+            <span class="font-6">予約一覧</span>
+        </a>
+    </div>
+    <div class="area-6 ten" id="a-favoritelist">
+        <a href="/carsharing_req/details/">
+            <div class="hover-6"></div>
+            <span class="font-6">利用履歴</span>
+        </a>
+    </div>
+    {% else %}
+    <div class="area-6 four" id="a-favoritelist">
+        <a href="/accounts/signup/">
+            <div class="hover-6"></div>
+            <span class="font-6">新規登録</span>
+        </a>
+    </div>
+    {% endif %}
+    <div class="area-6 five" id="a-favoritelist">
+        <a href="/secondhandcar/recommend_car">
+            <div class="hover-6"></div>
+            <span class="font-6">おすすめ</span>
+        </a>
+    </div>
+    <div class="area-6 six" id="a-favoritelist">
+        <a href="/secondhandcar/search">
+            <div class="hover-6"></div>
+            <span class="font-6">中古車検索</span>
+        </a>
+    </div>
+    <div class="area-6 seven" id="a-favoritelist">
+        <a href="/secondhandcar/">
+            <div class="hover-6"></div>
+            <span class="font-6">AI価格予想</span>
+        </a>
+    </div>
+    <!-- <div id="a-favoritelist" class="area-6">
+        <a href="/carsharing_booking/favoritelist">
+            <div class="hover-6 one"></div>
+            <span class="font-6">お気に入り</span>
+        </a>
+    </div> -->
 <style>
-.hover-6 {
-    background-image: url('{% static "admin/img/choce.jpg" %}');
+/* 移動 */
+#a-favoritelist {
+    border-radius: 15pt;
+    border: solid;
+    border-color: #000;
+}
+/* 移動 */
+.one {
+    background-image: url('{% static "admin/img/car02.jpg" %}');
+}
+
+.two {
+    background-image: url('{% static "admin/img/car01.jpg" %}');
+}
+
+.three {
+    background-image: url('{% static "admin/img/parking01.jpg" %}');
+}
+
+.four {
+    background-image: url('{% static "admin/img/car04.jpg" %}');
+}
+
+.five {
+    background-image: url('{% static "admin/img/car02.jpg" %}');
+    background-image: url('{% static "admin/img/car_recommend.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.six {
+    background-image: url('{% static "admin/img/car05.jpg" %}');
+}
+
+.seven {
+    background-image: url('{% static "admin/img/car03.png" %}');
+    background-image: url('{% static "admin/img/ai_graph.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.eight {
+    background-image: url('{% static "admin/img/car_favorite.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.nine {
+    background-image: url('{% static "admin/img/yoyaku.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.ten {
+    background-image: url('{% static "admin/img/rireki.png" %}');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 </style>
 <div class="w-100 clearfix">
@@ -61,13 +195,15 @@
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>20代に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{age}}に人気な車</h4>
+                <p>{{age}}に最も人気な車は？？...</p>
+                <p>答えは裏面に！！</P>
+                <p>マウスを乗せて見てみよう</P>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
-                </p>
+                <br>
+                <p><img src="/media/car/2020/12/29/10101040_202007z.jpg" width='200px'></p>
             </div>
         </div>
     </div>
@@ -76,13 +212,15 @@
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>男性に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{gender}}に人気な車</h4>
+                <p>{{gender}}に最も人気な車は？？...</p>
+                <p>答えは裏面に！！</P>
+                <p>マウスを乗せて見てみよう</P>
             </div>
             <div class="flip-card-back4">
-                <h4>プリウス</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
-                </p>
+                <h4>セレナ</h4>
+                <br>
+                <p><img src="/media/car/2020/12/29/K0001024840.jpg" width='200px'></p>
             </div>
         </div>
     </div>
@@ -91,13 +229,15 @@
     <div class="flip-card4">
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
-                <h4>松戸市民に人気な車</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <h4>{{address}}民に人気な車</h4>
+                <p>{{address}}に最も人気な車は？？...</p>
+                <p>答えは裏面に！！</P>
+                <p>マウスを乗せて見てみよう</P>
             </div>
             <div class="flip-card-back4">
-                <h4>プリウス</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
-                </p>
+                <h4>ワゴンR</h4>
+                <br>
+                <p><img src="/media/car/2021/01/04/K0000940369.jpg" width='200px'></p>
             </div>
         </div>    
     </div>
@@ -107,18 +247,20 @@
         <div class="flip-card-inner4">
             <div class="flip-card-front4">
                 <h4>週間ランキング 1位</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.</p>
+                <p>今、最も人気のある車は？？...</p>
+                <p>答えは裏面に！！</P>
+                <p>マウスを乗せて見てみよう</P>
             </div>
             <div class="flip-card-back4">
                 <h4>プリウス</h4>
-                <p>Posuere varius ullamcorper ipsum adipiscing dignissim ipsum adipiscing a a quisque malesuada quam purus venenatis sagittis fermentum parturient curabitur montes a metus.
-                </p>
+                <br>
+                <p><img src="/media/car/2020/12/29/10101040_202007z.jpg" width='200px'></p>
             </div>
         </div>
     </div>
     </li>
 </ul>
-</div>
+</div> 
             <!-- <div class="three">
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect fill="#868e96" width="100%" height="100%"/><text fill="#dee2e6" dy=".3em" x="50%" y="50%">Image cap</text></svg>
@@ -224,7 +366,7 @@
                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/8GEanKJj9NM" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
-        <div class="clearfix">
+        <!-- <div class="clearfix">
           <div id ="left">
           <div data-trigger class="news">
               <h2>お知らせ</h2>
@@ -296,7 +438,7 @@
             </p>
         </div>
           </div>
-    </div>
+    </div> -->
 {% endblock %}
 
 {% block includejs %}

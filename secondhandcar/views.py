@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
@@ -39,6 +39,7 @@ def importCSV(request):
     # SecondHandCarAIModel作成
     with open('./data/car_csv/secondhandcar-record.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             # print(row)
             if row[0] != 'carID':
@@ -120,12 +121,15 @@ def importCSV(request):
                 record.box_74 = row[74]
                 record.box_75 = row[75]
                 record.box_76 = row[76]
-                record.save()
+                record_list.append(record)
+                # record.save()
+        SecondHandCarAIModel.objects.bulk_create(record_list)
     
     # SecondHandCarInfoModel作成
     count = -1
     with open('./data/car_csv/used_car_data.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             # print(row)
             if count != -1:
@@ -139,13 +143,16 @@ def importCSV(request):
                 record.img1 = row[130]
                 record.img2 = row[131]
                 record.img3 = row[132]
-                record.save()
+                record_list.append(record)
+                #record.save()
             count += 1
+        SecondHandCarInfoModel.objects.bulk_create(record_list)
     
     # SecondHandCarPriceModel作成
     count = 0
     with open('./data/car_csv/car_value_data.csv') as f:
         reader = csv.reader(f)
+        record_list = []
         for row in reader:
             if count == 0:
                 car_list = row
@@ -156,8 +163,11 @@ def importCSV(request):
                     record.second_hand_car_id_id = car_list[num]
                     record.day = row[0]
                     record.price = row[num]
-                    record.save()
+                    record_list.append(record)
+                    # record.save()
             count += 1
+        SecondHandCarPriceModel.objects.bulk_create(record_list)
+    return redirect(to='secondhandcar:search')
 
 
 def exportCSV(request):
@@ -208,40 +218,44 @@ def recommend_car(request):
         return render(request, 'secondhandcar/recommend.html', params)
 
     # 会員か非会員か判定
-    if str(request.user) == "AnonymousUser":
-        # 非会員は先にアンケートに回答
-        survey_list = [
-            '乗り心地がいい',
-            '荷室の使いやすさ',
-            '燃費の良さ',
-            '排気量の少なさ',
-            '車内空間が広い',
-            '静かに走る',
-            '馬力がある',
-            '乗車定員が多い',
-            '小回りが利く',
-            '乗車しやすい',
-            '安全性能が高い',
-            '走行性能が高い',
-            '車両サイズが小さい'
-        ]
-        params = {
-            'data': survey_list,
-            'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
-            'title': "アンケートにお答え下さい"
-        }
-        return render(request, 'secondhandcar/gestquestionnaire.html', params)
-    else:
-        # 作成されたjsonデータを使用しておすすめを提案
-        data = importRecoJson('./data/recommend/reco_user_' + str(request.session['user_id']) + '.json', str(request.session['user_id']))
-
-    secondhandcar_list = setSecondHandCarList(data)
-
+    # 非会員は先にアンケートに回答
+    survey_list = [
+        '乗り心地がいい',
+        '荷室の使いやすさ',
+        '燃費の良さ',
+        '排気量の少なさ',
+        '車内空間が広い',
+        '静かに走る',
+        '馬力がある',
+        '乗車定員が多い',
+        '小回りが利く',
+        '乗車しやすい',
+        '安全性能が高い',
+        '走行性能が高い',
+        '車両サイズが小さい'
+    ]
     params = {
-        'secondhandcar_list': secondhandcar_list,
-        'title': 'あなたへのおすすめ'
+        'data': survey_list,
+        'message': "あなたが車を選ぶ際に重要視する点を選択して下さい。(複数選択可)",
+        'title': "アンケートにお答え下さい"
     }
-    return render(request, 'secondhandcar/recommend.html', params)
+
+    if str(request.user) != "AnonymousUser":
+        myfile = './data/recommend/reco_user_' + str(request.session['user_id']) + '.json'
+        if(os.path.exists(myfile)):
+            # 作成されたjsonデータを使用しておすすめを提案
+            data = importRecoJson(myfile, str(request.session['user_id']))
+            secondhandcar_list = setSecondHandCarList(data)
+
+            params = {
+                'secondhandcar_list': secondhandcar_list,
+                'title': 'あなたへのおすすめ'
+            }
+            return render(request, 'secondhandcar/recommend.html', params)
+        else:
+            return render(request, 'secondhandcar/gestquestionnaire.html', params)
+    else:
+        return render(request, 'secondhandcar/gestquestionnaire.html', params)
 
 
 

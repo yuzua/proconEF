@@ -9,10 +9,26 @@
 
 {% block main_contents %}
     <h1>{{ title }}</h1>
-<div class="card">
-<table class="table">
-    <tr class="card-header"><th>画像</th><th>メーカー</th><th>車種</th><th>型番</th><th>乗車人数</th><th>タイヤ</th><th>AT/MT</th><th>搭載機能</th></tr>
-    <tr><td><img src="/media/{{car_obj.img}}" width="110" height="80" border="0" /></td></td><td>{{car_obj.parent_category}}</td><td>{{car_obj.category}}</td><td>{{car_obj.model_id}}</td><td>{{car_obj.people}}人</td><td>{{car_obj.tire}}</td><td>{{car_obj.at_mt}}車</td>
+<div>
+<table class="table pc">
+    <tr class="tr">
+        <th>画像</th>
+        <th>メーカー</th>
+        <th>車種</th>
+        <th>型番</th>
+        <th>乗車人数</th>
+        <th>タイヤ</th>
+        <th>AT/MT</th>
+        <th>搭載機能</th>
+    </tr>
+    <tr>
+        <td><img src="/media/{{car_obj.img}}" width="110" height="80" border="0" /></td>
+        <td>{{car_obj.parent_category}}</td>
+        <td>{{car_obj.category}}</td>
+        <td>{{car_obj.model_id}}</td>
+        <td>{{car_obj.people}}人</td>
+        <td>{{car_obj.tire}}</td>
+        <td>{{car_obj.at_mt}}車</td>
         <td>
         {% if car_obj.babysheet == True %}
         <li>チャイルドシート</li>
@@ -35,28 +51,99 @@
         </td>
     </tr> 
 </table>
+
+<table class="table sp">
+    <tr class="tr">
+        <th>画像</th>
+    </tr>
+    <tr>
+        <td><img src="/media/{{car_obj.img}}" border="0" /></td>
+    </tr>
+    <tr class="tr">
+        <th>メーカー</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.parent_category}}</td>
+    </tr>
+    <tr class="tr">
+        <th>車種</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.category}}</td>
+    </tr>
+    <tr class="tr">
+        <th>型番</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.model_id}}</td>
+    </tr>
+    <tr class="tr">
+        <th>乗車人数</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.people}}人</td>
+    </tr>
+    <tr class="tr">
+        <th>タイヤ</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.tire}}</td>
+    </tr>
+    <tr class="tr">
+        <th>AT/MT</th>
+    </tr>
+    <tr>
+        <td>{{car_obj.at_mt}}車</td>
+    </tr>
+    <tr class="tr">
+        <th>搭載機能</th>
+    </tr>
+    <tr>
+        <td>
+            {% if car_obj.babysheet == True %}
+            <li>チャイルドシート</li>
+            {% endif %}
+            {% if car_obj.car_nav == True %}
+            <li>カーナビ</li>
+            {% endif %}
+            {% if car_obj.etc == True %}
+            <li>ETC</li>
+            {% endif %}
+            {% if car_obj.car_autonomous == True %}
+            <li>自動運動</li>
+            {% endif %}
+            {% if car_obj.around_view_monitor == True %}
+            <li>駐車アシスト</li>
+            {% endif %}
+            {% if car_obj.non_smoking == True %}
+            <li>禁煙</li>
+            {% endif %}
+            </td>
+    </tr>
+</table>
+
 </div>
 <br>
-<div class="card">
-    <h2 class="card-header">{{message}}</h2>
-    <div class="card-body">
+<div>
+    <h2>{{message}}</h2>
+    <div>
         <p>利用予約場所：{{address}}</p>
         <p>開始予定日時：{{data.start_day}} {{data.start_time}}</p>
         <p>終了予定日時：{{data.end_day}} {{data.end_time}}</p>
         <p>利用予定時間：{{times}}</p>
         <p>支払い予定料金：{{kingaku}}円</p>
     </div>
-    <div class="card-footer">
+    <div>
     {% if request.session.select == 'map' or  request.session.select == 'car' %}
         <form action="{% url 'carsharing_booking:push' %}" method="post" >
             {% csrf_token %}
             {% for key, value in data.items %}
                 <input type="hidden" name="{{key}}" value="{{value}}">
             {% endfor %}
-                <input class="btn btn-outline-secondary" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
+                <input class="btn" type="submit" value="確定" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">
         </form>
     {% else %}
-        <a href="{% url 'carsharing_req:first' %}" class="btn btn-outline-secondary" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">TOPへ戻る</a>
+        <a href="{% url 'carsharing_req:first' %}" class="btn" style="float: right;width: 80pt;height: 30pt;margin: 5pt;">TOPへ戻る</a>
     {% endif %}
     </div>
 </div>
