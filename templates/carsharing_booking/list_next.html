@@ -4,7 +4,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-  <!-- <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'> -->
+  <link rel="stylesheet" href='{% static "carsharing_booking/css/list.css" %}'>
   <link rel="stylesheet" href='{% static "owners_req/css/numberplate.css" %}'>
 {% endblock %}
 
@@ -26,7 +26,7 @@
     <h1>車両{{ title }}</h1>
         <div class="p-2">
             <div class="pic m-0"> 
-                <img border="0" src="/media/{{data.img}}" alt="{{data.img}}" class="img">
+                <img border="0" src="/media/{{data.img}}" alt="{{data.img}}" class="img mr-5">
                 <div class="card" id="numberplate">
                     <div class="container clearfix" id="numberplate-top">
                         <p class="numberplate-top-item">{{ data.license_plate_place }}</p>
@@ -38,15 +38,15 @@
                     </div>
                 </div>
             </div>
-            <div class="detail">
+            <div class="detail" style="clear:both;">
                 <div class="car">
                     <p>車種(メーカー)：{{data.category}}({{data.parent_category}})</p>
                     <p>型番：{{data.model_id}}</p>
                     <p>乗車人数：{{data.people}}人</p>
                     <p>変速システム：{{data.at_mt}}車</p>
-                    <p>搭載機能：</p>
                 </div>
-                <div class="cars">
+                <div class="cars" style="float:left;">
+                    <p>搭載機能：</p>
                     {% if data.babysheet == True %}
                     <li>チャイルドシート</li>
                     {% endif %}
@@ -69,7 +69,7 @@
             </div>
         </div>
 {% endif %}
-    <h1 class="one">駐車場{{ title }}</h1>
+    <h1 class="one" style="float:left;clear:both;">駐車場{{ title }}</h1>
         <div class="card-body p-2">
             <div id="map" style="width:100%; height:400px"></div>
             <div class="br1">
