@@ -21,12 +21,15 @@
     * Djangoクエリによる条件検索
     * jsによる非同期検索
 * 履歴から予約
-* 金額計算
+* 予約入力
+    * プラン別で金額計算(js)
+    * getで検索条件指定
 
 **○予約確認**
 * 非同期切り替えレイアウト
 
 **○お気に入り車両登録**
+* getでredirect先の分岐
 
 **○メールの自動送信**
 
@@ -34,6 +37,8 @@
 * fullcalendar
 
 **○車両登録、地図登録**
+* Ajax通信
+* Google map API
 
 **○オーナー貸し出し日時登録**
 * 排他制御
@@ -50,9 +55,13 @@
 * Google map API
 
 **○DB自動入力**
-* Json, csv, xlsx
+* Json, csv, xlsxファイルをDBへ格納
 
-> ### **mobileシステム(Kotlin)**
+> ### **mobileシステム(Kotlin, Android studio)**
+* webAPI
+* Google map API
+
+# -------------- 1年生発表用 --------------
 
 # django-sample
 **#編集する箇所**
