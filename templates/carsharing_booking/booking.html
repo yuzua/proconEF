@@ -98,6 +98,8 @@
 </table>
 
 <table class="table pc">
+<form action="{% url 'carsharing_booking:checkbooking' %}" method="post">
+{% csrf_token %}
     <tr class="tr1">
         <th>予約</th>
         <th>画像</th>
