@@ -1053,9 +1053,12 @@ def mobile(request):
 
 
 def survey(request):
+    params = {
+        'title': "アンケート"
+    }
     data = list(AnswerModel.objects.filter(count=3).values('answer'))
     for itemstr in data:
         item = ast.literal_eval(itemstr['answer'])
         print(type(item))
         print(item)
-    return HttpResponse(data)
+    return render(request, 'administrator/survey.html', params)
