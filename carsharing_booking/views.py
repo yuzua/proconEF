@@ -1037,6 +1037,8 @@ class ReservationList(TemplateView):
         return render(request, 'carsharing_booking/list_next.html', self.params)
 
     def get(self, request):
+        if str(request.user) == "AnonymousUser":
+            return redirect(to='carsharing_req:index')
         dt_now = datetime.datetime.now()
         d_now = dt_now.strftime('%Y-%m-%d')
         # print(d_now)
