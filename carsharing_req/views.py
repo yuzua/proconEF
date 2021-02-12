@@ -166,6 +166,8 @@ class CarsharUserInfo(TemplateView):
     def get(self, request):
         if str(request.user) == "AnonymousUser":
             print('ゲスト')
+            path = "http://127.0.0.1:8000/parking_booking/push/"
+            print(path[:-21])
         else:
             print(request.user)
             user_data = CarsharUserModel.objects.get(id=request.session['user_id'])

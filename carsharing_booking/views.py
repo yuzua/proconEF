@@ -916,7 +916,8 @@ def push(request):
 def success_booking_mail(request, charge, start_day, start_time, end_day, end_time):
 
     subject = "予約完了確認メール"
-    url = 'http://127.0.0.1:8000/carsharing_booking/list/'
+    path = request.build_absolute_uri()
+    url = path[:-5] + 'list/'
     message = str(request.user) + "様\n \
         ご予約ありがとうございます。\n \
         お手続きが完了いたしました。\n\n \
