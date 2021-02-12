@@ -928,7 +928,7 @@ def success_booking_mail(request, charge, start_day, start_time, end_day, end_ti
         予約詳細はコチラから！！\n \
         URL: " + url + "\n"
     user = request.user  # ログインユーザーを取得する
-    from_email = 'admin@gmail.com'  # 送信者
+    from_email = 's.kawanishi291@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
 

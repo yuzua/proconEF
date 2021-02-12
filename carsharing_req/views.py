@@ -753,7 +753,7 @@ def surveyMail(request, booking):
         コチラから返却確認処理をおこなってください。\n \
         URL: " + attachments + "\n"
     user = request.user  # ログインユーザーを取得する
-    from_email = 'admin@gmail.com'  # 送信者
+    from_email = 's.kawanishi291@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
 
@@ -769,7 +769,7 @@ def ParkingEndMail(request, booking):
         料金: " + str(booking['charge']) + "円\n\n \
         またのご利用お待ちしております。"
     user = request.user  # ログインユーザーを取得する
-    from_email = 'admin@gmail.com'  # 送信者
+    from_email = 's.kawanishi291@gmail.com'  # 送信者
     user.email_user(subject, message, from_email)  # メールの送信
     pass
 
