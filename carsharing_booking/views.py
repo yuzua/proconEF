@@ -855,7 +855,7 @@ def checkBooking(request):
                 elif h <= 6 and charge > 4580:
                     charge = 4580
         times += x
-    if d == 0 and m <= 15 and h == 0:
+    if d == 0 and m < 15 and h == 0:
         messages.error(request, '15分未満は利用できません。')
         if request.session['select'] == 'map':
             return render(request, 'carsharing_booking/booking.html', params)
