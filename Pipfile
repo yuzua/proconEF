@@ -18,7 +18,8 @@ sklearn = "*"
 matplotlib = "*"
 scipy = "*"
 gunicorn = "*"
-keras = "==2.3.1"
+tensorflow = "*"
+keras = "*"
 
 [requires]
 python_version = "3.7"
