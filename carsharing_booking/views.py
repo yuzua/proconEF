@@ -886,6 +886,9 @@ def checkBooking(request):
     return render(request, "carsharing_booking/check.html", params)
 
 def push(request):
+    if str(request.user) == "AnonymousUser":
+        messages.error(request, 'ログインしてください。')
+        return redirect(to='carsharing_req:index')
     if (request.method == 'POST'):
         user_id = int(request.session['user_id'])
         car_id = int(request.POST['car_id'])
