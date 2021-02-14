@@ -1,67 +1,141 @@
-# プロコン1年生発表用
+# プロコン発表用
     
+<img width="2371" alt="WEBシステム" src="https://user-images.githubusercontent.com/71476154/107870003-fdcc9800-6ed7-11eb-85c5-277e5c3cf31b.png">
+
+
 > ### **webシステム(Python, JavaScript)**
 
-**○会員登録**
-* バリデーション
-* 免許証AI
-* 2段回認証
-* all authによるソーシャルアカウントログイン（Google認証）
+* ユーザ
+	* 会員登録
+		* バリデーション
+		* 免許判定AI
+			* 画像処理
+				* TensorFlow(h5)
+		* 二段階認証
+			* ソーシャルアカウントログイン
+				* Google OAuth 
+			* Allauth(Django)
+	* カーシェア予約方法
+		* 地図から
+			* 自宅
+				* Google map API
+			* 現在地
+				* Google map API
+				* Wi-Fiから位置情報取得
+					* Geolocation API
+		* 車から
+			* 非同期検索(JavaScript)
+			* 条件検索(Django)
+		* お気に入りから
+			* 登録処理
+				* getでredirect先の分岐
+		* 過去の履歴から
+	* カーシェア予約処理
+		* 入力
+			* 入力フォーム
+				* DatePicker
+					* (Django, Bootstrap)
+			* バリデーション
+		* 排他制御
+			* オーナー貸し出し制限
+			* 重複予約回避
+		* FullCalendar
+		* プラン別料金計算(jQuery)
+		* 予約完了メール
+			* Django-ses
+			* AWS SES
+		* QRコード生成
+			* Google Chart API
+		* 返却処理
+			* メール送信
+				* Django-ses
+				* AWS SES
+			* おすすめAI起動
+				* クラスタ分析
+					* K-means
+					* Pandas / NumPy (Python)
+				* Jsonデータ生成
+	* 駐車場予約
+		* バリデーション
+		* メール送信
+			* Django-ses
+			* AWS SES
+	* マイページ
+		* ユーザ情報確認
+		* 予約一覧
+			* 非同期切り替え
+		* 利用明細
+			* ページネーション
+			* 非同期切り替え
+		* カレンダー
+			* FullCalendar
+* モバイルアプリ
+	* 自作 WEB API
+		* GETで条件検索(Django)
+		* HttpResponse Json書出し
+* タイマー処理
+	* 月に一度
+		* ユーザの料金チャージ
+		* ユーザ変更処理
+			* プラン変更処理
+			* クレカ期限チェック
+		* 価格予測AI起動
+			* Pandas / NumPy (Python)
+			* Jsonデータ生成
+	* 週に一度
+		* 配車予測AI起動
+			* ユーザ利用地域収集
+			* Pandas / NumPy (Python)
+			* Jsonデータ生成
+* 管理者
+	* 車両登録
+		* バリデーション
+	* 駐車場登録
+		* 座標取得
+			* Ajax通信
+		* バリデーション
+		* 駐車場タイプ入力制御(JavaScript)
+		* エリア自動分類登録(Django)
+	* 配車管理AI
+		* 過不足判定AI
+		* UI
+			* Google map API
+		* 配車管理
+			* 車両の設定と解除
+	* アンケート結果
+		* Google Chart API
+	* DBデータ自動入力
+		* import(csv, xlsx, json)
+* 中古車購入
+	* おすすめAI
+		* Jsonデータ参照
+	* 検索
+		* ページネーション
+		* メーカー検索
+		* 詳細画面
+			* グラフ描画
+				* Chart.js
+			* スクレイピング
+				* DB自動格納
+	* 価格推移AI
+		* Jsonデータ参照
+		* グラフ描画
+			* Chart.js
+* オーナ
+	* オーナ登録
+		* バリデーション
+		* 銀行支店コード判定
+	* 車両登録
+		* バリデーション
+	* 駐車場登録
+		* 座標取得
+			* Ajax通信
+		* バリデーション
+		* 駐車場タイプ入力制御(JavaScript)
+		* エリア自動登録(Django)
+	* オーナー貸し出し制限
 
-**○オーナー登録**
-* 銀行支店検索
-* バリデーション
-
-**○予約**
-* 現在地から予約
-    * Google map API、geo.js
-* 自宅から予約
-    * Wi-Fiで現在地取得
-* 車から予約
-    * Djangoクエリによる条件検索
-    * jsによる非同期検索
-* 履歴から予約
-* 予約入力
-    * プラン別で金額計算(js)
-    * getで検索条件指定
-
-**○予約確認**
-* 非同期切り替えレイアウト
-
-**○お気に入り車両登録**
-* getでredirect先の分岐
-
-**○メールの自動送信**
-
-**○カレンダー**
-* fullcalendar
-
-**○車両登録、地図登録**
-* Ajax通信
-* Google map API
-
-**○オーナー貸し出し日時登録**
-* 排他制御
-
-**○中古車価格予想**
-* 価格予想AI
-* chart.js
-
-**○おすすめ中古車**
-* おすすめ判定AI
-
-**○配車管理**
-* 配車予測AI
-* Google map API
-
-**○DB自動入力**
-* Json, csv, xlsxファイルをDBへ格納
-
-> ### **mobileシステム(Kotlin, Android studio)**
-* webAPI
-* Google map API
-
-# -------------- 1年生発表用 --------------
+# ---------------- 発表用 ----------------
 
 # django-sample
 **#編集する箇所**
