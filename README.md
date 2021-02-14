@@ -39,7 +39,7 @@
 
 
 > ### **webシステム(全体像)**
-<img width="2371" alt="WEBシステム" src="https://user-images.githubusercontent.com/71476154/107870003-fdcc9800-6ed7-11eb-85c5-277e5c3cf31b.png">
+<img width="2371" alt="WEBシステム" src="https://user-images.githubusercontent.com/71476154/107870940-7cc5ce80-6ee0-11eb-8828-5a92788b6264.png">
 
 
 > ### **webシステム(概要)**
