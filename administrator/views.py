@@ -584,10 +584,11 @@ class UploadData(TemplateView):
             xlsx_all_list = ImportXlsx(file_name)
             if file_name[0] == 'p':
                 AllParkingUpload(xlsx_all_list)
+                messages.success(self.request, '駐車場情報をDBへ格納しました。')
             else:
                 AllCarUpload(xlsx_all_list)
+                messages.success(self.request, '車両情報をDBへ格納しました。')
             DeleteUploadXlsx('./media/xlsx/')
-            messages.success(self.request, '車両情報をDBへ格納しました。')
         else:
             messages.error(self.request, 'error')
         return redirect(to='administrator:upload_data')
