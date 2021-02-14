@@ -1,9 +1,44 @@
 # プロコン発表用
-    
+> ### **webシステム(使用言語, フレームワーク, パッケージ, ライブラリ, DB, ファイル 等...)**
+* Python
+    * gunicorn
+    * Django
+        * django-allauth
+        * django-bootstrap-datepicker-plus
+        * django-ses
+        * boto
+    * psycopg2-binary
+    * openpyxl
+    * pillow
+    * Pandas
+    * NumPy
+    * Scipy
+    * sklearn
+    * matplotlib
+    * TensorFlow
+    * Keras
+* JavaScript
+    * Chart.js
+    * jQuery
+        * FullCalendar
+* Ajax
+* CSS
+* Bootstrap
+* PostgreSQL
+* WEB API
+    * Google OAuth 
+    * Google map API
+        * Geocoding API
+        * Maps JavaScript API
+    * Geolocation API
+* json, csv, xlsx
+
+
+> ### **webシステム(全体像)**
 <img width="2371" alt="WEBシステム" src="https://user-images.githubusercontent.com/71476154/107870003-fdcc9800-6ed7-11eb-85c5-277e5c3cf31b.png">
 
 
-> ### **webシステム(Python, JavaScript)**
+> ### **webシステム(概要)**
 
 * ユーザ
 	* 会員登録
