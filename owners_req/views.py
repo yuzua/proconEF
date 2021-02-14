@@ -602,6 +602,7 @@ def check(request):
     return redirect(to='owners_req:createDate')
 
 
+# 作業用
 def AAA():
     mylist=["支店名","削除","コード"]
     add_list = []
