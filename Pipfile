@@ -23,5 +23,6 @@ keras = "*"
 boto = "*"
 django-ses = "*"
 
+
 [requires]
 python_version = "3.7"
